@@ -22,3 +22,7 @@ span.invalid-message {
     max-width: 23%;
     height: auto;
 }
+
+input[switch=danger]:label {
+    background-color: red;
+}
