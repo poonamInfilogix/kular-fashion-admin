@@ -4,7 +4,7 @@
             <div class="navbar-brand-box">
                 <a href="{{ route('dashboard') }}" class="logo logo-dark">
                     <span class="logo-sm">
-                        <img src="{{ asset('assets/images/small-logo.png') }}" alt="" height="50">
+                        <img src="{{ asset('assets/images/small-logo.png') }}" alt="" height="40">
                     </span>
                     <span class="logo-lg">
                         <img src="{{ asset('assets/images/logo.png') }}" alt="" class="bg-white" height="50">
@@ -13,7 +13,7 @@
 
                 <a href="{{ route('dashboard') }}" class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="{{ asset('assets/images/small-logo.png') }}" alt="" height="50">
+                        <img src="{{ asset('assets/images/small-logo.png') }}" alt="" height="40">
                     </span>
                     <span class="logo-lg">
                         <img src="{{ asset('assets/images/logo.png') }}" alt="" class="bg-white" height="50">
@@ -43,7 +43,7 @@
                 <div class="dropdown-menu dropdown-menu-end">
                     <a class="dropdown-item" href="#"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span key="t-profile">Profile</span></a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-danger" href="#"><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span key="t-logout">Logout</span></a>
+                    <a class="dropdown-item text-danger" href="{{ route('logout') }}"><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span key="t-logout">Logout</span></a>
                 </div>
             </div>
         </div>
