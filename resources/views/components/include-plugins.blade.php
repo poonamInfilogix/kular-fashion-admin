@@ -80,3 +80,58 @@
         <script src="{{ asset('assets/js/chosen.jquery.min.js') }}"></script>
     @endpush
 @endif
+
+@if($hasPlugin('update-status'))
+    @push('scripts')
+    <script>
+        $(function() {
+            $('.update-status').change(function() {
+                var status = $(this).prop('checked') ? 'Active' : 'Inactive'; // Send enum values
+                var categoryId = $(this).data('id');
+                let statusUpdateApiEndpoint = $(this).data('endpoint');
+                const toggleButton = $(this);
+                swal({
+                    title: "Are you sure?",
+                    text: `You really want to ${status} this?`,
+                    type: "warning",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                }, function(isConfirm) {
+                    if (isConfirm) {
+                        $.ajax({
+                            type: "POST",
+                            dataType: "json",
+                            url: statusUpdateApiEndpoint,
+                            data: {
+                                'status': status,
+                                'id': categoryId,
+                                '_token': '{{ csrf_token() }}' 
+                            },
+                            success: function(response) {
+                                if(response.success){
+                                    swal({
+                                        title: "Success!",
+                                        text: response.message,
+                                        type: "success",
+                                        showConfirmButton: false
+                                    }) 
+    
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 2000);
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error updating status:', error);
+                            }
+                        });
+                    } else {
+                        console.log('sasd');
+                        toggleButton.prop('checked', !toggleButton.prop('checked')); 
+                    }
+                });
+            });
+        });
+    </script>
+    @endpush
+@endif

@@ -17,7 +17,7 @@
                         <span key="t-ecommerce">Manage Products</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="#" key="t-products">Categories</a></li>
+                        <li><a href="{{ route('categories.index')}}" key="t-products">Categories</a></li>
                         <li><a href="#" key="t-products">Subcategories</a></li>
                         <li><a href="#" key="t-products">Brands</a></li>
                         <li><a href="#" key="t-products">Products</a></li>
@@ -28,6 +28,16 @@
                         <i class="bx bx-user"></i>
                         <span key="t-user">Manage Customers</span>
                     </a>
+                </li>
+                <li class="menu-title" key="t-menu">Settings</li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="bx bx-box"></i>
+                        <span key="t-ecommerce">Manage Settings</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{ route('categories.index')}}" key="t-products">Default Images</a></li>
+                    </ul>
                 </li>
             </ul>
         </div>
