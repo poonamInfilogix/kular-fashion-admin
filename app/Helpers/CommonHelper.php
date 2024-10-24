@@ -15,3 +15,14 @@ if(!function_exists('uploadFile')) {
         return null;
     }
 }
+
+if(!function_exists('setting')) {
+    function setting($setting_key){
+        $setting = Setting::where('key', $setting_key)->first();
+        $value = '';
+        if ($setting) {
+            $value = $setting->value;
+        }
+        return $value;
+    }
+}

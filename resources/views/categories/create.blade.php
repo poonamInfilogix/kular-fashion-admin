@@ -36,20 +36,4 @@
             </div> <!-- end row -->
         </div> <!-- container-fluid -->
     </div>
-    <script>
-$(document).ready(function() {
-    $('#imageInput').on('change', function(event) {
-        var file = event.target.files[0];
-        if (file) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                $('#imagePreview').attr('src', e.target.result).show(); // Show the preview
-            };
-            reader.readAsDataURL(file);
-        } else {
-            $('#imagePreview').hide(); // Hide if no file selected
-        }
-    });
-});
-        </script>
 @endsection

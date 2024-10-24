@@ -135,3 +135,25 @@
     </script>
     @endpush
 @endif
+
+@if($hasPlugin('imagePreview'))
+<script>
+    function previewImage(input, previewId) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $(previewId).prop('hidden', false).attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $('#category_image').change(function() {
+        previewImage(this, '#preview-category');
+    });
+
+    $('#add-subcategory').change(function() {
+        previewImage(this, '#preview-subcategory');
+    });
+</script>
+@endif

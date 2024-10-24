@@ -41,7 +41,7 @@
                                     <tr>
                                         <td>{{ ++$key }}</td>
                                         <td>{{ $category->name }}</td>
-                                        <td>{{ $category->description }}</td>
+                                        <td><img src="{{ asset($category->image) }}" width="50" height="50"></td>
                                         <td>
                                             <input type="checkbox" id="{{ $category->id }}"  class="update-status" data-id="{{ $category->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $category->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('update-status')}}"/>
                                             <label for="{{ $category->id }}" data-on-label="Active" data-off-label="Inactive"></label>
@@ -64,5 +64,5 @@
 
         </div> <!-- container-fluid -->
     </div>
-    <x-include-plugins :plugins="['dataTable', 'update-status']"></x-include-plugins>
+    <x-include-plugins :plugins="['dataTable', 'update-status', 'imagePreview' ]"></x-include-plugins>
 @endsection
