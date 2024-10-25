@@ -51,7 +51,7 @@
                                             </td>
                                             <td class="action-buttons">
                                                 <a href="{{ route('product-types.edit', $productType->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
-                                                <button data-source="Sub Category" data-endpoint="{{ route('product-types.destroy', $productType->id)}}"
+                                                <button data-source="Product Type" data-endpoint="{{ route('product-types.destroy', $productType->id)}}"
                                                     class="delete-btn btn btn-danger btn-sm edit">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>

@@ -117,7 +117,7 @@
         $(function() {
             $('.update-status').change(function() {
                 var status = $(this).prop('checked') ? 'Active' : 'Inactive'; // Send enum values
-                var categoryId = $(this).data('id');
+                var id = $(this).data('id');
                 let statusUpdateApiEndpoint = $(this).data('endpoint');
                 const toggleButton = $(this);
                 swal({
@@ -134,7 +134,7 @@
                             url: statusUpdateApiEndpoint,
                             data: {
                                 'status': status,
-                                'id': categoryId,
+                                'id': id,
                                 '_token': '{{ csrf_token() }}' 
                             },
                             success: function(response) {
