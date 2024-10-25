@@ -13,12 +13,16 @@
     $('#add-category-image').change(function() {
         Image(this, '#preview-category');
         Image(this, '#previewCategory');
-
     });
 
     $('#add-subCategory-image').change(function() {
         Image(this, '#preview-subCategory');
         Image(this, '#preview-sub-category');
+    });
+
+    $('#add-brand-image').change(function() {
+        Image(this, '#preview-brand');
+        Image(this, '#previewBrand');
 
     });
 </script>
