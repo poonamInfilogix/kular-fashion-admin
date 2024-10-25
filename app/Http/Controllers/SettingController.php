@@ -15,42 +15,32 @@ class SettingController extends Controller
 
     public function store(Request $request)
     {
-        $datas = $request->all();
-        $skippedArray = array_slice($datas, 1, null, true);
+        $skippedArray = array_slice($request->all(), 1, null, true);
 
-        $categoryImage = Setting::where('key','category_image')->first();
-        $oldCategoryImage = $categoryImage ? $categoryImage->value : NULL;
-        if($request->category_image) {
-            $categoryImageName = uploadFile($request->file('category_image'), 'uploads/default-images/');
-            $image_path = public_path($oldCategoryImage);
+        $settings = [
+            'default_category_image' => 'default_category_image',
+            'default_subcategory_image' => 'default_subcategory_image'
+        ];
 
-            if ($oldCategoryImage && File::exists($image_path)) {
-                File::delete($image_path);
+        foreach ($settings as $settingKey => $imageKey) {
+            $setting = Setting::where('key', $settingKey)->first();
+            $oldImagePath = $setting ? $setting->value : null;
+
+            if ($request->hasFile($imageKey)) {
+                $newImageName = uploadFile($request->file($imageKey), 'uploads/default-images/');
+                $fullOldImagePath = public_path($oldImagePath);
+
+                if ($oldImagePath && File::exists($fullOldImagePath)) {
+                    File::delete($fullOldImagePath);
+                }
+                $skippedArray[$settingKey] = $newImageName;
+            } else {
+                $skippedArray[$settingKey] = $oldImagePath;
             }
         }
 
-        $subCategoryImage = Setting::where('key','subcategory_image')->first();
-        $oldSubCategoryImage = $subCategoryImage ? $subCategoryImage->value : NULL;
-        if($request->subcategory_image) {
-            $subCategoryImageName = uploadFile($request->file('subcategory_image'), 'uploads/default-images/');
-            $image_path = public_path($oldSubCategoryImage);
-
-            if ($oldSubCategoryImage && File::exists($image_path)) {
-                File::delete($image_path);
-            }
-        }
-
-        $skippedArray['category_image'] = $categoryImageName ??  $oldCategoryImage;
-        $skippedArray['subcategory_image'] = $subCategoryImageName ??  $oldSubCategoryImage;
-
-
-        foreach ($skippedArray as $key => $value)
-        {
-            Setting::updateOrCreate([
-                'key' => $key,
-            ],[
-                'value' => $value
-            ]);
+        foreach ($skippedArray as $key => $value) {
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
 
         return redirect()->route('settings.index')->with('success', 'Setting updated successfully');

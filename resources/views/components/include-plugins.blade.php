@@ -138,7 +138,22 @@
 
 @if($hasPlugin('imagePreview'))
 <script>
-    function previewImage(input, previewId) {
+    function previewImage(event, key) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function() {
+            const preview = document.getElementById(`preview-${key}`);
+            preview.src = reader.result;
+            preview.hidden = false;
+        }
+        
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function Image(input, previewId) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
             reader.onload = function(e) {
@@ -149,11 +164,7 @@
     }
 
     $('#category_image').change(function() {
-        previewImage(this, '#preview-category');
-    });
-
-    $('#add-subcategory').change(function() {
-        previewImage(this, '#preview-subcategory');
+        Image(this, '#preview-category');
     });
 </script>
 @endif

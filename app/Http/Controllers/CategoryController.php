@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Support\Facades\File;
 
 class CategoryController extends Controller
 {
@@ -25,7 +26,7 @@ class CategoryController extends Controller
             'name'    => 'required',
         ]);
 
-        $imageName = uploadFile($request->file('image'), 'uploads/categories/');
+        $imageName = uploadFile($request->file('category_image'), 'uploads/categories/');
 
         Category::create([
             'name'          => $request->name,
@@ -56,15 +57,22 @@ class CategoryController extends Controller
         ]);
 
         $category = Category::where('id', $id)->first();
-        if($request->image) {
-            $imageName = uploadFile($request->file('image'), 'uploads/categories/');
+        $oldCategoryImage = $category ? $category->image : NULL;
+
+        if($request->category_image) {
+            $imageName = uploadFile($request->file('category_image'), 'uploads/categories/');
+            $image_path = public_path($oldCategoryImage);
+
+            if ($oldCategoryImage && File::exists($image_path)) {
+                File::delete($image_path);
+            }
         }
 
         $category->update([
             'name'          => $request->name,
             'status'        => $request->categoryStatus,
             'description'   => $request->description,
-            'image'         => $imageName ?? $category->image
+            'image'         => $imageName ?? $oldCategoryImage
         ]);
 
         return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
