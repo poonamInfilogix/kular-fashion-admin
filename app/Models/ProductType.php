@@ -4,15 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Category;
+use App\Models\Department;
 
-class SubCategory extends Model
+class ProductType extends Model
 {
     use SoftDeletes;
     protected $guarded =[];
 
-    public function category()
+    public function department()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Department::class);
     }
 }

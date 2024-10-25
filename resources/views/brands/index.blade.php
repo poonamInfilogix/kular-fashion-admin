@@ -44,7 +44,7 @@
                                                 onerror="this.onerror=null; this.src='{{ asset(setting('default_brand_image')) }}';" >
                                             </td>
                                             <td>
-                                                <input type="checkbox" id="{{ $brand->id }}"  class="update-status" data-id="{{ $brand->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $brand->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('brands-status')}}"/>
+                                                <input type="checkbox" id="{{ $brand->id }}"  class="update-status" data-id="{{ $brand->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $brand->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('brand-status')}}"/>
                                                 <label for="{{ $brand->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
                                             <td class="action-buttons">

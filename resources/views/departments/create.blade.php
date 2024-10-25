@@ -8,10 +8,10 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Update Category</h4>
+                        <h4 class="mb-sm-0 font-size-18">Create a new Department</h4>
 
                         <div class="page-title-right">
-                            <a href="{{ route('categories.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to all categories</a>
+                            <a href="{{ route('departments.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to departments</a>
                         </div>
 
                     </div>
@@ -26,10 +26,9 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <form action="{{ route('categories.update', $category->id) }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('departments.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
-                                @method('PUT')
-                                @include('categories.form')
+                                @include('departments.form')
                             </form>    
                         </div>    
                     </div>

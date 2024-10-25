@@ -11,25 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sub_categories', function (Blueprint $table) {
+        Schema::create('departments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('category_id')->index();
-            $table->string('sub_category_name');
+            $table->string('name');
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->softDeletes();
             $table->timestamps();
-
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
         });
     }
- 
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('sub_categories');
+        Schema::dropIfExists('departments');
     }
 };

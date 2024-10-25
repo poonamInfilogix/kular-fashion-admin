@@ -10,14 +10,14 @@
         }
     }
 
-    $('#add-category-image').change(function() {
-        Image(this, '#preview-category');
-        Image(this, '#previewCategory');
+    $('#add-department-image').change(function() {
+        Image(this, '#preview-department');
+        Image(this, '#previewDepartment');
     });
 
-    $('#add-subCategory-image').change(function() {
-        Image(this, '#preview-subCategory');
-        Image(this, '#preview-sub-category');
+    $('#add-productType-image').change(function() {
+        Image(this, '#preview-productType');
+        Image(this, '#preview-product-type');
     });
 
     $('#add-brand-image').change(function() {

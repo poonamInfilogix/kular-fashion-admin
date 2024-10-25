@@ -8,10 +8,10 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Create a new Category</h4>
+                        <h4 class="mb-sm-0 font-size-18">Create a new product type</h4>
 
                         <div class="page-title-right">
-                            <a href="{{ route('categories.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to categories</a>
+                            <a href="{{ route('product-types.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to product types</a>
                         </div>
 
                     </div>
@@ -26,9 +26,9 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <form action="{{ route('categories.store') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('product-types.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
-                                @include('categories.form')
+                                @include('product-types.form')
                             </form>    
                         </div>    
                     </div>
@@ -36,4 +36,5 @@
             </div> <!-- end row -->
         </div> <!-- container-fluid -->
     </div>
+
 @endsection

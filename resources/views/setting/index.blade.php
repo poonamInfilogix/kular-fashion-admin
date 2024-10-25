@@ -24,10 +24,10 @@
                                 @csrf
                                 @php
                                     $images = [
-                                        'default_category_image'    => ' Default Category Image',
-                                        'default_subcategory_image' => 'Default Sub Category Image',
-                                        'default_brand_image'       => 'Default Brand Image',
-                                        'default_product_image'     => 'Default Product Image'
+                                        'default_department_image'    => 'Default Department Image',
+                                        'default_product_type_image'  => 'Default Product Type Image',
+                                        'default_brand_image'         => 'Default Brand Image',
+                                        'default_product_image'       => 'Default Product Image'
                                     ];
                                 @endphp
 

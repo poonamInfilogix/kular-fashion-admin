@@ -7,10 +7,10 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Sub Categories</h4>
+                        <h4 class="mb-sm-0 font-size-18">Departments</h4>
 
                         <div class="page-title-right">
-                            <a href="{{ route('sub-categories.create') }}" class="btn btn-primary">Add New Sub Category</a>
+                            <a href="{{ route('departments.create') }}" class="btn btn-primary">Add New Department</a>
                         </div>
 
                     </div>
@@ -29,29 +29,27 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Category Name</th>
-                                        <th>Sub Category Name</th>
+                                        <th>Name</th>
                                         <th>Image</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($subCategories as $key => $subCategory)
+                                    @foreach($departments as $key => $department)
                                         <tr>
                                             <td>{{ ++$key }}</td>
-                                            <td>{{ optional($subCategory->category)->name }}</td>
-                                            <td>{{ $subCategory->sub_category_name }}</td>
-                                            <td><img src="{{ asset($subCategory->image) }}" width="50" height="50" 
-                                                onerror="this.onerror=null; this.src='{{ asset(setting('default_subcategory_image')) }}';" >
+                                            <td>{{ $department->name }}</td>
+                                            <td><img src="{{ asset($department->image) }}" width="50" height="50" 
+                                                onerror="this.onerror=null; this.src='{{ asset(setting('default_department_image')) }}';" >
                                             </td>
                                             <td>
-                                                <input type="checkbox" id="{{ $subCategory->id }}"  class="update-status" data-id="{{ $subCategory->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $subCategory->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('sub-category-status')}}"/>
-                                                <label for="{{ $subCategory->id }}" data-on-label="Active" data-off-label="Inactive"></label>
+                                                <input type="checkbox" id="{{ $department->id }}"  class="update-status" data-id="{{ $department->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $department->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('department-status')}}"/>
+                                                <label for="{{ $department->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
                                             <td class="action-buttons">
-                                                <a href="{{ route('sub-categories.edit', $subCategory->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
-                                                <button data-source="Sub Category" data-endpoint="{{ route('sub-categories.destroy', $subCategory->id)}}"
+                                                <a href="{{ route('departments.edit', $department->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
+                                                <button data-source="Department" data-endpoint="{{ route('departments.destroy', $department->id)}}"
                                                     class="delete-btn btn btn-danger btn-sm edit">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
@@ -66,5 +64,5 @@
             </div> <!-- end row -->
         </div> <!-- container-fluid -->
     </div>
-    <x-include-plugins :plugins="['dataTable', 'update-status']"></x-include-plugins>
+    <x-include-plugins :plugins="['dataTable', 'update-status' ]"></x-include-plugins>
 @endsection
