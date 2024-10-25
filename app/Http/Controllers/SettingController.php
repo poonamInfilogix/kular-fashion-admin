@@ -18,8 +18,10 @@ class SettingController extends Controller
         $skippedArray = array_slice($request->all(), 1, null, true);
 
         $settings = [
-            'default_category_image' => 'default_category_image',
-            'default_subcategory_image' => 'default_subcategory_image'
+            'default_category_image'    => 'default_category_image',
+            'default_subcategory_image' => 'default_subcategory_image',
+            'default_brand_image'       => 'default_brand_image',
+            'default_product_image'     => 'default_product_image'
         ];
 
         foreach ($settings as $settingKey => $imageKey) {
