@@ -18,7 +18,7 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{ route('categories.index')}}" key="t-products">Categories</a></li>
-                        <li><a href="#" key="t-products">Sub Categories</a></li>
+                        <li><a href="{{ route('sub-categories.index')}}" key="t-products">Sub Categories</a></li>
                         <li><a href="#" key="t-products">Brands</a></li>
                         <li><a href="#" key="t-products">Products</a></li>
                     </ul>

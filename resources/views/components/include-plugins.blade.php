@@ -1,3 +1,29 @@
+@if($hasPlugin('image'))
+<script>
+    function Image(input, previewId) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $(previewId).prop('hidden', false).attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $('#add-category-image').change(function() {
+        Image(this, '#preview-category');
+        Image(this, '#previewCategory');
+
+    });
+
+    $('#add-subCategory-image').change(function() {
+        Image(this, '#preview-subCategory');
+        Image(this, '#preview-sub-category');
+
+    });
+</script>
+@endif
+
 @if($hasPlugin('datePicker'))
     @push('styles')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -152,19 +178,5 @@
             reader.readAsDataURL(file);
         }
     }
-
-    function Image(input, previewId) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                $(previewId).prop('hidden', false).attr('src', e.target.result);
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    $('#category_image').change(function() {
-        Image(this, '#preview-category');
-    });
 </script>
 @endif

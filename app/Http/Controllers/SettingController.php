@@ -45,6 +45,6 @@ class SettingController extends Controller
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
         }
 
-        return redirect()->route('settings.index')->with('success', 'Setting updated successfully');
+        return redirect()->route('settings.index')->with('success', 'Default Images updated successfully');
     }
 }
