@@ -184,3 +184,15 @@
     }
 </script>
 @endif
+
+@if($hasPlugin('colorPicker'))
+    @push('styles')
+        <link href="{{ asset('assets/libs/spectrum-colorpicker2/spectrum.min.css') }}" rel="stylesheet" type="text/css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    @endpush
+    @push('scripts')
+        <script src="{{ asset('assets/libs/spectrum-colorpicker2/spectrum.min.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+        <script src="{{ asset('assets/js/pages/form-advanced.init.js') }}"></script>
+    @endpush
+@endif
