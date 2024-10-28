@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\SizeScaleController;
+use App\Http\Controllers\SeasonController;
 
 Route::get('/', function (){
     return redirect()->route('dashboard');
@@ -27,11 +28,13 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'brands'        => BrandController::class,
         'colors'        => ColorController::class,
         'size-scales'   => SizeScaleController::class,
+        'seasons'       => SeasonController::class
     ]);
     Route::post('/department-status', [DepartmentController::class, 'updateStatus'])->name('department-status');
     Route::post('/product-types-status', [ProductTypeController::class, 'productTypeStatus'])->name('product-types-status');
     Route::post('/brand-status', [BrandController::class, 'updateStatus'])->name('brand-status');
     Route::post('/color-status', [ColorController::class, 'colorStatus'])->name('color-status');
     Route::post('/size-scale-status', [SizeScaleController::class, 'sizeScaleStatus'])->name('size-scale-status');
+    Route::post('/season-status', [SeasonController::class, 'seasonStatus'])->name('season-status');
 });
 

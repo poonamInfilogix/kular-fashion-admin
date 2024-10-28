@@ -23,13 +23,13 @@ class ColorController extends Controller
     {
         $request->validate([
             'color_name'       => 'required',
-            'color_short_code' => 'required'
+            'color_short_code' => 'required|min:1|max:5'
         ]);
 
         Color::create([
             'color_name'       => $request->color_name,
             'color_short_code' => $request->color_short_code,
-            'color_picker'     => $request->color_picker,
+            'ui_color_code'    => $request->color,
             'status'           => $request->status,
         ]);
 
@@ -52,14 +52,14 @@ class ColorController extends Controller
     {
         $request->validate([
             'color_name'       => 'required',
-            'color_short_code' => 'required'
+            'color_short_code' => 'required|min:1|max:5'
         ]);
 
         $color = Color::where('id', $id)->first();
         $color->update([
             'color_name'        => $request->color_name,
             'color_short_code'  => $request->color_short_code,
-            'color_picker'      => $request->color_picker,
+            'ui_color_code'     => $request->color,
             'status'            => $request->status,
         ]);
 
