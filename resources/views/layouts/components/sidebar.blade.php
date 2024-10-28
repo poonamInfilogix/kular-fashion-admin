@@ -17,9 +17,11 @@
                         <span key="t-ecommerce">Manage Products</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('categories.index')}}" key="t-products">Categories</a></li>
-                        <li><a href="#" key="t-products">Sub Categories</a></li>
-                        <li><a href="#" key="t-products">Brands</a></li>
+                        <li><a href="{{ route('departments.index')}}" key="t-products">Departments</a></li>
+                        <li><a href="{{ route('product-types.index')}}" key="t-products">Product Types</a></li>
+                        <li><a href="{{ route('brands.index') }}" key="t-products">Brands</a></li>
+                        <li><a href="{{ route('colors.index') }}" key="t-products">Colors</a></li>
+                        <li><a href="{{ route('size-scales.index') }}" key="t-products">Size Scales</a></li>
                         <li><a href="#" key="t-products">Products</a></li>
                     </ul>
                 </li>

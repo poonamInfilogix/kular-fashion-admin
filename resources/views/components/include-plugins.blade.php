@@ -1,3 +1,33 @@
+@if($hasPlugin('image'))
+<script>
+    function Image(input, previewId) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $(previewId).prop('hidden', false).attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $('#add-department-image').change(function() {
+        Image(this, '#preview-department');
+        Image(this, '#previewDepartment');
+    });
+
+    $('#add-productType-image').change(function() {
+        Image(this, '#preview-productType');
+        Image(this, '#preview-product-type');
+    });
+
+    $('#add-brand-image').change(function() {
+        Image(this, '#preview-brand');
+        Image(this, '#previewBrand');
+
+    });
+</script>
+@endif
+
 @if($hasPlugin('datePicker'))
     @push('styles')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -87,7 +117,7 @@
         $(function() {
             $('.update-status').change(function() {
                 var status = $(this).prop('checked') ? 'Active' : 'Inactive'; // Send enum values
-                var categoryId = $(this).data('id');
+                var id = $(this).data('id');
                 let statusUpdateApiEndpoint = $(this).data('endpoint');
                 const toggleButton = $(this);
                 swal({
@@ -104,7 +134,7 @@
                             url: statusUpdateApiEndpoint,
                             data: {
                                 'status': status,
-                                'id': categoryId,
+                                'id': id,
                                 '_token': '{{ csrf_token() }}' 
                             },
                             success: function(response) {
@@ -138,22 +168,31 @@
 
 @if($hasPlugin('imagePreview'))
 <script>
-    function previewImage(input, previewId) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                $(previewId).prop('hidden', false).attr('src', e.target.result);
-            }
-            reader.readAsDataURL(input.files[0]);
+    function previewImage(event, key) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        
+        reader.onload = function() {
+            const preview = document.getElementById(`preview-${key}`);
+            preview.src = reader.result;
+            preview.hidden = false;
+        }
+        
+        if (file) {
+            reader.readAsDataURL(file);
         }
     }
-
-    $('#category_image').change(function() {
-        previewImage(this, '#preview-category');
-    });
-
-    $('#add-subcategory').change(function() {
-        previewImage(this, '#preview-subcategory');
-    });
 </script>
+@endif
+
+@if($hasPlugin('colorPicker'))
+    @push('styles')
+        <link href="{{ asset('assets/libs/spectrum-colorpicker2/spectrum.min.css') }}" rel="stylesheet" type="text/css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    @endpush
+    @push('scripts')
+        <script src="{{ asset('assets/libs/spectrum-colorpicker2/spectrum.min.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+        <script src="{{ asset('assets/js/pages/form-advanced.init.js') }}"></script>
+    @endpush
 @endif
