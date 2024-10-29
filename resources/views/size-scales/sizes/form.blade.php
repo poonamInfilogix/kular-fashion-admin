@@ -11,7 +11,7 @@
     </div>
     <div class="col-sm-6 col-md-3">
         <div class="mb-3">
-            <x-form-input name="old_code" value="{{ $size->old_code ?? '' }}" label="Old Code" placeholder="Enter Old Code" required="true"/>
+            <x-form-input name="old_code" value="{{ $size->old_code ?? '' }}" label="Old Code" placeholder="Enter Old Code" maxlength="5"/>
         </div>
     </div>
     <div class="col-sm-6 col-md-3">

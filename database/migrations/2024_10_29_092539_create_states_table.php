@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('colors', function (Blueprint $table) {
+        Schema::create('states', function (Blueprint $table) {
             $table->id();
-            $table->string('color_name');
-            $table->string('color_short_code')->nullable();
-            $table->string('ui_color_code')->nullable();
-            $table->enum('status', ['Active', 'Inactive'])->default('Active');
-
+            $table->string('name');
+            $table->foreignId('country_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('colors');
+        Schema::dropIfExists('states');
     }
 };

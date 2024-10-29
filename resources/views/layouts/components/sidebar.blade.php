@@ -26,6 +26,12 @@
                     </ul>
                 </li>
                 <li >
+                    <a href="{{ route('suppliers.index') }}" class="waves-effect">
+                        <i class="bx bx-user-circle"></i>
+                        <span key="t-user">Manage Suppliers</span>
+                    </a>
+                </li>
+                <li >
                     <a href="#" class="waves-effect">
                         <i class="bx bx-user"></i>
                         <span key="t-user">Manage Customers</span>
