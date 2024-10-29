@@ -9,7 +9,7 @@ class SizeScaleController extends Controller
 {
     public function index()
     {
-        $sizeScales = SizeScale::latest()->get();
+        $sizeScales = SizeScale::withCount('sizes')->latest()->get();
 
         return view('size-scales.index', compact('sizeScales'));
     }
@@ -22,7 +22,7 @@ class SizeScaleController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'size_scale' => 'required',
+            'size_scale' => 'required|unique:size_scales,size_scale',
         ]);
 
         SizeScale::create([
@@ -48,7 +48,7 @@ class SizeScaleController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'size_scale' => 'required',
+            'size_scale' => 'required|unique:size_scales,size_scale,' . $id,
         ]);
 
         $sizeScale = SizeScale::where('id', $id)->first();

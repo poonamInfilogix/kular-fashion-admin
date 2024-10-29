@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('color_name');
             $table->string('color_short_code')->nullable();
-            $table->string('color_picker')->nullable();
+            $table->string('color')->nullable();
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
 
             $table->timestamps();
