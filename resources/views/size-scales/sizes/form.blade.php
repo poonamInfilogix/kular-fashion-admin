@@ -18,8 +18,8 @@
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
             <select name="status" id="color-status" class="form-control">
-                <option value="Active" {{ (isset($sizeScale) && $sizeScale->status === 'Active') ? 'selected' : '' }}>Active</option>
-                <option value="Inactive" {{ (isset($sizeScale) && $sizeScale->status === 'Inactive') ? 'selected' : '' }}>Inactive</option>
+                <option value="Active" {{ (isset($size) && $size->status === 'Active') ? 'selected' : '' }}>Active</option>
+                <option value="Inactive" {{ (isset($size) && $size->status === 'Inactive') ? 'selected' : '' }}>Inactive</option>
             </select>
         </div>
     </div>

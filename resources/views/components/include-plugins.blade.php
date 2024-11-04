@@ -23,8 +23,12 @@
     $('#add-brand-image').change(function() {
         Image(this, '#preview-brand');
         Image(this, '#previewBrand');
-
     });
+
+    $('#add-product-image').change(function() {
+        // Image(this, '#preview-brand');
+        Image(this, '#preview-product');
+    })
 </script>
 @endif
 

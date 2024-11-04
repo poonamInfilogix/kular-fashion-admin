@@ -12,6 +12,7 @@ use App\Http\Controllers\SizeScaleController;
 use App\Http\Controllers\SizeController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TaxController;
+use App\Http\Controllers\ProductController;
 
 Route::get('/', function (){
     return redirect()->route('dashboard');
@@ -31,7 +32,8 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'colors'        => ColorController::class,
         'size-scales'   => SizeScaleController::class,
         'suppliers'     => SupplierController::class,
-        'taxes'         => TaxController::class
+        'taxes'         => TaxController::class,
+        'products'      => ProductController::class
     ]);
 
     Route::get('size-scales/sizes/{sizeScaleId}', [SizeController::class, 'index'])->name('sizes.index');
@@ -49,6 +51,8 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::post('/size-status', [SizeController::class, 'sizeStatus'])->name('size-status');
     Route::post('/supplier-status',[SupplierController::class, 'supplierStatus'])->name('supplier-status');
     Route::post('/tax-status', [TaxController::class, 'taxStatus'])->name('tax-status');
+    Route::post('/product-status', [ProductController::class, 'productStatus'])->name('product-status');
+    
     Route::get('/get-states/{countryId}', [SupplierController::class, 'getStates']);
 });
 

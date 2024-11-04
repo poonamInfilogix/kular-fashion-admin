@@ -22,7 +22,7 @@
                         <li><a href="{{ route('brands.index') }}" key="t-products">Brands</a></li>
                         <li><a href="{{ route('colors.index') }}" key="t-products">Colors</a></li>
                         <li><a href="{{ route('size-scales.index') }}" key="t-products">Size Scales</a></li>
-                        <li><a href="#" key="t-products">Products</a></li>
+                        <li><a href="{{ route('products.index') }}" key="t-products">Products</a></li>
                     </ul>
                 </li>
                 <li >
