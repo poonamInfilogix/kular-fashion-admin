@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('colors', function (Blueprint $table) {
             $table->id();
             $table->string('color_name');
-            $table->string('color_short_code')->nullable();
+            $table->string('color_code')->nullable();
             $table->string('ui_color_code')->nullable();
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
 

@@ -9,9 +9,9 @@ use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\SizeScaleController;
-use App\Http\Controllers\SeasonController;
 use App\Http\Controllers\SizeController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\TaxController;
 
 Route::get('/', function (){
     return redirect()->route('dashboard');
@@ -30,8 +30,8 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'brands'        => BrandController::class,
         'colors'        => ColorController::class,
         'size-scales'   => SizeScaleController::class,
-        'seasons'       => SeasonController::class,
-        'suppliers'     => SupplierController::class
+        'suppliers'     => SupplierController::class,
+        'taxes'         => TaxController::class
     ]);
 
     Route::get('size-scales/sizes/{sizeScaleId}', [SizeController::class, 'index'])->name('sizes.index');
@@ -48,7 +48,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::post('/size-scale-status', [SizeScaleController::class, 'sizeScaleStatus'])->name('size-scale-status');
     Route::post('/size-status', [SizeController::class, 'sizeStatus'])->name('size-status');
     Route::post('/supplier-status',[SupplierController::class, 'supplierStatus'])->name('supplier-status');
-    Route::post('/season-status', [SeasonController::class, 'seasonStatus'])->name('season-status');
+    Route::post('/tax-status', [TaxController::class, 'taxStatus'])->name('tax-status');
     Route::get('/get-states/{countryId}', [SupplierController::class, 'getStates']);
 });
 

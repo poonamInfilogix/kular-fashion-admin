@@ -69,7 +69,7 @@
     </div>
     <div class="col-sm-6 col-md-3">
         <div class="mb-3">
-            <x-form-input name="postal_code" value="{{ $supplier->postal_code ?? '' }}" label="Postal Code" placeholder="Enter Postal Code"/>
+            <x-form-input type="number" name="postal_code" value="{{ $supplier->postal_code ?? '' }}" label="Postal Code" placeholder="Enter Postal Code"/>
         </div>
     </div>
     <div class="col-sm-6 col-md-3">
@@ -88,31 +88,14 @@
         <button type="submit" class="btn btn-primary w-md">Submit</button>
     </div>
 </div>
-
+<x-include-plugins :plugins="['chosen', 'country']"></x-include-plugins>
+@push('scripts')
 <script>
-    $(document).ready(function() {
-        $('#country_id').change(function() {
-            const countryId = $(this).val();
-            const stateSelect = $('#state_id');
-    
-            stateSelect.html('<option value="" disabled selected>Select state</option>'); // Reset options
-    
-            if (countryId) {
-                $.ajax({
-                    url: `/get-states/${countryId}`,
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(data) {
-                        console.log(data);
-                        data.states.forEach(function(state) {
-                            stateSelect.append(new Option(state.name, state.id));
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error fetching states:', error);
-                    }
-                });
-            }
+    $(function(){
+        $('#country_id').chosen({
+            width: '100%',
+            placeholder_text_multiple: 'Include tests'
         });
-    });
-    </script>
+    })
+</script>
+@endpush

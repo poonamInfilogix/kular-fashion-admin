@@ -196,3 +196,33 @@
         <script src="{{ asset('assets/js/pages/form-advanced.init.js') }}"></script>
     @endpush
 @endif
+
+@if($hasPlugin('country'))
+<script>
+    $(document).ready(function() {
+        $('#country_id').change(function() {
+            const countryId = $(this).val();
+            const stateSelect = $('#state_id');
+    
+            stateSelect.html('<option value="" disabled selected>Select state</option>'); // Reset options
+    
+            if (countryId) {
+                $.ajax({
+                    url: `/get-states/${countryId}`,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log(data);
+                        data.states.forEach(function(state) {
+                            stateSelect.append(new Option(state.name, state.id));
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching states:', error);
+                    }
+                });
+            }
+        });
+    });
+</script>
+@endif

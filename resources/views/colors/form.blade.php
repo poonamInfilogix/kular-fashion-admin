@@ -6,7 +6,7 @@
     </div>
     <div class="col-sm-6 col-md-3">
         <div class="mb-3">
-            <x-form-input name="color_short_code" value="{{ $color->color_short_code ?? '' }}" label="Color Short Code" placeholder="Enter Short Code"  required="true"/>
+            <x-form-input name="color_code" value="{{ $color->color_code ?? '' }}" label="Color Code" placeholder="Enter Color Code"  required="true" maxlength="3"/>
         </div>
     </div>
     <div class="Col-sm-6 col-md-3">

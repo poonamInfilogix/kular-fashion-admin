@@ -46,12 +46,12 @@ class SupplierController extends Controller
             'supplier_ref'  => $request->supplier_ref,
             'telephone'     => $request->telephone,
             'email'         => $request->email,
-            'address_line_1'=>$request->address_line_1,
-            'address_line_2'=>$request->address_line_2,
-            'country_id'    =>$request->country_id,
+            'address_line_1'=> $request->address_line_1,
+            'address_line_2'=> $request->address_line_2,
+            'country_id'    => $request->country_id,
             'state_id'      => $request->state_id,
             'city'          => $request->city,
-            'postal_code'   =>$request->postal_code,
+            'postal_code'   => $request->postal_code,
             'status'        => $request->status
         ]);
 
@@ -93,12 +93,12 @@ class SupplierController extends Controller
             'supplier_ref'  => $request->supplier_ref,
             'telephone'     => $request->telephone,
             'email'         => $request->email,
-            'address_line_1'=>$request->address_line_1,
-            'address_line_2'=>$request->address_line_2,
-            'country_id'    =>$request->country_id,
+            'address_line_1'=> $request->address_line_1,
+            'address_line_2'=> $request->address_line_2,
+            'country_id'    => $request->country_id,
             'state_id'      => $request->state_id,
-            'city'          => $request->city_id,
-            'postal_code'   =>$request->postal_code,
+            'city'          => $request->city,
+            'postal_code'   => $request->postal_code,
             'status'        => $request->status
         ]);
 
