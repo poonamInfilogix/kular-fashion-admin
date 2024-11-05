@@ -44,7 +44,7 @@
             flatpickr('.date-picker', {
                 dateFormat: "Y-m-d",
                 allowInput: true,
-                minDate: "today"
+                maxDate: "today"
             });
         })
     </script>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Department;
 use Illuminate\Support\Facades\File;
+use Illuminate\Validation\Rule;
 
 class DepartmentController extends Controller
 {
@@ -23,7 +24,10 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'    => 'required',
+            'name' => [
+                'required',
+                Rule::unique('departments')->whereNull('deleted_at'),
+            ],
         ]);
 
         $imageName = uploadFile($request->file('image'), 'uploads/departments/');
@@ -53,7 +57,10 @@ class DepartmentController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name'    => 'required',
+            'name' => [
+                'required',
+                Rule::unique('departments')->ignore($id)->whereNull('deleted_at'),
+            ],
         ]);
 
         $department = Department::where('id', $id)->first();

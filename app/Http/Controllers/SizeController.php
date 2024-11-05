@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Size;
 use App\Models\SizeScale;
+use Illuminate\Validation\Rule;
 
 class SizeController extends Controller
 {
@@ -29,7 +30,12 @@ class SizeController extends Controller
     public function store(Request $request, $sizeScaleId)
     {
         $request->validate([
-            'size'          => 'required',
+            'size' => [
+                'required',
+                Rule::unique('sizes')->where(function ($query) use ($sizeScaleId) {
+                    return $query->where('size_scale_id', $sizeScaleId); // Remove the space after 'size_scale_id'
+                }),
+            ],
             'new_code'      => 'required',
             'old_code'      => 'nullable|min:1|max:5',
         ]);
@@ -53,7 +59,12 @@ class SizeController extends Controller
     public function update(Request $request, $sizeScaleId, Size $size)
     {
         $request->validate([
-            'size'          => 'required',
+            'size'          => [
+                'required',
+                Rule::unique('sizes')->ignore($size->id)->where(function ($query) use ($sizeScaleId) {
+                    return $query->where('size_scale_id', $sizeScaleId);
+                })
+            ],
             'new_code'      => 'required',
             'old_code'      => 'nullable|min:1|max:5',
         ]);

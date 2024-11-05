@@ -27,8 +27,8 @@ class ProductController extends Controller
         $latestProduct = Product::orderBy('article_code', 'desc')->first();
 
         $latestNewCode = $latestProduct ? (int)$latestProduct->article_code : 300000;
-        $brands = Brand::latest()->get();
-        $departments = Department::latest()->get();
+        $brands = Brand::whereNull('deleted_at')->latest()->get();
+        $departments = Department::whereNull('deleted_at')->latest()->get();
         $taxes = Tax::latest()->get();
         $tags  = Tag::latest()->get();
         $sizeScales = SizeScale::latest()->get();
@@ -82,9 +82,9 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        $brands = Brand::latest()->get();
-        $productTypes = ProductType::latest()->get();
-        $departments = Department::latest()->get();
+        $brands = Brand::whereNull('deleted_at')->latest()->get();
+        $departments = Department::whereNull('deleted_at')->latest()->get();
+        $productTypes = ProductType::where('department_id', $product->department_id)->whereNull('deleted_at')->latest()->get();
         $taxes = Tax::latest()->get();
         $tags  = Tag::latest()->get();
         $sizeScales = SizeScale::latest()->get();
@@ -174,7 +174,7 @@ class ProductController extends Controller
 
     public function getDepartment($departmentId)
     {
-        $productTypes = ProductType::where('department_id', $departmentId)->get();
+        $productTypes = ProductType::where('department_id', $departmentId)->whereNull('deleted_at')->get();
 
         return response()->json(['productTypes' => $productTypes]);
     }

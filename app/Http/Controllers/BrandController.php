@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Brand;
 use Illuminate\Support\Facades\File;
+use Illuminate\Validation\Rule;
 
 class BrandController extends Controller
 {
@@ -23,7 +24,10 @@ class BrandController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'brand_name' => 'required|unique:brands,brand_name',
+            'brand_name' => [
+                'required',
+                    Rule::unique('brands')->whereNull('deleted_at'),
+                ],
         ]);
 
         $imageName = uploadFile($request->file('brand_image'), 'uploads/brands/');
@@ -53,7 +57,10 @@ class BrandController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'brand_name' => 'required|unique:brands,brand_name,' . $id,
+            'brand_name' => [
+                'required',
+                Rule::unique('brands')->ignore($id)->whereNull('deleted_at'),
+            ],
         ]);
 
         $brand = Brand::where('id', $id)->first();

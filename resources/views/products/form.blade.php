@@ -14,7 +14,6 @@
         <div class="mb-3">
             <label for="department_id">Department<span class="text-danger">*</span></label>
             <select name="department_id" id="department_id" class="form-control{{ $errors->has('department_id') ? ' is-invalid' : '' }}">
-                <option value="" disabled selected>Select Depertment</option>
                 @foreach($departments as $department)
                     <option value="{{ $department->id }}" @selected(isset($product->department_id) && $product->department_id == $department->id)>
                         {{ $department->name }}

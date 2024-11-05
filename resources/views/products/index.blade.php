@@ -31,9 +31,9 @@
                                         <th>#</th>
                                         <th>Article Code</th>
                                         <th>Manufacture Code</th>
-                                        <th>Brand</th>
                                         <th>Department</th>
                                         <th>Product Type</th>
+                                        <th>Brand</th>
                                         <th>In date</th>
                                         <th>Image</th>
                                         <th>Status</th>
@@ -46,9 +46,9 @@
                                             <td>{{ ++$key }}</td>
                                             <td>{{ $product->article_code }}</td>
                                             <td>{{ $product->manufacture_code }}</td>
-                                            <td>{{ $product->brand->brand_name }}</td>
-                                            <td>{{ $product->department->name }}</td>
-                                            <td>{{ $product->productType->product_type_name }}</td>
+                                            <td>{{ optional($product->department)->name }}</td>
+                                            <td>{{ optional($product->productType)->product_type_name }}</td>
+                                            <td>{{ optional($product->brand)->brand_name }}</td>
                                             <td>{{ $product->in_date}}</td>
                                             <td><img src="{{ asset($product->image) }}" width="50" height="50" 
                                                 onerror="this.onerror=null; this.src='{{ asset(setting('default_product_image')) }}';" >
