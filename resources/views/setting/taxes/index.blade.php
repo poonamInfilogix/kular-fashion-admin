@@ -29,7 +29,7 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Tax (in %)</th>
+                                        <th>Taxes (in %)</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>

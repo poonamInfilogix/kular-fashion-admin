@@ -52,7 +52,8 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::post('/supplier-status',[SupplierController::class, 'supplierStatus'])->name('supplier-status');
     Route::post('/tax-status', [TaxController::class, 'taxStatus'])->name('tax-status');
     Route::post('/product-status', [ProductController::class, 'productStatus'])->name('product-status');
-    
+
     Route::get('/get-states/{countryId}', [SupplierController::class, 'getStates']);
+    Route::get('/get-product-type/{departmentId}', [ProductController::class, 'getDepartment']);
 });
 

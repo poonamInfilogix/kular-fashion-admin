@@ -27,7 +27,8 @@ return new class extends Migration
             $table->unsignedBigInteger('tax_id')->nullable()->index();
             $table->date('in_date')->nullable();
             $table->date('last_date')->nullable();
-            $table->string('tags')->nullable();
+            $table->string('tag_id')->nullable();
+            $table->unsignedBigInteger('size_scale_id')->nullable()->index();
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->softDeletes();
             $table->timestamps();
@@ -36,6 +37,7 @@ return new class extends Migration
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
             $table->foreign('product_type_id')->references('id')->on('product_types')->onDelete('cascade');
             $table->foreign('tax_id')->references('id')->on('taxes')->onDelete('cascade');
+            $table->foreign('size_scale_id')->references('id')->on('size_scales')->onDelete('cascade');
         });
     }
 

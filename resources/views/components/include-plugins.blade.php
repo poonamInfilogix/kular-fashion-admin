@@ -43,7 +43,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             flatpickr('.date-picker', {
                 dateFormat: "Y-m-d",
-                allowInput: true
+                allowInput: true,
+                minDate: "today"
             });
         })
     </script>

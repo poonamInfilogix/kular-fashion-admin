@@ -51,7 +51,7 @@
                                             <td>{{ $product->productType->product_type_name }}</td>
                                             <td>{{ $product->in_date}}</td>
                                             <td><img src="{{ asset($product->image) }}" width="50" height="50" 
-                                                onerror="this.onerror=null; this.src='{{ asset(setting('default_department_image')) }}';" >
+                                                onerror="this.onerror=null; this.src='{{ asset(setting('default_product_image')) }}';" >
                                             </td>
                                             <td>
                                                 <input type="checkbox" id="{{ $product->id }}"  class="update-status" data-id="{{ $product->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $product->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('product-status')}}"/>

@@ -45,7 +45,7 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{ route('settings.index')}}" key="t-products">Default Images</a></li>
-                        <li><a href="{{ route('taxes.index')}}" key="t-products">Setting Taxes</a></li>
+                        <li><a href="{{ route('taxes.index')}}" key="t-products">Tax Settings</a></li>
                     </ul>
                 </li>
             </ul>

@@ -7,15 +7,22 @@
 
     <div class="col-sm-6 col-md-4">
         <div class="mb-3">
-            <label for="tax_status" class="form-label">Status</label>
-            <input type="checkbox" id="tax_status" name="status" class="form-check-input" value="1" @checked(old('status', $tax->status ?? 0) == 1) onclick="statusClick(this);" />
+            <label for="status" class="form-label">Status</label>
+            <select name="status" id="color-status" class="form-control">
+                <option value="0"  @selected(isset($tax) && $tax->status === 0)>Active</option>
+                <option value="1"  @selected(isset($tax) && $tax->status === 1)>Inactive</option>
+            </select>
         </div>
     </div>
 
     <div class="col-sm-6 col-md-4">
         <div class="mb-3">
             <label for="default" class="form-label">Default</label>
-            <input type="checkbox" id="default" name="default" class="form-check-input" value="1" @checked(old('default', $tax->is_default ?? 0) == 1) onclick="defaultClick(this);" />
+            <select name="default" id="default" class="form-control">
+                <option value="" disabled selected>Select Default</option>
+                <option value="0" @selected(isset($tax) && $tax->is_default === 0)>No</option>
+                <option value="1" @selected(isset($tax) && $tax->is_default === 1)>Yes</option>
+            </select>
         </div>
     </div>
 </div>
@@ -25,15 +32,3 @@
         <button type="submit" class="btn btn-primary w-md">Submit</button>
     </div>
 </div>
-
-<script>
-    function statusClick(e) {
-        e.value = e.checked ? 1 : 0;
-        $('#tax_status').val(e.value);
-    }
-
-    function defaultClick(e) {
-        e.value = e.checked ? 1 : 0;
-        $('#default').val(e.value);
-    }
-</script>
