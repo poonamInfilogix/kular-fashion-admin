@@ -127,12 +127,6 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <label form="short_description" class="form-label">Short Description</label>
-            <textarea name="short_description" class="form-control" placeholder="Enter Short Description" rows=3>{{ old('short_description', $product->short_description ?? '') }}</textarea>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-2">
-        <div class="mb-3">
             <label class="form-label">Image</label>
             <input type="file" name="image" id="add-product-image" class="form-control">
 
@@ -185,6 +179,12 @@
             </select>
         </div>
     </div>
+    <div class="col-sm-6 col-md-2">
+        <div class="mb-3">
+            <label form="short_description" class="form-label">Short Description</label>
+            <textarea name="short_description" class="form-control" placeholder="Enter Short Description" rows=3>{{ old('short_description', $product->short_description ?? '') }}</textarea>
+        </div>
+    </div>
 </div>
 
 <div class="row mb-2">
@@ -192,6 +192,7 @@
         <button type="submit" class="btn btn-primary w-md">Submit</button>
     </div>
 </div>
+
 <x-include-plugins :plugins="['chosen', 'image','datePicker' ]"></x-include-plugins>
 <script>
     $(function(){
