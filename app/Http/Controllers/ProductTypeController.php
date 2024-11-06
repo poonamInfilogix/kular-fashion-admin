@@ -27,8 +27,8 @@ class ProductTypeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'department_id'       => 'required',
-           'product_type_name' => [
+            'department_id'     => 'required',
+           'product_type_name'  => [
                 'required',
                 Rule::unique('product_types')
                     ->where(function ($query) use ($request) {

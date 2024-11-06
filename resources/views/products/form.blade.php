@@ -85,12 +85,6 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <x-form-input name="supplier_price" type="number" step="0.01" value="{{ $product->supplier_price ?? '' }}" label="Supplier Price" placeholder="Enter Supplier Price"/>
-        </div>
-    </div>
-
-    <div class="col-sm-6 col-md-2">
-        <div class="mb-3">
             <x-form-input name="mrp" type="number" step="0.01" value="{{ $product->mrp ?? '' }}" label="MRP" placeholder="Enter Mrp" required="true"/>
         </div>
     </div>
@@ -114,6 +108,46 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
+            <x-form-input name="supplier_price" type="number" step="0.01" value="{{ $product->supplier_price ?? '' }}" label="Supplier Price" placeholder="Enter Supplier Price" required="true"/>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-md-2">
+        <div class="mb-3">
+            <label for="size_scale_id">Size Scale<span class="text-danger">*</span></label>
+            <select name="size_scale_id" id="size_scale_id" class="form-control{{ $errors->has('size_scale_id') ? ' is-invalid' : '' }}">
+                <option value="" disabled selected>Select size scale</option>
+                @foreach($sizeScales as $sizeScale)
+                    <option value="{{ $sizeScale->id }}" @selected(isset($product->size_scale_id) && $product->size_scale_id == $sizeScale->id)>
+                        {{ $sizeScale->size_scale }}
+                    </option>
+                @endforeach
+            </select>
+            @error('size_scale_id')
+                <span class="invalid-feedback">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-md-2">
+        <div class="mb-3">
+            <label class="form-label">Image</label>
+            <input type="file" name="image" id="add-product-image" class="form-control">
+
+            <div class="row d-block d-md-none">
+                <div class="col-md-6 mt-2">
+                    @if(isset($product) && $product->image)
+                        <img src="{{ asset($product->image) }}" id="preview-product" class="img-preview img-fluid w-50">
+                    @else
+                        <img src="" id="preview-product" class="img-fluid w-50;" name="image" hidden>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-md-2">
+        <div class="mb-3">
             <x-form-input name="in_date" class="date-picker"  value="{{ $product->in_date ?? now()->format('Y-m-d') }}"  label="In Date" placeholder="Enter In Date"/>
         </div>
     </div>
@@ -123,32 +157,7 @@
             <x-form-input name="last_date" class="date-picker" value="{{ $product->last_date ?? now()->format('Y-m-d') }}" label="Last Date" placeholder="Enter Last Date"/>
         </div>
     </div>
-
-    <div class="col-sm-6 col-md-2">
-        <div class="mb-3">
-            <label class="form-label">Image</label>
-            <input type="file" name="image" id="add-product-image" class="form-control">
-
-            <div class="col-md-6 mt-2">
-                @if(isset($product) && $product->image)
-                    <img src="{{ asset($product->image) }}" id="preview-product" class="img-preview img-fluid w-100">
-                @else
-                    <img src="" id="preview-product" class="img-fluid w-100;" name="image" hidden>
-                @endif
-            </div>
-        </div>
-    </div>
     
-    <div class="col-sm-6 col-md-2">
-        <div class="mb-3">
-            <label for="status" class="form-label">Status</label>
-            <select name="status" id="color-status" class="form-control">
-                <option value="Active" @selected(isset($product) && $product->status === 'Active')>Active</option>
-                <option value="Inactive" @selected(isset($product) && $product->status === 'Inactive')>Inactive</option>
-            </select>
-        </div>
-    </div>
-
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="tag_id">Tag</label>
@@ -167,22 +176,25 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <label for="size_scale_id">Size Scale</label>
-            <select name="size_scale_id" id="size_scale_id" class="form-control{{ $errors->has('size_scale_id') ? ' is-invalid' : '' }}">
-                <option value="" disabled selected>Select size scale</option>
-                @foreach($sizeScales as $sizeScale)
-                    <option value="{{ $sizeScale->id }}" @selected(isset($product->size_scale_id) && $product->size_scale_id == $sizeScale->id)>
-                        {{ $sizeScale->size_scale }}
-                    </option>
-                @endforeach
-            </select>
+            <label form="short_description" class="form-label">Short Description</label>
+            <textarea name="short_description" class="form-control" placeholder="Enter Short Description" rows=3>{{ old('short_description', $product->short_description ?? '') }}</textarea>
         </div>
     </div>
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <label form="short_description" class="form-label">Short Description</label>
-            <textarea name="short_description" class="form-control" placeholder="Enter Short Description" rows=3>{{ old('short_description', $product->short_description ?? '') }}</textarea>
+            <label for="status" class="form-label">Status</label>
+            <select name="status" id="color-status" class="form-control">
+                <option value="Active" @selected(isset($product) && $product->status === 'Active')>Active</option>
+                <option value="Inactive" @selected(isset($product) && $product->status === 'Inactive')>Inactive</option>
+            </select>
         </div>
+    </div>
+    <div class="col-sm-6 col-md-2 d-none d-md-block">
+        @if(isset($product) && $product->image)
+            <img src="{{ asset($product->image) }}" id="previewProduct" class="img-preview img-fluid w-50">
+        @else
+            <img src="" id="previewProduct" class="img-fluid w-50;" name="image" hidden>
+        @endif
     </div>
 </div>
 
@@ -192,7 +204,7 @@
     </div>
 </div>
 
-<x-include-plugins :plugins="['chosen', 'image','datePicker' ]"></x-include-plugins>
+<x-include-plugins :plugins="['chosen', 'image','datePicker']"></x-include-plugins>
 <script>
     $(function(){
         $('#brand_id').chosen({
@@ -268,6 +280,15 @@
                     width: '100%',
                     placeholder_text_multiple: 'Select Product Type'
                 });
+            }
+        });
+        $('#mrp').on('input', function() {
+            var mrp = parseFloat($(this).val()); // Get the value of MRP
+            if (!isNaN(mrp)) {
+                var supplierPrice = mrp * 0.5; // Calculate 50% of MRP
+                $('#supplier_price').val(supplierPrice); // Set the Supplier Price field
+            } else {
+                $('#supplier_price').val(''); // Clear Supplier Price if MRP is invalid
             }
         });
     });
