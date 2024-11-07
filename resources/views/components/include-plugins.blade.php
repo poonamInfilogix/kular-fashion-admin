@@ -1,4 +1,5 @@
 @if($hasPlugin('image'))
+@push('scripts')
 <script>
     function Image(input, previewId) {
         if (input.files && input.files[0]) {
@@ -31,6 +32,7 @@
         Image(this, '#previewProduct');
     })
 </script>
+@endpush
 @endif
 
 @if($hasPlugin('datePicker'))

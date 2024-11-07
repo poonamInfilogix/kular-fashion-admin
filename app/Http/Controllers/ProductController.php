@@ -32,7 +32,7 @@ class ProductController extends Controller
         $departments = Department::whereNull('deleted_at')->latest()->get();
         $taxes = Tax::latest()->get();
         $tags  = Tag::latest()->get();
-        $sizeScales = SizeScale::latest()->get();
+        $sizeScales = SizeScale::select('id', 'size_scale')->where('status', 'Active')->latest()->with('sizes')->get();
 
         return view('products.create', compact('latestNewCode', 'brands', 'departments', 'taxes', 'tags', 'sizeScales'));
     }
