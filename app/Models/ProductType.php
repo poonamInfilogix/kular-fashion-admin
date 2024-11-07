@@ -15,4 +15,8 @@ class ProductType extends Model
     {
         return $this->belongsTo(Department::class);
     }
+    public function productTypeDepartments()
+    {
+        return $this->hasMany(ProductTypeDepartment::class, 'product_type_id')->with('departments');
+    }
 }

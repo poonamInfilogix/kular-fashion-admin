@@ -37,4 +37,12 @@
             </div> <!-- end row -->
         </div> <!-- container-fluid -->
     </div>
+    <x-include-plugins :plugins="['chosen']"></x-include-plugins>
+    <script>
+        $(function(){
+            var selectedDeparments =  @json($selectedDeparments);
+            $('#department_id').val(selectedDeparments).trigger('chosen:updated');
+        });
+    </script> 
 @endsection
+   

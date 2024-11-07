@@ -29,8 +29,8 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Department Name</th>
-                                        <th>Product Type Name</th>
+                                        <th>Product Type</th>
+                                        <th>Department</th>
                                         <th>Image</th>
                                         <th>Status</th>
                                         <th>Action</th>
@@ -40,8 +40,13 @@
                                     @foreach($productTypes as $key => $productType)
                                         <tr>
                                             <td>{{ ++$key }}</td>
-                                            <td>{{ optional($productType->department)->name }}</td>
                                             <td>{{ $productType->product_type_name }}</td>
+                                            <td>
+                                                @foreach($productType->productTypeDepartments as $departments)
+                                                    {{ $departments->departments->name }}
+                                                    @if(!$loop->last), @endif
+                                                @endforeach
+                                            </td>
                                             <td><img src="{{ asset($productType->image) }}" width="50" height="50" 
                                                 onerror="this.onerror=null; this.src='{{ asset(setting('default_product_type_image')) }}';" >
                                             </td>
