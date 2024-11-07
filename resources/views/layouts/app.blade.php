@@ -20,24 +20,27 @@
 </head>
 
 <body data-sidebar="dark">
-    <div id="layout-wrapper">
-        @include('layouts.components.header')
-        @include('layouts.components.sidebar')
+    <div id="vue-components">
+        <div id="layout-wrapper">
+            @include('layouts.components.header')
+            @include('layouts.components.sidebar')
 
-        <div class="main-content">
-            @yield('content')
-        </div>
+            <div class="main-content">
+                @yield('content')
+            </div>
 
-        <footer class="footer">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-sm-6">
-                        {{ date('Y') }} © Kular Fashion.
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            {{ date('Y') }} © Kular Fashion.
+                        </div>
                     </div>
                 </div>
-            </div>
-        </footer>
+            </footer>
+        </div>
     </div>
+    
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/libs/metismenu/metisMenu.min.js') }}"></script>
     <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>

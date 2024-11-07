@@ -113,18 +113,11 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <label for="size_scale_id">Size Scale<span class="text-danger">*</span></label>
-            <select name="size_scale_id" id="size_scale_id" class="form-control{{ $errors->has('size_scale_id') ? ' is-invalid' : '' }}">
-                <option value="" disabled selected>Select size scale</option>
-                @foreach($sizeScales as $sizeScale)
-                    <option value="{{ $sizeScale->id }}" @selected(isset($product->size_scale_id) && $product->size_scale_id == $sizeScale->id)>
-                        {{ $sizeScale->size_scale }}
-                    </option>
-                @endforeach
-            </select>
-            @error('size_scale_id')
-                <span class="invalid-feedback">{{ $message }}</span>
-            @enderror
+            <size-scale-select
+                :initial-size-scales="{{ json_encode($sizeScales) }}"
+                :initial-size-scale-id="{{ old('size_scale_id', isset($product->size_scale_id) ? $product->size_scale_id : 'null') }}"
+                :validation-error="'{{ $errors->has('size_scale_id') ? $errors->first('size_scale_id') : '' }}'"
+            ></size-scale-select>
         </div>
     </div>
     <div class="col-sm-6 col-md-2">
@@ -200,6 +193,7 @@
 </div>
 
 <x-include-plugins :plugins="['chosen', 'image','datePicker']"></x-include-plugins>
+@push('scripts')
 <script>
     $(function(){
         $('#brand_id').chosen({
@@ -219,11 +213,6 @@
         $('#tag_id').chosen({
             width: '100%',
             placeholder_text_multiple: 'Select Tag'
-        });
-
-        $('#size_scale_id').chosen({
-            width: '100%',
-            placeholder_text_multiple: 'Select Size Scale'
         });
     })
 
@@ -330,4 +319,4 @@
         }
     });
 </script>
-
+@endpush
