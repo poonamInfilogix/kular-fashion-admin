@@ -16,6 +16,7 @@
     <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
    
     @stack('styles')
+    @vite('resources/js/app.js')
 </head>
 
 <body data-sidebar="dark">
@@ -37,7 +38,6 @@
             </div>
         </footer>
     </div>
-
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/libs/metismenu/metisMenu.min.js') }}"></script>
     <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>

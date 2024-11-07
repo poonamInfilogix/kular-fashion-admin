@@ -28,6 +28,7 @@
     $('#add-product-image').change(function() {
         // Image(this, '#preview-brand');
         Image(this, '#preview-product');
+        Image(this, '#previewProduct');
     })
 </script>
 @endif

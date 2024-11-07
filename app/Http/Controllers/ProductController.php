@@ -43,7 +43,9 @@ class ProductController extends Controller
             'manufacture_code' => 'required|unique:products,manufacture_code',
             'brand_id'         => 'required',
             'department_id'    => 'required',
-            'product_type_id'  => 'required'
+            'product_type_id'  => 'required',
+            'size_scale_id'    => 'required',
+            'supplier_price'   => 'required'
         ]);
 
         $imageName = uploadFile($request->file('image'), 'uploads/products/');
@@ -101,7 +103,9 @@ class ProductController extends Controller
             'manufacture_code' => 'required|unique:products,manufacture_code,' . $id,
             'brand_id'         => 'required',
             'department_id'    => 'required',
-            'product_type_id'  => 'required'
+            'product_type_id'  => 'required',
+            'size_scale_id'    => 'required',
+            'supplier_price'   => 'required'
         ]);
 
         $product = Product::where('id', $id)->first();
