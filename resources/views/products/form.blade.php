@@ -66,10 +66,10 @@
         <div class="mb-3">
             <label for="status" class="form-label">Season<span class="text-danger">*</span></label>
             <select name="season" id="season" class="form-control{{ $errors->has('season') ? ' is-invalid' : '' }}">
-                <option value="Summer" @selected(isset($product) && $product->season === 'Summer')>Summer</option>
-                <option value="Winter" @selected(isset($product) && $product->season === 'Winter')>Winter</option>
-                <option value="Autumn" @selected(isset($product) && $product->season === 'Autumn')>Autumn</option>
-                <option value="Spring" @selected(isset($product) && $product->season === 'Spring')>Spring</option>
+                <option value="Summer" @selected(isset($product) && $product->season === 'Summer') @selected(!isset($product->season) && setting('default_season') == 'Summer')>Summer</option>
+                <option value="Winter" @selected(isset($product) && $product->season === 'Winter') @selected(!isset($product->season) && setting('default_season') == 'Winter')>Winter</option>
+                <option value="Autumn" @selected(isset($product) && $product->season === 'Autumn') @selected(!isset($product->season) && setting('default_season') == 'Autumn')>Autumn</option>
+                <option value="Spring" @selected(isset($product) && $product->season === 'Spring') @selected(!isset($product->season) && setting('default_season') == 'Spring')>Spring</option>
             </select>
             @error('season')
                 <span class="invalid-feedback">{{ $message }}</span>
@@ -138,7 +138,7 @@
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label class="form-label">Image</label>
-            <input type="file" name="image" id="add-product-image" class="form-control">
+            <input type="file" name="image" id="add-product-image" class="form-control" accept="image/*">
 
             <div class="col-md-6 mt-2">
                 @if(isset($product) && $product->image)
@@ -177,13 +177,7 @@
             <textarea name="short_description" class="form-control" placeholder="Enter Short Description" rows=3>{{ old('short_description', $product->short_description ?? '') }}</textarea>
         </div>
     </div>
-    <div class="col-sm-6 col-md-2 d-none d-md-block">
-        @if(isset($product) && $product->image)
-            <img src="{{ asset($product->image) }}" id="previewProduct" class="img-preview img-fluid w-50">
-        @else
-            <img src="" id="previewProduct" class="img-fluid w-50;" name="image" hidden>
-        @endif
-    </div>
+  
 </div>
 
 <div class="row mb-2">

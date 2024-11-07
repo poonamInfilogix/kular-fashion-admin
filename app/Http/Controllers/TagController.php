@@ -56,5 +56,31 @@ class TagController extends Controller
         return redirect()->route('tags.index')->with('success', 'Tag updated successfully.');
     }
 
+    public function destroy(Tag $tag)
+    {
+        $tag->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Tag deleted successfully.'
+        ]);
+    }
+
+    public function tagStatus(Request $request)
+    {
+        $tag = Tag::find($request->id);
+        if ($tag) {
+            $tag->update([
+                'status' => $request->status
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Status updated successfully.'
+            ]);
+        }
+        return response()->json(['error' => 'Tag not found.'], 404);
+    }
+
 
 }

@@ -25,19 +25,19 @@
                                 <tr>
                                     <th scope="row">Quantity</th>
                                     <td v-for="(size, index) in selectedSizeScale.sizes" :key="index">
-                                        <input type="number" name="quantity" class="form-control">
+                                        <input type="number" name="quantity" class="form-control" min="0">
                                     </td>
                                 </tr>
                                 <tr>
                                     <th scope="row">MRP</th>
                                     <td v-for="(size, index) in selectedSizeScale.sizes" :key="index">
-                                        <input type="number" name="mrp" class="form-control">
+                                        <input type="number" name="mrp" class="form-control" min="0">
                                     </td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Supplier</th>
                                     <td v-for="(size, index) in selectedSizeScale.sizes" :key="index">
-                                        <input type="number" name="supplier" class="form-control">
+                                        <input type="number" name="supplier" class="form-control" min="0">
                                     </td>
                                 </tr>
                             </tbody>

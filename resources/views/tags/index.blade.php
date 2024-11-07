@@ -40,7 +40,7 @@
                                             <td>{{ ++$key }}</td>
                                             <td>{{ $tag->tag_name }}</td>
                                             <td>
-                                                <input type="checkbox" id="{{ $tag->id }}" class="update-status" data-id="{{ $tax->id }}" switch="success" data-on="Active" data-off="Inactive" {{ $tag->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('tag-status') }}" />
+                                                <input type="checkbox" id="{{ $tag->id }}" class="update-status" data-id="{{ $tag->id }}" switch="success" data-on="Active" data-off="Inactive" {{ $tag->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('tag-status') }}" />
                                                 <label for="{{ $tag->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
                                             <td class="action-buttons">
