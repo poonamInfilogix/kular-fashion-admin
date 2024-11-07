@@ -111,44 +111,19 @@
             @enderror
         </div>
     </div>
-
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <x-form-input name="in_date" class="date-picker"  value="{{ $product->in_date ?? now()->format('Y-m-d') }}"  label="In Date" placeholder="Enter In Date"/>
-        </div>
-    </div>
-
-    <div class="col-sm-6 col-md-2">
-        <div class="mb-3">
-            <x-form-input name="last_date" class="date-picker" value="{{ $product->last_date ?? now()->format('Y-m-d') }}" label="Last Date" placeholder="Enter Last Date"/>
-        </div>
-    </div>
-
-    <div class="col-sm-6 col-md-2">
-        <div class="mb-3">
-            <label class="form-label">Image</label>
-            <input type="file" name="image" id="add-product-image" class="form-control">
-
-            <div class="col-md-6 mt-2">
-                @if(isset($product) && $product->image)
-                    <img src="{{ asset($product->image) }}" id="preview-product" class="img-preview img-fluid w-100">
-                @else
-                    <img src="" id="preview-product" class="img-fluid w-100;" name="image" hidden>
-                @endif
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-sm-6 col-md-2">
-        <div class="mb-3">
-            <label for="status" class="form-label">Status</label>
-            <select name="status" id="color-status" class="form-control">
-                <option value="Active" @selected(isset($product) && $product->status === 'Active')>Active</option>
-                <option value="Inactive" @selected(isset($product) && $product->status === 'Inactive')>Inactive</option>
+            <label for="size_scale_id">Size Scale</label>
+            <select name="size_scale_id" id="size_scale_id" class="form-control{{ $errors->has('size_scale_id') ? ' is-invalid' : '' }}">
+                <option value="" disabled selected>Select size scale</option>
+                @foreach($sizeScales as $sizeScale)
+                    <option value="{{ $sizeScale->id }}" @selected(isset($product->size_scale_id) && $product->size_scale_id == $sizeScale->id)>
+                        {{ $sizeScale->size_scale }}
+                    </option>
+                @endforeach
             </select>
         </div>
     </div>
-
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="tag_id">Tag</label>
@@ -164,20 +139,42 @@
             </select>
         </div>
     </div>
+    <div class="col-sm-6 col-md-2">
+        <div class="mb-3">
+            <label class="form-label">Image</label>
+            <input type="file" name="image" id="add-product-image" class="form-control">
+
+            <div class="col-md-6 mt-2">
+                @if(isset($product) && $product->image)
+                    <img src="{{ asset($product->image) }}" id="preview-product" class="img-preview img-fluid w-100">
+                @else
+                    <img src="" id="preview-product" class="img-fluid w-100;" name="image" hidden>
+                @endif
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-2">
+        <div class="mb-3">
+            <x-form-input name="in_date" class="date-picker"  value="{{ $product->in_date ?? now()->format('Y-m-d') }}"  label="In Date" placeholder="Enter In Date"/>
+        </div>
+    </div>
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <label for="size_scale_id">Size Scale</label>
-            <select name="size_scale_id" id="size_scale_id" class="form-control{{ $errors->has('size_scale_id') ? ' is-invalid' : '' }}">
-                <option value="" disabled selected>Select size scale</option>
-                @foreach($sizeScales as $sizeScale)
-                    <option value="{{ $sizeScale->id }}" @selected(isset($product->size_scale_id) && $product->size_scale_id == $sizeScale->id)>
-                        {{ $sizeScale->size_scale }}
-                    </option>
-                @endforeach
+            <x-form-input name="last_date" class="date-picker" value="{{ $product->last_date ?? now()->format('Y-m-d') }}" label="Last Date" placeholder="Enter Last Date"/>
+        </div>
+    </div>
+    
+    <div class="col-sm-6 col-md-2">
+        <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select name="status" id="color-status" class="form-control">
+                <option value="Active" @selected(isset($product) && $product->status === 'Active')>Active</option>
+                <option value="Inactive" @selected(isset($product) && $product->status === 'Inactive')>Inactive</option>
             </select>
         </div>
     </div>
+
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label form="short_description" class="form-label">Short Description</label>
@@ -242,17 +239,20 @@
                     type: 'GET',
                     dataType: 'json',
                     success: function(data) {
-
-                        if (data.productTypes && data.productTypes.length > 0) {
-                            data.productTypes.forEach(function(productType) {
-                                const option = new Option(productType.product_type_name, productType.id);
-                                productTypeSelect.append(option);
+                        if (data && data.length > 0) {
+                            data.forEach(function(item) {
+                                if (item.product_types) {
+                                    const option = new Option(item.product_types.product_type_name, item.product_type_id);
+                                    productTypeSelect.append(option);
+                                }
                             });
                         } else {
-                            const noOption = new Option('Not Found Product Types', '', false, false);
-                            productTypeSelect.append(noOption);
+                            // If no product types, append a default 'Not Found' option
+                            //const noOption = 'Not Found Product Types';
+                            //productTypeSelect.append(noOption);
                         }
 
+                        // Initialize Chosen plugin for better UI on the select dropdown
                         productTypeSelect.chosen({
                             width: '100%',
                             placeholder_text_multiple: 'Select Product Type'
@@ -270,6 +270,45 @@
                 });
             }
         });
+    });
+    // Get product type on page load
+    $(document).ready(function(){
+        var departmentId = $('#department_id').val();
+        const productTypeSelect = $('#product_type');
+
+        productTypeSelect.html('<option value="" disabled selected>Select Product Type</option>');
+        productTypeSelect.chosen("destroy"); // Destroy the previous instance to avoid issues
+
+        if (departmentId) {
+            $.ajax({
+                url: `/get-product-type/${departmentId}`,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if (data && data.length > 0) {
+                        data.forEach(function(item) {
+                            if (item.product_types) {
+                                const option = new Option(item.product_types.product_type_name, item.product_type_id);
+                                productTypeSelect.append(option);
+                            }
+                        });
+                    } 
+                    productTypeSelect.chosen({
+                        width: '100%',
+                        placeholder_text_multiple: 'Select Product Type'
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching product types:', error);
+                }
+            });
+        } else {
+            productTypeSelect.chosen("destroy").html('<option value="" disabled selected>Select Product Type</option>');
+            productTypeSelect.chosen({
+                width: '100%',
+                placeholder_text_multiple: 'Select Product Type'
+            });
+        }
     });
 </script>
 

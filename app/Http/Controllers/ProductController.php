@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Brand;
 use App\Models\Department;
 use App\Models\ProductType;
+use App\Models\ProductTypeDepartment;
 use App\Models\Size;
 use App\Models\SizeScale;
 use App\Models\Tax;
@@ -84,7 +85,7 @@ class ProductController extends Controller
     {
         $brands = Brand::whereNull('deleted_at')->latest()->get();
         $departments = Department::whereNull('deleted_at')->latest()->get();
-        $productTypes = ProductType::where('department_id', $product->department_id)->whereNull('deleted_at')->latest()->get();
+        $productTypes = ProductType::where('id', $product->product_type_id)->whereNull('deleted_at')->latest()->get();
         $taxes = Tax::latest()->get();
         $tags  = Tag::latest()->get();
         $sizeScales = SizeScale::latest()->get();
@@ -174,8 +175,9 @@ class ProductController extends Controller
 
     public function getDepartment($departmentId)
     {
-        $productTypes = ProductType::where('department_id', $departmentId)->whereNull('deleted_at')->get();
+        $productTypes = ProductTypeDepartment::with('productTypes')->where('department_id',$departmentId)->get();
+        //$productTypes = ProductType::where('department_id', $departmentId)->whereNull('deleted_at')->get();
 
-        return response()->json(['productTypes' => $productTypes]);
+        return response()->json($productTypes);
     }
 }
