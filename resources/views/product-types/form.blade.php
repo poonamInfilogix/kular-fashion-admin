@@ -17,7 +17,7 @@
     </div>
     <div class="col-sm-6 col-md-3">
         <div class="mb-3">
-            <x-form-input name="product_types_name" value="{{ $productType->product_type_name ?? '' }}" label="Product Type Name" placeholder="Enter Product Type Name"  required="true"/>
+            <x-form-input name="product_type_name" value="{{ $productType->product_type_name ?? '' }}" label="Product Type Name" placeholder="Enter Product Type Name"  required="true"/>
         </div>
     </div>
     <div class="col-sm-6 col-md-3">

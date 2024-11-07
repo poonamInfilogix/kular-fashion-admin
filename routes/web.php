@@ -9,7 +9,10 @@ use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\SizeScaleController;
-use App\Http\Controllers\SeasonController;
+use App\Http\Controllers\SizeController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\TaxController;
+use App\Http\Controllers\ProductController;
 
 Route::get('/', function (){
     return redirect()->route('dashboard');
@@ -28,13 +31,29 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'brands'        => BrandController::class,
         'colors'        => ColorController::class,
         'size-scales'   => SizeScaleController::class,
-        'seasons'       => SeasonController::class
+        'suppliers'     => SupplierController::class,
+        'taxes'         => TaxController::class,
+        'products'      => ProductController::class
     ]);
+
+    Route::get('size-scales/sizes/{sizeScaleId}', [SizeController::class, 'index'])->name('sizes.index');
+    Route::get('size-scales/sizes/{sizeScaleId}/create', [SizeController::class, 'create'])->name('sizes.create');
+    Route::post('sizes/{sizeScaleId}', [SizeController::class, 'store'])->name('sizes.store');
+    Route::get('size-scales/{sizeScaleId}/sizes/{size}/edit', [SizeController::class, 'edit'])->name('sizes.edit');
+    Route::put('size-scales/{sizeScaleId}/sizes/{size}', [SizeController::class, 'update'])->name('sizes.update');
+    Route::delete('size-scales/{sizeScaleId}/sizes/{size}', [SizeController::class, 'destroy'])->name('sizes.destroy');
+
     Route::post('/department-status', [DepartmentController::class, 'updateStatus'])->name('department-status');
     Route::post('/product-types-status', [ProductTypeController::class, 'productTypeStatus'])->name('product-types-status');
     Route::post('/brand-status', [BrandController::class, 'updateStatus'])->name('brand-status');
     Route::post('/color-status', [ColorController::class, 'colorStatus'])->name('color-status');
     Route::post('/size-scale-status', [SizeScaleController::class, 'sizeScaleStatus'])->name('size-scale-status');
-    Route::post('/season-status', [SeasonController::class, 'seasonStatus'])->name('season-status');
+    Route::post('/size-status', [SizeController::class, 'sizeStatus'])->name('size-status');
+    Route::post('/supplier-status',[SupplierController::class, 'supplierStatus'])->name('supplier-status');
+    Route::post('/tax-status', [TaxController::class, 'taxStatus'])->name('tax-status');
+    Route::post('/product-status', [ProductController::class, 'productStatus'])->name('product-status');
+
+    Route::get('/get-states/{countryId}', [SupplierController::class, 'getStates']);
+    Route::get('/get-product-type/{departmentId}', [ProductController::class, 'getDepartment']);
 });
 

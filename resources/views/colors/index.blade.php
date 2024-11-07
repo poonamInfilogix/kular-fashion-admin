@@ -40,7 +40,7 @@
                                         <tr>
                                             <td>{{ ++$key }}</td>
                                             <td>{{ ucwords($color->color_name) }}</td>
-                                            <td>{{ $color->color_short_code }}</td>
+                                            <td>{{ $color->color_code }}</td>
                                             <td>
                                                 <input type="checkbox" id="{{ $color->id }}"  class="update-status" data-id="{{ $color->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $color->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('color-status')}}"/>
                                                 <label for="{{ $color->id }}" data-on-label="Active" data-off-label="Inactive"></label>

@@ -22,8 +22,14 @@
                         <li><a href="{{ route('brands.index') }}" key="t-products">Brands</a></li>
                         <li><a href="{{ route('colors.index') }}" key="t-products">Colors</a></li>
                         <li><a href="{{ route('size-scales.index') }}" key="t-products">Size Scales</a></li>
-                        <li><a href="#" key="t-products">Products</a></li>
+                        <li><a href="{{ route('products.index') }}" key="t-products">Products</a></li>
                     </ul>
+                </li>
+                <li >
+                    <a href="{{ route('suppliers.index') }}" class="waves-effect">
+                        <i class="bx bx-user-circle"></i>
+                        <span key="t-user">Manage Suppliers</span>
+                    </a>
                 </li>
                 <li >
                     <a href="#" class="waves-effect">
@@ -39,6 +45,7 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{ route('settings.index')}}" key="t-products">Default Images</a></li>
+                        <li><a href="{{ route('taxes.index')}}" key="t-products">Tax Settings</a></li>
                     </ul>
                 </li>
             </ul>

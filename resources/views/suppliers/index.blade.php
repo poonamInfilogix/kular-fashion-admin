@@ -7,10 +7,10 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Size Scales</h4>
+                        <h4 class="mb-sm-0 font-size-18"></h4>
 
                         <div class="page-title-right">
-                            <a href="{{ route('size-scales.create') }}" class="btn btn-primary">Add New Size Scale</a>
+                            <a href="{{ route('suppliers.create') }}" class="btn btn-primary">Add New Supplier</a>
                         </div>
 
                     </div>
@@ -29,23 +29,31 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Season</th>
+                                        <th>Short Code</th>
+                                        <th>Supplier Name</th>
+                                        <th>Supplier Ref</th>
+                                        <th>Email</th>
+                                        <th>Telephone</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($seasons as $key => $season)
+                                    @foreach($suppliers as $key => $supplier)
                                         <tr>
                                             <td>{{ ++$key }}</td>
-                                            <td>{{ ucwords($season->season_name) }}</td>
+                                            <td>{{ $supplier->short_code }}</td>
+                                            <td>{{ $supplier->supplier_name }}</td>
+                                            <td>{{ $supplier->supplier_ref }}</td>
+                                            <td>{{ $supplier->email }}</td>
+                                            <td>{{ $supplier->telephone }}</td>
                                             <td>
-                                                <input type="checkbox" id="{{ $season->id }}"  class="update-status" data-id="{{ $season->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $season->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('season-status')}}"/>
-                                                <label for="{{ $season->id }}" data-on-label="Active" data-off-label="Inactive"></label>
+                                                <input type="checkbox" id="{{ $supplier->id }}"  class="update-status" data-id="{{ $supplier->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $supplier->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('supplier-status')}}"/>
+                                                <label for="{{ $supplier->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
                                             <td class="action-buttons">
-                                                <a href="{{ route('season.edit', $season->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
-                                                <button data-source="Season" data-endpoint="{{ route('season.destroy', $season->id)}}"
+                                                <a href="{{ route('suppliers.edit', $supplier->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
+                                                <button data-source="Supplier" data-endpoint="{{ route('suppliers.destroy', $supplier->id)}}"
                                                     class="delete-btn btn btn-danger btn-sm edit">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>

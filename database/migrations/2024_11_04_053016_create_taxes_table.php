@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('seasons', function (Blueprint $table) {
+        Schema::create('taxes', function (Blueprint $table) {
             $table->id();
-            $table->string('season_name');
-            $table->enum('status', ['Active', 'Inactive'])->default('Active');
-
+            $table->string('tax');
+            $table->boolean('status')->default(0);
+            $table->boolean('is_default')->default(0);
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('seasons');
+        Schema::dropIfExists('taxes');
     }
 };

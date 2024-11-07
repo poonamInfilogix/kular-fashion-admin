@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sizes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('size_sacle_id')->index();
+            $table->unsignedBigInteger('size_scale_id')->index();
             $table->string('size', 100);
             $table->string('new_code', 100)->nullable();
             $table->string('old_code', 100)->nullable();
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
 
-            $table->foreign('size_sacle_id')->references('id')->on('size_scales')->onDelete('cascade');
+            $table->foreign('size_scale_id')->references('id')->on('size_scales')->onDelete('cascade');
         });
     }
 

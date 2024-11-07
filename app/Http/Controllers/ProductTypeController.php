@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\ProductType;
 use App\Models\Department;
 use Illuminate\Support\Facades\File;
+use Illuminate\Validation\Rule;
 
 class ProductTypeController extends Controller
 {
@@ -26,15 +27,22 @@ class ProductTypeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'department_id'       => 'required',
-            'product_types_name'  => 'required',
+            'department_id'     => 'required',
+           'product_type_name'  => [
+                'required',
+                Rule::unique('product_types')
+                    ->where(function ($query) use ($request) {
+                        return $query->where('department_id', $request->department_id)
+                                    ->whereNull('deleted_at');
+                    }),
+            ],
         ]);
 
         $imageName = uploadFile($request->file('image'), 'uploads/product-types/');
 
         ProductType::create([
             'department_id'      => $request->department_id,
-            'product_type_name' => $request->product_types_name,
+            'product_type_name' => $request->product_type_name,
             'status'             => $request->status,
             'description'        => $request->description,
             'image'              => $imageName
@@ -60,7 +68,15 @@ class ProductTypeController extends Controller
     {
         $request->validate([
             'department_id'       => 'required',
-            'product_types_name'  => 'required',
+           'product_type_name' => [
+                'required',
+                Rule::unique('product_types')
+                    ->ignore($id) // Exclude the current record being updated
+                    ->where(function ($query) use ($request) {
+                        return $query->where('department_id', $request->department_id)
+                                    ->whereNull('deleted_at');
+                    }),
+            ],
         ]);
 
         $productType = ProductType::where('id', $id)->first();
@@ -77,7 +93,7 @@ class ProductTypeController extends Controller
 
         $productType->update([
             'department_id'      => $request->department_id,
-            'product_type_name' => $request->product_types_name,
+            'product_type_name' => $request->product_type_name,
             'status'             => $request->status,
             'description'        => $request->description,
             'image'              => $imageName ?? $oldProductTypeImage
