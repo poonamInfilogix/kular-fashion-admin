@@ -19,8 +19,6 @@ return new class extends Migration
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->softDeletes();
             $table->timestamps();
-
-            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
         });
     }
 

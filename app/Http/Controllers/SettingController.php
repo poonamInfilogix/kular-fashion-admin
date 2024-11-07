@@ -10,7 +10,7 @@ class SettingController extends Controller
 {
     public function index()
     {
-        return view('setting.index');
+        return view('setting.default-images.index');
     }
 
     public function store(Request $request)
@@ -46,5 +46,27 @@ class SettingController extends Controller
         }
 
         return redirect()->route('settings.index')->with('success', 'Default Images updated successfully');
+    }
+
+    public function generalSetting()
+    {
+        return view('setting.general-settings.index');
+    }
+
+    public function generalSettingStore(Request $request)
+    {
+        $datas = $request->all();
+        $skippedArray = array_slice($datas, 1, null, true);
+
+        foreach ($skippedArray as $key => $value)
+        {
+            Setting::updateOrCreate([
+                'key' => $key,
+            ],[
+                'value' => $value
+            ]);
+        }
+
+        return redirect()->route('general-settings.index')->with('success', 'General Setting updated successfully');
     }
 }

@@ -72,7 +72,6 @@ class ProductController extends Controller
             'status'          => $request->status,
             'tag_id'          => $tags,
             'size_scale_id'   => $request->size_scale_id,
-            'size_id'         => $request->size_id
         ]);
 
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
@@ -87,7 +86,7 @@ class ProductController extends Controller
     {
         $brands = Brand::whereNull('deleted_at')->latest()->get();
         $departments = Department::whereNull('deleted_at')->latest()->get();
-        $productTypes = ProductType::where('id', $product->product_type_id)->whereNull('deleted_at')->latest()->get();
+        $productTypes = ProductType::whereNull('deleted_at')->latest()->get();
         $taxes = Tax::latest()->get();
         $tags  = Tag::latest()->get();
         $sizeScales = SizeScale::latest()->get();
@@ -144,7 +143,6 @@ class ProductController extends Controller
             'status'          => $request->status,
             'tag_id'          => $tags,
             'size_scale_id'   => $request->size_scale_id,
-            'size_id'         => $request->size_id
         ]);
 
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');

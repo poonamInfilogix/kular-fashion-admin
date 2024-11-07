@@ -7,10 +7,10 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Taxes</h4>
+                        <h4 class="mb-sm-0 font-size-18">Tax Settings</h4>
 
                         <div class="page-title-right">
-                            <a href="{{ route('taxes.create') }}" class="btn btn-primary">Add New Tax</a>
+                            <a href="{{ route('tax-settings.create') }}" class="btn btn-primary">Add New Tax</a>
                         </div>
 
                     </div>
@@ -44,8 +44,8 @@
                                                 <label for="{{ $tax->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
                                             <td class="action-buttons">
-                                                <a href="{{ route('taxes.edit', $tax->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
-                                                <button data-source="Tax" data-endpoint="{{ route('taxes.destroy', $tax->id)}}"
+                                                <a href="{{ route('tax-settings.edit', $tax->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
+                                                <button data-source="Tax" data-endpoint="{{ route('tax-settings.destroy', $tax->id)}}"
                                                     class="delete-btn btn btn-danger btn-sm edit">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>

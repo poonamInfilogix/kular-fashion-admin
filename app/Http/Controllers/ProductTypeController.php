@@ -28,36 +28,25 @@ class ProductTypeController extends Controller
     {
         $request->validate([
            'department_id'       => 'required',
-           'product_type_name' => [
-                'required',
-                Rule::unique('product_types')
-                    ->where(function ($query) use ($request) {
-                        return $query->where('department_id', $request->department_id)
-                                    ->whereNull('deleted_at');
-                    }),
-            ],
+           'product_type_name'   => 'required|unique:product_types,product_type_name' 
         ]);
-        $exists = ProductType::where('product_type_name',$request->product_type_name)->exists();
-        if ($exists) {
-            return redirect()->back()->with('message', 'This name already exist.');
-        }else{
-            $imageName = uploadFile($request->file('image'), 'uploads/product-types/');
 
-            $productType = ProductType::create([
-                'product_type_name' => $request->product_type_name,
-                'status'             => $request->status,
-                'description'        => $request->description,
-                'image'              => $imageName
+        $imageName = uploadFile($request->file('image'), 'uploads/product-types/');
+
+        $productType = ProductType::create([
+            'product_type_name' => $request->product_type_name,
+            'status'             => $request->status,
+            'description'        => $request->description,
+            'image'              => $imageName
+        ]);
+        foreach ($request->department_id as $departmentId) {
+            ProductTypeDepartment::create([
+                'product_type_id' => $productType->id,
+                'department_id'   => $departmentId
             ]);
-            foreach ($request->department_id as $departmentId) {
-                ProductTypeDepartment::create([
-                    'product_type_id' => $productType->id,
-                    'department_id'   => $departmentId
-                ]);
-            }
-
-            return redirect()->route('product-types.index')->with('success', 'Product Type created successfully.');
         }
+
+        return redirect()->route('product-types.index')->with('success', 'Product Type created successfully.');
     }
 
     public function show(string $id)
@@ -77,15 +66,7 @@ class ProductTypeController extends Controller
     {
         $request->validate([
             'department_id'       => 'required',
-           'product_type_name' => [
-                'required',
-                Rule::unique('product_types')
-                    ->ignore($id) // Exclude the current record being updated
-                    ->where(function ($query) use ($request) {
-                        return $query->where('department_id', $request->department_id)
-                                    ->whereNull('deleted_at');
-                    }),
-            ],
+            'product_type_name'    => 'required|unique:product_types,product_type_name,' . $id
         ]);
 
         $productType = ProductType::where('id', $id)->first();

@@ -16,7 +16,7 @@
     <div class="col-sm-6 col-md-4">
         <div class="mb-3">
             <label class="form-label">Image</label>
-            <input type="file" name="brand_image" id="add-brand-image" class="form-control">
+            <input type="file" name="brand_image" id="add-brand-image" class="form-control" accept="image/*">
 
             <div class="row d-block d-md-none">
                 <div class="col-md-3 mt-2">
