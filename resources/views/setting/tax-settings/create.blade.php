@@ -8,10 +8,10 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Update Product Type</h4>
+                        <h4 class="mb-sm-0 font-size-18">Create a new tax</h4>
 
                         <div class="page-title-right">
-                            <a href="{{ route('product-types.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to all product types</a>
+                            <a href="{{ route('tax-settings.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to taxes</a>
                         </div>
 
                     </div>
@@ -26,10 +26,9 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <form action="{{ route('product-types.update', $productType->id) }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('tax-settings.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
-                                @method('PUT')
-                                @include('product-types.form')
+                                @include('setting.tax-settings.form')
                             </form>    
                         </div>    
                     </div>
@@ -37,12 +36,5 @@
             </div> <!-- end row -->
         </div> <!-- container-fluid -->
     </div>
-    <x-include-plugins :plugins="['chosen']"></x-include-plugins>
-    <script>
-        $(function(){
-            var selectedDeparments =  @json($selectedDeparments);
-            $('#department_id').val(selectedDeparments).trigger('chosen:updated');
-        });
-    </script> 
+
 @endsection
-   

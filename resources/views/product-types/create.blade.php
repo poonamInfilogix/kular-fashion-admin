@@ -21,7 +21,7 @@
 
             <div class="row">
                 <div class="col-12">
-                    <x-error-message :message="$errors->first('message')" />
+                    <x-error-message :message="session('message')" />
                     <x-success-message :message="session('success')" />
 
                     <div class="card">

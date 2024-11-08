@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <title>Kular Fashion</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}">
     <link href="{{ asset('assets/css/sweetalert.css') }}" rel="stylesheet" type="text/css" />
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/app.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
-   
+
     @stack('styles')
     @vite('resources/js/app.js')
 </head>
@@ -24,7 +24,7 @@
         @include('layouts.components.header')
         @include('layouts.components.sidebar')
 
-        <div class="main-content">
+        <div class="main-content" id="vue-components">
             @yield('content')
         </div>
 
@@ -38,6 +38,7 @@
             </div>
         </footer>
     </div>
+
     <script src="{{ asset('assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/libs/metismenu/metisMenu.min.js') }}"></script>
     <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
@@ -48,15 +49,15 @@
     <script src="{{ asset('assets/js/app.js') }}"></script>
 
     <script src="{{ asset('assets/libs/sweetalert2/sweetalert.min.js') }}"></script>
-    
+
     @stack('scripts')
 
     <script>
-        $(function() {            
+        $(function() {
             $('.delete-btn').click(function() {
                 let source = $(this).data('source');
                 let deleteApiEndpoint = $(this).data('endpoint');
-    
+
                 swal({
                     title: "Are you sure?",
                     text: `You really want to remove this ${source}?`,
@@ -72,14 +73,14 @@
                                 '_token': '{{ csrf_token() }}'
                             },
                             success: function(response) {
-                                if(response.success){
+                                if (response.success) {
                                     swal({
                                         title: "Success!",
                                         text: response.message,
                                         type: "success",
                                         showConfirmButton: false
-                                    }) 
-    
+                                    })
+
                                     setTimeout(() => {
                                         location.reload();
                                     }, 2000);
@@ -92,4 +93,5 @@
         })
     </script>
 </body>
+
 </html>

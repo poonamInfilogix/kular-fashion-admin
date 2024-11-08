@@ -8,9 +8,9 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Update Tax</h4>
+                        <h4 class="mb-sm-0 font-size-18">Update Tags</h4>
                         <div class="page-title-right">
-                            <a href="{{ route('taxes.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to all taxes</a>
+                            <a href="{{ route('tags.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to all tags</a>
                         </div>
                     </div>
                 </div>
@@ -24,10 +24,10 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <form action="{{ route('taxes.update', $tax->id) }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('tags.update', $tag->id) }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
-                                @include('setting.taxes.form')
+                                @include('tags.form')
                             </form>    
                         </div>    
                     </div>

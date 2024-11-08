@@ -66,10 +66,10 @@
         <div class="mb-3">
             <label for="status" class="form-label">Season<span class="text-danger">*</span></label>
             <select name="season" id="season" class="form-control{{ $errors->has('season') ? ' is-invalid' : '' }}">
-                <option value="Summer" @selected(isset($product) && $product->season === 'Summer')>Summer</option>
-                <option value="Winter" @selected(isset($product) && $product->season === 'Winter')>Winter</option>
-                <option value="Autumn" @selected(isset($product) && $product->season === 'Autumn')>Autumn</option>
-                <option value="Spring" @selected(isset($product) && $product->season === 'Spring')>Spring</option>
+                <option value="Summer" @selected(isset($product) && $product->season === 'Summer') @selected(!isset($product->season) && setting('default_season') == 'Summer')>Summer</option>
+                <option value="Winter" @selected(isset($product) && $product->season === 'Winter') @selected(!isset($product->season) && setting('default_season') == 'Winter')>Winter</option>
+                <option value="Autumn" @selected(isset($product) && $product->season === 'Autumn') @selected(!isset($product->season) && setting('default_season') == 'Autumn')>Autumn</option>
+                <option value="Spring" @selected(isset($product) && $product->season === 'Spring') @selected(!isset($product->season) && setting('default_season') == 'Spring')>Spring</option>
             </select>
             @error('season')
                 <span class="invalid-feedback">{{ $message }}</span>
@@ -105,7 +105,6 @@
             @enderror
         </div>
     </div>
-
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <x-form-input name="supplier_price" type="number" step="0.01" value="{{ $product->supplier_price ?? '' }}" label="Supplier Price" placeholder="Enter Supplier Price" required="true"/>
@@ -114,50 +113,13 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <label for="size_scale_id">Size Scale<span class="text-danger">*</span></label>
-            <select name="size_scale_id" id="size_scale_id" class="form-control{{ $errors->has('size_scale_id') ? ' is-invalid' : '' }}">
-                <option value="" disabled selected>Select size scale</option>
-                @foreach($sizeScales as $sizeScale)
-                    <option value="{{ $sizeScale->id }}" @selected(isset($product->size_scale_id) && $product->size_scale_id == $sizeScale->id)>
-                        {{ $sizeScale->size_scale }}
-                    </option>
-                @endforeach
-            </select>
-            @error('size_scale_id')
-                <span class="invalid-feedback">{{ $message }}</span>
-            @enderror
+            <size-scale-select
+                :initial-size-scales="{{ json_encode($sizeScales) }}"
+                :initial-size-scale-id="{{ old('size_scale_id', isset($product->size_scale_id) ? $product->size_scale_id : 'null') }}"
+                :validation-error="'{{ $errors->has('size_scale_id') ? $errors->first('size_scale_id') : '' }}'"
+            ></size-scale-select>
         </div>
     </div>
-
-    <div class="col-sm-6 col-md-2">
-        <div class="mb-3">
-            <label class="form-label">Image</label>
-            <input type="file" name="image" id="add-product-image" class="form-control">
-
-            <div class="row d-block d-md-none">
-                <div class="col-md-6 mt-2">
-                    @if(isset($product) && $product->image)
-                        <img src="{{ asset($product->image) }}" id="preview-product" class="img-preview img-fluid w-50">
-                    @else
-                        <img src="" id="preview-product" class="img-fluid w-50;" name="image" hidden>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-sm-6 col-md-2">
-        <div class="mb-3">
-            <x-form-input name="in_date" class="date-picker"  value="{{ $product->in_date ?? now()->format('Y-m-d') }}"  label="In Date" placeholder="Enter In Date"/>
-        </div>
-    </div>
-
-    <div class="col-sm-6 col-md-2">
-        <div class="mb-3">
-            <x-form-input name="last_date" class="date-picker" value="{{ $product->last_date ?? now()->format('Y-m-d') }}" label="Last Date" placeholder="Enter Last Date"/>
-        </div>
-    </div>
-    
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="tag_id">Tag</label>
@@ -173,13 +135,32 @@
             </select>
         </div>
     </div>
+    <div class="col-sm-6 col-md-2">
+        <div class="mb-3">
+            <label class="form-label">Image</label>
+            <input type="file" name="image" id="add-product-image" class="form-control" accept="image/*">
+
+            <div class="col-md-6 mt-2">
+                @if(isset($product) && $product->image)
+                    <img src="{{ asset($product->image) }}" id="preview-product" class="img-preview img-fluid w-100">
+                @else
+                    <img src="" id="preview-product" class="img-fluid w-100;" name="image" hidden>
+                @endif
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-2">
+        <div class="mb-3">
+            <x-form-input name="in_date" class="date-picker"  value="{{ $product->in_date ?? now()->format('Y-m-d') }}"  label="In Date" placeholder="Enter In Date"/>
+        </div>
+    </div>
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <label form="short_description" class="form-label">Short Description</label>
-            <textarea name="short_description" class="form-control" placeholder="Enter Short Description" rows=3>{{ old('short_description', $product->short_description ?? '') }}</textarea>
+            <x-form-input name="last_date" class="date-picker" value="{{ $product->last_date ?? now()->format('Y-m-d') }}" label="Last Date" placeholder="Enter Last Date"/>
         </div>
     </div>
+    
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
@@ -189,13 +170,14 @@
             </select>
         </div>
     </div>
-    <div class="col-sm-6 col-md-2 d-none d-md-block">
-        @if(isset($product) && $product->image)
-            <img src="{{ asset($product->image) }}" id="previewProduct" class="img-preview img-fluid w-50">
-        @else
-            <img src="" id="previewProduct" class="img-fluid w-50;" name="image" hidden>
-        @endif
+
+    <div class="col-sm-6 col-md-2">
+        <div class="mb-3">
+            <label form="short_description" class="form-label">Short Description</label>
+            <textarea name="short_description" class="form-control" placeholder="Enter Short Description" rows=3>{{ old('short_description', $product->short_description ?? '') }}</textarea>
+        </div>
     </div>
+  
 </div>
 
 <div class="row mb-2">
@@ -205,6 +187,7 @@
 </div>
 
 <x-include-plugins :plugins="['chosen', 'image','datePicker']"></x-include-plugins>
+@push('scripts')
 <script>
     $(function(){
         $('#brand_id').chosen({
@@ -224,11 +207,6 @@
         $('#tag_id').chosen({
             width: '100%',
             placeholder_text_multiple: 'Select Tag'
-        });
-
-        $('#size_scale_id').chosen({
-            width: '100%',
-            placeholder_text_multiple: 'Select Size Scale'
         });
     })
 
@@ -254,17 +232,20 @@
                     type: 'GET',
                     dataType: 'json',
                     success: function(data) {
-
-                        if (data.productTypes && data.productTypes.length > 0) {
-                            data.productTypes.forEach(function(productType) {
-                                const option = new Option(productType.product_type_name, productType.id);
-                                productTypeSelect.append(option);
+                        if (data && data.length > 0) {
+                            data.forEach(function(item) {
+                                if (item.product_types) {
+                                    const option = new Option(item.product_types.product_type_name, item.product_type_id);
+                                    productTypeSelect.append(option);
+                                }
                             });
                         } else {
-                            const noOption = new Option('Not Found Product Types', '', false, false);
-                            productTypeSelect.append(noOption);
+                            // If no product types, append a default 'Not Found' option
+                            //const noOption = 'Not Found Product Types';
+                            //productTypeSelect.append(noOption);
                         }
 
+                        // Initialize Chosen plugin for better UI on the select dropdown
                         productTypeSelect.chosen({
                             width: '100%',
                             placeholder_text_multiple: 'Select Product Type'
@@ -292,5 +273,44 @@
             }
         });
     });
-</script>
+    // Get product type on page load
+    $(document).ready(function(){
+        var departmentId = $('#department_id').val();
+        const productTypeSelect = $('#product_type');
 
+        productTypeSelect.html('<option value="" disabled selected>Select Product Type</option>');
+        productTypeSelect.chosen("destroy"); // Destroy the previous instance to avoid issues
+
+        if (departmentId) {
+            $.ajax({
+                url: `/get-product-type/${departmentId}`,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if (data && data.length > 0) {
+                        data.forEach(function(item) {
+                            if (item.product_types) {
+                                const option = new Option(item.product_types.product_type_name, item.product_type_id);
+                                productTypeSelect.append(option);
+                            }
+                        });
+                    } 
+                    productTypeSelect.chosen({
+                        width: '100%',
+                        placeholder_text_multiple: 'Select Product Type'
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching product types:', error);
+                }
+            });
+        } else {
+            productTypeSelect.chosen("destroy").html('<option value="" disabled selected>Select Product Type</option>');
+            productTypeSelect.chosen({
+                width: '100%',
+                placeholder_text_multiple: 'Select Product Type'
+            });
+        }
+    });
+</script>
+@endpush

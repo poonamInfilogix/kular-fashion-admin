@@ -11,12 +11,12 @@ class TaxController extends Controller
     {
         $taxes = Tax::latest()->get();
 
-        return view('setting.taxes.index', compact('taxes'));
+        return view('setting.tax-settings.index', compact('taxes'));
     }
 
     public function create()
     {
-        return view('setting.taxes.create');
+        return view('setting.tax-settings.create');
     }
 
     public function store(Request $request)
@@ -41,7 +41,7 @@ class TaxController extends Controller
             'is_default' => $isDefault
         ]);
 
-        return redirect()->route('taxes.index')->with('success', 'Tax created successfully.');
+        return redirect()->route('tax-settings.index')->with('success', 'Tax setting created successfully.');
     }
 
     public function show(string $id)
@@ -49,12 +49,14 @@ class TaxController extends Controller
         //
     }
 
-    public function edit(Tax $tax)
+    public function edit($id)
     {
-        return view('setting.taxes.edit', compact('tax'));
+        $tax = Tax::where('id', $id)->first();
+
+        return view('setting.tax-settings.edit', compact('tax'));
     }
 
-    public function update(Request $request, Tax $tax)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'tax' => 'required',
@@ -69,18 +71,18 @@ class TaxController extends Controller
             ]);
         }
 
-        $tax->update([
+        Tax::where('id', $id)->update([
             'tax'        => $request->tax,
             'status'     => $status,
             'is_default' => $isDefault
         ]);
 
-        return redirect()->route('taxes.index')->with('success', 'Tax updated successfully.');
+        return redirect()->route('tax-settings.index')->with('success', 'Tax setting updated successfully.');
     }
 
-    public function destroy(Tax $tax)
+    public function destroy($id)
     {
-        $latestTax = Tax::where('id', '!=', $tax->id)
+        $latestTax = Tax::where('id', '!=', $id)
                      ->orderBy('created_at', 'desc')
                      ->first();
 
@@ -88,7 +90,7 @@ class TaxController extends Controller
             $latestTax->update(['is_default' => 1]);
         }
 
-        $tax->delete();
+        Tax::where('id', $id)->delete();
 
         return response()->json([
             'success' => true,

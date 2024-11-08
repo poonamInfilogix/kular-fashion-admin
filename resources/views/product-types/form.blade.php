@@ -2,10 +2,9 @@
     <div class="col-sm-6 col-md-3">
         <div class="mb-3">
             <label for="department_id">Department <span class="text-danger">*</span></label>
-            <select name="department_id" id="department_id" class="form-control{{ $errors->has('department_id') ? ' is-invalid' : '' }}">
-                <option value="" disabled selected>Select department</option>
+            <select name="department_id[]" id="department_id" class="form-control{{ $errors->has('department_id') ? ' is-invalid' : '' }}" multiple>
                 @foreach($departments as $department)
-                    <option value="{{ $department->id }}" {{ (isset($productType->department_id) && $productType->department_id == $department->id) ? 'selected' : '' }}>
+                    <option value="{{ $department->id }}" >
                         {{ $department->name }}
                     </option>
                 @endforeach
@@ -17,13 +16,13 @@
     </div>
     <div class="col-sm-6 col-md-3">
         <div class="mb-3">
-            <x-form-input name="product_type_name" value="{{ $productType->product_type_name ?? '' }}" label="Product Type Name" placeholder="Enter Product Type Name"  required="true"/>
+            <x-form-input name="product_type_name" value="{{ $productType->product_type_name ?? '' }}" label="Product Type" placeholder="Enter Product Type"  required="true"/>
         </div>
     </div>
     <div class="col-sm-6 col-md-3">
         <div class="mb-3">
             <label class="form-label">Image</label>
-            <input type="file" name="image" id="add-productType-image" class="form-control">
+            <input type="file" name="image" id="add-productType-image" class="form-control" accept="image/*">
 
             <div class="row d-block d-md-none">
                 <div class="col-md-3 mt-2">
@@ -68,4 +67,12 @@
         <button type="submit" class="btn btn-primary w-md">Submit</button>
     </div>
 </div>
-<x-include-plugins :plugins="['image' ]"></x-include-plugins>
+<x-include-plugins :plugins="['chosen','image' ]"></x-include-plugins>
+<script>
+    $(function(){
+        $('#department_id').chosen({
+            width: '100%',
+            placeholder_text_multiple: 'Select Department'
+        });
+    });
+</script>    

@@ -37,6 +37,12 @@
                         <span key="t-user">Manage Customers</span>
                     </a>
                 </li>
+                <li >
+                    <a href="{{ route('tags.index') }}" class="waves-effect">
+                        <i class="bx bx-extension"></i>
+                        <span key="t-user">Manage Tags</span>
+                    </a>
+                </li>
                 <li class="menu-title" key="t-menu">Settings</li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -45,7 +51,8 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{ route('settings.index')}}" key="t-products">Default Images</a></li>
-                        <li><a href="{{ route('taxes.index')}}" key="t-products">Tax Settings</a></li>
+                        <li><a href="{{ route('tax-settings.index')}}" key="t-products">Tax Settings</a></li>
+                        <li><a href="{{ route('general-settings.index')}}" key="t-general-setting">General Settings</a></li>
                     </ul>
                 </li>
             </ul>
