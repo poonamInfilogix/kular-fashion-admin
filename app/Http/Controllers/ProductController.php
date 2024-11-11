@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Brand;
+use App\Models\Color;
 use App\Models\Department;
 use App\Models\ProductType;
 use App\Models\ProductTypeDepartment;
@@ -13,6 +14,8 @@ use App\Models\SizeScale;
 use App\Models\Tax;
 use App\Models\Tag;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Session;
+
 
 class ProductController extends Controller
 {
@@ -34,21 +37,59 @@ class ProductController extends Controller
         $tags  = Tag::latest()->get();
         $sizeScales = SizeScale::select('id', 'size_scale')->where('status', 'Active')->latest()->with('sizes')->get();
 
-        return view('products.create', compact('latestNewCode', 'brands', 'departments', 'taxes', 'tags', 'sizeScales'));
+        return view('products.steps.step-1', compact('latestNewCode', 'brands', 'departments', 'taxes', 'tags', 'sizeScales'));
     }
 
-    public function store(Request $request)
-    {
+    public function saveStep1(Request $request){
         $request->validate([
             'manufacture_code' => 'required|unique:products,manufacture_code',
             'brand_id'         => 'required',
             'department_id'    => 'required',
             'product_type_id'  => 'required',
             'size_scale_id'    => 'required',
-            'supplier_price'   => 'required'
+            'supplier_price'   => 'required',
+            'mrp'              => 'required',
         ]);
 
-        $imageName = uploadFile($request->file('image'), 'uploads/products/');
+        Session::put('savingProduct', $request->all());
+        return redirect()->route('products.create.step-2');
+    }
+
+    public function saveStep2(Request $request){
+        $product = Session::get('savingProduct');
+        $product['size_range_min'] = $request->size_range_min;
+        $product['size_range_max'] = $request->size_range_max;
+
+        $product['variants'] = $request->supplier_color_code;
+        $product['colors'] = $request->colors;
+        Session::put('savingProduct', $product);
+    
+
+        $request->validate([
+            'colors' => 'required|array',
+            'colors.*' => 'required|distinct|exists:colors,id', // For all colors fields
+            'supplier_color_code' => 'required|array',
+            'supplier_color_code.*' => 'required|distinct|string|min:3|max:10', 
+            'size_range_min' => 'required|exists:sizes,id',
+            'size_range_max' => 'required|exists:sizes,id|gte:size_range_min',
+        ]);
+        return redirect()->route('products.create.step-3');
+    }
+
+    public function saveStep3(Request $request){
+        /* $request->validate([
+            'mrp'              => 'required',
+        ]); */
+        Session::put('savingProduct', $request->all());
+        dd($request);
+        die('insert product');
+    }
+
+    public function store(Request $request)
+    {
+        
+
+       /* $imageName = uploadFile($request->file('image'), 'uploads/products/');
         if (is_array($request->tag_id)) {
             $tags = implode(',', $request->tag_id);
         } else {
@@ -72,9 +113,9 @@ class ProductController extends Controller
             'status'          => $request->status,
             'tag_id'          => $tags,
             'size_scale_id'   => $request->size_scale_id,
-        ]);
-
-        return redirect()->route('products.index')->with('success', 'Product created successfully.');
+        ]);*/
+        
+        //return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
     public function show()
@@ -104,7 +145,8 @@ class ProductController extends Controller
             'department_id'    => 'required',
             'product_type_id'  => 'required',
             'size_scale_id'    => 'required',
-            'supplier_price'   => 'required'
+            'supplier_price'   => 'required',
+            'mrp'              => 'required',
         ]);
 
         $product = Product::where('id', $id)->first();
@@ -181,5 +223,51 @@ class ProductController extends Controller
         //$productTypes = ProductType::where('department_id', $departmentId)->whereNull('deleted_at')->get();
 
         return response()->json($productTypes);
+    }
+
+    public function productStep1()
+    {
+        $latestProduct = Product::orderBy('article_code', 'desc')->first();
+
+        $latestNewCode = $latestProduct ? (int)$latestProduct->article_code : 300000;
+        $brands = Brand::whereNull('deleted_at')->latest()->get();
+        $departments = Department::whereNull('deleted_at')->latest()->get();
+        $taxes = Tax::latest()->get();
+        $tags  = Tag::latest()->get();
+        $sizeScales = SizeScale::select('id', 'size_scale')->where('status', 'Active')->latest()->with('sizes')->get();
+
+        $product = (object)Session::get('savingProduct');
+
+        return view('products.steps.step-1', compact('latestNewCode', 'product', 'brands', 'departments', 'taxes', 'tags', 'sizeScales'));
+    }
+
+    public function productStep2()
+    {
+        $savingProduct = (object)Session::get('savingProduct');
+        if (empty($savingProduct->size_scale_id)) {
+            return redirect()->route('products.create.step1');
+        }
+        $brand = Brand::where('id',$savingProduct->brand_id)->first();
+        $sizeScale = SizeScale::where('id',$savingProduct->size_scale_id)->first();
+        $colors = Color::where('status','Active')->get();
+        $sizes = Size::where('status', 'Active')
+                ->where('size_scale_id', $savingProduct->size_scale_id)
+                ->orderBy('id', 'asc')
+                ->get();  
+
+        return view('products.steps.step-2', compact('savingProduct','brand','sizeScale','colors','sizes'));
+    }
+
+    public function productStep3(Request $request){
+        $savingProduct = (object)Session::get('savingProduct');
+        if (empty($savingProduct->size_scale_id)) {
+            return redirect()->route('products.create.step1');
+        }
+
+        $sizes = Size::whereBetween('id', [$savingProduct->size_range_min, $savingProduct->size_range_max])->get();
+
+        $colors = Color::whereIn('id', $savingProduct->colors)->get()->toArray();
+
+        return view('products.steps.step-3', compact('savingProduct', 'sizes','colors'));
     }
 }

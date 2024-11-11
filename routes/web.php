@@ -38,6 +38,15 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'tags'          => TagController::class,
     ]);
 
+    #Product Steps Rout: 
+    Route::get('products/create/step-1',[ProductController::class,'productStep1'])->name('products.create.step-1');
+    Route::post('products/create/step-1',[ProductController::class,'saveStep1'])->name('products.save-step-1');
+    Route::get('products/create/step-2',[ProductController::class,'productStep2'])->name('products.create.step-2');
+    Route::post('products/create/step-2',[ProductController::class,'saveStep2'])->name('products.save-step-2');
+    Route::get('products/create/step-3',[ProductController::class,'productStep3'])->name('products.create.step-3');
+    Route::post('products/create/step-3',[ProductController::class,'saveStep3'])->name('products.save-step-3');
+
+    #Product Steps Route End:
     Route::get('general-settings', [SettingController::class, 'generalSetting'])->name('general-settings.index');
     Route::post('general-settings.store', [SettingController::class, 'generalSettingStore'])->name('general-settings.store');
 
