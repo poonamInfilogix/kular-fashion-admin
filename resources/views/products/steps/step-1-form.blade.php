@@ -30,7 +30,7 @@
         <div class="mb-3">
             <label for="productType">Product Type <span class="text-danger">*</span></label>
             <select name="product_type_id" id="product_type" class="productType form-control{{ $errors->has('product_type_id') ? ' is-invalid' : '' }}">
-                <option value="" disabled selected>Select Product Type</option>
+                <option value="" disabled>Select Product Type</option>
                 @if(isset($productTypes))
                     @foreach($productTypes as $productType)
                         <option value="{{ $productType->id }}" @selected(isset($product->product_type_id) && $product->product_type_id == $productType->id)>
@@ -64,28 +64,13 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <label for="status" class="form-label">Season<span class="text-danger">*</span></label>
-            <select name="season" id="season" class="form-control{{ $errors->has('season') ? ' is-invalid' : '' }}">
-                <option value="Summer" @selected(isset($product) && $product->season === 'Summer') @selected(!isset($product->season) && setting('default_season') == 'Summer')>Summer</option>
-                <option value="Winter" @selected(isset($product) && $product->season === 'Winter') @selected(!isset($product->season) && setting('default_season') == 'Winter')>Winter</option>
-                <option value="Autumn" @selected(isset($product) && $product->season === 'Autumn') @selected(!isset($product->season) && setting('default_season') == 'Autumn')>Autumn</option>
-                <option value="Spring" @selected(isset($product) && $product->season === 'Spring') @selected(!isset($product->season) && setting('default_season') == 'Spring')>Spring</option>
-            </select>
-            @error('season')
-                <span class="invalid-feedback">{{ $message }}</span>
-            @enderror
-        </div>
-    </div>
-
-    <div class="col-sm-6 col-md-2">
-        <div class="mb-3">
             <x-form-input name="supplier_ref" value="{{ $product->supplier_ref ?? '' }}" label="Supplier Ref" placeholder="Enter Supplier Ref"/>
         </div>
     </div>
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <x-form-input name="mrp" type="number" step="0.01" value="{{ $product->mrp ?? '' }}" label="MRP" placeholder="Enter Mrp" required="true"/>
+            <x-form-input name="mrp" type="number" step="0.01" value="{{ $product->mrp ?? '' }}" label="MRP" placeholder="Enter MRP" required="true"/>
         </div>
     </div>
 
@@ -113,18 +98,26 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <size-scale-select
-                :initial-size-scales="{{ json_encode($sizeScales) }}"
-                :initial-size-scale-id="{{ old('size_scale_id', isset($product->size_scale_id) ? $product->size_scale_id : 'null') }}"
-                :validation-error="'{{ $errors->has('size_scale_id') ? $errors->first('size_scale_id') : '' }}'"
-            ></size-scale-select>
+            <label for="size_scale_id">Size Scale<span class="text-danger">*</span></label>
+            <select name="size_scale_id" id="size_scale_id" class="form-control{{ $errors->has('size_scale_id') ? ' is-invalid' : '' }}">
+                <option value="" disabled selected>Select size scale</option>
+                @foreach($sizeScales as $sizeScale)
+                    <option value="{{ $sizeScale->id }}" @selected(isset($product->size_scale_id) && $product->size_scale_id == $sizeScale->id)>
+                        {{ $sizeScale->size_scale }} ({{ substr($sizeScale->size_scale, 0, 1) }}-{{ substr($sizeScale->size_scale, -1) }})
+                    </option>
+                @endforeach
+            </select>
+            @error('size_scale_id')
+                <span class="invalid-feedback">{{ $message }}</span>
+            @enderror
         </div>
     </div>
+
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="tag_id">Tag</label>
             <select name="tag_id[]" id="tag_id" class="form-control{{ $errors->has('tag_id') ? ' is-invalid' : '' }}" multiple>
-                <option value="" disabled {{ old('tag_id') || (isset($product) && !count($product->tag_id)) ? 'selected' : '' }}>Select tag</option>
+                <option value="" disabled>Select tag</option>
                 @foreach($tags as $tag)
                     <option value="{{ $tag->id }}" 
                         @if((old('tag_id') && in_array($tag->id, old('tag_id'))) || (isset($product) && in_array($tag->id, $product->tag_id)))  selected 
@@ -135,13 +128,29 @@
             </select>
         </div>
     </div>
+
+    <div class="col-sm-6 col-md-2">
+        <div class="mb-3">
+            <label for="status" class="form-label">Season</label>
+            <select name="season" id="season" class="form-control{{ $errors->has('season') ? ' is-invalid' : '' }}">
+                <option value="Summer" @selected(isset($product) && $product->season === 'Summer') @selected(!isset($product->season) && setting('default_season') == 'Summer')>Summer</option>
+                <option value="Winter" @selected(isset($product) && $product->season === 'Winter') @selected(!isset($product->season) && setting('default_season') == 'Winter')>Winter</option>
+                <option value="Autumn" @selected(isset($product) && $product->season === 'Autumn') @selected(!isset($product->season) && setting('default_season') == 'Autumn')>Autumn</option>
+                <option value="Spring" @selected(isset($product) && $product->season === 'Spring') @selected(!isset($product->season) && setting('default_season') == 'Spring')>Spring</option>
+            </select>
+            @error('season')
+                <span class="invalid-feedback">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
+
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label class="form-label">Image</label>
             <input type="file" name="image" id="add-product-image" class="form-control" accept="image/*">
 
             <div class="col-md-6 mt-2">
-                @if(isset($product) && $product->image)
+                @if(isset($product->image))
                     <img src="{{ asset($product->image) }}" id="preview-product" class="img-preview img-fluid w-100">
                 @else
                     <img src="" id="preview-product" class="img-fluid w-100;" name="image" hidden>
@@ -208,19 +217,14 @@
             width: '100%',
             placeholder_text_multiple: 'Select Tag'
         });
+        $('#size_scale_id').chosen({
+            width: '100%',
+            placeholder_text_multiple: 'Select Tag'
+        });
+        
     })
 
-    $(document).ready(function() {
-        let lastCode = parseInt("{{ $latestNewCode ?? '300000' }}"); // Start from 300000
-        let articleCode = lastCode + 1; // Increment the code
-        $('#article_code').val(String(articleCode).padStart(6, '0')); // Format to 6 digits
-
-        @if(isset($product) && $product->article_code)
-            $('#article_code').val("{{ $product->article_code }}"); // Use existing article code if in edit mode
-        @endif
-
-        $('#department_id').change(function() {
-            const departmentId = $(this).val();
+    function refreshProductTypeDropdown(departmentId){
             const productTypeSelect = $('#product_type');
 
             productTypeSelect.html('<option value="" disabled selected>Select Product Type</option>');
@@ -239,16 +243,16 @@
                                     productTypeSelect.append(option);
                                 }
                             });
-                        } else {
-                            // If no product types, append a default 'Not Found' option
-                            //const noOption = 'Not Found Product Types';
-                            //productTypeSelect.append(noOption);
                         }
 
+                        // Select the current product's product_type_id if available
+                        @if(isset($product->product_type_id))
+                            productTypeSelect.val("{{ $product->product_type_id }}").trigger('chosen:updated');
+                        @endif
+                        
                         // Initialize Chosen plugin for better UI on the select dropdown
                         productTypeSelect.chosen({
                             width: '100%',
-                            placeholder_text_multiple: 'Select Product Type'
                         });
                     },
                     error: function(xhr, status, error) {
@@ -259,10 +263,27 @@
                 productTypeSelect.chosen("destroy").html('<option value="" disabled selected>Select Product Type</option>');
                 productTypeSelect.chosen({
                     width: '100%',
-                    placeholder_text_multiple: 'Select Product Type'
                 });
             }
+        }
+
+
+    $(document).ready(function() {
+        let lastCode = parseInt("{{ $latestNewCode ?? '300000' }}"); // Start from 300000
+        let articleCode = lastCode + 1; // Increment the code
+        $('#article_code').val(String(articleCode).padStart(6, '0')); // Format to 6 digits
+
+        @if(isset($product) && $product->article_code)
+            $('#article_code').val("{{ $product->article_code }}"); // Use existing article code if in edit mode
+        @endif
+
+       
+        $('#department_id').change(function() {
+            const departmentId = $(this).val();
+            
+            refreshProductTypeDropdown(departmentId);
         });
+
         $('#mrp').on('input', function() {
             var mrp = parseFloat($(this).val()); // Get the value of MRP
             if (!isNaN(mrp)) {
@@ -276,41 +297,7 @@
     // Get product type on page load
     $(document).ready(function(){
         var departmentId = $('#department_id').val();
-        const productTypeSelect = $('#product_type');
-
-        productTypeSelect.html('<option value="" disabled selected>Select Product Type</option>');
-        productTypeSelect.chosen("destroy"); // Destroy the previous instance to avoid issues
-
-        if (departmentId) {
-            $.ajax({
-                url: `/get-product-type/${departmentId}`,
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    if (data && data.length > 0) {
-                        data.forEach(function(item) {
-                            if (item.product_types) {
-                                const option = new Option(item.product_types.product_type_name, item.product_type_id);
-                                productTypeSelect.append(option);
-                            }
-                        });
-                    } 
-                    productTypeSelect.chosen({
-                        width: '100%',
-                        placeholder_text_multiple: 'Select Product Type'
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error fetching product types:', error);
-                }
-            });
-        } else {
-            productTypeSelect.chosen("destroy").html('<option value="" disabled selected>Select Product Type</option>');
-            productTypeSelect.chosen({
-                width: '100%',
-                placeholder_text_multiple: 'Select Product Type'
-            });
-        }
+        refreshProductTypeDropdown(departmentId);
     });
 </script>
 @endpush
