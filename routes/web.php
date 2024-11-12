@@ -57,6 +57,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::put('size-scales/{sizeScaleId}/sizes/{size}', [SizeController::class, 'update'])->name('sizes.update');
     Route::delete('size-scales/{sizeScaleId}/sizes/{size}', [SizeController::class, 'destroy'])->name('sizes.destroy');
 
+    //************************Status Route********************/
     Route::post('/department-status', [DepartmentController::class, 'updateStatus'])->name('department-status');
     Route::post('/product-types-status', [ProductTypeController::class, 'productTypeStatus'])->name('product-types-status');
     Route::post('/brand-status', [BrandController::class, 'updateStatus'])->name('brand-status');
@@ -67,7 +68,18 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::post('/tax-status', [TaxController::class, 'taxStatus'])->name('tax-status');
     Route::post('/product-status', [ProductController::class, 'productStatus'])->name('product-status');
     Route::post('/tag-status', [TagController::class, 'tagStatus'])->name('tag-status');
+   
     Route::get('/get-states/{countryId}', [SupplierController::class, 'getStates']);
     Route::get('/get-product-type/{departmentId}', [ProductController::class, 'getDepartment']);
+
+    //************************Import Csv Route********************/
+    Route::post('import-brands', [BrandController::class, 'importBrands'])->name('import.brands');
+
+
+    Route::get('download-brand-sample', function() {
+        $file = public_path('assets/sample-brand/brand.csv');
+        return Response::download($file);
+    });
+    
 });
 

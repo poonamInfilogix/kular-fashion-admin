@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Brand;
 use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
+use App\Imports\BrandImport;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Session;
 
 class BrandController extends Controller
 {
@@ -109,5 +112,18 @@ class BrandController extends Controller
             ]);
         }
         return response()->json(['error' => 'Brand not found.'], 404);
+    }
+
+    public function importBrands(Request $request)
+    {
+        $import = new BrandImport;
+        Excel::import($import, $request->file('file'));
+
+        $errors = $import->getErrors();
+        if (!empty($errors)) {
+            session()->flash('import_errors', $errors);
+        }
+
+        return redirect()->route('brands.index')->with('success', 'Bay imported successfully.');
     }
 }
