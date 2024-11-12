@@ -15,7 +15,7 @@ class Department extends Model
     {
         return [
             'slug' => [
-                'source' => 'name'  // Source column for slug
+                'source' => 'name'
             ]
         ];
     }

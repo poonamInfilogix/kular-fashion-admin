@@ -15,7 +15,7 @@ class Brand extends Model
     {
         return [
             'slug' => [
-                'source' => 'brand_name'  // Source column for slug
+                'source' => 'brand_name'
             ]
         ];
     }
