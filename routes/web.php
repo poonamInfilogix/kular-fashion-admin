@@ -45,7 +45,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::post('products/create/step-2',[ProductController::class,'saveStep2'])->name('products.save-step-2');
     Route::get('products/create/step-3',[ProductController::class,'productStep3'])->name('products.create.step-3');
     Route::post('products/create/step-3',[ProductController::class,'saveStep3'])->name('products.save-step-3');
-
+    Route::post('add-variant', [ProductController::class, 'addVariant']);
     #Product Steps Route End:
     Route::get('general-settings', [SettingController::class, 'generalSetting'])->name('general-settings.index');
     Route::post('general-settings.store', [SettingController::class, 'generalSettingStore'])->name('general-settings.store');

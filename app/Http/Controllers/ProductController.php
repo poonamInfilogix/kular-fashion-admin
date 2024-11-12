@@ -80,9 +80,15 @@ class ProductController extends Controller
         /* $request->validate([
             'mrp'              => 'required',
         ]); */
-        Session::put('savingProduct', $request->all());
-        dd($request);
+       // Session::put('savingProduct', $request->all());
+       echo '<pre>';
+        print_r($request->all());
         die('insert product');
+    }
+
+    public function addVariant(Request $request)
+    {
+        echo"<pre>"; print_R($request->all()); die();
     }
 
     public function store(Request $request)
@@ -266,8 +272,9 @@ class ProductController extends Controller
 
         $sizes = Size::whereBetween('id', [$savingProduct->size_range_min, $savingProduct->size_range_max])->get();
 
-        $colors = Color::whereIn('id', $savingProduct->colors)->get()->toArray();
+        $savedColors = Color::whereIn('id', $savingProduct->colors)->get()->toArray();
+        $colors = Color::where('status','Active')->get();
 
-        return view('products.steps.step-3', compact('savingProduct', 'sizes','colors'));
+        return view('products.steps.step-3', compact('savingProduct', 'sizes', 'savedColors', 'colors'));
     }
 }
