@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\ProductColor;
+use App\Models\ProductSize;
+use App\Models\ProductQuantity;
 use App\Models\Brand;
 use App\Models\Color;
 use App\Models\Department;
@@ -15,6 +18,8 @@ use App\Models\Tax;
 use App\Models\Tag;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
 
 
 class ProductController extends Controller
@@ -60,10 +65,9 @@ class ProductController extends Controller
         $product['size_range_min'] = $request->size_range_min;
         $product['size_range_max'] = $request->size_range_max;
 
-        $product['variants'] = $request->supplier_color_code;
+        $product['supplier_color_codes'] = $request->supplier_color_code;
         $product['colors'] = $request->colors;
         Session::put('savingProduct', $product);
-    
 
         $request->validate([
             'colors' => 'required|array',
@@ -76,19 +80,135 @@ class ProductController extends Controller
         return redirect()->route('products.create.step-3');
     }
 
+
     public function saveStep3(Request $request){
-        /* $request->validate([
-            'mrp'              => 'required',
-        ]); */
-       // Session::put('savingProduct', $request->all());
-       echo '<pre>';
-        print_r($request->all());
-        die('insert product');
+
+        $productData = Session::get('savingProduct');
+        $productData['variantData'] = $request->all();
+        Session::put('savingProduct', $productData);
+        echo '<pre>';
+        print_r($productData);
+
+        $product = Product::create([
+            'article_code' => $productData['article_code'] ?? NULL,
+            'manufacture_code' => $productData['manufacture_code'] ?? NULL,
+            'department_id' => $productData['department_id'] ?? NULL,
+            'brand_id' => $productData['brand_id'] ?? NULL,
+            'product_type_id' => $productData['product_type_id'] ?? NULL,
+            'short_description' => $productData['short_description'] ?? NULL ,
+            'mrp' => $productData['mrp'] ?? NULL,
+            'supplier_price' => $productData['supplier_price'] ?? NULL,
+            'season' => $productData['season'] ?? NULL,
+            'supplier_ref' => $productData['supplier_ref'] ?? NULL,
+            'tax_id' => $productData['tax_id'] ?? NULL,
+            'in_date' => $productData['in_date'] ?? NULL,
+            'last_date' => $productData['last_date'] ?? NULL,
+            'tag_id' => $productData['tag_id'] ?? NULL,
+            'size_scale_id' => $productData['size_scale_id'] ?? NULL,
+            'status' => $productData['status'],
+        ]);
+    
+        foreach ($productData['supplier_color_codes'] as $index => $supplierCode) {
+            $productColor = ProductColor::create([
+                'product_id' => $product->id,
+                'color_id' => $productData['colors'][$index],
+                'supplier_color_code' => $supplierCode,
+            ]);
+            $color_id = $productData['colors'][$index];
+            foreach ($productData['variantData']['quantity'][$color_id] as $sizeId => $quantity) {
+                ProductQuantity::create([
+                    'product_id' => $product->id,
+                    'product_color_id' => $productColor->id,
+                    'product_size_id' => $sizeId,
+                    'quantity' => $quantity,
+                ]);
+            }
+        }
+        foreach ($productData['variantData']['mrp'] as $sizeId => $mrp) {
+            ProductSize::create([
+                'product_id' => $product->id,
+                'size_id' => $sizeId,
+                'mrp' => $mrp
+            ]);
+        }
+    
+
     }
 
     public function addVariant(Request $request)
     {
-        echo"<pre>"; print_R($request->all()); die();
+        $validator = Validator::make($request->all(), [
+            'supplier_color_code' => 'required|string|max:255',
+            'color_select' => 'required|exists:colors,id'
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+        } else {
+            $errors = new MessageBag(); 
+        }
+
+        $savingProduct = Session::get('savingProduct');
+
+        if ($savingProduct) {
+            if (is_array($savingProduct['supplier_color_codes']) && in_array($request->supplier_color_code, $savingProduct['supplier_color_codes'])) {
+                $errors->add('supplier_color_code', 'Supplier Code already exists');
+            }
+            if (is_array($savingProduct['colors']) && in_array($request->color_select, $savingProduct['colors'])) {
+                $errors->add('color_select', 'Color already exists');
+            }
+        }
+        if ($errors->isNotEmpty()) {
+            return response()->json([
+                'errors' => $errors
+            ], 422);
+        }
+        $color = Color::where('id',$request->color_select)->first();
+        array_push($savingProduct['supplier_color_codes'], $request->supplier_color_code);
+        array_push($savingProduct['colors'], $request->color_select);
+        $savingProduct = Session::put('savingProduct',$savingProduct);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'supplier_color_code' => $request->supplier_color_code,
+                'color_id' => $request->color_select,
+                'color_name' => $color->color_name,
+                'color_code' => $color->color_code
+            ],
+            'message' => 'Variant added successfully!'
+        ]);
+    }
+
+    public function removeVariant(Request $request, $colorId){
+        // Retrieve the product session data
+        $savingProduct = Session::get('savingProduct');
+        
+        if (!$savingProduct) {
+            return response()->json(['error' => 'No product session found.'], 404);
+        }
+
+        // Check if colorId exists in the 'colors' array
+        $key = array_search($colorId, $savingProduct['colors']);
+
+        if ($key === false) {
+            return redirect()->back()->with('error', 'Color doesn\'t exist');
+        }
+
+        // Remove the colorId from the 'colors' array
+        unset($savingProduct['colors'][$key]);
+
+        // Remove the corresponding supplier color code from the 'supplier_color_codes' array
+        unset($savingProduct['supplier_color_codes'][$key]);
+
+        // Reindex the arrays to maintain numeric indexes
+        $savingProduct['colors'] = array_values($savingProduct['colors']);
+        $savingProduct['supplier_color_codes'] = array_values($savingProduct['supplier_color_codes']);
+
+        // Update the session with the modified product data
+        Session::put('savingProduct', $savingProduct);
+
+        return redirect()->back();
     }
 
     public function store(Request $request)
@@ -251,7 +371,7 @@ class ProductController extends Controller
     {
         $savingProduct = (object)Session::get('savingProduct');
         if (empty($savingProduct->size_scale_id)) {
-            return redirect()->route('products.create.step1');
+            return redirect()->route('products.create.step-1');
         }
         $brand = Brand::where('id',$savingProduct->brand_id)->first();
         $sizeScale = SizeScale::where('id',$savingProduct->size_scale_id)->first();
@@ -267,7 +387,7 @@ class ProductController extends Controller
     public function productStep3(Request $request){
         $savingProduct = (object)Session::get('savingProduct');
         if (empty($savingProduct->size_scale_id)) {
-            return redirect()->route('products.create.step1');
+            return redirect()->route('products.create.step-1');
         }
 
         $sizes = Size::whereBetween('id', [$savingProduct->size_range_min, $savingProduct->size_range_max])->get();
@@ -277,4 +397,5 @@ class ProductController extends Controller
 
         return view('products.steps.step-3', compact('savingProduct', 'sizes', 'savedColors', 'colors'));
     }
+
 }

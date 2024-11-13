@@ -72,16 +72,17 @@
                                 <div class="row">
                                     <div class="col-sm-6 col-md-3">
                                         <div class="mb-3">
-                                            <x-form-input name="supplier_color_code[0]" value="{{ old('supplier_color_code[0]', $savingProduct->variants[0] ?? '') }}" label="Supplier Color Code" placeholder="Enter Supplier code" required/>
+                                            <x-form-input name="supplier_color_code[0]" value="{{ old('supplier_color_code[0]', $savingProduct->supplier_color_codes[0] ?? '') }}" label="Supplier Color Code" placeholder="Enter Supplier code" required/>
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-md-3">
                                         <div class="mb-3">
                                             <label for="color">Select Color <span class="text-danger">*</span></label>
+
                                             <select name="colors[0]" id="color" class="form-control{{ $errors->has('colors.0') ? ' is-invalid' : '' }}">
-                                                <option value="" selected>Select Color</option>                                                
+                                                <option value="" selected>Select Color</option> 
                                                 @foreach($colors as $color)
-                                                    <option value="{{ $color->id }}" {{ old('colors[0]',$color->id) == $color->id ? 'selected' : '' }}>
+                                                    <option value="{{ $color->id }}" {{ old('colors[0]', isset($savingProduct->colors[0]) ? $savingProduct->colors[0] : null) == $color->id ? 'selected' : '' }}>
                                                         {{ $color->color_name }} ({{ $color->color_code }})
                                                     </option>
                                                 @endforeach
@@ -96,7 +97,7 @@
                                             <label for="color">Select Size Range(Min) <span class="text-danger">*</span></label>
                                             <select name="size_range_min" id="size_range_min" class="form-control{{ $errors->has('color') ? ' is-invalid' : '' }}">
                                                 @foreach($sizes as $size)
-                                                    <option value="{{ $size->id }}">
+                                                    <option value="{{ old('size_range_min', $size->id) }}">
                                                         {{ $size->size }}
                                                     </option>
                                                 @endforeach
@@ -111,7 +112,7 @@
                                             <label for="size_range_max">Select Size Range(Max) <span class="text-danger">*</span></label>
                                             <select name="size_range_max" id="size_range_max" class="form-control{{ $errors->has('size_range_max') ? ' is-invalid' : '' }}">
                                                 @foreach($sizes as $index => $size)
-                                                    <option value="{{ $size->id }}" {{ $loop->last ? 'selected' : '' }}>
+                                                    <option value="{{ old('size_range_max', $size->id) }}" {{ $loop->last ? 'selected' : '' }}>
                                                         {{ $size->size }}
                                                     </option>
                                                 @endforeach
@@ -123,8 +124,8 @@
                                     </div>
                                     
                                     <div class="col-12" id="color-fields">
-                                        @if(isset($savingProduct->variants))
-                                            @foreach ($savingProduct->variants as $index => $variant)
+                                        @if(isset($savingProduct->supplier_color_codes))
+                                            @foreach ($savingProduct->supplier_color_codes as $index => $variant)
                                                 
                                                 @if($index !== 0)
                                                 <div class="color-field" id="color-field-{{ $index }}">
@@ -187,7 +188,7 @@
     @push('scripts')
     <script>
         $(function(){
-            var colorIndex = {{ isset($savingProduct->variants) ? count($savingProduct->variants)-1 : 1 }};
+            var colorIndex = {{ isset($savingProduct->supplier_color_codes) ? count($savingProduct->supplier_color_codes)-1 : 1 }};
             $('#add-color-btn').click(function() {
                 colorIndex++;
 
@@ -275,6 +276,38 @@
                     $('#size_range_max').val(lastOptionValue).trigger('chosen:updated');
                 }
             });
+            // Dropdownn Auto selected
+            var minimumSize = {{ isset($savingProduct->size_range_min) ? $savingProduct->size_range_min : '0' }};
+            var maximumSize = {{ isset($savingProduct->size_range_max) ? $savingProduct->size_range_max : '0' }};
+            var minSizeId = parseInt(minimumSize); // Convert min size ID to an integer
+            $('#size_range_min option[value="'+minimumSize+'"]').prop("selected", true);
+            setTimeout(() => {
+                $('#size_range_max option[value="'+maximumSize+'"]').prop("selected", true);
+            }, 1000);
+
+                $('#size_range_max').prop('disabled', false).trigger('chosen:updated');
+
+                $('#size_range_max option').show();
+
+                $('#size_range_max option').each(function() {
+                    var maxSizeId = parseInt($(this).val());
+
+                    if (maxSizeId < minSizeId) {
+                        $(this).hide();
+                    }
+                });
+
+                $('#size_range_max').trigger('chosen:updated');
+
+                var visibleOptions = $('#size_range_max option:visible');
+
+                if (visibleOptions.length > 0) {
+                    var lastVisibleOptionValue = visibleOptions.last().val();
+                    $('#size_range_max').val(lastVisibleOptionValue).trigger('chosen:updated');
+                } else {
+                    var lastOptionValue = $('#size_range_max option:last').val();
+                    $('#size_range_max').val(lastOptionValue).trigger('chosen:updated');
+                }
         });
         </script>
     @endpush

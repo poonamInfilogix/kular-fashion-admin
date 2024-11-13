@@ -133,10 +133,10 @@
         <div class="mb-3">
             <label for="status" class="form-label">Season</label>
             <select name="season" id="season" class="form-control{{ $errors->has('season') ? ' is-invalid' : '' }}">
-                <option value="Summer" @selected(isset($product) && $product->season === 'Summer') @selected(!isset($product->season) && setting('default_season') == 'Summer')>Summer</option>
-                <option value="Winter" @selected(isset($product) && $product->season === 'Winter') @selected(!isset($product->season) && setting('default_season') == 'Winter')>Winter</option>
-                <option value="Autumn" @selected(isset($product) && $product->season === 'Autumn') @selected(!isset($product->season) && setting('default_season') == 'Autumn')>Autumn</option>
-                <option value="Spring" @selected(isset($product) && $product->season === 'Spring') @selected(!isset($product->season) && setting('default_season') == 'Spring')>Spring</option>
+                <option value="Summer" @selected(($product->season ?? setting('default_season')) === 'Summer')>Summer</option>
+<option value="Winter" @selected(($product->season ?? setting('default_season')) === 'Winter')>Winter</option>
+<option value="Autumn" @selected(($product->season ?? setting('default_season')) === 'Autumn')>Autumn</option>
+<option value="Spring" @selected(($product->season ?? setting('default_season')) === 'Spring')>Spring</option>
             </select>
             @error('season')
                 <span class="invalid-feedback">{{ $message }}</span>
@@ -174,8 +174,8 @@
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
             <select name="status" id="color-status" class="form-control">
-                <option value="Active" @selected(isset($product) && $product->status === 'Active')>Active</option>
-                <option value="Inactive" @selected(isset($product) && $product->status === 'Inactive')>Inactive</option>
+                <option value="Active" @selected(($product->status ?? '') === 'Active')>Active</option>
+                <option value="Inactive" @selected(($product->status ?? '') === 'Inactive')>Inactive</option>
             </select>
         </div>
     </div>
@@ -273,7 +273,7 @@
         let articleCode = lastCode + 1; // Increment the code
         $('#article_code').val(String(articleCode).padStart(6, '0')); // Format to 6 digits
 
-        @if(isset($product) && $product->article_code)
+        @if($product->article_code ?? '')
             $('#article_code').val("{{ $product->article_code }}"); // Use existing article code if in edit mode
         @endif
 
