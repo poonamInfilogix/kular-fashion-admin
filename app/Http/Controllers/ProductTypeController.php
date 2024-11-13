@@ -39,6 +39,7 @@ class ProductTypeController extends Controller
             'description'        => $request->description,
             'image'              => $imageName
         ]);
+        
         foreach ($request->department_id as $departmentId) {
             ProductTypeDepartment::create([
                 'product_type_id' => $productType->id,

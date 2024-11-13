@@ -51,13 +51,6 @@
                                 <x-form-input name="password" type="password" label="Password" placeholder="Enter your password"/>
                             </div>
 
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="remember-check">
-                                <label class="form-check-label" for="remember-check">
-                                    Remember me
-                                </label>
-                            </div>
-                            
                             <div class="mt-3 d-grid">
                                 <button class="btn btn-primary waves-effect waves-light" type="submit">Log In</button>
                             </div>
