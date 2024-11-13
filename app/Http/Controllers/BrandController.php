@@ -124,6 +124,6 @@ class BrandController extends Controller
             session()->flash('import_errors', $errors);
         }
 
-        return redirect()->route('brands.index')->with('success', 'Bay imported successfully.');
+        return redirect()->route('brands.index')->with('success', 'Brands imported successfully.');
     }
 }
