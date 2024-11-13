@@ -30,20 +30,33 @@
 
                                 <table class="table">
                                     <thead>
-                                        <tr>
+                                        <tr id="sizeHeader">
                                             <th>Size</th>
                                             @foreach($sizes as $size)
-                                                <th>{{ $size->size }}</th>
+                                                <th data-size-id="{{$size->id}}">{{ $size->size }}</th>
                                             @endforeach
+
+                                            <th @class(['actionColumn', 'd-none' => count($savedColors)<= 1])>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @php 
+                                            if(isset($savingProduct->variantData)){
+                                                $quantityData = $savingProduct->variantData->quantity;
+                                            }
+                                        @endphp
                                         @foreach($savedColors as $color)
-                                            <tr>
+                                            <tr data-id="rm-{{$color['id']}}">
                                                 <th>{{ $color['color_name'] }} ({{ $color['color_code'] }})</th>
                                                 @foreach($sizes as $key => $size)
-                                                    <td><input type="number" name="quantity[{{ $color['id'] }}][{{ $size->id }}]" value="0" class="form-control"></td>
+                                                    <td><input type="number" name="quantity[{{ $color['id'] }}][{{ $size->id }}]" value="{{ isset($quantityData) ? $quantityData[$color['id']] : old('example', '0') }}" class="form-control"></td>
                                                 @endforeach
+                                                
+                                                <td @class(['actionColumn', 'd-none' => count($savedColors)<= 1])>
+                                                    <a href="{{ route('products.remove-variant', $color['id']) }}" class="btn btn-danger">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </a>
+                                                </td>
                                             </tr>
                                         @endforeach
                                         <tr>
@@ -52,6 +65,7 @@
                                                 <td><input type="number" name="mrp[{{ $size->id }}]" value="{{ $savingProduct->mrp }}" class="form-control"></td>
                                             @endforeach
                                         </tr>
+
                                     </tbody>
                                 </table>
                                 <button type="button" class="btn btn-secondary" id="add-variant-btn">Add new variant</button>
@@ -107,38 +121,67 @@
                 });
             })
             $(document).ready(function() {
-                $('#saveVariantBtn').on('click', function() {
+                $('#saveVariantBtn').on('click', function () {
                     $('#supplierColorCodeError').text('');
                     $('#colorSelectError').text('');
 
-                    let supplierColorCode = $('#supplier_color_code').val().trim();
-                    let selectedColor = $('#color_select').val();
+                    let formData = {
+                        supplier_color_code: $('#supplier_color_code').val(),
+                        color_select: $('#color_select').val(),
+                        _token: '{{ csrf_token() }}' 
+                    };
 
-                    if (!supplierColorCode) {
-                        $('#supplierColorCodeError').text('Please enter the Supplier Color Code.');
-                    }
-                    if (!selectedColor) {
-                        $('#colorSelectError').text('Please select a color.');
-                    }
+                    $.post('/add-variant', formData)
+                        .done(function (response) {
+                            if (response.success) {
+                                $('#addVariantModal').modal('hide'); 
+                                $('#addVariantForm')[0].reset();
+                                $('.actionColumn').removeClass('d-none');
 
-                    if (supplierColorCode && selectedColor) {
-                        $.ajax({
-                            url: '/add-variant',
-                            method: 'POST',
-                            data: {
-                                supplier_color_code: supplierColorCode,
-                                color_id: selectedColor,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(data) {
-                                alert('Variant saved successfully!');
-                                $('#addVariantModal').modal('hide');
-                            },
-                            error: function() {
-                                alert('An error occurred while saving the variant.');
+                                let $tbody = $('table tbody');
+                                let $sizeHeader = $('#sizeHeader');
+
+                                let sizes = $sizeHeader.find('th')
+                                    .slice(1, -1)  // Skip the first "Size" header and remove the last header
+                                    .map(function() { return $(this).attr('data-size-id'); })
+                                    .get();
+
+                                let $newRow = $('<tr></tr>');
+                                let $newTh = $('<th></th>').text(`${response.data.color_name} (${response.data.color_code})`);
+                                $newRow.append($newTh);
+
+                                $.each(sizes, function(index, size) {
+                                    let $newTd = $('<td></td>');
+                                    $newTd.html(`<input type="number" name="quantity[${response.data.color_id}][${size}]" value="0" class="form-control">`);
+                                    $newRow.append($newTd);
+                                });
+
+                                // Add delete button as the last cell
+                                let $deleteTd = $('<td></td>');
+                                $deleteTd.html(`
+                                    <a href="{{ route('products.remove-variant','') }}/${response.data.color_id}" class="btn btn-danger"> 
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                `);
+                                $newRow.append($deleteTd);
+
+                                // Insert the new row at the second position or append if only one row exists
+                                if ($tbody.children().length > 1) {
+                                    $tbody.children().eq(1).before($newRow);
+                                } else {
+                                    $tbody.append($newRow);
+                                }
+                            }
+                        })
+                        .fail(function (xhr) {
+                            let errors = xhr.responseJSON.errors;
+                            if (errors.supplier_color_code) {
+                                $('#supplierColorCodeError').text(errors.supplier_color_code[0]);
+                            }
+                            if (errors.color_select) {
+                                $('#colorSelectError').text(errors.color_select[0]);
                             }
                         });
-                    }
                 });
             });
         </script>

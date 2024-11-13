@@ -29,6 +29,8 @@ return new class extends Migration
             $table->date('last_date')->nullable();
             $table->string('tag_id')->nullable();
             $table->unsignedBigInteger('size_scale_id')->nullable()->index();
+            $table->unsignedBigInteger('min_size_id')->nullable()->index();
+            $table->unsignedBigInteger('max_size_id')->nullable()->index();
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->softDeletes();
             $table->timestamps();
@@ -36,8 +38,10 @@ return new class extends Migration
             $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
             $table->foreign('product_type_id')->references('id')->on('product_types')->onDelete('cascade');
-            $table->foreign('tax_id')->references('id')->on('taxes')->onDelete('cascade');
+            $table->foreign('tax_id')->references('id')->on('taxes')->onDelete('set null');
             $table->foreign('size_scale_id')->references('id')->on('size_scales')->onDelete('cascade');
+            $table->foreign('min_size_id')->references('id')->on('sizes')->onDelete('cascade');
+            $table->foreign('max_size_id')->references('id')->on('sizes')->onDelete('cascade');
         });
     }
 
