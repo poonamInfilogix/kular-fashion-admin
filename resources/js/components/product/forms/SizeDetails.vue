@@ -35,13 +35,15 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Supplier</th>
+                                    <th scope="row">Previous In</th>
                                     <td v-for="(size, index) in selectedSizeScale.sizes" :key="index">
                                         <input type="number" name="supplier" class="form-control" min="0">
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
+
+                        <button type="button" class="btn btn-primary">Add Variant</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div>

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('product_types', function (Blueprint $table) {
             $table->id();
             $table->string('product_type_name');
+            $table->string('slug')->unique();
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->enum('status', ['Active', 'Inactive'])->default('Active');

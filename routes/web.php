@@ -38,6 +38,16 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'tags'          => TagController::class,
     ]);
 
+    #Product Steps Rout: 
+    Route::get('products/create/step-1',[ProductController::class,'productStep1'])->name('products.create.step-1');
+    Route::post('products/create/step-1',[ProductController::class,'saveStep1'])->name('products.save-step-1');
+    Route::get('products/create/step-2',[ProductController::class,'productStep2'])->name('products.create.step-2');
+    Route::post('products/create/step-2',[ProductController::class,'saveStep2'])->name('products.save-step-2');
+    Route::get('products/create/step-3',[ProductController::class,'productStep3'])->name('products.create.step-3');
+    Route::post('products/create/step-3',[ProductController::class,'saveStep3'])->name('products.save-step-3');
+    Route::post('add-variant', [ProductController::class, 'addVariant'])->name('add.variant');
+    Route::get('products/remove-variant/{colorId}', [ProductController::class, 'removeVariant'])->name('products.remove-variant');
+    #Product Steps Route End:
     Route::get('general-settings', [SettingController::class, 'generalSetting'])->name('general-settings.index');
     Route::post('general-settings.store', [SettingController::class, 'generalSettingStore'])->name('general-settings.store');
 
@@ -48,6 +58,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::put('size-scales/{sizeScaleId}/sizes/{size}', [SizeController::class, 'update'])->name('sizes.update');
     Route::delete('size-scales/{sizeScaleId}/sizes/{size}', [SizeController::class, 'destroy'])->name('sizes.destroy');
 
+    //************************Status Route********************/
     Route::post('/department-status', [DepartmentController::class, 'updateStatus'])->name('department-status');
     Route::post('/product-types-status', [ProductTypeController::class, 'productTypeStatus'])->name('product-types-status');
     Route::post('/brand-status', [BrandController::class, 'updateStatus'])->name('brand-status');
@@ -58,7 +69,18 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::post('/tax-status', [TaxController::class, 'taxStatus'])->name('tax-status');
     Route::post('/product-status', [ProductController::class, 'productStatus'])->name('product-status');
     Route::post('/tag-status', [TagController::class, 'tagStatus'])->name('tag-status');
+   
     Route::get('/get-states/{countryId}', [SupplierController::class, 'getStates']);
     Route::get('/get-product-type/{departmentId}', [ProductController::class, 'getDepartment']);
+
+    //************************Import Csv Route********************/
+    Route::post('import-brands', [BrandController::class, 'importBrands'])->name('import.brands');
+
+
+    Route::get('download-brand-sample', function() {
+        $file = public_path('assets/sample-brand/brand.csv');
+        return Response::download($file);
+    });
+    
 });
 
