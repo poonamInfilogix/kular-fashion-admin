@@ -44,19 +44,21 @@ class SizeScaleSeeder extends Seeder
                 ['size' => '46'],
                 ['size' => '47'],
             ],
-            'j1' => [['size' => '28']],
-            'j2' => [['size' => '30']],
-            'j3' => [['size' => '32']],
-            'j4' => [['size' => '34']],
-            'j5' => [['size' => '36']],
-            'j6' => [['size' => '38']],
-            'j7' => [['size' => '40']],
-            'j8' => [['size' => '42']],
-            'j9' => [['size' => '44']],
-            'j10' => [['size' => '46']],
-            'j11' => [['size' => '48']],
-            'j12' => [['size' => '50']],
-            'j13' => [['size' => '52']],
+            'J1' => [
+                ['size' => '28'],
+                ['size' => '30'],
+                ['size' => '32'],
+                ['size' => '34'],
+                ['size' => '36'],
+                ['size' => '38'],
+                ['size' => '40'],
+                ['size' => '42'],
+                ['size' => '44'],
+                ['size' => '46'],
+                ['size' => '48'],
+                ['size' => '50'],
+                ['size' => '52'],
+            ],
             'JLL' => [
                 ['size' => '23'],
                 ['size' => '24'],
@@ -73,6 +75,8 @@ class SizeScaleSeeder extends Seeder
                 ['size' => '36'],
             ],
             'JUR' => [
+                ['size' => '1'],
+                ['size' => '2'],
                 ['size' => '3'],
                 ['size' => '4'],
                 ['size' => '5'],
@@ -84,8 +88,6 @@ class SizeScaleSeeder extends Seeder
                 ['size' => '11'],
                 ['size' => '12'],
                 ['size' => '13'],
-                ['size' => '1'],
-                ['size' => '2'],
             ],
             'SL3' => [
                 ['size' => '3'],
@@ -100,6 +102,7 @@ class SizeScaleSeeder extends Seeder
                 ['size' => '10'],
                 ['size' => '11'],
                 ['size' => '12'],
+                ['size' => '13'],
             ],
             'SL4' => [
                 ['size' => '4'],
@@ -117,6 +120,7 @@ class SizeScaleSeeder extends Seeder
                 ['size' => '16'],
             ],
             'SM1' => [
+                ['size' => '5'],
                 ['size' => '6'],
                 ['size' => '6.5'],
                 ['size' => '7'],
@@ -132,8 +136,10 @@ class SizeScaleSeeder extends Seeder
                 ['size' => '13'],
             ],	
             'SML' => [
+                ['size' => 'XS/S'],
                 ['size' => 'S/M'],
                 ['size' => 'M/L'],
+                ['size' => 'L/XL'],
             ]
         ];
         $totalSizesCount = 0;
