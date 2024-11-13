@@ -13,7 +13,6 @@
                         <div class="page-title-right">
                             <a href="{{ route('products.create.step-2') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to Step 2</a>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -25,7 +24,7 @@
                     <x-success-message :message="session('success')" />   
                     <div class="card">
                         <div class="card-body">  
-                            <form action="{{ route('products.create.step-3') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('products.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
 
                                 <table class="table">

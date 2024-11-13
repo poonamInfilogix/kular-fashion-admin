@@ -80,61 +80,6 @@ class ProductController extends Controller
         return redirect()->route('products.create.step-3');
     }
 
-
-    public function saveStep3(Request $request){
-
-        $productData = Session::get('savingProduct');
-        $productData['variantData'] = $request->all();
-        Session::put('savingProduct', $productData);
-        echo '<pre>';
-        print_r($productData);
-
-        $product = Product::create([
-            'article_code' => $productData['article_code'] ?? NULL,
-            'manufacture_code' => $productData['manufacture_code'] ?? NULL,
-            'department_id' => $productData['department_id'] ?? NULL,
-            'brand_id' => $productData['brand_id'] ?? NULL,
-            'product_type_id' => $productData['product_type_id'] ?? NULL,
-            'short_description' => $productData['short_description'] ?? NULL ,
-            'mrp' => $productData['mrp'] ?? NULL,
-            'supplier_price' => $productData['supplier_price'] ?? NULL,
-            'season' => $productData['season'] ?? NULL,
-            'supplier_ref' => $productData['supplier_ref'] ?? NULL,
-            'tax_id' => $productData['tax_id'] ?? NULL,
-            'in_date' => $productData['in_date'] ?? NULL,
-            'last_date' => $productData['last_date'] ?? NULL,
-            'tag_id' => $productData['tag_id'] ?? NULL,
-            'size_scale_id' => $productData['size_scale_id'] ?? NULL,
-            'status' => $productData['status'],
-        ]);
-    
-        foreach ($productData['supplier_color_codes'] as $index => $supplierCode) {
-            $productColor = ProductColor::create([
-                'product_id' => $product->id,
-                'color_id' => $productData['colors'][$index],
-                'supplier_color_code' => $supplierCode,
-            ]);
-            $color_id = $productData['colors'][$index];
-            foreach ($productData['variantData']['quantity'][$color_id] as $sizeId => $quantity) {
-                ProductQuantity::create([
-                    'product_id' => $product->id,
-                    'product_color_id' => $productColor->id,
-                    'product_size_id' => $sizeId,
-                    'quantity' => $quantity,
-                ]);
-            }
-        }
-        foreach ($productData['variantData']['mrp'] as $sizeId => $mrp) {
-            ProductSize::create([
-                'product_id' => $product->id,
-                'size_id' => $sizeId,
-                'mrp' => $mrp
-            ]);
-        }
-    
-
-    }
-
     public function addVariant(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -214,34 +159,55 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         
+        $productData = Session::get('savingProduct');
+        $productData['variantData'] = $request->all();
+        Session::put('savingProduct', $productData);
 
-       /* $imageName = uploadFile($request->file('image'), 'uploads/products/');
-        if (is_array($request->tag_id)) {
-            $tags = implode(',', $request->tag_id);
-        } else {
-            $tags = $request->tag_id;
+        $product = Product::create([
+            'article_code' => $productData['article_code'] ?? NULL,
+            'manufacture_code' => $productData['manufacture_code'] ?? NULL,
+            'department_id' => $productData['department_id'] ?? NULL,
+            'brand_id' => $productData['brand_id'] ?? NULL,
+            'product_type_id' => $productData['product_type_id'] ?? NULL,
+            'short_description' => $productData['short_description'] ?? NULL ,
+            'mrp' => $productData['mrp'] ?? NULL,
+            'supplier_price' => $productData['supplier_price'] ?? NULL,
+            'season' => $productData['season'] ?? NULL,
+            'supplier_ref' => $productData['supplier_ref'] ?? NULL,
+            'tax_id' => $productData['tax_id'] ?? NULL,
+            'in_date' => $productData['in_date'] ?? NULL,
+            'last_date' => $productData['last_date'] ?? NULL,
+            'tag_id' => $productData['tag_id'] ?? NULL,
+            'size_scale_id' => $productData['size_scale_id'] ?? NULL,
+            'status' => $productData['status'],
+        ]);
+    
+        foreach ($productData['supplier_color_codes'] as $index => $supplierCode) {
+            $productColor = ProductColor::create([
+                'product_id' => $product->id,
+                'color_id' => $productData['colors'][$index],
+                'supplier_color_code' => $supplierCode,
+            ]);
+            $color_id = $productData['colors'][$index];
+            foreach ($productData['variantData']['quantity'][$color_id] as $sizeId => $quantity) {
+                ProductQuantity::create([
+                    'product_id' => $product->id,
+                    'product_color_id' => $productColor->id,
+                    'product_size_id' => $sizeId,
+                    'quantity' => $quantity,
+                ]);
+            }
         }
-        Product::create([
-            'article_code'    => $request->article_code,
-            'manufacture_code'=> $request->manufacture_code,
-            'brand_id'        => $request->brand_id,
-            'product_type_id' => $request->product_type_id,
-            'mrp'             => $request->mrp,
-            'supplier_price'  => $request->supplier_price,
-            'department_id'   => $request->department_id,
-            'season'          => $request->season,
-            'supplier_ref'    => $request->supplier_ref,
-            'tax_id'          => $request->tax,
-            'in_date'         => $request->in_date,
-            'last_date'       => $request->last_date,
-            'short_description'=> $request->short_description,
-            'image'           => $imageName,
-            'status'          => $request->status,
-            'tag_id'          => $tags,
-            'size_scale_id'   => $request->size_scale_id,
-        ]);*/
-        
-        //return redirect()->route('products.index')->with('success', 'Product created successfully.');
+
+        foreach ($productData['variantData']['mrp'] as $sizeId => $mrp) {
+            ProductSize::create([
+                'product_id' => $product->id,
+                'size_id' => $sizeId,
+                'mrp' => $mrp
+            ]);
+        }
+    
+        return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
     public function show()

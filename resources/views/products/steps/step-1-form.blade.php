@@ -33,7 +33,7 @@
                 <option value="" disabled>Select Product Type</option>
                 @if(isset($productTypes))
                     @foreach($productTypes as $productType)
-                        <option value="{{ $productType->id }}" @selected(isset($product->product_type_id) && $product->product_type_id == $productType->id)>
+                        <option value="{{ $productType->id }}" @selected(old('product_type_id', $product->product_type_id ?? '') == $productType->id)>
                             {{ $productType->product_type_name }}
                         </option>
                     @endforeach
@@ -51,7 +51,7 @@
             <select name="brand_id" id="brand_id" class="form-control{{ $errors->has('brand_id') ? ' is-invalid' : '' }}">
                 <option value="" disabled selected>Select brand</option>
                 @foreach($brands as $brand)
-                    <option value="{{ $brand->id }}" @selected(isset($product->brand_id) && $product->brand_id == $brand->id)>
+                    <option value="{{ $brand->id }}" @selected(old('brand_id', $product->brand_id ?? '') == $brand->id)>
                         {{ $brand->brand_name }}
                     </option>
                 @endforeach
@@ -102,7 +102,7 @@
             <select name="size_scale_id" id="size_scale_id" class="form-control{{ $errors->has('size_scale_id') ? ' is-invalid' : '' }}">
                 <option value="" disabled selected>Select size scale</option>
                 @foreach($sizeScales as $sizeScale)
-                    <option value="{{ $sizeScale->id }}" @selected(isset($product->size_scale_id) && $product->size_scale_id == $sizeScale->id)>
+                    <option value="{{ $sizeScale->id }}" @selected(old('size_scale_id', $product->size_scale_id ?? '') == $sizeScale->id)>
                         {{ $sizeScale->size_scale }} ({{ substr($sizeScale->size_scale, 0, 1) }}-{{ substr($sizeScale->size_scale, -1) }})
                     </option>
                 @endforeach
@@ -228,7 +228,7 @@
             const productTypeSelect = $('#product_type');
 
             productTypeSelect.html('<option value="" disabled selected>Select Product Type</option>');
-            productTypeSelect.chosen("destroy"); // Destroy the previous instance to avoid issues
+            productTypeSelect.chosen("destroy");
 
             if (departmentId) {
                 $.ajax({
@@ -245,12 +245,12 @@
                             });
                         }
 
-                        // Select the current product's product_type_id if available
-                        @if(isset($product->product_type_id))
-                            productTypeSelect.val("{{ $product->product_type_id }}").trigger('chosen:updated');
-                        @endif
-                        
-                        // Initialize Chosen plugin for better UI on the select dropdown
+                        // After appending options, ensure the previously selected option is set
+                        const selectedProductTypeId = "{{ old('product_type_id', $product->product_type_id ?? '') }}";
+                        if (selectedProductTypeId) {
+                            productTypeSelect.val(selectedProductTypeId);
+                        }
+
                         productTypeSelect.chosen({
                             width: '100%',
                         });
@@ -271,16 +271,10 @@
     $(document).ready(function() {
         let lastCode = parseInt("{{ $latestNewCode ?? '300000' }}"); // Start from 300000
         let articleCode = lastCode + 1; // Increment the code
-        $('#article_code').val(String(articleCode).padStart(6, '0')); // Format to 6 digits
+        $('#article_code').val(String(articleCode).padStart(6, '0'));
 
-        @if($product->article_code ?? '')
-            $('#article_code').val("{{ $product->article_code }}"); // Use existing article code if in edit mode
-        @endif
-
-       
         $('#department_id').change(function() {
             const departmentId = $(this).val();
-            
             refreshProductTypeDropdown(departmentId);
         });
 

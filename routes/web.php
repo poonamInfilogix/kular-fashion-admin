@@ -44,7 +44,6 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::get('products/create/step-2',[ProductController::class,'productStep2'])->name('products.create.step-2');
     Route::post('products/create/step-2',[ProductController::class,'saveStep2'])->name('products.save-step-2');
     Route::get('products/create/step-3',[ProductController::class,'productStep3'])->name('products.create.step-3');
-    Route::post('products/create/step-3',[ProductController::class,'saveStep3'])->name('products.save-step-3');
     Route::post('add-variant', [ProductController::class, 'addVariant'])->name('add.variant');
     Route::get('products/remove-variant/{colorId}', [ProductController::class, 'removeVariant'])->name('products.remove-variant');
     #Product Steps Route End:
@@ -78,7 +77,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
 
 
     Route::get('download-brand-sample', function() {
-        $file = public_path('assets/sample-brand/brand.csv');
+        $file = public_path('assets/samples/brand.csv');
         return Response::download($file);
     });
     
