@@ -147,7 +147,7 @@
                                                                 <select name="colors[{{ $index }}]" id="color-{{ $index }}" class="form-control{{ $errors->has("colors.$index") ? ' is-invalid' : '' }}">
                                                                     <option value=""  {{ old("colors.$index") === null ? 'selected' : '' }}>Select Color</option>
                                                                     @foreach($colors as $color)
-                                                                        <option value="{{ $color->id }}" @selected($savingProduct->colors[$index] == $color->id)
+                                                                        <option value="{{ $color->id }}" @selected($savingProduct->colors[$index] ?? '' == $color->id)
                                                                             {{ old("colors[$index]", $savingProduct->colors[$index] ?? '') }}>
                                                                             {{ $color->color_name }} ({{ $color->color_code }})
                                                                         </option>

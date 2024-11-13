@@ -90,7 +90,7 @@
                         <div class="mb-3">
                             <label for="supplier_color_code" class="form-label">Supplier Color Code</label>
                             <input type="text" id="supplier_color_code" class="form-control" placeholder="Enter Supplier Color Code" required>
-                            <div id="supplierColorCodeError" class="text-danger"></div>
+                            <div id="supplierColorCodeError" class="invalid-feedback"></div>
                         </div>
                         <div class="mb-3">
                             <label for="color_select" class="form-label">Select Color</label>
@@ -100,7 +100,7 @@
                                     <option value="{{ $color->id }}">{{ $color->color_name }} ({{ $color->color_code }})</option>
                                 @endforeach
                             </select>
-                            <div id="colorSelectError" class="text-danger"></div>
+                            <div id="colorSelectError" class="invalid-feedback"></div>
                         </div>
                     </form>
                 </div>
@@ -121,8 +121,8 @@
             })
             $(document).ready(function() {
                 $('#saveVariantBtn').on('click', function () {
-                    $('#supplierColorCodeError').text('');
-                    $('#colorSelectError').text('');
+                    $('#supplier_color_code').removeClass('is-invalid');
+                    $('#color_select').removeClass('is-invalid');
 
                     let formData = {
                         supplier_color_code: $('#supplier_color_code').val(),
@@ -175,9 +175,11 @@
                         .fail(function (xhr) {
                             let errors = xhr.responseJSON.errors;
                             if (errors.supplier_color_code) {
+                                $('#supplier_color_code').addClass('is-invalid');
                                 $('#supplierColorCodeError').text(errors.supplier_color_code[0]);
                             }
                             if (errors.color_select) {
+                                $('#color_select').addClass('is-invalid');
                                 $('#colorSelectError').text(errors.color_select[0]);
                             }
                         });
