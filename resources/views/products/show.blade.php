@@ -32,11 +32,16 @@
 
                                 <div class="col-xl-8">
                                     <div class="mt-4 mt-xl-3">
-                                        <a href="javascript: void(0);"
-                                            class="text-primary">{{ $product->brand->brand_name }}</a>
-                                        <h4 class="mt-1 mb-3">{{ $product->article_code }}</h4>
+                                        <div>
+                                            <a href="javascript: void(0);" class="text-primary">{{ $product->brand->brand_name }}</a>
+                                            > {{ $product->productType->product_type_name }}
+                                        </div>
 
-                                        <h5 class="mb-4">Price: <b>£{{ $product->mrp }}</b></h5>
+                                        <h4 class="mt-1 mb-2">Article Code: {{ $product->article_code }}</h4>
+                                        <h6 class="mb-2">Manufacture Code: {{ $product->manufacture_code }}</h6>
+                                        <h6 class="mb-2">Supplier Price: {{ $product->supplier_price }}</h6>
+                                        <h6 class="mb-2">In Date: {{ $product->in_date }}</h6>
+                                        <h6 class="mb-3">Price: <b>£{{ $product->mrp }}</b></h6>
                                         <p class="text-muted mb-4">{{ $product->short_description }}</p>
                                     </div>
                                 </div>

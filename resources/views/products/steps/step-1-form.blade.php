@@ -112,6 +112,42 @@
             @enderror
         </div>
     </div>
+    
+    <div class="col-sm-6 col-md-4">
+        <div class="mb-3">
+            <x-form-input name="short_description" value="{{ $product->short_description ?? '' }}" label="Short Description" placeholder="Enter Short Description"  required="true"/>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-md-2">
+        <div class="mb-3">
+            <label class="form-label">Image</label>
+            <input type="file" name="image" id="add-product-image" class="form-control" accept="image/*">
+
+            <div class="col-md-6 mt-2">
+                @if(isset($product->image_path))
+                    <img src="{{ asset($product->image_path) }}" id="preview-product" class="img-preview img-fluid w-100">
+                @else
+                    <img src="" id="preview-product" class="img-fluid w-100;" name="image" hidden>
+                @endif
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-sm-6 col-md-2">
+        <div class="mb-3">
+            <label for="status" class="form-label">Season</label>
+            <select name="season" id="season" class="form-control{{ $errors->has('season') ? ' is-invalid' : '' }}">
+                <option value="Summer" @selected(($product->season ?? setting('default_season')) === 'Summer')>Summer</option>
+                <option value="Winter" @selected(($product->season ?? setting('default_season')) === 'Winter')>Winter</option>
+                <option value="Autumn" @selected(($product->season ?? setting('default_season')) === 'Autumn')>Autumn</option>
+                <option value="Spring" @selected(($product->season ?? setting('default_season')) === 'Spring')>Spring</option>
+            </select>
+            @error('season')
+                <span class="invalid-feedback">{{ $message }}</span>
+            @enderror
+        </div>
+    </div>
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
@@ -129,35 +165,6 @@
         </div>
     </div>
 
-    <div class="col-sm-6 col-md-2">
-        <div class="mb-3">
-            <label for="status" class="form-label">Season</label>
-            <select name="season" id="season" class="form-control{{ $errors->has('season') ? ' is-invalid' : '' }}">
-                <option value="Summer" @selected(($product->season ?? setting('default_season')) === 'Summer')>Summer</option>
-<option value="Winter" @selected(($product->season ?? setting('default_season')) === 'Winter')>Winter</option>
-<option value="Autumn" @selected(($product->season ?? setting('default_season')) === 'Autumn')>Autumn</option>
-<option value="Spring" @selected(($product->season ?? setting('default_season')) === 'Spring')>Spring</option>
-            </select>
-            @error('season')
-                <span class="invalid-feedback">{{ $message }}</span>
-            @enderror
-        </div>
-    </div>
-
-    <div class="col-sm-6 col-md-2">
-        <div class="mb-3">
-            <label class="form-label">Image</label>
-            <input type="file" name="image" id="add-product-image" class="form-control" accept="image/*">
-
-            <div class="col-md-6 mt-2">
-                @if(isset($product->image))
-                    <img src="{{ asset($product->image) }}" id="preview-product" class="img-preview img-fluid w-100">
-                @else
-                    <img src="" id="preview-product" class="img-fluid w-100;" name="image" hidden>
-                @endif
-            </div>
-        </div>
-    </div>
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <x-form-input name="in_date" class="date-picker"  value="{{ $product->in_date ?? now()->format('Y-m-d') }}"  label="In Date" placeholder="Enter In Date"/>
@@ -179,14 +186,6 @@
             </select>
         </div>
     </div>
-
-    <div class="col-sm-6 col-md-2">
-        <div class="mb-3">
-            <label form="short_description" class="form-label">Short Description</label>
-            <textarea name="short_description" class="form-control" placeholder="Enter Short Description" rows=3>{{ old('short_description', $product->short_description ?? '') }}</textarea>
-        </div>
-    </div>
-  
 </div>
 
 <div class="row mb-2">

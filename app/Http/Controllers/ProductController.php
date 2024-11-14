@@ -47,16 +47,31 @@ class ProductController extends Controller
 
     public function saveStep1(Request $request){
         $request->validate([
-            'manufacture_code' => 'required|unique:products,manufacture_code',
-            'brand_id'         => 'required',
-            'department_id'    => 'required',
-            'product_type_id'  => 'required',
-            'size_scale_id'    => 'required',
-            'supplier_price'   => 'required',
-            'mrp'              => 'required',
+            'manufacture_code'  => 'required|unique:products,manufacture_code',
+            'brand_id'          => 'required',
+            'department_id'     => 'required',
+            'product_type_id'   => 'required',
+            'size_scale_id'     => 'required',
+            'supplier_price'    => 'required',
+            'mrp'               => 'required',
+            'short_description' => 'required',
+            'image'             => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048'
         ]);
 
-        Session::put('savingProduct', $request->all());
+        $productData = $request->all();
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = $request->article_code . '.' . $image->getClientOriginalExtension();
+            $path = 'uploads/products/';
+            $image->move(public_path($path), $imageName);
+        
+            // Store only the file path in the data array
+            $productData['image_path'] = $path . $imageName;
+            unset($productData['image']);
+        }
+        
+        Session::put('savingProduct', $productData);
         return redirect()->route('products.create.step-2');
     }
 
@@ -179,6 +194,7 @@ class ProductController extends Controller
             'last_date' => $productData['last_date'] ?? NULL,
             'tag_id' => $productData['tag_id'] ?? NULL,
             'size_scale_id' => $productData['size_scale_id'] ?? NULL,
+            'image' => $productData['image_path'] ?? NULL,
             'status' => $productData['status'],
         ]);
     
