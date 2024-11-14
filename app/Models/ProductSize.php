@@ -21,4 +21,14 @@ class ProductSize extends Model
         
         return $query->first()->quantity ?? 0;
     }
+
+    public function totalQuantity($product_color_id = null){
+        $query = $this->hasMany(ProductQuantity::class, 'product_size_id', 'size_id');
+    
+        if ($product_color_id) {
+            $query->where('product_color_id', $product_color_id);
+        }
+        
+        return $query->first()->total_quantity ?? 0;
+    }
 }

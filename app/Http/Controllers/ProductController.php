@@ -300,6 +300,7 @@ class ProductController extends Controller
                     'product_color_id' => $productColor->id,
                     'product_size_id' => $sizeId,
                     'quantity' => $quantity,
+                    'total_quantity' => $quantity,
                 ]);
             }
         }
@@ -336,7 +337,7 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         foreach($request->mrp as $product_size_id => $mrp){
-            $product->sizes()->updateOrCreate([
+            $product->sizes()->update([
                 'product_id' => $product->id, 
                 'size_id' => $product_size_id
             ], [
@@ -344,23 +345,24 @@ class ProductController extends Controller
             ]);
         }
 
-        dd($request->quantity);
-
+        echo '<pre>';
         $productData = Session::get('savingProduct');
         foreach ($productData['supplier_color_codes'] as $index => $supplierColorCode) {
-            dd($product->quantities->toArray());
-
             $color_id = $productData['colors'][$index];
+
+            print_r($request->all());
+            dd($productData['variantData']['quantity']);
             foreach ($productData['variantData']['quantity'][$color_id] as $sizeId => $quantity) {
-                ProductQuantity::create([
+               /*  ProductQuantity::create([
                     'product_id' => $product->id,
                     'product_color_id' => $productColor->id,
                     'product_size_id' => $sizeId,
                     'quantity' => $quantity,
-                ]);
+                ]); */
             }
         }
 
+        dd(null);
         dd($productData);
         die('heheh!');
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');

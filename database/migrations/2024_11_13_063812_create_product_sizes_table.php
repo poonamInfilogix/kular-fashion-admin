@@ -12,11 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product_sizes', function (Blueprint $table) {
-            $table->id();  // Auto-incrementing primary key
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');  // Foreign key to products table
-            $table->foreignId('size_id')->constrained()->onDelete('cascade');  // Foreign key to sizes table
-            $table->decimal('mrp', 8, 2)->default(0.00);  // Default Maximum Retail Price (MRP) is 0
+            $table->id();
+            $table->unsignedBigInteger('product_id'); 
+            $table->unsignedBigInteger('size_id');
+            $table->decimal('mrp', 8, 2)->default(0.00);
             $table->timestamps();
+
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('size_id')->references('id')->on('sizes')->onDelete('cascade');
         });
     }
 

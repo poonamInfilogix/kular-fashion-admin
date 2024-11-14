@@ -12,11 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product_colors', function (Blueprint $table) {
-            $table->id();  // Auto-incrementing primary key
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');  // Foreign key to products table
-            $table->foreignId('color_id')->constrained()->onDelete('cascade');  // Foreign key to colors table
-            $table->string('supplier_color_code')->nullable();  // Supplier color code (nullable)
+            $table->id();
+            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('color_id'); 
+            $table->string('supplier_color_code')->nullable();
             $table->timestamps();
+
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('color_id')->references('id')->on('colors')->onDelete('cascade');
         });
     }
 
