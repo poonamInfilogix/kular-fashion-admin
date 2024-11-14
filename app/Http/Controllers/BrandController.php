@@ -27,7 +27,7 @@ class BrandController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'brand_name' => [
+            'name' => [
                 'required',
                     Rule::unique('brands')->whereNull('deleted_at'),
                 ],
@@ -36,7 +36,7 @@ class BrandController extends Controller
         $imageName = uploadFile($request->file('brand_image'), 'uploads/brands/');
 
         Brand::create([
-            'brand_name'    => $request->brand_name,
+            'name'          => $request->brand_name,
             'status'        => $request->status,
             'description'   => $request->description,
             'image'         => $imageName
@@ -79,7 +79,7 @@ class BrandController extends Controller
         }
 
         $brand->update([
-            'brand_name'    => $request->brand_name,
+            'name'          => $request->brand_name,
             'status'        => $request->status,
             'description'   => $request->description,
             'image'         => $imageName ?? $oldBrandImage
@@ -90,7 +90,7 @@ class BrandController extends Controller
 
     public function destroy(string $id)
     {
-        $brand = Brand::where('id', $id)->delete();
+        Brand::where('id', $id)->delete();
 
         return response()->json([
             'success' => true,

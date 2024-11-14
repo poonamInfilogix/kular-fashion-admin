@@ -39,14 +39,14 @@ class BrandImport implements ToModel, WithHeadingRow
             return null;
         }
 
-        $brand = Brand::where('brand_name', $row['name'])->first();
+        $brand = Brand::where('name', $row['name'])->first();
 
         if (!$brand) {
             // Brand doesn't exist, create a new one
             $imagePath = $this->handleImage($row);
         
             Brand::create([
-                'brand_name' => $row['name'],
+                'name' => $row['name'],
                 'image'      => $imagePath,
             ]);
         } else {

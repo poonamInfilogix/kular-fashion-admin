@@ -25,7 +25,9 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             CountrySeeder::class,
             StateSeeder::class,
-            SizeScaleSeeder::class
+            SizeScaleSeeder::class,
+            BrandSeeder::class,
+            ColorSeeder::class
         ]);
     }
 }

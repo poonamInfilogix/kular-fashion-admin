@@ -54,7 +54,7 @@
                         <div class="col-sm-6 col-md-6">
                             <div class="mb-2 d-flex gap-1">
                                 <h5 class="card-title">Brand: </h5>
-                                <p class="card-text"> {{ $brand->brand_name }}</p>
+                                <p class="card-text"> {{ $brand->name }}</p>
                             </div>    
                         </div>
                         <div class="col-sm-6 col-md-6">

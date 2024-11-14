@@ -33,7 +33,7 @@
                                 <div class="col-xl-8">
                                     <div class="mt-4 mt-xl-3">
                                         <div>
-                                            <a href="javascript: void(0);" class="text-primary">{{ $product->brand->brand_name }}</a>
+                                            <a href="javascript: void(0);" class="text-primary">{{ $product->brand->name }}</a>
                                             > {{ $product->productType->product_type_name }}
                                         </div>
 

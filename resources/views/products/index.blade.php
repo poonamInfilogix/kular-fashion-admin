@@ -45,7 +45,7 @@
                                             <td>{{ $product->manufacture_code }}</td>
                                             <td>{{ optional($product->department)->name }}</td>
                                             <td>{{ optional($product->productType)->product_type_name }}</td>
-                                            <td>{{ optional($product->brand)->brand_name }}</td>
+                                            <td>{{ optional($product->brand)->name }}</td>
                                             <td>
                                                 <input type="checkbox" id="{{ $product->id }}" class="update-status"
                                                     data-id="{{ $product->id }}" switch="success" data-on="Active"
