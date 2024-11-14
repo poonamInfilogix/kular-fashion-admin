@@ -59,7 +59,7 @@
                                     @foreach($brands as $key => $brand)
                                         <tr>
                                             <td>{{ ++$key }}</td>
-                                            <td>{{ $brand->brand_name }}</td>
+                                            <td>{{ $brand->name }}</td>
                                             <td><img src="{{ asset($brand->image) }}" width="50" height="50" 
                                                 onerror="this.onerror=null; this.src='{{ asset(setting('default_brand_image')) }}';" >
                                             </td>
