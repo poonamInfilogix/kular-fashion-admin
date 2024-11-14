@@ -43,16 +43,21 @@
                     @endforeach
 
                     <td @class(['actionColumn', 'd-none' => count($savedColors) <= 1])>
-                        @isset ($product)
-                            <a href="{{ route('products.remove-variant', $color['id'].'?productId='.$product->id) }}" class="btn btn-danger">
+                        <div class="d-flex gap-2">
+                            @isset ($product)
+                                <a href="{{ route('products.remove-variant', $color['id'].'?productId='.$product->id) }}" class="btn btn-danger">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            @else 
+                            <a href="{{ route('products.remove-variant', $color['id']) }}" class="btn btn-danger">
                                 <i class="fas fa-trash-alt"></i>
                             </a>
-                        @else 
-                        <a href="{{ route('products.remove-variant', $color['id']) }}" class="btn btn-danger">
-                            <i class="fas fa-trash-alt"></i>
-                        </a>
-                        @endisset
-                        
+                            @endisset
+                            
+                            <button type="button" class="btn btn-secondary copy-quantity-btn" data-color-id="{{ $color['id'] }}">
+                                <i class="mdi mdi-content-copy fs-6"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             @endif
