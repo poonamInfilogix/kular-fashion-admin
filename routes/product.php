@@ -12,3 +12,4 @@ Route::get('products/remove-variant/{colorId}', [ProductController::class, 'remo
 
 Route::put('products/update/step-1/{product}', [ProductController::class, 'updateStep1'])->name('products.update-step-1');
 Route::get('products/edit/step-2/{product}', [ProductController::class, 'editStep2'])->name('products.edit.step-2');
+Route::put('products/update/step-2/{product}', [ProductController::class, 'updateStep2'])->name('products.update-step-2');

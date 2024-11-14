@@ -132,7 +132,13 @@ class ProductController extends Controller
 
     
     public function editStep2(Product $product){
-        return view('products.steps.edit-step-2', compact('product'));
+        $sizes = $product->sizes;
+
+        $savedColorIds = $product->colors->pluck('color_id');
+        $savedColors = Color::whereIn('id', $savedColorIds)->get()->toArray();
+        $colors = Color::where('status','Active')->get();
+
+        return view('products.steps.edit-step-2', compact('product', 'sizes', 'savedColors', 'colors'));
     }
 
     public function saveStep2(Request $request){
@@ -253,8 +259,11 @@ class ProductController extends Controller
             'last_date' => $productData['last_date'] ?? NULL,
             'size_scale_id' => $productData['size_scale_id'] ?? NULL,
             'image' => $productData['image_path'] ?? NULL,
+            'min_size_id' => $productData['size_range_min'],
+            'max_size_id' => $productData['size_range_max'],
             'status' => $productData['status'],
         ]);
+
     
         foreach ($productData['supplier_color_codes'] as $index => $supplierCode) {
             $productColor = ProductColor::create([
@@ -302,47 +311,9 @@ class ProductController extends Controller
         return view('products.edit', compact('brands', 'productTypes', 'departments', 'product', 'taxes', 'tags', 'sizes', 'sizeScales'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $product)
     {
-        $request->validate([
-            'manufacture_code' => 'required|unique:products,manufacture_code,' . $id,
-            'brand_id'         => 'required',
-            'department_id'    => 'required',
-            'product_type_id'  => 'required',
-            'size_scale_id'    => 'required',
-            'supplier_price'   => 'required',
-            'mrp'              => 'required',
-        ]);
-
-        $product = Product::where('id', $id)->first();
-        $oldProductImage = $product ? $product->image : NULL;
-
-        if($request->image) {
-            $imageName = uploadFile($request->file('image'), 'uploads/products/');
-            $image_path = public_path($oldProductImage);
-
-            if ($oldProductImage && File::exists($image_path)) {
-                File::delete($image_path);
-            }
-        }
-
-        $product->update([
-            'manufacture_code'=> $request->manufacture_code,
-            'brand_id'        => $request->brand_id,
-            'product_type_id' => $request->product_type_id,
-            'mrp'             => $request->mrp,
-            'supplier_price'  => $request->supplier_price,
-            'department_id'   => $request->department_id,
-            'season'          => $request->season,
-            'supplier_ref'    => $request->supplier_ref,
-            'tax_id'          => $request->tax,
-            'in_date'         => $request->in_date,
-            'last_date'       => $request->last_date,
-            'short_description'=> $request->short_description,
-            'image'           => $imageName ?? $oldProductImage,
-            'status'          => $request->status,
-            'size_scale_id'   => $request->size_scale_id,
-        ]);
+        dd($request->all());
 
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
