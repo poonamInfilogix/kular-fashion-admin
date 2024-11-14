@@ -158,7 +158,7 @@ class ProductController extends Controller
 
         $request->validate([
             'colors' => 'required|array',
-            'colors.*' => 'required|distinct|exists:colors,id', // For all colors fields
+            'colors.*' => 'required|distinct|exists:colors,id',
             'supplier_color_code' => 'required|array',
             'supplier_color_code.*' => 'required|distinct|string|min:3|max:10', 
             'size_range_min' => 'required|exists:sizes,id',
@@ -181,11 +181,15 @@ class ProductController extends Controller
         }
 
         if($request->product_id){
-            ProductColor::create([
-                'product_id' => $request->product_id,
-                'color_id' => $request->color_select,
-                'supplier_color_code' => $request->supplier_color_code,
-            ]);
+            ProductColor::updateOrCreate(
+                [
+                    'product_id' => $request->product_id,
+                    'color_id' => $request->color_select,
+                ],
+                [
+                    'supplier_color_code' => $request->supplier_color_code,
+                ]
+            );            
         }
 
         $savingProduct = Session::get('savingProduct');
@@ -285,6 +289,14 @@ class ProductController extends Controller
             'status' => $productData['status'],
         ]);
 
+        
+        foreach ($productData['variantData']['mrp'] as $sizeId => $mrp) {
+            ProductSize::create([
+                'product_id' => $product->id,
+                'size_id' => $sizeId,
+                'mrp' => $mrp
+            ]);
+        }
     
         foreach ($productData['supplier_color_codes'] as $index => $supplierColorCode) {
             $productColor = ProductColor::create([
@@ -295,22 +307,16 @@ class ProductController extends Controller
 
             $color_id = $productData['colors'][$index];
             foreach ($productData['variantData']['quantity'][$color_id] as $sizeId => $quantity) {
+                $productSize = ProductSize::where('size_id',  $sizeId)->first();
+
                 ProductQuantity::create([
                     'product_id' => $product->id,
                     'product_color_id' => $productColor->id,
-                    'product_size_id' => $sizeId,
+                    'product_size_id' => $productSize->id,
                     'quantity' => $quantity,
                     'total_quantity' => $quantity,
                 ]);
             }
-        }
-
-        foreach ($productData['variantData']['mrp'] as $sizeId => $mrp) {
-            ProductSize::create([
-                'product_id' => $product->id,
-                'size_id' => $sizeId,
-                'mrp' => $mrp
-            ]);
         }
     
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
@@ -337,34 +343,37 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         foreach($request->mrp as $product_size_id => $mrp){
-            $product->sizes()->update([
-                'product_id' => $product->id, 
-                'size_id' => $product_size_id
-            ], [
+            ProductSize::find($product_size_id)->update([
                 'mrp' => $mrp
             ]);
         }
 
         echo '<pre>';
-        $productData = Session::get('savingProduct');
-        foreach ($productData['supplier_color_codes'] as $index => $supplierColorCode) {
-            $color_id = $productData['colors'][$index];
 
-            print_r($request->all());
-            dd($productData['variantData']['quantity']);
-            foreach ($productData['variantData']['quantity'][$color_id] as $sizeId => $quantity) {
-               /*  ProductQuantity::create([
-                    'product_id' => $product->id,
-                    'product_color_id' => $productColor->id,
-                    'product_size_id' => $sizeId,
-                    'quantity' => $quantity,
-                ]); */
+        $productData = Session::get('savingProduct');
+
+        foreach($request->quantity as $colorId => $tempQuantity){
+            $productColor = ProductColor::where('product_id', $product->id)->where('color_id', $colorId)->first();
+            if($productColor){
+                $productColorId = $productColor->id;
+
+                foreach($tempQuantity as $productSizeId => $newQuantity){
+                    $quantityRecord = ProductQuantity::where(
+                        [
+                            'product_id' => $product->id,
+                            'product_color_id' => $productColorId,
+                            'product_size_id' => $productSizeId,
+                        ]
+                    )->first();
+
+                    $quantityRecord->quantity += $newQuantity;
+                    $quantityRecord->total_quantity += $newQuantity;
+
+                    $quantityRecord->save();
+                }
             }
         }
-
-        dd(null);
-        dd($productData);
-        die('heheh!');
+        
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
 

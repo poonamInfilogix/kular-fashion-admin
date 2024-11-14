@@ -65,11 +65,11 @@
 @push('scripts')
     <script>
         $(function() {
-            $('#add-variant-btn').click(function() {
+            $('#add-variant-btn').on('click', function() {
                 $('#addVariantModal').modal('show');
             });
 
-            $('.copy-quantity-btn').click(function() {
+            $(document).on('click', '.copy-quantity-btn', function() {
                 let selectedColorId = $(this).attr('data-color-id');
                 $(`#copy_quantity_for_color option`).show();
                 $(`#copy_quantity_for_color option[value="${selectedColorId}"]`).hide();
@@ -78,7 +78,7 @@
                 $('#copyQuantityModal').modal('show');
             });
 
-            $('#copyQuantity').click(function() {
+            $('#copyQuantity').on('click', function() {
                 let colorIdForCopy = $('#copy_quantity_for_color').val();
                 let colorIdToBeCopied = $(this).attr('data-selected-color-id');
 
@@ -136,18 +136,29 @@
 
                             $.each(sizes, function(index, size) {
                                 let $newTd = $('<td></td>');
-                                $newTd.html(
-                                    `<input type="number" name="quantity[${response.data.color_id}][${size}]" value="0" class="form-control">`
-                                );
+                                let quantityCell = `<input type="number" name="quantity[${response.data.color_id}][${size}]" value="0" class="form-control">`;
+                                @isset($product)
+                                    quantityCell += `<h6 class="mt-1 mb-0">Total in: <b>0</b></h6>`;
+                                @endisset
+                                $newTd.html(quantityCell);
                                 $newRow.append($newTd);
                             });
+
+                            @isset($product)
+                                $newRow.append('<td class="fs-5 text-center">0</td>');
+                            @endisset
 
                             // Add delete button as the last cell
                             let $deleteTd = $('<td></td>');
                             $deleteTd.html(`
                             <a href="{{ route('products.remove-variant', '') }}/${response.data.color_id}" class="btn btn-danger"> 
                                <i class="fas fa-trash-alt"></i>
-                            </a>`);
+                            </a>
+                            <button type="button" class="btn btn-secondary copy-quantity-btn" data-color-id="${response.data.color_id}">
+                                <i class="mdi mdi-content-copy fs-6"></i>
+                            </button>`);
+
+                            $('#copy_quantity_for_color').append(`<option value="${response.data.color_id}">${response.data.color_name} (${response.data.color_code})</option>`);
 
                             $newRow.append($deleteTd);
 

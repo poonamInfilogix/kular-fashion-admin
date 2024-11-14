@@ -13,7 +13,7 @@ class ProductSize extends Model
     }
 
     public function quantity($product_color_id = null){
-        $query = $this->hasMany(ProductQuantity::class, 'product_size_id', 'size_id');
+        $query = $this->hasMany(ProductQuantity::class, 'product_size_id', 'id');
     
         if ($product_color_id) {
             $query->where('product_color_id', $product_color_id);
@@ -23,7 +23,7 @@ class ProductSize extends Model
     }
 
     public function totalQuantity($product_color_id = null){
-        $query = $this->hasMany(ProductQuantity::class, 'product_size_id', 'size_id');
+        $query = $this->hasMany(ProductQuantity::class, 'product_size_id', 'id');
     
         if ($product_color_id) {
             $query->where('product_color_id', $product_color_id);
