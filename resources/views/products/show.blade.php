@@ -39,7 +39,6 @@
 
                                         <h4 class="mt-1 mb-2">Article Code: {{ $product->article_code }}</h4>
                                         <h6 class="mb-2">Manufacture Code: {{ $product->manufacture_code }}</h6>
-                                        <h6 class="mb-2">Supplier Price: {{ $product->supplier_price }}</h6>
                                         <h6 class="mb-2">In Date: {{ $product->in_date }}</h6>
                                         <h6 class="mb-3">Price: <b>£{{ $product->mrp }}</b></h6>
                                         <p class="text-muted mb-4">{{ $product->short_description }}</p>

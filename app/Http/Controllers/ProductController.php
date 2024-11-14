@@ -16,7 +16,6 @@ use App\Models\Size;
 use App\Models\SizeScale;
 use App\Models\Tax;
 use App\Models\Tag;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
@@ -134,8 +133,15 @@ class ProductController extends Controller
     public function editStep2(Product $product){
         $sizes = $product->sizes;
 
-        $savedColorIds = $product->colors->pluck('color_id');
-        $savedColors = Color::whereIn('id', $savedColorIds)->get()->toArray();
+        $savedColorIds = $product->colors->pluck('color_id')->toArray();
+        $reversedColorIds = array_reverse($savedColorIds);
+        $savedColors = Color::whereIn('id', $reversedColorIds)->get();
+        $savedColorsMapped = $savedColors->keyBy('id')->toArray();
+
+        $savedColors = array_map(function ($colorId) use ($savedColorsMapped) {
+            return $savedColorsMapped[$colorId] ?? null;
+        }, $reversedColorIds);
+
         $colors = Color::where('status','Active')->get();
 
         return view('products.steps.edit-step-2', compact('product', 'sizes', 'savedColors', 'colors'));
@@ -174,6 +180,14 @@ class ProductController extends Controller
             $errors = new MessageBag(); 
         }
 
+        if($request->product_id){
+            ProductColor::create([
+                'product_id' => $request->product_id,
+                'color_id' => $request->color_select,
+                'supplier_color_code' => $request->supplier_color_code,
+            ]);
+        }
+
         $savingProduct = Session::get('savingProduct');
 
         if ($savingProduct) {
@@ -210,8 +224,15 @@ class ProductController extends Controller
         // Retrieve the product session data
         $savingProduct = Session::get('savingProduct');
         
-        if (!$savingProduct) {
+        if (!$savingProduct && !$request->productId) {
             return response()->json(['error' => 'No product session found.'], 404);
+        }
+
+        if($request->productId){
+            $product = Product::find($request->productId);
+            if($product){
+                $product->colors()->where('color_id', $colorId)->delete();
+            }
         }
 
         // Check if colorId exists in the 'colors' array
@@ -265,12 +286,13 @@ class ProductController extends Controller
         ]);
 
     
-        foreach ($productData['supplier_color_codes'] as $index => $supplierCode) {
+        foreach ($productData['supplier_color_codes'] as $index => $supplierColorCode) {
             $productColor = ProductColor::create([
                 'product_id' => $product->id,
                 'color_id' => $productData['colors'][$index],
-                'supplier_color_code' => $supplierCode,
+                'supplier_color_code' => $supplierColorCode,
             ]);
+
             $color_id = $productData['colors'][$index];
             foreach ($productData['variantData']['quantity'][$color_id] as $sizeId => $quantity) {
                 ProductQuantity::create([
@@ -313,8 +335,34 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        dd($request->all());
+        foreach($request->mrp as $product_size_id => $mrp){
+            $product->sizes()->updateOrCreate([
+                'product_id' => $product->id, 
+                'size_id' => $product_size_id
+            ], [
+                'mrp' => $mrp
+            ]);
+        }
 
+        dd($request->quantity);
+
+        $productData = Session::get('savingProduct');
+        foreach ($productData['supplier_color_codes'] as $index => $supplierColorCode) {
+            dd($product->quantities->toArray());
+
+            $color_id = $productData['colors'][$index];
+            foreach ($productData['variantData']['quantity'][$color_id] as $sizeId => $quantity) {
+                ProductQuantity::create([
+                    'product_id' => $product->id,
+                    'product_color_id' => $productColor->id,
+                    'product_size_id' => $sizeId,
+                    'quantity' => $quantity,
+                ]);
+            }
+        }
+
+        dd($productData);
+        die('heheh!');
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
 
@@ -394,7 +442,14 @@ class ProductController extends Controller
 
         $sizes = Size::whereBetween('id', [$savingProduct->size_range_min, $savingProduct->size_range_max])->get();
 
-        $savedColors = Color::whereIn('id', $savingProduct->colors)->get()->toArray();
+        $reversedColors = array_reverse($savingProduct->colors);
+        $savedColors = Color::whereIn('id', $reversedColors)->get();
+        $savedColorsMapped = $savedColors->keyBy('id')->toArray();
+
+        $savedColors = array_map(function ($colorId) use ($savedColorsMapped) {
+            return $savedColorsMapped[$colorId] ?? null;
+        }, $reversedColors);
+
         $colors = Color::where('status','Active')->get();
 
         return view('products.steps.step-3', compact('savingProduct', 'sizes', 'savedColors', 'colors'));

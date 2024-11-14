@@ -15,32 +15,47 @@
                 $quantityData = $savingProduct->variantData->quantity;
             }
         @endphp
+
         @foreach ($savedColors as $color)
-            <tr data-id="rm-{{ $color['id'] }}">
-                <th>{{ $color['color_name'] }} ({{ $color['color_code'] }})</th>
-                @foreach ($sizes as $key => $size)
+            @if ($color)
+                <tr data-id="rm-{{ $color['id'] }}">
+                    <th>
+                        {{ $color['color_name'] }} ({{ $color['color_code'] }})
+                    </th>
+                    @foreach ($sizes as $key => $size)
+                        @php
+                        $quantity = 0;
+                        if(isset($product) ? $product->colors->where('color_id', $color['id'])->first() : null){
+                            $savedProductColorId = $product->colors->where('color_id', $color['id'])->first()->id;
+                            $quantity = $size->quantity($savedProductColorId);
+                        }
+                        @endphp
 
-                @php
-                $quantity = 0;
-                if(isset($product) ? $product->colors->where('color_id', $color['id'])->first() : null){
-                    $savedProductColorId = $product->colors->where('color_id', $color['id'])->first()->id;
-                    $quantity = $size->quantity($savedProductColorId);
-                }
-                @endphp
+                        <td>
+                            <input type="number" name="quantity[{{ $color['id'] }}][{{ $size->id }}]"
+                                value="{{ isset($quantityData) ? $quantityData[$color['id']] : 0 }}"
+                                class="form-control">
 
-                    <td>
-                        <input type="number" name="quantity[{{ $color['id'] }}][{{ $size->id }}]"
-                            value="{{ isset($quantityData) ? $quantityData[$color['id']] : $quantity }}"
-                            class="form-control">
+                            @isset($product)
+                                <h6 class="mt-1 mb-0">Total in: <b>{{ $quantity }}</b></h6>
+                            @endisset
+                        </td>
+                    @endforeach
+
+                    <td @class(['actionColumn', 'd-none' => count($savedColors) <= 1])>
+                        @isset ($product)
+                            <a href="{{ route('products.remove-variant', $color['id'].'?productId='.$product->id) }}" class="btn btn-danger">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        @else 
+                        <a href="{{ route('products.remove-variant', $color['id']) }}" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                        @endisset
+                        
                     </td>
-                @endforeach
-
-                <td @class(['actionColumn', 'd-none' => count($savedColors) <= 1])>
-                    <a href="{{ route('products.remove-variant', $color['id']) }}" class="btn btn-danger">
-                        <i class="fas fa-trash-alt"></i>
-                    </a>
-                </td>
-            </tr>
+                </tr>
+            @endif
         @endforeach
         <tr>
             <th>MRP</th>

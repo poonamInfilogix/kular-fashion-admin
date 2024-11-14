@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('product_color_id')->constrained('product_colors')->onDelete('cascade');
             $table->foreignId('product_size_id')->unsigned(); 
             $table->integer('quantity')->default(0);
+            $table->integer('total_quantity')->default(0);
             $table->timestamps();
         });
     }

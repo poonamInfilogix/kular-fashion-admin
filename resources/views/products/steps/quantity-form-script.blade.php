@@ -50,6 +50,7 @@
                 let formData = {
                     supplier_color_code: $('#supplier_color_code').val(),
                     color_select: $('#color_select').val(),
+                    product_id: '{{ isset($product) ? $product->id : 0 }}',
                     _token: '{{ csrf_token() }}'
                 };
 
@@ -90,12 +91,7 @@
                         
                         $newRow.append($deleteTd);
 
-                        // Insert the new row at the second position or append if only one row exists
-                        if ($tbody.children().length > 1) {
-                            $tbody.children().eq(1).before($newRow);
-                        } else {
-                            $tbody.append($newRow);
-                        }
+                        $tbody.prepend($newRow);
                     }
                 })
                 .fail(function(xhr) {
