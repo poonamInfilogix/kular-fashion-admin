@@ -26,15 +26,15 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <form action="{{ route('products.store') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('products.save-step-1') }}" method="post" enctype="multipart/form-data">
                                 @csrf
-                                @include('products.form')
+                                @include('products.steps.step-1-form')
                             </form>    
                         </div>    
                     </div>
-                </div> <!-- end col -->
-            </div> <!-- end row -->
-        </div> <!-- container-fluid -->
+                </div>
+            </div>
+        </div> 
     </div>
 
 @endsection

@@ -124,11 +124,11 @@
             <label class="form-label">Image</label>
             <input type="file" name="image" id="add-product-image" class="form-control" accept="image/*">
 
-            <div class="col-md-6 mt-2">
-                @if(isset($product->image_path))
-                    <img src="{{ asset($product->image_path) }}" id="preview-product" class="img-preview img-fluid w-100">
+            <div class="col-md-12 mt-2">
+                @if(isset($product->image_path) || isset($product->image))
+                    <img src="{{ asset($product->image_path ?? $product->image) }}" id="preview-product" class="img-preview img-fluid w-100" onerror="this.onerror=null; this.src='{{ asset(setting('default_product_image')) }}';">
                 @else
-                    <img src="" id="preview-product" class="img-fluid w-100;" name="image" hidden>
+                    <img src="{{ asset(setting('default_product_image')) }}" id="preview-product" class="img-fluid w-100;" name="image">
                 @endif
             </div>
         </div>
@@ -155,9 +155,7 @@
             <select name="tag_id[]" id="tag_id" class="form-control{{ $errors->has('tag_id') ? ' is-invalid' : '' }}" multiple>
                 <option value="" disabled>Select tag</option>
                 @foreach($tags as $tag)
-                    <option value="{{ $tag->id }}" 
-                        @if((old('tag_id') && in_array($tag->id, old('tag_id'))) || (isset($product) && in_array($tag->id, $product->tag_id)))  selected 
-                        @endif>
+                    <option value="{{ $tag->id }}" @selected(old('tag_id') && in_array($tag->id, old('tag_id')))>
                         {{ $tag->tag_name }}
                     </option>
                 @endforeach
@@ -190,7 +188,7 @@
 
 <div class="row mb-2">
     <div class="col-lg-6 mb-2">
-        <button type="submit" class="btn btn-primary w-md">Submit</button>
+        <button type="submit" class="btn btn-primary w-md">Coninue</button>
     </div>
 </div>
 

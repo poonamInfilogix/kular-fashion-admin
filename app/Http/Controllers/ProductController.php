@@ -42,7 +42,7 @@ class ProductController extends Controller
         $tags  = Tag::latest()->get();
         $sizeScales = SizeScale::select('id', 'size_scale')->where('status', 'Active')->latest()->with('sizes')->get();
 
-        return view('products.steps.step-1', compact('latestNewCode', 'brands', 'departments', 'taxes', 'tags', 'sizeScales'));
+        return view('products.create', compact('latestNewCode', 'brands', 'departments', 'taxes', 'tags', 'sizeScales'));
     }
 
     public function saveStep1(Request $request){
@@ -73,6 +73,66 @@ class ProductController extends Controller
         
         Session::put('savingProduct', $productData);
         return redirect()->route('products.create.step-2');
+    }
+
+    public function updateStep1(Request $request, $productId){
+        $request->validate([
+            'manufacture_code'  => 'required|unique:products,manufacture_code,'.$productId,
+            'brand_id'          => 'required',
+            'department_id'     => 'required',
+            'product_type_id'   => 'required',
+            'size_scale_id'     => 'required',
+            'supplier_price'    => 'required',
+            'mrp'               => 'required',
+            'short_description' => 'required',
+            'image'             => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048'
+        ]);
+
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = $request->article_code . '.' . $image->getClientOriginalExtension();
+            $path = 'uploads/products/';
+            $image->move(public_path($path), $imageName);
+        
+            // Store only the file path in the data array
+            $imagePath = $path . $imageName;
+        }
+
+        
+        $product = Product::find($productId);
+
+        if(!$imagePath){
+            $imagePath = $product->image;
+        }
+
+        if ($product) {
+            $product->update([
+                'manufacture_code' => $request->manufacture_code,
+                'department_id' => $request->department_id,
+                'brand_id' => $request->brand_id,
+                'product_type_id' => $request->product_type_id,
+                'short_description' => $request->short_description,
+                'mrp' => $request->mrp,
+                'supplier_price' => $request->supplier_price,
+                'season' => $request->season,
+                'supplier_ref' => $request->supplier_ref,
+                'tax_id' => $request->tax_id,
+                'in_date' => $request->in_date,
+                'last_date' => $request->last_date,
+                'size_scale_id' => $request->size_scale_id,
+                'image' => $imagePath,
+                'status' => $request->status,
+            ]);
+        }
+
+        return redirect()->route('products.edit.step-2', $productId);
+    }
+
+    
+    public function editStep2(Product $product){
+        return view('products.steps.edit-step-2', compact('product'));
     }
 
     public function saveStep2(Request $request){
@@ -173,7 +233,6 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        
         $productData = Session::get('savingProduct');
         $productData['variantData'] = $request->all();
         Session::put('savingProduct', $productData);
@@ -192,7 +251,6 @@ class ProductController extends Controller
             'tax_id' => $productData['tax_id'] ?? NULL,
             'in_date' => $productData['in_date'] ?? NULL,
             'last_date' => $productData['last_date'] ?? NULL,
-            'tag_id' => $productData['tag_id'] ?? NULL,
             'size_scale_id' => $productData['size_scale_id'] ?? NULL,
             'image' => $productData['image_path'] ?? NULL,
             'status' => $productData['status'],
@@ -240,7 +298,6 @@ class ProductController extends Controller
         $tags  = Tag::latest()->get();
         $sizeScales = SizeScale::latest()->get();
         $sizes = Size::latest()->get();
-        $product['tag_id'] = explode(',' ,$product->tag_id);
 
         return view('products.edit', compact('brands', 'productTypes', 'departments', 'product', 'taxes', 'tags', 'sizes', 'sizeScales'));
     }
@@ -269,13 +326,6 @@ class ProductController extends Controller
             }
         }
 
-        if (is_array($request->tag_id)) {
-            $tags = implode(',', $request->tag_id);
-        } else {
-            $tags = $request->tag_id;
-        }
-
-
         $product->update([
             'manufacture_code'=> $request->manufacture_code,
             'brand_id'        => $request->brand_id,
@@ -291,7 +341,6 @@ class ProductController extends Controller
             'short_description'=> $request->short_description,
             'image'           => $imageName ?? $oldProductImage,
             'status'          => $request->status,
-            'tag_id'          => $tags,
             'size_scale_id'   => $request->size_scale_id,
         ]);
 
@@ -346,7 +395,7 @@ class ProductController extends Controller
 
         $product = (object)Session::get('savingProduct');
 
-        return view('products.steps.step-1', compact('latestNewCode', 'product', 'brands', 'departments', 'taxes', 'tags', 'sizeScales'));
+        return view('products.create', compact('latestNewCode', 'product', 'brands', 'departments', 'taxes', 'tags', 'sizeScales'));
     }
 
     public function productStep2()

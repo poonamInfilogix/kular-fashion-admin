@@ -27,7 +27,6 @@ return new class extends Migration
             $table->unsignedBigInteger('tax_id')->nullable()->index();
             $table->date('in_date')->nullable();
             $table->date('last_date')->nullable();
-            $table->string('tag_id')->nullable();
             $table->unsignedBigInteger('size_scale_id')->nullable()->index();
             $table->unsignedBigInteger('min_size_id')->nullable()->index();
             $table->unsignedBigInteger('max_size_id')->nullable()->index();
