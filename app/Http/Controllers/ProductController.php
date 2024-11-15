@@ -446,7 +446,8 @@ class ProductController extends Controller
         return view('products.steps.step-2', compact('savingProduct','brand','sizeScale','colors','sizes'));
     }
 
-    public function productStep3(Request $request){
+    public function productStep3(Request $request)
+    {
         $savingProduct = (object)Session::get('savingProduct');
         if (empty($savingProduct->size_scale_id)) {
             return redirect()->route('products.create.step-1');
@@ -465,5 +466,10 @@ class ProductController extends Controller
         $colors = Color::where('status','Active')->get();
 
         return view('products.steps.step-3', compact('savingProduct', 'sizes', 'savedColors', 'colors'));
+    }
+
+    public function brandMargin()
+    {
+        
     }
 }
