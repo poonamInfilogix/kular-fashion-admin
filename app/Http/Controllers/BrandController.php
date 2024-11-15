@@ -36,10 +36,11 @@ class BrandController extends Controller
         $imageName = uploadFile($request->file('brand_image'), 'uploads/brands/');
 
         Brand::create([
-            'name'          => $request->brand_name,
+            'name'          => $request->name,
             'status'        => $request->status,
             'description'   => $request->description,
-            'image'         => $imageName
+            'image'         => $imageName,
+            'margin'        => $request->margin
         ]);
 
         return redirect()->route('brands.index')->with('success', 'Brand created successfully.');
@@ -60,7 +61,7 @@ class BrandController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'brand_name' => [
+            'name' => [
                 'required',
                 Rule::unique('brands')->ignore($id)->whereNull('deleted_at'),
             ],
@@ -79,10 +80,11 @@ class BrandController extends Controller
         }
 
         $brand->update([
-            'name'          => $request->brand_name,
+            'name'          => $request->name,
             'status'        => $request->status,
             'description'   => $request->description,
-            'image'         => $imageName ?? $oldBrandImage
+            'image'         => $imageName ?? $oldBrandImage,
+            'margin'        => $request->margin
         ]);
 
         return redirect()->route('brands.index')->with('success', 'Brand updated successfully.');

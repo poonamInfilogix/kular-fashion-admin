@@ -16,6 +16,7 @@ use App\Models\Size;
 use App\Models\SizeScale;
 use App\Models\Tax;
 use App\Models\Tag;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
@@ -46,7 +47,10 @@ class ProductController extends Controller
 
     public function saveStep1(Request $request){
         $request->validate([
-            'manufacture_code'  => 'required|unique:products,manufacture_code',
+            'manufacture_code' => [
+                'required',
+                    Rule::unique('products')->whereNull('deleted_at'),
+                ],
             'brand_id'          => 'required',
             'department_id'     => 'required',
             'product_type_id'   => 'required',
@@ -76,7 +80,10 @@ class ProductController extends Controller
 
     public function updateStep1(Request $request, $productId){
         $request->validate([
-            'manufacture_code'  => 'required|unique:products,manufacture_code,'.$productId,
+            'manufacture_code' => [
+                'required',
+                Rule::unique('products')->ignore($productId)->whereNull('deleted_at'),
+            ],
             'brand_id'          => 'required',
             'department_id'     => 'required',
             'product_type_id'   => 'required',
@@ -129,7 +136,6 @@ class ProductController extends Controller
         return redirect()->route('products.edit.step-2', $productId);
     }
 
-    
     public function editStep2(Product $product){
         $sizes = $product->sizes;
 
@@ -373,9 +379,9 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
 
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        Product::where('id', $id)->delete();
+        $product->delete();
 
         return response()->json([
             'success' => true,
@@ -440,7 +446,8 @@ class ProductController extends Controller
         return view('products.steps.step-2', compact('savingProduct','brand','sizeScale','colors','sizes'));
     }
 
-    public function productStep3(Request $request){
+    public function productStep3(Request $request)
+    {
         $savingProduct = (object)Session::get('savingProduct');
         if (empty($savingProduct->size_scale_id)) {
             return redirect()->route('products.create.step-1');
@@ -461,4 +468,8 @@ class ProductController extends Controller
         return view('products.steps.step-3', compact('savingProduct', 'sizes', 'savedColors', 'colors'));
     }
 
+    public function brandMargin()
+    {
+        
+    }
 }

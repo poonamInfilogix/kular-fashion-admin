@@ -51,7 +51,7 @@
             <select name="brand_id" id="brand_id" class="form-control{{ $errors->has('brand_id') ? ' is-invalid' : '' }}">
                 <option value="" disabled selected>Select brand</option>
                 @foreach($brands as $brand)
-                    <option value="{{ $brand->id }}" @selected(old('brand_id', $product->brand_id ?? '') == $brand->id)>
+                    <option value="{{ $brand->id }}" data-margin="{{ $brand->margin }}" @selected(old('brand_id', $product->brand_id ?? '') == $brand->id)>
                         {{ $brand->name }}
                     </option>
                 @endforeach
@@ -60,6 +60,7 @@
                 <span class="invalid-feedback">{{ $message }}</span>
             @enderror
         </div>
+        <input type="hidden" id="brand_margin" value="{{ $product->brand->margin ?? 50 }}">
     </div>
 
     <div class="col-sm-6 col-md-2">
@@ -276,16 +277,36 @@
             refreshProductTypeDropdown(departmentId);
         });
 
-        $('#mrp').on('input', function() {
-            var mrp = parseFloat($(this).val()); // Get the value of MRP
-            if (!isNaN(mrp)) {
-                var supplierPrice = mrp * 0.5; // Calculate 50% of MRP
-                $('#supplier_price').val(supplierPrice); // Set the Supplier Price field
+        function updateSupplierPrice() {
+            var margin = parseFloat($('#brand_margin').val());
+            console.log(margin);
+            var mrp = parseFloat($('#mrp').val());
+
+            if (!isNaN(mrp) && margin >= 0) {
+                var supplierPrice = mrp * (1 - margin / 100);
+                $('#supplier_price').val(supplierPrice.toFixed(2));
             } else {
-                $('#supplier_price').val(''); // Clear Supplier Price if MRP is invalid
+                $('#supplier_price').val('');
             }
+        }
+
+        $('#brand_id').change(function() {
+            var selectedBrand = $(this).find('option:selected');
+            var margin = selectedBrand.data('margin');
+
+            $('#brand_margin').val(margin);
+            updateSupplierPrice();
         });
+
+        $('#mrp').on('input', function() {
+            updateSupplierPrice(); // Recalculate supplier price when MRP is changed
+        });
+
+        if ($('#brand_id').val()) {
+            updateSupplierPrice();
+        }
     });
+
     // Get product type on page load
     $(document).ready(function(){
         var departmentId = $('#department_id').val();
