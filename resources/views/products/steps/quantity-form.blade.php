@@ -7,7 +7,7 @@
             @endforeach
 
             @isset($product)
-                <th style="width: 75px">Total In</th>
+                <th class="text-center" style="width: 60px">Qty</th>
             @endisset
 
             <th @class(['actionColumn', 'd-none' => count($savedColors) <= 1])>Action</th>

@@ -76,20 +76,18 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <label for="tax_id">Tax</label>
-            <select name="tax_id" id="tax_id" class="form-control{{ $errors->has('tax_id') ? ' is-invalid' : '' }}">
-                <option value="" disabled>Select Tax</option>
-                @foreach($taxes as $tax)
-                    <option value="{{ $tax->id }}" @selected(isset($product->tax_id) && $product->tax_id == $tax->id)
-                        @selected(!isset($product->tax_id) && $tax->is_default == 1)>{{ $tax->tax }}%
+            <label for="tag_id">Tag</label>
+            <select name="tag_id[]" id="tag_id" class="form-control{{ $errors->has('tag_id') ? ' is-invalid' : '' }}" multiple>
+                <option value="" disabled>Select tag</option>
+                @foreach($tags as $tag)
+                    <option value="{{ $tag->id }}" @selected(old('tag_id') && in_array($tag->id, old('tag_id')))>
+                        {{ $tag->tag_name }}
                     </option>
                 @endforeach
             </select>
-            @error('tax_id')
-                <span class="invalid-feedback">{{ $message }}</span>
-            @enderror
         </div>
     </div>
+
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <x-form-input name="supplier_price" type="number" step="0.01" value="{{ $product->supplier_price ?? '' }}" label="Supplier Price" placeholder="Enter Supplier Price" required="true"/>
@@ -151,15 +149,18 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <label for="tag_id">Tag</label>
-            <select name="tag_id[]" id="tag_id" class="form-control{{ $errors->has('tag_id') ? ' is-invalid' : '' }}" multiple>
-                <option value="" disabled>Select tag</option>
-                @foreach($tags as $tag)
-                    <option value="{{ $tag->id }}" @selected(old('tag_id') && in_array($tag->id, old('tag_id')))>
-                        {{ $tag->tag_name }}
+            <label for="tax_id">Tax</label>
+            <select name="tax_id" id="tax_id" class="form-control{{ $errors->has('tax_id') ? ' is-invalid' : '' }}">
+                <option value="" disabled>Select Tax</option>
+                @foreach($taxes as $tax)
+                    <option value="{{ $tax->id }}" @selected(isset($product->tax_id) && $product->tax_id == $tax->id)
+                        @selected(!isset($product->tax_id) && $tax->is_default == 1)>{{ $tax->tax }}%
                     </option>
                 @endforeach
             </select>
+            @error('tax_id')
+                <span class="invalid-feedback">{{ $message }}</span>
+            @enderror
         </div>
     </div>
 

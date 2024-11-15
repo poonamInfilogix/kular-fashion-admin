@@ -35,10 +35,10 @@ class ProductController extends Controller
         $latestProduct = Product::orderBy('article_code', 'desc')->first();
 
         $latestNewCode = $latestProduct ? (int)$latestProduct->article_code : 300000;
-        $brands = Brand::whereNull('deleted_at')->latest()->get();
-        $departments = Department::whereNull('deleted_at')->latest()->get();
-        $taxes = Tax::latest()->get();
-        $tags  = Tag::latest()->get();
+        $brands = Brand::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
+        $departments = Department::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
+        $taxes = Tax::where('status', 'Active')->latest()->get();
+        $tags  = Tag::where('status', 'Active')->latest()->get();
         $sizeScales = SizeScale::select('id', 'size_scale')->where('status', 'Active')->latest()->with('sizes')->get();
 
         return view('products.create', compact('latestNewCode', 'brands', 'departments', 'taxes', 'tags', 'sizeScales'));
@@ -329,13 +329,13 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        $brands = Brand::whereNull('deleted_at')->latest()->get();
-        $departments = Department::whereNull('deleted_at')->latest()->get();
-        $productTypes = ProductType::whereNull('deleted_at')->latest()->get();
-        $taxes = Tax::latest()->get();
-        $tags  = Tag::latest()->get();
-        $sizeScales = SizeScale::latest()->get();
-        $sizes = Size::latest()->get();
+        $brands = Brand::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
+        $departments = Department::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
+        $productTypes = ProductType::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
+        $taxes = Tax::where('status', 'Active')->latest()->get();
+        $tags  = Tag::where('status', 'Active')->latest()->get();
+        $sizeScales = SizeScale::where('status', 'Active')->latest()->get();
+        $sizes = Size::where('status', 'Active')->latest()->get();
 
         return view('products.edit', compact('brands', 'productTypes', 'departments', 'product', 'taxes', 'tags', 'sizes', 'sizeScales'));
     }
@@ -347,10 +347,6 @@ class ProductController extends Controller
                 'mrp' => $mrp
             ]);
         }
-
-        echo '<pre>';
-
-        $productData = Session::get('savingProduct');
 
         foreach($request->quantity as $colorId => $tempQuantity){
             $productColor = ProductColor::where('product_id', $product->id)->where('color_id', $colorId)->first();
@@ -407,7 +403,6 @@ class ProductController extends Controller
     public function getDepartment($departmentId)
     {
         $productTypes = ProductTypeDepartment::with('productTypes')->where('department_id',$departmentId)->get();
-        //$productTypes = ProductType::where('department_id', $departmentId)->whereNull('deleted_at')->get();
 
         return response()->json($productTypes);
     }
@@ -417,10 +412,10 @@ class ProductController extends Controller
         $latestProduct = Product::orderBy('article_code', 'desc')->first();
 
         $latestNewCode = $latestProduct ? (int)$latestProduct->article_code : 300000;
-        $brands = Brand::whereNull('deleted_at')->latest()->get();
-        $departments = Department::whereNull('deleted_at')->latest()->get();
-        $taxes = Tax::latest()->get();
-        $tags  = Tag::latest()->get();
+        $brands = Brand::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
+        $departments = Department::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
+        $taxes = Tax::where('status', 'Active')->latest()->get();
+        $tags  = Tag::where('status', 'Active')->latest()->get();
         $sizeScales = SizeScale::select('id', 'size_scale')->where('status', 'Active')->latest()->with('sizes')->get();
 
         $product = (object)Session::get('savingProduct');

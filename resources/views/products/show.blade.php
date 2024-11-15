@@ -22,7 +22,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body pt-0">
                             <div class="row">
                                 <div class="col-xl-4">
                                     <img src="{{ asset($product->image) }}" alt=""
@@ -32,16 +32,26 @@
 
                                 <div class="col-xl-8">
                                     <div class="mt-4 mt-xl-3">
-                                        <div>
-                                            <a href="javascript: void(0);" class="text-primary">{{ $product->brand->name }}</a>
-                                            > {{ $product->productType->product_type_name }}
-                                        </div>
-
                                         <h4 class="mt-1 mb-2">Article Code: {{ $product->article_code }}</h4>
-                                        <h6 class="mb-2">Manufacture Code: {{ $product->manufacture_code }}</h6>
-                                        <h6 class="mb-2">In Date: {{ $product->in_date }}</h6>
-                                        <h6 class="mb-3">Price: <b>£{{ $product->mrp }}</b></h6>
-                                        <p class="text-muted mb-4">{{ $product->short_description }}</p>
+                                        <p class="text-muted mb-2">{{ $product->short_description }}</p>
+
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div>
+                                                    <a href="javascript: void(0);" class="text-primary">{{ $product->brand->name }}</a>
+                                                    > {{ $product->productType->product_type_name }}
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <h6 class="mb-2">Manufacture Code: {{ $product->manufacture_code }}</h6>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <h6 class="mb-2">In Date: {{ $product->in_date }}</h6>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <h6 class="mb-3">Price: <b>£{{ $product->mrp }}</b></h6>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
