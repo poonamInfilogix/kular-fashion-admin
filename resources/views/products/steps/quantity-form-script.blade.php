@@ -131,7 +131,7 @@
 
                             let $newRow = $('<tr></tr>');
                             let $newTh = $('<th></th>').html(
-                                `<div class="me-1" style="border: 1px solid; border-radius: 4px; height: 1.5rem; width: 1.5rem; background: ${response.data.ui_color_code}"></div>${response.data.color_name} (${response.data.color_code})`);
+                                `<div class="me-1 d-color-code" style="background: ${response.data.ui_color_code}"></div>${response.data.color_name} (${response.data.color_code})`);
                             $newRow.append($newTh);
 
                             $.each(sizes, function(index, size) {

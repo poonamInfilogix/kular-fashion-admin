@@ -28,7 +28,7 @@
 
                 <tr data-id="rm-{{ $color['id'] }}">
                     <th>
-                        <div class="me-1" style="border: 1px solid; border-radius: 4px; height: 1.5rem; width: 1.5rem; background: {{ $color['ui_color_code'] }}"></div>
+                        <div class="me-1 d-color-code" style="background: {{ $color['ui_color_code'] }}"></div>
                         {{ $color['color_name'] }} ({{ $color['color_code'] }})
                     </th>
                     @foreach ($sizes as $key => $size)
