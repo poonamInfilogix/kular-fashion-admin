@@ -11,12 +11,12 @@ class TaxController extends Controller
     {
         $taxes = Tax::latest()->get();
 
-        return view('setting.tax-settings.index', compact('taxes'));
+        return view('settings.tax-settings.index', compact('taxes'));
     }
 
     public function create()
     {
-        return view('setting.tax-settings.create');
+        return view('settings.tax-settings.create');
     }
 
     public function store(Request $request)
@@ -53,7 +53,7 @@ class TaxController extends Controller
     {
         $tax = Tax::where('id', $id)->first();
 
-        return view('setting.tax-settings.edit', compact('tax'));
+        return view('settings.tax-settings.edit', compact('tax'));
     }
 
     public function update(Request $request, $id)

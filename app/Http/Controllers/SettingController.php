@@ -10,7 +10,7 @@ class SettingController extends Controller
 {
     public function index()
     {
-        return view('setting.default-images.index');
+        return view('settings.default-images.index');
     }
 
     public function store(Request $request)
@@ -50,7 +50,7 @@ class SettingController extends Controller
 
     public function generalSetting()
     {
-        return view('setting.general-settings.index');
+        return view('settings.general-settings.index');
     }
 
     public function generalSettingStore(Request $request)
