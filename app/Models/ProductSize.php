@@ -29,6 +29,9 @@ class ProductSize extends Model
             $query->where('product_color_id', $product_color_id);
         }
         
+        echo 'product_color_id'.$product_color_id.'<br>';
+        dd($query->toSql());
+        die();
         return $query->first()->total_quantity ?? 0;
     }
 }

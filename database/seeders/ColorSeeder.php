@@ -17,7 +17,7 @@ class ColorSeeder extends Seeder
             [
                 'color_name' => 'Red',
                 'color_code' => '100',
-                'ui_color_code' => 'FF0000',
+                'ui_color_code' => '#FF0000',
             ],
             [
                 'color_name' => 'Green',

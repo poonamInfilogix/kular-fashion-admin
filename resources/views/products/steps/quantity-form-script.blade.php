@@ -130,8 +130,8 @@
                                 .get();
 
                             let $newRow = $('<tr></tr>');
-                            let $newTh = $('<th></th>').text(
-                                `${response.data.color_name} (${response.data.color_code})`);
+                            let $newTh = $('<th></th>').html(
+                                `<div class="me-1 d-color-code" style="background: ${response.data.ui_color_code}"></div>${response.data.color_name} (${response.data.color_code})`);
                             $newRow.append($newTh);
 
                             $.each(sizes, function(index, size) {
