@@ -224,7 +224,8 @@ class ProductController extends Controller
                 'supplier_color_code' => $request->supplier_color_code,
                 'color_id' => $request->color_select,
                 'color_name' => $color->color_name,
-                'color_code' => $color->color_code
+                'color_code' => $color->color_code,
+                'ui_color_code' => $color->ui_color_code,
             ],
             'message' => 'Variant added successfully!'
         ]);

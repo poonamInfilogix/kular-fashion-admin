@@ -16,7 +16,7 @@
     <tbody>
         @php
             if (isset($savingProduct->variantData)) {
-                $quantityData = $savingProduct->variantData->quantity;
+                $quantityData = $savingProduct->variantData['quantity'];
             }
         @endphp
 
@@ -28,6 +28,7 @@
 
                 <tr data-id="rm-{{ $color['id'] }}">
                     <th>
+                        <div class="me-1" style="border: 1px solid; border-radius: 4px; height: 1.5rem; width: 1.5rem; background: {{ $color['ui_color_code'] }}"></div>
                         {{ $color['color_name'] }} ({{ $color['color_code'] }})
                     </th>
                     @foreach ($sizes as $key => $size)
@@ -42,8 +43,8 @@
 
                         <td>
                             <input type="number" name="quantity[{{ $color['id'] }}][{{ $size->id }}]"
-                                value="{{ isset($quantityData) ? $quantityData[$color['id']] : 0 }}" class="form-control">
-
+                                value="{{ isset($quantityData) && is_array($quantityData) && isset($quantityData[$color['id']]) ? (int) $quantityData[$color['id']] : 0 }}"
+                                class="form-control">
                             @isset($product)
                                 <h6 class="mt-1 mb-0">Total in: <b>{{ $quantity }}</b></h6>
                             @endisset
@@ -53,7 +54,7 @@
                     @isset($product)
                         <td class="fs-5 text-center">{{ $total_in }}</td>
                     @endisset
-
+                    
                     <td @class(['actionColumn', 'd-none' => count($savedColors) <= 1])>
                         <div class="d-flex gap-2">
                             @isset($product)

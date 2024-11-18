@@ -31,7 +31,6 @@
                                 <button type="button" class="btn btn-secondary" id="add-variant-btn">Add new variant</button>
                                 <button class="btn btn-primary">Submit</button>
                             </form>    
-                            
                         </div>    
                     </div>
                 </div>
