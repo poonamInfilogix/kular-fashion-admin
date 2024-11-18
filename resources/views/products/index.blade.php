@@ -76,7 +76,8 @@
                             `.replace(/:id/g, row.id); 
                         } 
                     }
-                ]
+                ],
+                order: [[0, 'desc']]
             });
         });
     </script>

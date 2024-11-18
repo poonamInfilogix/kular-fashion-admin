@@ -416,43 +416,44 @@ class ProductController extends Controller
             'message' => 'Product deleted successfully.'
         ]);
     }
+
     public function getProducts(Request $request)
     {
         $query = Product::with(['brand', 'department', 'productType']);
     
+        // Apply search filter if there's any search value
         if ($request->has('search') && !empty($request->input('search.value'))) {
             $search = $request->input('search.value');
             $query->where(function($q) use ($search) {
                 $q->where('article_code', 'like', "%{$search}%")
-                  ->orWhere('manufacture_code', 'like', "%{$search}%")
-                  ->orWhereHas('brand', function($q) use ($search) {
-                      $q->where('name', 'like', "%{$search}%");
-                  })
-                  ->orWhereHas('department', function($q) use ($search) {
-                      $q->where('name', 'like', "%{$search}%");
-                  })
-                  ->orWhereHas('productType', function($q) use ($search) {
-                      $q->where('product_type_name', 'like', "%{$search}%");
-                  });
+                ->orWhere('manufacture_code', 'like', "%{$search}%")
+                ->orWhereHas('brand', function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                })
+                ->orWhereHas('department', function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
+                })
+                ->orWhereHas('productType', function($q) use ($search) {
+                    $q->where('product_type_name', 'like', "%{$search}%");
+                });
             });
         }
-    
-        $products = $query->orderBy('id', 'asc')
-                          ->paginate($request->input('length', 10));
-    
+        
+        // Order by id in descending order by default
+        $products = $query->orderBy('id', 'desc') // Changed to 'desc' for descending order
+                        ->paginate($request->input('length', 10));
+
         $data = [
             'draw' => $request->input('draw'),
             'recordsTotal' => $products->total(),
             'recordsFiltered' => $products->total(),
             'data' => $products->items(),
         ];
-    
+
         return response()->json($data);
     }
     
     
-    
-
     public function productStatus(Request $request)
     {
         $product = Product::find($request->id);
