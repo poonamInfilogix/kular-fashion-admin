@@ -32,6 +32,7 @@
                         {{ $color['color_name'] }} ({{ $color['color_code'] }})
                     </th>
                     @foreach ($sizes as $key => $size)
+                    {{$size}}
                         @php
                             $quantity = 0;
                             if (isset($product) ? $product->colors->where('color_id', $color['id'])->first() : null) {

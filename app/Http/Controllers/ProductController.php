@@ -11,6 +11,7 @@ use App\Models\Brand;
 use App\Models\Color;
 use App\Models\Department;
 use App\Models\ProductType;
+use App\Models\ProductTag;
 use App\Models\ProductTypeDepartment;
 use App\Models\Size;
 use App\Models\SizeScale;
@@ -47,6 +48,10 @@ class ProductController extends Controller
 
     public function saveStep1(Request $request){
         $request->validate([
+            'article_code' => [ 
+                'required', 
+                Rule::unique('products')->whereNull('deleted_at'), 
+            ],
             'manufacture_code' => [
                 'required',
                     Rule::unique('products')->whereNull('deleted_at'),
@@ -62,7 +67,7 @@ class ProductController extends Controller
         ]);
 
         $productData = $request->all();
-
+        
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = $request->article_code . '.' . $image->getClientOriginalExtension();
@@ -131,6 +136,20 @@ class ProductController extends Controller
                 'image' => $imagePath,
                 'status' => $request->status,
             ]);
+        }
+        if(isset($request->tag_id)){
+            foreach($request->tag_id as $tags){
+                ProductTag::updateOrCreate(
+                    [
+                        'product_id' => $productId, 
+                        'tag_id' => $tags            
+                    ],
+                    [
+                        'product_id' => $productId, 
+                        'tag_id' => $tags             
+                    ]
+                );
+            }
         }
 
         return redirect()->route('products.edit.step-2', $productId);
@@ -276,7 +295,6 @@ class ProductController extends Controller
         Session::put('savingProduct', $productData);
 
         $product = Product::create([
-            'article_code' => $productData['article_code'] ?? NULL,
             'manufacture_code' => $productData['manufacture_code'] ?? NULL,
             'department_id' => $productData['department_id'] ?? NULL,
             'brand_id' => $productData['brand_id'] ?? NULL,
@@ -296,7 +314,14 @@ class ProductController extends Controller
             'status' => $productData['status'],
         ]);
 
-        
+        if(isset($productData['tag_id'])){
+            foreach($productData['tag_id'] as $tags){
+                ProductTag::create([
+                    "product_id" => $product->id,
+                    "tag_id" => $tags
+                ]);
+            }
+        }
         foreach ($productData['variantData']['mrp'] as $sizeId => $mrp) {
             ProductSize::create([
                 'product_id' => $product->id,
@@ -343,8 +368,9 @@ class ProductController extends Controller
         $tags  = Tag::where('status', 'Active')->latest()->get();
         $sizeScales = SizeScale::where('status', 'Active')->latest()->get();
         $sizes = Size::where('status', 'Active')->latest()->get();
+        $productTags = ProductTag::where('product_id', $product->id)->pluck('tag_id'); 
 
-        return view('products.edit', compact('brands', 'productTypes', 'departments', 'product', 'taxes', 'tags', 'sizes', 'sizeScales'));
+        return view('products.edit', compact('brands', 'productTypes', 'departments', 'product', 'taxes', 'tags', 'sizes', 'sizeScales','productTags'));
     }
 
     public function update(Request $request, Product $product)
@@ -369,10 +395,11 @@ class ProductController extends Controller
                         ]
                     )->first();
 
-                    $quantityRecord->quantity += $newQuantity;
-                    $quantityRecord->total_quantity += $newQuantity;
-
-                    $quantityRecord->save();
+                    if($quantityRecord){
+                        $quantityRecord->quantity += $newQuantity;
+                        $quantityRecord->total_quantity += $newQuantity;
+                        $quantityRecord->save();
+                    }
                 }
             }
         }
@@ -389,6 +416,42 @@ class ProductController extends Controller
             'message' => 'Product deleted successfully.'
         ]);
     }
+    public function getProducts(Request $request)
+    {
+        $query = Product::with(['brand', 'department', 'productType']);
+    
+        if ($request->has('search') && !empty($request->input('search.value'))) {
+            $search = $request->input('search.value');
+            $query->where(function($q) use ($search) {
+                $q->where('article_code', 'like', "%{$search}%")
+                  ->orWhere('manufacture_code', 'like', "%{$search}%")
+                  ->orWhereHas('brand', function($q) use ($search) {
+                      $q->where('name', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('department', function($q) use ($search) {
+                      $q->where('name', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('productType', function($q) use ($search) {
+                      $q->where('product_type_name', 'like', "%{$search}%");
+                  });
+            });
+        }
+    
+        $products = $query->orderBy('id', 'asc')
+                          ->paginate($request->input('length', 10));
+    
+        $data = [
+            'draw' => $request->input('draw'),
+            'recordsTotal' => $products->total(),
+            'recordsFiltered' => $products->total(),
+            'data' => $products->items(),
+        ];
+    
+        return response()->json($data);
+    }
+    
+    
+    
 
     public function productStatus(Request $request)
     {
