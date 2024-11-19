@@ -21,7 +21,8 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
-
+use Picqer\Barcode\BarcodeGeneratorPNG;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProductController extends Controller
 {
@@ -533,8 +534,27 @@ class ProductController extends Controller
         return view('products.steps.step-3', compact('savingProduct', 'sizes', 'savedColors', 'colors'));
     }
 
-    public function brandMargin()
+    public function downloadBarcodes()
     {
-        
+        $products = Product::where('status', 'Active')
+                            ->whereHas('department', function ($query) {
+                                $query->where('status', 'Active');
+                            })->get();
+
+        $generator = new BarcodeGeneratorPNG();
+        $barcodes = [];
+
+        foreach ($products as $product) {
+            $barcode = base64_encode($generator->getBarcode($product->article_code, $generator::TYPE_CODE_128));
+            $barcodes[] = [
+                'product' => $product,
+                'barcode' => $barcode,
+                'product_code' => $product->acticle_code
+            ];
+        }
+
+        $pdf = PDF::loadView('products.pdf.barcodes', ['barcodes' => $barcodes]);
+
+        return $pdf->download('product_barcodes.pdf');
     }
 }
