@@ -58,9 +58,15 @@
                             </table>
                         </div>
                     </div>
-                </div> <!-- end col -->
-            </div> <!-- end row -->
-        </div> <!-- container-fluid -->
+                </div>
+            </div>
+        </div>
     </div>
     <x-include-plugins :plugins="['dataTable', 'update-status' ]"></x-include-plugins>
+
+    <script>
+        $(document).ready(function() {
+            $('#datatable').DataTable();
+        });
+    </script>
 @endsection

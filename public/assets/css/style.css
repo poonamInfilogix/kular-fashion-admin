@@ -49,3 +49,10 @@ input[switch=danger]:label {
 .chosen-container-single .chosen-single div b{
     margin-top: 10px!important;
 }
+
+.d-color-code{
+    border: 1px solid; 
+    border-radius: 4px; 
+    height: 1.5rem; 
+    width: 1.5rem; 
+}

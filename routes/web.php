@@ -38,7 +38,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'products'      => ProductController::class,
         'tags'          => TagController::class,
     ]);
-   
+    Route::get('/get-products', [ProductController::class, 'getProducts'])->name('get.products');
     Route::get('general-settings', [SettingController::class, 'generalSetting'])->name('general-settings.index');
     Route::post('general-settings.store', [SettingController::class, 'generalSettingStore'])->name('general-settings.store');
 

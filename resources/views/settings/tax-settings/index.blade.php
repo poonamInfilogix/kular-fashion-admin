@@ -25,7 +25,7 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <table id="datatable" class="table table-bordered dt-responsive nowrap w-100">
+                            <table id="dataTable" class="table table-bordered dt-responsive nowrap w-100">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -56,15 +56,18 @@
                             </table>
                         </div>
                     </div>
-                </div> <!-- end col -->
-            </div> <!-- end row -->
-        </div> <!-- container-fluid -->
+                </div>
+            </div>
+        </div>
     </div>
     <x-include-plugins :plugins="['dataTable']"></x-include-plugins>
+    
     <script>
         $(function() {
+            $('#dataTable').DataTable();
+
             $('.update-status').change(function() {
-                var status = $(this).prop('checked') ? '0' : '1'; // Send enum values
+                var status = $(this).prop('checked') ? '0' : '1';
                 var id = $(this).data('id');
                 let statusUpdateApiEndpoint = $(this).data('endpoint');
                 const toggleButton = $(this);

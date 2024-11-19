@@ -53,7 +53,7 @@
 
     <script>
         $(function() {
-            $('.delete-btn').click(function() {
+            $(document).on('click', '.delete-btn', function() {
                 let source = $(this).data('source');
                 let deleteApiEndpoint = $(this).data('endpoint');
 
