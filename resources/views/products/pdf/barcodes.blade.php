@@ -7,73 +7,151 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-        }
+
         table {
             width: 100%;
-            border-collapse: collapse; /* Removes spacing between table cells */
-            margin-bottom: 20px;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
+
         td {
-            padding: 15px;
+            padding: 6px;
             text-align: center;
             border: 1px solid #ddd;
-            vertical-align: middle;
+            vertical-align: top;
+            width: 23%;  /* Reduced width for smaller cells */
+            height: 130px;  /* Adjusted for smaller cells */
         }
-        .barcode img {
-            max-width: 80%; /* Ensures barcode images fit inside their containers */
+
+        .barcode-box img {
+            max-width: 70%;  /* Reduced image size further to 70% */
             height: auto;
         }
-        .barcode p {
-            margin: 5px 0;
-        }
-        .barcode .product-code {
-            font-size: 1em;
+
+        .barcode-box .product-code {
+            font-size: 8px;  /* Smaller product code font size */
             color: #666;
         }
 
-        /* Responsive design for smaller screens */
-        @media (max-width: 768px) {
-            td {
-                padding: 10px; /* Reduced padding for smaller screens */
+        .size-label {
+            font-size: 8px;  /* Smaller size label font */
+        }
+
+        .barcode-container {
+            display: block;
+            margin-top: 5px;
+        }
+
+        .barcode {
+            margin-bottom: 5px;
+        }
+
+        h3 {
+            text-align: left;
+            margin-top: 5px;
+            font-size: 12px;  /* Reduced font size for h3 */
+        }
+
+  
+
+        .ch-3 span {
+            font-size: 10px;
+        }
+
+        span.txt-adj {
+            font-weight: 600;
+        }
+
+        /* Print-specific styles */
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: Arial, sans-serif;
             }
+
             table {
-                font-size: 14px; /* Smaller font size on mobile */
+                width: 100%;
+                page-break-before: always;
+            }
+
+            tr {
+                page-break-inside: avoid;  /* Prevent row break */
+            }
+
+            td {
+                width: 23%;  /* Reduced cell width for print */
+                height: 130px;  /* Reduced cell height */
+                padding: 4px;  /* Reduced padding */
+            }
+
+            .barcode-box {
+                padding: 4px;  /* Reduced padding */
+                margin: 0 !important;
+            }
+
+            .barcode-container {
+                display: block;
+                margin-top: 5px;
+            }
+
+            .size-label,
+            .product-code {
+                font-size: 8px;  /* Smaller size for print */
+            }
+
+            h3 {
+                font-size: 12px;  /* Smaller size for h3 */
+                text-align: left;
+            }
+
+
+            /* Ensure barcode images fit the space */
+            .barcode-box img {
+                max-width: 70%;  /* Reduced image size for print */
+                height: auto;
             }
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>Product Barcodes</h1>
-        <table>
-            <tbody>
-                <!-- Barcode rows -->
-                @foreach($barcodes as $index => $item)
-                    @if($index % 6 == 0)
-                        <tr> <!-- Start new row for every 6 items -->
-                    @endif
-                        <td class="barcode">
+    <table>
+        <tbody>
+            <!-- Barcode rows -->
+            @foreach ($barcodes as $index => $item)
+                @if ($index % 4 == 0)
+                    <tr> <!-- Start new row for every 4 items -->
+                @endif
+                <td class="barcode-box">
+                    <div class="main-ct">
+                        <h3>ARMOR LUX</h3>
+                        <div style="width: 100%; font-size: 10px;">
+                            <span style="float: left">STRIPE NEW JACK</span>
+                            <span style="float: right">84112449</span>
+                        </div>
+                        <div class="ch-2">
+                            <span >BLUE</span>
+                            <span>MEN</span>
+                        </div>
+                        <div class="ch-3">
                             <img src="data:image/png;base64,{{ $item['barcode'] }}" alt="Barcode">
-                            <p class="product-code">{{ $item['product']->article_code }}</p> <!-- Display 1, 2, 3, 4, 5, 6, etc. -->
-                        </td>
-                    @if(($index + 1) % 6 == 0 || $loop->last)
-                        </tr> <!-- Close row after 6 items or last item -->
-                    @endif
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+                            <span class="product-size">Size <span class="txt-adj">{{ $item['size'] }}</span></span>
+                        </div>
+                        <div class="ch-4">
+                            <span>{{ $item['product_code'] }}</span>
+                            <span>£<span class="txt-adj">50</span></span>
+                        </div>
+                    </div>
+                </td>
+                @if (($index + 1) % 4 == 0 || $loop->last)
+                    </tr> <!-- Close row after 4 items or last item -->
+                @endif
+            @endforeach
+        </tbody>
+    </table>
 </body>
 </html>

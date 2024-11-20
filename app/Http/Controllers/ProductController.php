@@ -536,25 +536,60 @@ class ProductController extends Controller
 
     public function downloadBarcodes()
     {
-        $products = Product::where('status', 'Active')
-                            ->whereHas('department', function ($query) {
-                                $query->where('status', 'Active');
-                            })->get();
-
         $generator = new BarcodeGeneratorPNG();
         $barcodes = [];
+        
+        $products = ProductQuantity::with('product.department', 'sizes.sizeDetail', 'colors.colorDetail')->get();
 
-        foreach ($products as $product) {
-            $barcode = base64_encode($generator->getBarcode($product->article_code, $generator::TYPE_CODE_128));
-            $barcodes[] = [
-                'product' => $product,
-                'barcode' => $barcode,
-                'product_code' => $product->acticle_code
-            ];
+        foreach($products as $productDetail){
+            $article_code = $productDetail->product->article_code;
+            $color_code = $productDetail->colors->colorDetail->color_code;
+            $new_code = $productDetail->sizes->sizeDetail->new_code;
+            $article_code = $article_code.$color_code.$new_code;
+           
+            $checkCode = $this->generateCheckDigit($article_code);
+            for ($i=0; $i < $productDetail->quantity; $i++) { 
+                $barcode = base64_encode($generator->getBarcode($article_code.$checkCode, $generator::TYPE_CODE_128));
+
+                $barcodes[] = [
+                    'barcode' => $barcode,
+                    'product_code' => $article_code.$checkCode,
+                    'department' => $productDetail->product->department->name,
+                    'manufacture_code' => $productDetail->product->manufacture_code,
+                    'size' => $productDetail->sizes->sizeDetail->size,
+                    'mrp' => $productDetail->sizes->mrp,
+                    'article_code' => $productDetail->product->article_code,
+                ];
+            }
         }
+       $pdf = PDF::loadView('products.pdf.barcodes', ['barcodes' => $barcodes]);
 
-        $pdf = PDF::loadView('products.pdf.barcodes', ['barcodes' => $barcodes]);
-
-        return $pdf->download('product_barcodes.pdf');
+       /*return view('products.pdf.barcodes', ['barcodes' => $barcodes]);
+       die();*/
+       return $pdf->download('product_barcodes.pdf');
     }
+    public function generateCheckDigit($ean) {
+        
+        if (strlen($ean) != 12) {
+            throw new \Exception("EAN must have 12 digits.");
+        }
+    
+        $digits = str_split($ean); 
+        $oddSum = 0;
+        $evenSum = 0;
+    
+        for ($i = 0; $i < 12; $i += 2) {
+            $oddSum += $digits[$i];
+        }
+    
+        for ($i = 1; $i < 12; $i += 2) {
+            $evenSum += $digits[$i];
+        }
+    
+        $totalSum = ($oddSum * 3) + $evenSum;
+        $checkDigit = (10 - ($totalSum % 10)) % 10;
+    
+        return $checkDigit;
+    }
+    
 }
