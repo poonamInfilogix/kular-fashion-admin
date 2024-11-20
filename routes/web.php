@@ -40,12 +40,12 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'tags'          => TagController::class,
         'roles-and-permissions' => RoleAndPermissionController::class,
     ]);
-
+  
     Route::get('roles-and-permissions/role-list', [RoleAndPermissionController::class,'show'])->name('roles-and-permissions.role-list');
     Route::post('roles-and-permissions/store-role', [RoleAndPermissionController::class,'storeRole'])->name('roles-and-permissions.store-role');
 
     Route::get('/get-products', [ProductController::class, 'getProducts'])->name('get.products');
-    
+   
     Route::get('general-settings', [SettingController::class, 'generalSetting'])->name('general-settings.index');
     Route::post('general-settings.store', [SettingController::class, 'generalSettingStore'])->name('general-settings.store');
 

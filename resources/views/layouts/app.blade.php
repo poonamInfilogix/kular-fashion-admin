@@ -16,6 +16,7 @@
     <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
 
     @stack('styles')
+    @vite('resources/js/app.js')
 </head>
 
 <body data-sidebar="dark">

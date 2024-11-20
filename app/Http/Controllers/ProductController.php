@@ -549,7 +549,7 @@ class ProductController extends Controller
            
             $checkCode = $this->generateCheckDigit($article_code);
             for ($i=0; $i < $productDetail->quantity; $i++) { 
-                $barcode = base64_encode($generator->getBarcode($article_code.$checkCode, $generator::TYPE_CODE_128));
+                $barcode = base64_encode($generator->getBarcode($article_code.$checkCode, $generator::TYPE_CODE_39E_CHECKSUM, 1, 40));
 
                 $barcodes[] = [
                     'barcode' => $barcode,
@@ -564,10 +564,11 @@ class ProductController extends Controller
         }
        $pdf = PDF::loadView('products.pdf.barcodes', ['barcodes' => $barcodes]);
 
-       /*return view('products.pdf.barcodes', ['barcodes' => $barcodes]);
-       die();*/
+       //return view('products.pdf.barcodes', ['barcodes' => $barcodes]);
+       return $pdf->stream('product-barcodes.pdf');
        return $pdf->download('product_barcodes.pdf');
     }
+
     public function generateCheckDigit($ean) {
         
         if (strlen($ean) != 12) {
