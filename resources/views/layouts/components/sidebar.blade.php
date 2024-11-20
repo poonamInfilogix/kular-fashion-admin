@@ -46,6 +46,16 @@
                 <li class="menu-title" key="t-menu">Settings</li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="fas fa-users-cog"></i>
+                        <span key="t-ecommerce">Roles & Permissions</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{ route('roles-and-permissions.role-list') }}" key="t-products">Manage Roles</a></li>
+                        <li><a href="{{ route('roles-and-permissions.index') }}" key="t-products">Manage Permissions</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-cog"></i>
                         <span key="t-ecommerce">Settings</span>
                     </a>
