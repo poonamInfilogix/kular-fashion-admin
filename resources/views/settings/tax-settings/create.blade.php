@@ -28,13 +28,13 @@
                         <div class="card-body">
                             <form action="{{ route('tax-settings.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
-                                @include('setting.tax-settings.form')
+                                @include('settings.tax-settings.form')
                             </form>    
                         </div>    
                     </div>
-                </div> <!-- end col -->
-            </div> <!-- end row -->
-        </div> <!-- container-fluid -->
+                </div>
+            </div>
+        </div>
     </div>
 
 @endsection

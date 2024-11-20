@@ -27,12 +27,12 @@
                             <form action="{{ route('tax-settings.update', $tax->id) }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
-                                @include('setting.tax-settings.form')
+                                @include('settings.tax-settings.form')
                             </form>    
                         </div>    
                     </div>
-                </div> <!-- end col -->
-            </div> <!-- end row -->
-        </div> <!-- container-fluid -->
+                </div> 
+            </div>
+        </div>
     </div>
 @endsection

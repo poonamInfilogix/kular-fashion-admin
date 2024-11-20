@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
-import SizeScale from './components/product/inputs/SizeScale.vue';
+import GenerateProductBarcodes from './pages/GenerateProductBarcodes.vue';
 
 const app = createApp({});
-app.component('size-scale-select', SizeScale);
+app.component('generate-product-barcodes', GenerateProductBarcodes);
 
 app.mount('#vue-components');

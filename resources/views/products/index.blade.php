@@ -9,10 +9,15 @@
                         <h4 class="mb-sm-0 font-size-18">Products</h4>
 
                         <div class="page-title-right">
-                            <a href="{{ route('download.barcodes') }}" class="btn btn-primary"><i data-feather="download" class="me-2"></i>
-                                Generate Bar code
+                            {{-- <a href="{{ route('download.barcodes') }}" class="btn btn-primary">Generate Bar codes</a> --}}
+                            <a href="{{ route('products.print-barcodes') }}" class="btn btn-primary me-2">
+                                <i class="bx bx-printer"></i>
+                                Print Barcodes
                             </a>
-                            <a href="{{ route('products.create') }}" class="btn btn-primary">Add New Product</a>
+                            <a href="{{ route('products.create') }}" class="btn btn-primary">
+                                <i class="bx bx-plus fs-16"></i>
+                                Add New Product
+                            </a>
                         </div>
 
                     </div>
