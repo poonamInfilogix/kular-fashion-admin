@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -11,7 +15,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('users.index');
+        $users = User::all();
+        return view('users.index',compact('users'));
     }
 
     /**
@@ -19,7 +24,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $roles = Role::all();
+        return view('users.create',compact('roles'));
     }
 
     /**
@@ -27,7 +33,25 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|unique:users,email', 
+            'name' => 'required', 
+            'password' => 'required', 
+            'role' => 'required|exists:roles,name',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $user = User::create([
+            "name" => $request->name,
+            "email" => $request->email,
+            "password" => Hash::make($request->password),
+        ]);
+        $user->assignRole($request->role);
+
+        return redirect()->route('users.index')->with("success","User created successfully");
+
     }
 
     /**
@@ -43,7 +67,9 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $roles = Role::all();
+        $user = User::find($id);
+        return view('users.edit',compact('roles','user'));
     }
 
     /**
@@ -51,7 +77,26 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|unique:users,email', 
+            'name' => 'required', 
+            'role' => 'nullable|exists:roles,name'
+        ]);
+    
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $user = User::find($id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        if($request->password){
+            $user->password = Hash::make($request->password);
+        }
+        $user->assignRole($request->role);
+        $user->save();
+
+        return redirect()->back()->with('success','User updated successfully');
     }
 
     /**
@@ -59,6 +104,10 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $delete = User::where('id',$id)->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Role deleted successfully.'
+        ]);
     }
 }

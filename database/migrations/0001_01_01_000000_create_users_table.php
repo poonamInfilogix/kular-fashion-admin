@@ -18,8 +18,8 @@ return new class extends Migration
             $table->integer('phone_number')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->date('date_of_birth')->nullable();
             $table->string('profile_image')->nullable();
+            $table->integer('branch_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
