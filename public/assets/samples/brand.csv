@@ -1,3 +1,4 @@
-name,image
-Puma,https://i.pinimg.com/originals/58/54/67/5854677876601cdfa66b5fbee6801dc7.png
-Nike,
+name,short_name,margin,image
+Puma,PMA,50,https://i.pinimg.com/originals/58/54/67/5854677876601cdfa66b5fbee6801dc7.png
+Nike,NKE,50,
+Adidas,ADD,,

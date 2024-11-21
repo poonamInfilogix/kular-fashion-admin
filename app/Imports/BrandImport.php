@@ -39,7 +39,7 @@ class BrandImport implements ToModel, WithHeadingRow
             return null;
         }
 
-        $brand = Brand::where('name', $row['name'])->first();
+        $brand = Brand::where('name', $row['name'])->where('short_name',$row['short_name'])->first();
 
         if (!$brand) {
             // Brand doesn't exist, create a new one
@@ -47,7 +47,9 @@ class BrandImport implements ToModel, WithHeadingRow
         
             Brand::create([
                 'name' => $row['name'],
+                'short_name' => $row['short_name'],
                 'image'      => $imagePath,
+                'margin'      => $row['margin'],
             ]);
         } else {
             if (isset($row['image']) && $row['image']) {
@@ -60,7 +62,7 @@ class BrandImport implements ToModel, WithHeadingRow
                 }
             } else {
                 $this->errors[] = [
-                    'message' => "Brand name '{$row['name']}' already exists in row {$this->rowIndex}",
+                    'message' => "Brand name '{$row['name']} and {$row['short_name']}' already exists in row {$this->rowIndex}",
                     'row' => $row,
                 ];
             }

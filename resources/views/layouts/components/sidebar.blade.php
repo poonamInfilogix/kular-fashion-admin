@@ -26,9 +26,17 @@
                     </ul>
                 </li>
                 <li >
-                    <a href="{{ route('suppliers.index') }}" class="waves-effect">
-                        <i class="bx bx-user-circle"></i>
-                        <span key="t-user">Manage Suppliers</span>
+                    <a href="{{ route('tags.index') }}" class="waves-effect">
+                        <i class="bx bx-extension"></i>
+                        <span key="t-user">Manage Tags</span>
+                    </a>
+                </li>
+
+                <li class="menu-title" key="t-menu">Users</li>
+                <li >
+                    <a href="{{ route('users.index') }}" class="waves-effect">
+                        <i class="bx bx-group"></i>
+                        <span key="t-user">Manage Users</span>
                     </a>
                 </li>
                 <li >
@@ -38,11 +46,13 @@
                     </a>
                 </li>
                 <li >
-                    <a href="{{ route('tags.index') }}" class="waves-effect">
-                        <i class="bx bx-extension"></i>
-                        <span key="t-user">Manage Tags</span>
+                    <a href="{{ route('suppliers.index') }}" class="waves-effect">
+                        <i class="bx bx-user-circle"></i>
+                        <span key="t-user">Manage Suppliers</span>
                     </a>
                 </li>
+
+
                 <li class="menu-title" key="t-menu">Settings</li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">

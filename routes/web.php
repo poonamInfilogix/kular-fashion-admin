@@ -16,6 +16,7 @@ use App\Http\Controllers\TaxController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleAndPermissionController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function (){
     return redirect()->route('dashboard');
@@ -38,6 +39,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'tax-settings'  => TaxController::class,
         'products'      => ProductController::class,
         'tags'          => TagController::class,
+        'users'         => UserController::class,
         'roles-and-permissions' => RoleAndPermissionController::class,
     ]);
   

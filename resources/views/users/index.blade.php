@@ -8,9 +8,9 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Roles List</h4>
+                        <h4 class="mb-sm-0 font-size-18">Users List</h4>
                         <div class="page-title-right">
-                            <a href="{{ route('roles-and-permissions.create') }}" class="btn btn-primary">Add New Role</a>
+                            <a href="{{ route('users.create') }}" class="btn btn-primary">Add New User</a>
                         </div>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                                     <th>Action</th>
                                 </tr>
                                 </thead>
-                                <tbody>
+                                {{--<tbody>
                                     @foreach ($roles as $key=> $role)
                                     <tr>
                                         <td>{{ ++$key }}</td>
@@ -46,7 +46,7 @@
                                         </td>
                                     </tr>  
                                     @endforeach  
-                                </tbody>
+                                </tbody>--}}
                             </table>
                         </div>
                     </div>
