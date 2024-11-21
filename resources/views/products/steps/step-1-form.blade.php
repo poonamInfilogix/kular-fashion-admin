@@ -272,9 +272,11 @@
 
 
     $(document).ready(function() {
-        let lastCode = parseInt("{{ $latestNewCode ?? '300000' }}"); // Start from 300000
-        let articleCode = lastCode + 1; // Increment the code
-        $('#article_code').val(String(articleCode).padStart(6, '0'));
+        @if(empty($product->article_code))
+            let lastCode = parseInt("{{ $latestNewCode ?? '300000' }}"); // Start from 300000
+            let articleCode = lastCode + 1; // Increment the code
+            $('#article_code').val(String(articleCode).padStart(6, '0'));
+        @endif
 
         $('#department_id').change(function() {
             const departmentId = $(this).val();
