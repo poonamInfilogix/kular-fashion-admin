@@ -406,13 +406,17 @@ class ProductController extends Controller
                 $productColorId = $productColor->id;
 
                 foreach($tempQuantity as $productSizeId => $newQuantity){
-                    $quantityRecord = ProductQuantity::where(
+                    $quantityRecord = ProductQuantity::firstOrCreate(
                         [
                             'product_id' => $product->id,
                             'product_color_id' => $productColorId,
                             'product_size_id' => $productSizeId,
+                        ],
+                        [
+                            'quantity' => 0,
+                            'total_quantity' => 0,
                         ]
-                    )->first();
+                    );
 
                     if($quantityRecord){
                         $quantityRecord->quantity += $newQuantity;
