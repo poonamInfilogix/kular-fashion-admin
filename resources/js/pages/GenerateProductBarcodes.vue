@@ -68,6 +68,7 @@ export default {
                 checkboxes.prop('checked', false);
                 this.selectedArticles = [];
             }
+
         });
 
         $('#product-table').on('change', '.select-row', (event) => {

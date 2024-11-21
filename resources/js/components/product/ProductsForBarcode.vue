@@ -98,37 +98,103 @@ export default {
     },
     methods: {
         expandRow(row, rowData) {
+            const nextRow = $(row).next('.expanded-row');
+            if (!rowData || nextRow.length) { return; }
+            
+            let tempSelectedColors = $(row).attr('data-selected-colors');
+            let tempSelectedSizes = $(row).attr('data-selected-sizes');
+            
+            let selectedColors = [];
+            let selectedSizes = [];
+
+            if(typeof tempSelectedColors === 'undefined'){
+                selectedColors = rowData.colors.map(color => String(color.color_detail.id));
+            } else {
+                selectedColors = tempSelectedColors ? tempSelectedColors.split(',') : [];
+            }
+
+            if(typeof tempSelectedSizes === 'undefined'){
+                selectedSizes = tempSelectedSizes ? tempSelectedSizes.split(',') : rowData.sizes.map(size => String(size.size_id));
+            } else {
+                selectedSizes = tempSelectedSizes ? tempSelectedSizes.split(',') : [];
+            }
+
             const expandedRow = $('<tr class="expanded-row"><td colspan="6"></td></tr>');
             const detailsHtml = `
-        <div class="d-flex">
-            <button class="btn btn-primary btn-sm me-3" id="toggleAllColorsBtn">Unselect All Colors</button>
-            
-            ${rowData.colors.map((color, index) => `
-                <div class="me-2 d-color-code selected" 
-                    data-index="${index}" 
-                    style="background-color: ${color.color_detail.ui_color_code};"
-                    data-color-id="${color.color_detail.id}">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="d-flex">
+                        <button class="btn btn-primary btn-sm me-3" id="toggleAllColorsBtn">Unselect All Colors</button>
+                        
+                        ${rowData.colors.map((color, index) => `
+                            <div class="me-2 d-color-code ${selectedColors.includes(String(color.color_detail.id)) ? 'selected' : ''}" 
+                                data-index="${index}" 
+                                style="background-color: ${color.color_detail.ui_color_code};"
+                                data-color-id="${color.color_detail.id}">
+                            </div>
+                        `).join('')}
+                    </div>
                 </div>
-            `).join('')}
-        </div>
-    `;
+                <div class="col-md-6">
+                    <div class="d-flex">
+                        <button class="btn btn-primary btn-sm me-3" id="toggleAllSizesBtn">Unselect All Sizes</button>
+
+                        ${rowData.sizes.map((size, index) => `
+                            <div class="me-2 d-size-box ${selectedSizes.includes(String(size.size_id)) ? 'selected' : ''}" 
+                                data-index="${index}" 
+                                data-size-id="${size.size_id}">
+                                ${size.size_detail.size}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+            `;
+
             expandedRow.find('td').html(detailsHtml);
             row.after(expandedRow);
 
             // Function to update the button text based on the selection state
             function updateButtonText() {
                 const allColorDivs = expandedRow.find('.d-color-code');
+                const allSizeDivs = expandedRow.find('.d-size-box');
                 const selectedClass = 'selected';
 
                 // Check if all colors are selected
-                const allSelected = allColorDivs.length === allColorDivs.filter(`.${selectedClass}`).length;
-
-                const button = expandedRow.find('#toggleAllColorsBtn');
-                if (allSelected) {
-                    button.text('Unselect All Colors');
+                const allColorsSelected = allColorDivs.length === allColorDivs.filter(`.${selectedClass}`).length;
+                const colorButton = expandedRow.find('#toggleAllColorsBtn');
+                if (allColorsSelected) {
+                    colorButton.text('Unselect All Colors');
                 } else {
-                    button.text('Select All Colors');
+                    colorButton.text('Select All Colors');
                 }
+
+                // Check if all sizes are selected
+                const allSizesSelected = allSizeDivs.length === allSizeDivs.filter(`.${selectedClass}`).length;
+                const sizeButton = expandedRow.find('#toggleAllSizesBtn');
+                if (allSizesSelected) {
+                    sizeButton.text('Unselect All Sizes');
+                } else {
+                    sizeButton.text('Select All Sizes');
+                }
+
+                // Update the data-selected-colors and data-selected-sizes attributes on the row
+                updateSelectedAttributes();
+            }
+
+            // Function to update the selected colors and sizes attributes on the row
+            function updateSelectedAttributes() {
+                const selectedColorDivs = expandedRow.find('.d-color-code.selected');
+                const selectedColorIds = selectedColorDivs.map(function () {
+                    return $(this).data('color-id');
+                }).get();
+                $(row).attr('data-selected-colors', selectedColorIds.join(','));
+
+                const selectedSizeDivs = expandedRow.find('.d-size-box.selected');
+                const selectedSizeIds = selectedSizeDivs.map(function () {
+                    return $(this).data('size-id');
+                }).get();
+                $(row).attr('data-selected-sizes', selectedSizeIds.join(','));
             }
 
             // Add click handler to color divs
@@ -138,20 +204,20 @@ export default {
 
                 // Toggle the selected class
                 colorDiv.toggleClass(selectedClass);
-
-                // Optionally, you can keep track of selected color IDs
-                const colorId = colorDiv.data('color-id');
-                if (colorDiv.hasClass(selectedClass)) {
-                    console.log(`Color ID ${colorId} selected`);
-                } else {
-                    console.log(`Color ID ${colorId} deselected`);
-                }
-
-                // Update the button text after a color is clicked
                 updateButtonText();
             });
 
-            // Add click handler for the "Select All" button
+            // Add click handler to size divs
+            expandedRow.find('.d-size-box').on('click', function () {
+                const sizeDiv = $(this);
+                const selectedClass = 'selected';
+
+                // Toggle the selected class
+                sizeDiv.toggleClass(selectedClass);
+                updateButtonText();
+            });
+
+            // Add click handler for the "Select All" button for colors
             expandedRow.find('#toggleAllColorsBtn').on('click', function () {
                 const allColorDivs = expandedRow.find('.d-color-code');
                 const selectedClass = 'selected';
@@ -159,24 +225,35 @@ export default {
                 if ($(this).text() === 'Unselect All Colors') {
                     allColorDivs.removeClass(selectedClass);
                     $(this).text('Select All Colors');
-                    allColorDivs.each(function () {
-                        const colorId = $(this).data('color-id');
-                        console.log(`Color ID ${colorId} deselected`);
-                    });
                 } else {
                     allColorDivs.addClass(selectedClass);
                     $(this).text('Unselect All Colors');
-                    allColorDivs.each(function () {
-                        const colorId = $(this).data('color-id');
-                        console.log(`Color ID ${colorId} selected`);
-                    });
                 }
+
+                // Update the button text after selecting/unselecting all colors
+                updateButtonText();
             });
 
-            // Update the button text initially in case all colors are selected by default
+            // Add click handler for the "Select All" button for sizes
+            expandedRow.find('#toggleAllSizesBtn').on('click', function () {
+                const allSizeDivs = expandedRow.find('.d-size-box');
+                const selectedClass = 'selected';
+
+                if ($(this).text() === 'Unselect All Sizes') {
+                    allSizeDivs.removeClass(selectedClass);
+                    $(this).text('Select All Sizes');
+                } else {
+                    allSizeDivs.addClass(selectedClass);
+                    $(this).text('Unselect All Sizes');
+                }
+
+                // Update the button text after selecting/unselecting all sizes
+                updateButtonText();
+            });
+
+            // Update the button text initially in case all colors or sizes are selected by default
             updateButtonText();
         }
-
     }
 };
 </script>
