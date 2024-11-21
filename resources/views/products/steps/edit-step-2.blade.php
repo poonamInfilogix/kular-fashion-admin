@@ -29,7 +29,7 @@
                                 @method('PUT')
                                 @include('products.steps.quantity-form')
 
-                                <button type="button" class="btn btn-secondary" id="add-variant-btn">Add new variant</button>
+                                <button type="button" class="btn btn-secondary me-2" id="add-variant-btn">Add new variant</button>
                                 <button class="btn btn-primary">Save</button>
                             </form>    
                             

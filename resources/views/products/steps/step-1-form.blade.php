@@ -102,7 +102,11 @@
                 <option value="" disabled selected>Select size scale</option>
                 @foreach($sizeScales as $sizeScale)
                     <option value="{{ $sizeScale->id }}" @selected(old('size_scale_id', $product->size_scale_id ?? '') == $sizeScale->id)>
-                        {{ $sizeScale->size_scale }} ({{ substr($sizeScale->size_scale, 0, 1) }}-{{ substr($sizeScale->size_scale, -1) }})
+                        {{ $sizeScale->size_scale }} 
+
+                        @if(isset($sizeScale->sizes))
+                            ({{$sizeScale->sizes->first()->size}} - {{$sizeScale->sizes->last()->size}})
+                        @endif
                     </option>
                 @endforeach
             </select>

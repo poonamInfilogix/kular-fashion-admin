@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['isVueComponent' => true])
 
 @section('content')
     <div class="page-content">

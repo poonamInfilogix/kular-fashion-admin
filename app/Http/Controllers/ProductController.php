@@ -206,6 +206,39 @@ class ProductController extends Controller
             $errors = new MessageBag(); 
         }
 
+        $savingProduct = Session::get('savingProduct', []);
+
+        if(empty($savingProduct)){
+            $savingProduct['supplier_color_codes'] = [];
+            $savingProduct['colors'] = [];
+        }
+
+        if(isset($request->product_id)){
+            $savedProduct = Product::with('colors')->find($request->product_id);
+            if($savedProduct){
+                $supplierColorCodes = $savedProduct->colors->pluck('supplier_color_code')->toArray();
+                $savedColorCodes = $savedProduct->colors->pluck('color_id')->toArray();
+                
+                $savingProduct['supplier_color_codes'] = $supplierColorCodes;
+                $savingProduct['colors'] = $savedColorCodes;
+            } 
+        }
+
+        if ($savingProduct) {
+            if (is_array($savingProduct['supplier_color_codes']) && in_array($request->supplier_color_code, $savingProduct['supplier_color_codes'])) {
+                $errors->add('supplier_color_code', 'Supplier Code already exists');
+            }
+            if (is_array($savingProduct['colors']) && in_array($request->color_select, $savingProduct['colors'])) {
+                $errors->add('color_select', 'Color already exists');
+            }
+        }
+
+        if ($errors->isNotEmpty()) {
+            return response()->json([
+                'errors' => $errors
+            ], 422);
+        }
+
         if($request->product_id){
             ProductColor::updateOrCreate(
                 [
@@ -218,21 +251,6 @@ class ProductController extends Controller
             );            
         }
 
-        $savingProduct = Session::get('savingProduct');
-
-        if ($savingProduct) {
-            if (is_array($savingProduct['supplier_color_codes']) && in_array($request->supplier_color_code, $savingProduct['supplier_color_codes'])) {
-                $errors->add('supplier_color_code', 'Supplier Code already exists');
-            }
-            if (is_array($savingProduct['colors']) && in_array($request->color_select, $savingProduct['colors'])) {
-                $errors->add('color_select', 'Color already exists');
-            }
-        }
-        if ($errors->isNotEmpty()) {
-            return response()->json([
-                'errors' => $errors
-            ], 422);
-        }
         $color = Color::where('id',$request->color_select)->first();
         array_push($savingProduct['supplier_color_codes'], $request->supplier_color_code);
         array_push($savingProduct['colors'], $request->color_select);
@@ -420,7 +438,7 @@ class ProductController extends Controller
 
     public function getProducts(Request $request)
     {
-        $query = Product::with(['brand', 'department', 'productType']);
+        $query = Product::with(['brand', 'department', 'productType', 'colors.colorDetail', 'sizes']);
     
         // Apply search filter if there's any search value
         if ($request->has('search') && !empty($request->input('search.value'))) {

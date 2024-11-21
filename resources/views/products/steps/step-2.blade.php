@@ -171,7 +171,7 @@
                                     
                                     <div class="row mb-2">
                                         <div class="col-lg-6 mb-2">
-                                            <button type="button" id="add-color-btn" class="btn btn-secondary">Add New Color</button>
+                                            <button type="button" id="add-color-btn" class="btn btn-secondary me-2">Add New Color</button>
                                             
                                             <button type="submit" class="btn btn-primary w-md">Continue</button>
                                         </div>

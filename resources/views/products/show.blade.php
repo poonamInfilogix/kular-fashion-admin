@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Products</h4>
+                        <h4 class="mb-sm-0 font-size-18">View Article</h4>
 
                         <div class="page-title-right">
                             <a href="{{ route('products.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i>
@@ -26,7 +26,7 @@
                             <div class="row">
                                 <div class="col-xl-4">
                                     <img src="{{ asset($product->image) }}" alt=""
-                                        class="img-fluid mx-auto d-block w-100"
+                                        class="img-fluid mx-auto d-block w-100 product-preview-image"
                                         onerror="this.onerror=null; this.src='{{ asset(setting('default_product_image')) }}';">
                                 </div>
 
@@ -64,28 +64,28 @@
                                     <table class="table mb-0 table-bordered">
                                         <tbody>
                                             <tr>
-                                                <th scope="row">Size</th>
+                                                <th scope="row" class="p-1">Size</th>
                                                 @foreach ($product->sizes as $size)
-                                                <th>{{ $size->sizeDetail->size }}</th>
+                                                <th class="p-1">{{ $size->sizeDetail->size }}</th>
                                                 @endforeach
                                             </tr>
 
                                             @foreach ($product->colors as $color)
                                             <tr>
-                                                <th class="d-flex">
+                                                <th class="d-flex p-1">
                                                     <div class="me-1 d-color-code" style="background: {{ $color->colorDetail->ui_color_code }}"></div>
                                                     <h6 class="m-0">{{ $color->colorDetail->color_name }} ({{ $color->colorDetail->color_code }})</h6>
                                                 </th>
                                                 @foreach ($product->sizes as $size)
-                                                    <td>{{ $size->quantity($color->id) }}</td>
+                                                    <td class="p-1">{{ $size->quantity($color->id) }}</td>
                                                 @endforeach
                                             </tr>
                                             @endforeach
 
                                             <tr>
-                                                <th scope="row">MRP</th>
+                                                <th scope="row" class="p-1">MRP</th>
                                                 @foreach ($product->sizes as $size)
-                                                <td>£{{ $size->mrp }}</td>
+                                                <td class="p-1">£{{ $size->mrp }}</td>
                                                 @endforeach
                                             </tr>
                                         </tbody>

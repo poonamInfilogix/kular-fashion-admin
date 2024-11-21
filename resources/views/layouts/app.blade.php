@@ -24,7 +24,7 @@
         @include('layouts.components.header')
         @include('layouts.components.sidebar')
 
-        <div class="main-content" id="vue-components">
+        <div class="main-content" id="{{ isset($isVueComponent) ? 'vue-components' : '' }}">
             @yield('content')
         </div>
 
