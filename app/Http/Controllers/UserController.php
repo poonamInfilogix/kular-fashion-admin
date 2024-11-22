@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Branch;
 
 class UserController extends Controller
 {
@@ -15,7 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::with('branch')->get();
         return view('users.index',compact('users'));
     }
 
@@ -25,7 +26,8 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::all();
-        return view('users.create',compact('roles'));
+        $branches = Branch::where('status','Active')->get();
+        return view('users.create',compact('roles','branches'));
     }
 
     /**
@@ -47,6 +49,7 @@ class UserController extends Controller
             "name" => $request->name,
             "email" => $request->email,
             "password" => Hash::make($request->password),
+            "branch_id" => $request->branch_id,
         ]);
         $user->assignRole($request->role);
 
@@ -69,7 +72,8 @@ class UserController extends Controller
     {
         $roles = Role::all();
         $user = User::find($id);
-        return view('users.edit',compact('roles','user'));
+        $branches = Branch::where('status','Active')->get();
+        return view('users.edit',compact('roles','user','branches'));
     }
 
     /**
@@ -78,7 +82,7 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:users,email', 
+            'email' => 'required|email', 
             'name' => 'required', 
             'role' => 'nullable|exists:roles,name'
         ]);
@@ -90,6 +94,7 @@ class UserController extends Controller
         $user = User::find($id);
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->branch_id = $request->branch_id;
         if($request->password){
             $user->password = Hash::make($request->password);
         }

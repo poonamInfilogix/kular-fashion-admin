@@ -27,10 +27,23 @@
         @endif
     </div>
     <div class="col-md-4">
+        <label>Branch</label>
+        <select name="branch_id" class="form-control">
+            <option value="">Select Branch</option>
+            @foreach($branches as $branch)
+                <option value="{{ $branch->id }}" 
+                    @isset($user) @selected($branch->id == $user->branch_id ) @endisset>
+                    {{ $branch->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+    <div class="col-md-4">
         <div class="mb-3">
             <x-form-input type="password" name="password" value="{{ old('password') }}" label="Password" placeholder="Enter Password"  required="true" />
         </div>
     </div>
+
 
 </div>
 <div class="row mb-2">

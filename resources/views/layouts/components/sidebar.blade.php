@@ -34,9 +34,9 @@
 
                 <li class="menu-title" key="t-menu">Users</li>
                 <li >
-                    <a href="{{ route('users.index') }}" class="waves-effect">
-                        <i class="bx bx-group"></i>
-                        <span key="t-user">Manage Users</span>
+                    <a href="{{ route('branches.index') }}" class="waves-effect">
+                        <i class="bx bx-store-alt"></i>
+                        <span key="t-user">Manage Branches</span>
                     </a>
                 </li>
                 <li >
@@ -49,6 +49,12 @@
                     <a href="{{ route('suppliers.index') }}" class="waves-effect">
                         <i class="bx bx-user-circle"></i>
                         <span key="t-user">Manage Suppliers</span>
+                    </a>
+                </li>
+                <li >
+                    <a href="{{ route('users.index') }}" class="waves-effect">
+                        <i class="bx bx-group"></i>
+                        <span key="t-user">Manage Users</span>
                     </a>
                 </li>
 

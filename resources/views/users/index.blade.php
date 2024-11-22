@@ -31,6 +31,7 @@
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Role</th>
+                                    <th>Branch</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -41,6 +42,7 @@
                                         <td>{{ ucwords($user->name) }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->getRoleNames()->first() }}</td>
+                                        <td>{{ $user->branch->name ?? 'N/A' }}</td>
                                         <td class="action-buttons">
                                             <a href="{{ route('users.edit', $user->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
                                             <button data-source="user" data-endpoint="{{ route('users.destroy', $user->id)}}"
