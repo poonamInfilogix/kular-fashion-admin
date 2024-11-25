@@ -442,7 +442,7 @@ class ProductController extends Controller
 
     public function getProducts(Request $request)
     {
-        $query = Product::with(['brand', 'department', 'productType', 'colors.colorDetail', 'sizes']);
+        $query = Product::with(['brand', 'department', 'productType', 'colors.colorDetail', 'sizes.sizeDetail']);
     
         // Apply search filter if there's any search value
         if ($request->has('search') && !empty($request->input('search.value'))) {
