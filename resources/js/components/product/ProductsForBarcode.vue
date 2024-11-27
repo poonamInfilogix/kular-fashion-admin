@@ -8,10 +8,10 @@
                     </div>
                 </th>
                 <th>Article Code</th>
-                <th>Manufacture Code</th>
-                <th>Department</th>
+                <th>Description</th>
                 <th>Product Type</th>
                 <th>Brand</th>
+                <th>Price</th>
             </tr>
         </thead>
     </table>
@@ -46,10 +46,10 @@ export default {
                     }
                 },
                 { title: "Article Code", data: 'article_code' },
-                { title: "Manufacture Code", data: 'manufacture_code' },
-                { title: "Department", data: 'department.name' },
+                { title: "Description", data: 'short_description' },
                 { title: "Brand", data: 'brand.name' },
                 { title: "Product Type", data: 'product_type.product_type_name' },
+                { title: "Price", data: 'mrp' },
             ],
             order: [[1, 'desc']]
         });
