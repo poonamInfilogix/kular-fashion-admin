@@ -31,12 +31,17 @@ class BrandController extends Controller
                 'required',
                     Rule::unique('brands')->whereNull('deleted_at'),
                 ],
+            'short_name' => [
+                'required',
+                    Rule::unique('brands')->whereNull('deleted_at'),
+            ]
         ]);
 
         $imageName = uploadFile($request->file('brand_image'), 'uploads/brands/');
 
         Brand::create([
             'name'          => $request->name,
+            'short_name'    => $request->short_name,
             'status'        => $request->status,
             'description'   => $request->description,
             'image'         => $imageName,
@@ -65,6 +70,10 @@ class BrandController extends Controller
                 'required',
                 Rule::unique('brands')->ignore($id)->whereNull('deleted_at'),
             ],
+            'short_name' => [
+                'required',
+                Rule::unique('brands')->ignore($id)->whereNull('deleted_at'),
+            ],
         ]);
 
         $brand = Brand::where('id', $id)->first();
@@ -81,6 +90,7 @@ class BrandController extends Controller
 
         $brand->update([
             'name'          => $request->name,
+            'short_name'    => $request->short_name,
             'status'        => $request->status,
             'description'   => $request->description,
             'image'         => $imageName ?? $oldBrandImage,

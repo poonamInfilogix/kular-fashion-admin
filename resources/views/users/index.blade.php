@@ -8,9 +8,9 @@
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Roles List</h4>
+                        <h4 class="mb-sm-0 font-size-18">Users List</h4>
                         <div class="page-title-right">
-                            <a href="{{ route('roles-and-permissions.create') }}" class="btn btn-primary">Add New Role</a>
+                            <a href="{{ route('users.create') }}" class="btn btn-primary">Add New User</a>
                         </div>
                     </div>
                 </div>
@@ -28,18 +28,24 @@
                                 <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
                                     <th>Role</th>
+                                    <th>Branch</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($roles as $key=> $role)
+                                    @foreach ($users as $key=> $user)
                                     <tr>
                                         <td>{{ ++$key }}</td>
-                                        <td>{{ ucwords($role->name) }}</td>
+                                        <td>{{ ucwords($user->name) }}</td>
+                                        <td>{{ $user->email }}</td>
+                                        <td>{{ $user->getRoleNames()->first() }}</td>
+                                        <td>{{ $user->branch->name ?? 'N/A' }}</td>
                                         <td class="action-buttons">
-                                            <a href="{{ route('roles-and-permissions.edit', $role->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
-                                            <button data-source="role" data-endpoint="{{ route('roles-and-permissions.destroy', $role->id)}}"
+                                            <a href="{{ route('users.edit', $user->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
+                                            <button data-source="user" data-endpoint="{{ route('users.destroy', $user->id)}}"
                                                 class="delete-btn btn btn-danger btn-sm edit">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>

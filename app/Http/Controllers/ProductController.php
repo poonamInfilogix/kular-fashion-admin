@@ -442,7 +442,7 @@ class ProductController extends Controller
 
     public function getProducts(Request $request)
     {
-        $query = Product::with(['brand', 'department', 'productType', 'colors.colorDetail', 'sizes.sizeDetail']);
+        $query = Product::with(['brand', 'department', 'quantities', 'productType', 'colors.colorDetail', 'sizes.sizeDetail']);
     
         // Apply search filter if there's any search value
         if ($request->has('search') && !empty($request->input('search.value'))) {
@@ -615,6 +615,11 @@ class ProductController extends Controller
         $checkDigit = (10 - ($totalSum % 10)) % 10;
     
         return $checkDigit;
+    }
+
+    public function testing(Request $request){
+        echo '<pre>';
+        print_r($request);
     }
     
 }

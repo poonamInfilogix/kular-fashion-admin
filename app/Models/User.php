@@ -25,6 +25,7 @@ class User extends Authenticatable
         'profile_image',
         'date_of_birth',
         'password',
+        'branch_id',
     ];
 
     /**
@@ -48,5 +49,8 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    public function branch(){
+        return $this->hasOne(Branch::class,'id','branch_id');
     }
 }
