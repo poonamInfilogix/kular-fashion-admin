@@ -95,6 +95,7 @@ export default {
                 this.expandRow(row, rowData);
             }
         });
+
     },
     methods: {
         expandRow(row, rowData) {
@@ -125,29 +126,33 @@ export default {
                 <div class="col-md-6">
                     <div class="d-flex">
                         <button class="btn btn-primary btn-sm me-3" id="toggleAllColorsBtn">Unselect All Colors</button>
-                        
-                        ${rowData.colors.map((color, index) => `
-                            <div class="me-2 d-color-code ${selectedColors.includes(String(color.color_detail.id)) ? 'selected' : ''}" 
-                                data-index="${index}" 
-                                style="background-color: ${color.color_detail.ui_color_code};"
-                                data-color-id="${color.color_detail.id}">
-                            </div>
-                        `).join('')}
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="d-flex">
-                        <button class="btn btn-primary btn-sm me-3" id="toggleAllSizesBtn">Unselect All Sizes</button>
-
-                        ${rowData.sizes.map((size, index) => `
-                            <div class="me-2 d-size-box ${selectedSizes.includes(String(size.size_id)) ? 'selected' : ''}" 
-                                data-index="${index}" 
-                                data-size-id="${size.size_id}">
-                                ${size.size_detail.size}
-                            </div>
+                <table class="table">
+                    <tr>
+                        <th>Size</th>
+                        ${rowData.sizes.map(size => `
+                            <th>${size.size_detail.size}</th>
                         `).join('')}
-                    </div>
-                </div>
+                    </tr>
+                    ${rowData.colors.map((color,index) => `
+                        <tr>
+                            <th>                            
+                                <div class="me-2 d-color-code ${selectedColors.includes(String(color.color_detail.id)) ? 'selected' : ''}" 
+                                    data-index="${index}" 
+                                    style="background-color: ${color.color_detail.ui_color_code};"
+                                    data-color-id="${color.color_detail.id}">
+                                </div>
+                            </th>
+                            ${rowData.quantities.map(quantity => {
+                                if (color.color_detail.id === quantity.product_color_id) {
+                                    return `<th><input name="[]" value="${quantity.quantity}"></th>`; 
+                                }
+                                return '';
+                            }).join('')}
+                        </tr>
+                    `).join('')}
+                </table>
             </div>
             `;
 
@@ -201,6 +206,7 @@ export default {
             expandedRow.find('.d-color-code').on('click', function () {
                 const colorDiv = $(this);
                 const selectedClass = 'selected';
+                colorDiv.parent().toggleClass(selectedClass);
 
                 // Toggle the selected class
                 colorDiv.toggleClass(selectedClass);
@@ -213,6 +219,7 @@ export default {
                 const selectedClass = 'selected';
 
                 // Toggle the selected class
+                sizeDiv.parent().toggleClass(selectedClass);
                 sizeDiv.toggleClass(selectedClass);
                 updateButtonText();
             });

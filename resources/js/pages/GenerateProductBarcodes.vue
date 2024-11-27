@@ -5,7 +5,7 @@
                 <h4 class="mb-sm-0 font-size-18">Print Barcodes</h4>
 
                 <div class="page-title-right">
-                    <button class="btn btn-primary me-2">
+                    <button class="btn btn-primary me-2" id="printBarcodeBtn">
                         <i class="bx bx-printer"></i>
                         Print
                     </button>
