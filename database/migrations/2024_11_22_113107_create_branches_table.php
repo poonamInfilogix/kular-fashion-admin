@@ -11,16 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('brands', function (Blueprint $table) {
+        Schema::create('branches', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('slug')->unique();
-            $table->string('short_name', 100)->unique()->nullable(); 
-            $table->text('description')->nullable();
-            $table->string('image')->nullable();
-            $table->decimal('margin', 5, 2)->default('50');
+            $table->string('name',255)->nullable();
+            $table->string('email')->nullable();
+            $table->string('contact')->nullable();
+            $table->string('location')->nullable();
+            $table->boolean('is_deleted')->default(0);
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
-            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('brands');
+        Schema::dropIfExists('branches');
     }
 };

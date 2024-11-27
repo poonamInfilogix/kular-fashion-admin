@@ -16,6 +16,8 @@ use App\Http\Controllers\TaxController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleAndPermissionController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\BranchController;
 
 Route::get('/', function (){
     return redirect()->route('dashboard');
@@ -38,7 +40,9 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'tax-settings'  => TaxController::class,
         'products'      => ProductController::class,
         'tags'          => TagController::class,
+        'users'         => UserController::class,
         'roles-and-permissions' => RoleAndPermissionController::class,
+        'branches' => BranchController::class,
     ]);
   
     Route::get('roles-and-permissions/role-list', [RoleAndPermissionController::class,'show'])->name('roles-and-permissions.role-list');
@@ -60,6 +64,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::post('/department-status', [DepartmentController::class, 'updateStatus'])->name('department-status');
     Route::post('/product-types-status', [ProductTypeController::class, 'productTypeStatus'])->name('product-types-status');
     Route::post('/brand-status', [BrandController::class, 'updateStatus'])->name('brand-status');
+    Route::post('/branch-status', [BranchController::class, 'updateStatus'])->name('branch-status');
     Route::post('/color-status', [ColorController::class, 'colorStatus'])->name('color-status');
     Route::post('/size-scale-status', [SizeScaleController::class, 'sizeScaleStatus'])->name('size-scale-status');
     Route::post('/size-status', [SizeController::class, 'sizeStatus'])->name('size-status');

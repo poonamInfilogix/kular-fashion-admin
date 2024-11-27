@@ -7,6 +7,12 @@
 
     <div class="col-sm-6 col-md-3">
         <div class="mb-3">
+            <x-form-input name="short_name" value="{{ $brand->short_name ?? '' }}" label="Short Name" placeholder="Enter Short Name"  required="true"/>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-md-2">
+        <div class="mb-3">
             <label class="form-label">Image</label>
             <input type="file" name="brand_image" id="add-brand-image" class="form-control" accept="image/*">
 
@@ -22,7 +28,7 @@
         </div>
     </div>
 
-    <div class="col-sm-6 col-md-3">
+    <div class="col-sm-6 col-md-2">
         <div class="mb-3 position-relative">
             <label for="validationTooltipUsername" class="form-label">Margin</label>
             <div class="input-group">
@@ -35,7 +41,7 @@
         </div>
     </div>
     
-    <div class="col-sm-6 col-md-3">
+    <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
             <select name="status" id="brand-status" class="form-control">
