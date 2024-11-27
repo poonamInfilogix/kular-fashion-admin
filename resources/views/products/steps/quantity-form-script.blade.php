@@ -136,7 +136,7 @@
 
                             $.each(sizes, function(index, size) {
                                 let $newTd = $('<td></td>');
-                                let quantityCell = `<input type="number" name="quantity[${response.data.color_id}][${size}]" value="0" class="form-control">`;
+                                let quantityCell = `<input type="number" name="quantity[${response.data.color_id}][${size}]" value="0" min="0" class="form-control">`;
                                 @isset($product)
                                     quantityCell += `<h6 class="mt-1 mb-0">Total in: <b>0</b></h6>`;
                                 @endisset

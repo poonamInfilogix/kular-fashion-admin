@@ -18,6 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('product_size_id'); 
             $table->integer('quantity')->default(0);
             $table->integer('total_quantity')->default(0);
+            $table->integer('original_printed_barcodes')->default(0);
+            $table->integer('total_printed_barcodes')->default(0);
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');

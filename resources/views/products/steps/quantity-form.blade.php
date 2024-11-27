@@ -42,7 +42,7 @@
                         @endphp
 
                         <td>
-                            <input type="number" name="quantity[{{ $color['id'] }}][{{ $size->id }}]"
+                            <input type="number" min="0" name="quantity[{{ $color['id'] }}][{{ $size->id }}]"
                                 value="{{ isset($quantityData) && is_array($quantityData) && isset($quantityData[$color['id']]) ? (int) $quantityData[$color['id']] : 0 }}"
                                 class="form-control">
                             @isset($product)
@@ -80,8 +80,7 @@
         <tr>
             <th>MRP</th>
             @foreach ($sizes as $size)
-                <td><input type="number" name="mrp[{{ $size->id }}]"
-                        value="{{ $savingProduct->mrp ?? $size->mrp }}" class="form-control"></td>
+                <td><input type="number" name="mrp[{{ $size->id }}]" min="0" value="{{ $savingProduct->mrp ?? $size->mrp }}" class="form-control"></td>
             @endforeach
         </tr>
 

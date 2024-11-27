@@ -5,7 +5,7 @@
                 <h4 class="mb-sm-0 font-size-18">Print Barcodes</h4>
 
                 <div class="page-title-right">
-                    <button class="btn btn-primary me-2" id="printBarcodeBtn">
+                    <button class="btn btn-primary me-2" @click="setBarcodesToBePrint">
                         <i class="bx bx-printer"></i>
                         Print
                     </button>
@@ -68,7 +68,17 @@ export default {
                 checkboxes.prop('checked', false);
                 this.selectedArticles = [];
             }
+        });
 
+        $('#product-table').on('click', 'tbody tr', (event) => {
+            if (event.target.tagName !== 'TD') return;
+            const row = $(event.currentTarget);
+            const productId = row.find('.select-row').val();
+
+            const index = this.selectedArticles.indexOf(productId);
+            if (index === -1) {
+                this.selectedArticles.push(productId);
+            }
         });
 
         $('#product-table').on('change', '.select-row', (event) => {
@@ -86,6 +96,29 @@ export default {
                 this.selectedArticles.splice(index, 1);
             }
         },
+        setBarcodesToBePrint(){
+            const selectedProductIds = this.selectedArticles;
+            const barcodesToBePrinted = [];
+
+            selectedProductIds.forEach((productId) => {
+                const tRow = $(`.select-row[value="${productId}"]`).parents('tr');
+                let selectedColors = tRow.attr('data-selected-colors');
+                let selectedSizes = tRow.attr('data-selected-sizes');
+
+                if(selectedColors && selectedSizes){
+                    selectedColors = selectedColors.split(',');
+                    selectedSizes = selectedSizes.split(',');
+
+                    barcodesToBePrinted.push({
+                        productId: productId,
+                        colors: selectedColors,
+                        sizes: selectedSizes,
+                    })
+                }
+            });
+
+            console.log('barcodesToBePrinted',barcodesToBePrinted)
+        }
     }
 };
 </script>

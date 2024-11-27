@@ -89,6 +89,9 @@ export default {
             const rowData = table.row(row).data();
             const nextRow = row.next('.expanded-row');
 
+            const checkbox = row.find('.select-row');
+            checkbox.prop('checked', 'checked');
+
             if (nextRow.length) {
                 nextRow.remove();
             } else {
@@ -123,30 +126,30 @@ export default {
             const expandedRow = $('<tr class="expanded-row"><td colspan="6"></td></tr>');
             const detailsHtml = `
             <div class="row">
-                <div class="col-md-6">
-                    <div class="d-flex">
-                        <button class="btn btn-primary btn-sm me-3" id="toggleAllColorsBtn">Unselect All Colors</button>
-                    </div>
-                </div>
-                <table class="table">
+                <table class="table mt-2">
                     <tr>
-                        <th>Size</th>
-                        ${rowData.sizes.map(size => `
-                            <th>${size.size_detail.size}</th>
+                        <th class="py-1">Size</th>
+                        ${rowData.sizes.map((size, index) => `
+                            <th class="py-1" data-index="${index}" data-size-id="${size.size_id}">
+                                ${size.size_detail.size}
+                            </th>
                         `).join('')}
                     </tr>
-                    ${rowData.colors.map((color,index) => `
+
+                    ${rowData.colors.filter(color => {
+                        return rowData.quantities.some(quantity => quantity.product_color_id === color.id && quantity.total_quantity > 0);
+                    }).map((color, index) => `
                         <tr>
-                            <th>                            
-                                <div class="me-2 d-color-code ${selectedColors.includes(String(color.color_detail.id)) ? 'selected' : ''}" 
+                            <th class="py-1">                            
+                                <div class="me-2 d-color-code" 
                                     data-index="${index}" 
                                     style="background-color: ${color.color_detail.ui_color_code};"
                                     data-color-id="${color.color_detail.id}">
                                 </div>
                             </th>
                             ${rowData.quantities.map(quantity => {
-                                if (color.color_detail.id === quantity.product_color_id) {
-                                    return `<th><input name="[]" value="${quantity.quantity}"></th>`; 
+                                if (color.id === quantity.product_color_id) {
+                                    return `<th class="py-1"><input type="number" name="[]" class="form-control py-1" min="0" value="${quantity.quantity}" oninput="validateMaxQuantity(this, ${quantity.total_quantity})"></th>`; 
                                 }
                                 return '';
                             }).join('')}
@@ -201,28 +204,6 @@ export default {
                 }).get();
                 $(row).attr('data-selected-sizes', selectedSizeIds.join(','));
             }
-
-            // Add click handler to color divs
-            expandedRow.find('.d-color-code').on('click', function () {
-                const colorDiv = $(this);
-                const selectedClass = 'selected';
-                colorDiv.parent().toggleClass(selectedClass);
-
-                // Toggle the selected class
-                colorDiv.toggleClass(selectedClass);
-                updateButtonText();
-            });
-
-            // Add click handler to size divs
-            expandedRow.find('.d-size-box').on('click', function () {
-                const sizeDiv = $(this);
-                const selectedClass = 'selected';
-
-                // Toggle the selected class
-                sizeDiv.parent().toggleClass(selectedClass);
-                sizeDiv.toggleClass(selectedClass);
-                updateButtonText();
-            });
 
             // Add click handler for the "Select All" button for colors
             expandedRow.find('#toggleAllColorsBtn').on('click', function () {
