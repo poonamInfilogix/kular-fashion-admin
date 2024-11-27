@@ -17,6 +17,22 @@
             </thead>
         </table>
     </form>
+    <table id="product-table" data-selected-articles="" class="table table-bordered dt-responsive nowrap w-100">
+        <thead>
+            <tr>
+                <th>
+                    <div class="form-check form-check-primary mb-3">
+                        <input class="form-check-input" type="checkbox" id="select-all">
+                    </div>
+                </th>
+                <th>Article Code</th>
+                <th>Description</th>
+                <th>Product Type</th>
+                <th>Brand</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+    </table>
 </template>
 
 
@@ -48,10 +64,10 @@ export default {
                     }
                 },
                 { title: "Article Code", data: 'article_code' },
-                { title: "Manufacture Code", data: 'manufacture_code' },
-                { title: "Department", data: 'department.name' },
+                { title: "Description", data: 'short_description' },
                 { title: "Brand", data: 'brand.name' },
                 { title: "Product Type", data: 'product_type.product_type_name' },
+                { title: "Price", data: 'mrp' },
             ],
             order: [[1, 'desc']]
         });
