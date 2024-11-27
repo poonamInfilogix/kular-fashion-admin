@@ -49,6 +49,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::post('roles-and-permissions/store-role', [RoleAndPermissionController::class,'storeRole'])->name('roles-and-permissions.store-role');
 
     Route::get('/get-products', [ProductController::class, 'getProducts'])->name('get.products');
+    Route::post('/test-products', [ProductController::class, 'testing'])->name('test.products');
    
     Route::get('general-settings', [SettingController::class, 'generalSetting'])->name('general-settings.index');
     Route::post('general-settings.store', [SettingController::class, 'generalSettingStore'])->name('general-settings.store');

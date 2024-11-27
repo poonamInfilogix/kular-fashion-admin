@@ -7,4 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Color extends Model
 {
     protected $guarded =[];
+
+    public function qauntity(){
+        return $this->belongsTo(ProductQuantity::class);
+    }
 }
