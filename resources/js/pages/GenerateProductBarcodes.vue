@@ -5,11 +5,10 @@
                 <h4 class="mb-sm-0 font-size-18">Print Barcodes</h4>
 
                 <div class="page-title-right">
-                    <button class="btn btn-primary me-2" id="printBarcodeBtn">
+                    <a :href="links.printBarcode" class="btn btn-primary me-2">
                         <i class="bx bx-printer"></i>
                         Print
-                    </button>
-
+                    </a>
                     <a :href="links.productList" class="btn btn-primary">
                         <i class="bx bx-arrow-back me-2"></i>
                         Back to products</a>
