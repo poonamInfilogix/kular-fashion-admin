@@ -40,6 +40,10 @@ export default {
                         let selectedArticles = $('#product-table').attr('data-selected-articles').split(',');
                         let checked = selectedArticles.includes(String(row.id)) ? 'checked' : '';
 
+                        if(!checked && !row.barcodes_printed_for_all){
+                            checked = 'checked';
+                        }
+
                         return `<div class="form-check form-check-primary">
                                 <input class="form-check-input select-row" type="checkbox" value="${row.id}" ${checked}>
                             </div>`
@@ -51,7 +55,15 @@ export default {
                 { title: "Product Type", data: 'product_type.product_type_name' },
                 { title: "Price", data: 'mrp' },
             ],
-            order: [[1, 'desc']]
+            order: [[1, 'desc']],
+            drawCallback: function(settings) {
+                // Call expandRow for each row after table is drawn
+                table.rows().every(function() {
+                    const rowData = this.data();
+                    const row = this.node();
+                    expandRow($(row), rowData);
+                });
+            }
         });
 
         // Handle row expansion on clicking any td (except the checkbox column)
@@ -62,7 +74,7 @@ export default {
             const expandedRow = row.next('.expanded-row');
 
             if (checkbox.prop('checked')) {
-                this.expandRow(row, rowData);
+                expandRow(row, rowData);
             } else {
                 expandedRow.remove();
             }
@@ -75,13 +87,12 @@ export default {
                 checkboxes.each((_, checkbox) => {
                     const row = $(checkbox).closest('tr');
                     const rowData = $(checkbox).closest('table').DataTable().row(row).data();
-                    this.expandRow(row, rowData);
+                    expandRow(row, rowData);
                 });
             } else {
                 $('#product-table .expanded-row').remove();
             }
         });
-
 
         $('#product-table').on('click', 'tbody tr', (e) => {
             if (e.target.tagName !== 'TD') return;
@@ -95,153 +106,9 @@ export default {
             if (nextRow.length) {
                 nextRow.remove();
             } else {
-                this.expandRow(row, rowData);
+                expandRow(row, rowData);
             }
         });
-
     },
-    methods: {
-        expandRow(row, rowData) {
-            const nextRow = $(row).next('.expanded-row');
-            if (!rowData || nextRow.length) { return; }
-            
-            let tempSelectedColors = $(row).attr('data-selected-colors');
-            let tempSelectedSizes = $(row).attr('data-selected-sizes');
-            
-            let selectedColors = [];
-            let selectedSizes = [];
-
-            if(typeof tempSelectedColors === 'undefined'){
-                selectedColors = rowData.colors.map(color => String(color.color_detail.id));
-            } else {
-                selectedColors = tempSelectedColors ? tempSelectedColors.split(',') : [];
-            }
-
-            if(typeof tempSelectedSizes === 'undefined'){
-                selectedSizes = tempSelectedSizes ? tempSelectedSizes.split(',') : rowData.sizes.map(size => String(size.size_id));
-            } else {
-                selectedSizes = tempSelectedSizes ? tempSelectedSizes.split(',') : [];
-            }
-
-            const expandedRow = $('<tr class="expanded-row"><td colspan="6"></td></tr>');
-            const detailsHtml = `
-            <div class="row">
-                <table class="table mt-2">
-                    <tr>
-                        <th class="py-1">Size</th>
-                        ${rowData.sizes.map((size, index) => `
-                            <th class="py-1" data-index="${index}" data-size-id="${size.size_id}">
-                                ${size.size_detail.size}
-                            </th>
-                        `).join('')}
-                    </tr>
-
-                    ${rowData.colors.filter(color => {
-                        return rowData.quantities.some(quantity => quantity.product_color_id === color.id && quantity.total_quantity > 0);
-                    }).map((color, index) => `
-                        <tr>
-                            <th class="py-1">                            
-                                <div class="me-2 d-color-code" 
-                                    data-index="${index}" 
-                                    style="background-color: ${color.color_detail.ui_color_code};"
-                                    data-color-id="${color.color_detail.id}">
-                                </div>
-                            </th>
-                            ${rowData.quantities.map(quantity => {
-                                if (color.id === quantity.product_color_id) {
-                                    return `<th class="py-1"><input type="number" name="[]" class="form-control py-1" min="0" value="${quantity.quantity}" oninput="validateMaxQuantity(this, ${quantity.total_quantity})"></th>`; 
-                                }
-                                return '';
-                            }).join('')}
-                        </tr>
-                    `).join('')}
-                </table>
-            </div>
-            `;
-
-            expandedRow.find('td').html(detailsHtml);
-            row.after(expandedRow);
-
-            // Function to update the button text based on the selection state
-            function updateButtonText() {
-                const allColorDivs = expandedRow.find('.d-color-code');
-                const allSizeDivs = expandedRow.find('.d-size-box');
-                const selectedClass = 'selected';
-
-                // Check if all colors are selected
-                const allColorsSelected = allColorDivs.length === allColorDivs.filter(`.${selectedClass}`).length;
-                const colorButton = expandedRow.find('#toggleAllColorsBtn');
-                if (allColorsSelected) {
-                    colorButton.text('Unselect All Colors');
-                } else {
-                    colorButton.text('Select All Colors');
-                }
-
-                // Check if all sizes are selected
-                const allSizesSelected = allSizeDivs.length === allSizeDivs.filter(`.${selectedClass}`).length;
-                const sizeButton = expandedRow.find('#toggleAllSizesBtn');
-                if (allSizesSelected) {
-                    sizeButton.text('Unselect All Sizes');
-                } else {
-                    sizeButton.text('Select All Sizes');
-                }
-
-                // Update the data-selected-colors and data-selected-sizes attributes on the row
-                updateSelectedAttributes();
-            }
-
-            // Function to update the selected colors and sizes attributes on the row
-            function updateSelectedAttributes() {
-                const selectedColorDivs = expandedRow.find('.d-color-code.selected');
-                const selectedColorIds = selectedColorDivs.map(function () {
-                    return $(this).data('color-id');
-                }).get();
-                $(row).attr('data-selected-colors', selectedColorIds.join(','));
-
-                const selectedSizeDivs = expandedRow.find('.d-size-box.selected');
-                const selectedSizeIds = selectedSizeDivs.map(function () {
-                    return $(this).data('size-id');
-                }).get();
-                $(row).attr('data-selected-sizes', selectedSizeIds.join(','));
-            }
-
-            // Add click handler for the "Select All" button for colors
-            expandedRow.find('#toggleAllColorsBtn').on('click', function () {
-                const allColorDivs = expandedRow.find('.d-color-code');
-                const selectedClass = 'selected';
-
-                if ($(this).text() === 'Unselect All Colors') {
-                    allColorDivs.removeClass(selectedClass);
-                    $(this).text('Select All Colors');
-                } else {
-                    allColorDivs.addClass(selectedClass);
-                    $(this).text('Unselect All Colors');
-                }
-
-                // Update the button text after selecting/unselecting all colors
-                updateButtonText();
-            });
-
-            // Add click handler for the "Select All" button for sizes
-            expandedRow.find('#toggleAllSizesBtn').on('click', function () {
-                const allSizeDivs = expandedRow.find('.d-size-box');
-                const selectedClass = 'selected';
-
-                if ($(this).text() === 'Unselect All Sizes') {
-                    allSizeDivs.removeClass(selectedClass);
-                    $(this).text('Select All Sizes');
-                } else {
-                    allSizeDivs.addClass(selectedClass);
-                    $(this).text('Unselect All Sizes');
-                }
-
-                // Update the button text after selecting/unselecting all sizes
-                updateButtonText();
-            });
-
-            // Update the button text initially in case all colors or sizes are selected by default
-            updateButtonText();
-        }
-    }
 };
 </script>

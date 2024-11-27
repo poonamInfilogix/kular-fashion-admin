@@ -24,7 +24,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <ProductsForBarcode />
+                    <ProductsForBarcode @toggle-selected-product="toggleSelection" />
                 </div>
             </div>
         </div>
@@ -41,6 +41,10 @@ export default {
     props: {
         links: {
             required: true
+        },
+        defaultProductsToBePrinted: {
+            type: Array,
+            default: []
         }
     },
     data() {
@@ -57,6 +61,8 @@ export default {
         }
     },
     mounted() {
+        this.selectedArticles = this.defaultProductsToBePrinted.map(String);
+
         $('table').on('change', '#select-all', (event) => {
             var checkboxes = $('#product-table .select-row');
 
@@ -100,19 +106,14 @@ export default {
             const barcodesToBePrinted = [];
 
             selectedProductIds.forEach((productId) => {
-                const tRow = $(`.select-row[value="${productId}"]`).parents('tr');
-                let selectedColors = tRow.attr('data-selected-colors');
-                let selectedSizes = tRow.attr('data-selected-sizes');
+                const productContainer = $(`[data-product-barcode-quantity="${productId}"]`);
+                const quantitiesToBePrint = $(productContainer).find('.barcode-quantity').not('[disabled]').filter(function() {
+                    return parseFloat($(this).val()) > 0;
+                });
+                console.log('productContainer',quantitiesToBePrint)
 
-                if(selectedColors && selectedSizes){
-                    selectedColors = selectedColors.split(',');
-                    selectedSizes = selectedSizes.split(',');
-
-                    barcodesToBePrinted.push({
-                        productId: productId,
-                        colors: selectedColors,
-                        sizes: selectedSizes,
-                    })
+                barcodesToBePrinted.product = {
+                    productId
                 }
             });
 
