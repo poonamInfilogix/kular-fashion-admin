@@ -9,7 +9,6 @@
                         <i class="bx bx-printer"></i>
                         Print
                     </button>
-
                     <a :href="links.productList" class="btn btn-primary">
                         <i class="bx bx-arrow-back me-2"></i>
                         Back to products</a>

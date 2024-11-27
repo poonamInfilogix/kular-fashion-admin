@@ -586,9 +586,11 @@ class ProductController extends Controller
         }
        $pdf = PDF::loadView('products.pdf.barcodes', ['barcodes' => $barcodes]);
 
-       //return view('products.pdf.barcodes', ['barcodes' => $barcodes]);
-       return $pdf->stream('product-barcodes.pdf');
-       return $pdf->download('product_barcodes.pdf');
+       //echo '<pre>';
+      // print_r($barcodes);
+       return view('products.pdf.barcodes', ['barcodes' => $barcodes]);
+      // return $pdf->stream('product-barcodes.pdf');
+      // return $pdf->download('product_barcodes.pdf');
     }
 
     public function generateCheckDigit($ean) {

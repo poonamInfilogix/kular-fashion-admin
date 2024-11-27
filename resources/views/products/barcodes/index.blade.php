@@ -5,7 +5,8 @@
         <div class="container-fluid">
             @php
                 $links = [
-                    'productList' => route('products.index'),
+                    'productList'   => route('products.index'),
+                    'printBarcode'  => route('download.barcodes'),
                 ];
             @endphp
             <generate-product-barcodes :links="{{ json_encode($links) }}"></generate-product-barcodes>
