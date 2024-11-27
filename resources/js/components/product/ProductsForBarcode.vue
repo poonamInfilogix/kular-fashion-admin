@@ -1,22 +1,4 @@
 <template>
-    <form id="printBarcode">
-        <table id="product-table" data-selected-articles="" class="table table-bordered dt-responsive nowrap w-100">
-            <thead>
-                <tr>
-                    <th>
-                        <div class="form-check form-check-primary mb-3">
-                            <input class="form-check-input" type="checkbox" id="select-all">
-                        </div>
-                    </th>
-                    <th>Article Code</th>
-                    <th>Manufacture Code</th>
-                    <th>Department</th>
-                    <th>Product Type</th>
-                    <th>Brand</th>
-                </tr>
-            </thead>
-        </table>
-    </form>
     <table id="product-table" data-selected-articles="" class="table table-bordered dt-responsive nowrap w-100">
         <thead>
             <tr>
