@@ -80,6 +80,8 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     //************************Import Csv Route********************/
     Route::post('import-brands', [BrandController::class, 'importBrands'])->name('import.brands');
 
+    Route::post('printbarcode-store-session',[ProductController::class, 'setBarcodeSession'])->name('printbarcode.store.session');
+
     Route::get('products/print-barcodes/list', [ProductController::class, 'downloadBarcodes'])->name('download.barcodes');
 
     Route::get('download-brand-sample', function() {

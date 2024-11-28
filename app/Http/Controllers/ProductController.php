@@ -617,9 +617,10 @@ class ProductController extends Controller
         return $checkDigit;
     }
 
-    public function testing(Request $request){
-        echo '<pre>';
-        print_r($request);
+    public function setBarcodeSession(Request $request){
+
+        Session::put('barcodesToBePrinted', $request);
+        return $request;
     }
     
 }

@@ -63,7 +63,7 @@
                                                 </div>
                                                 ${quantity.total_quantity > 0 ?
                                                     `<div class="col-4 p-0">
-                                                        <button class="btn btn-outline-secondary btn-sm double-barcode">2x</button>
+                                                        <button class="btn btn-outline-secondary btn-sm double-barcode btn2x" name="product[${rowData.id}][${quantity.id}]">2x</button>
                                                     </div>`
                                                 : ``}
                                             </div>
@@ -86,12 +86,18 @@
                     const barcodeQuantityInput = $(e.target).parent().parent().find('.barcode-quantity');
                     let originalQuantity = barcodeQuantityInput.val();
                     let quantityId = barcodeQuantityInput.attr('id');
+                    let inpName = barcodeQuantityInput.attr('name');
 
                     $(e.target).toggleClass('btn-outline-secondary btn-secondary');
-                    console.log('originalQuantity',originalQuantity)
-                    console.log('quantityId',quantityId)
+
+                    $('[name="'+inpName+'"]').attr('data-double', function(_, value) {
+                        return value === "true" ? "false" : "true"; 
+                    });
+
+                    console.log('originalQuantity', originalQuantity);
+                    console.log('quantityId', quantityId);
                 });
-            })
+            });
         </script>
     @endpush
 @endsection
