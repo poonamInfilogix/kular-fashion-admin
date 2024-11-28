@@ -21,7 +21,7 @@ return new class extends Migration
             $table->decimal('total_amount')->nullable();
             $table->decimal('total_payable_amount')->nullable();
             $table->decimal('paid_amount')->nullable();
-            $table->enum('source',['POS', 'Website', 'other'])->default('POS');
+            $table->enum('source',['POS', 'Website', 'Other'])->default('Other');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');

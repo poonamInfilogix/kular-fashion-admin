@@ -27,8 +27,9 @@ return new class extends Migration
             $table->string('barcode', 100)->nullable();
             $table->decimal('original_price')->nullable();
             $table->decimal('changed_price')->nullable();
+            $table->string('changed_price_reason_id')->nullable();
             $table->string('changed_price_reason')->nullable();
-            $table->integer('quantity')->nullable();
+            $table->integer('quantity')->nullable()->default(1);
             $table->text('description')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('sales_person_id')->nullable();
@@ -41,6 +42,7 @@ return new class extends Migration
             $table->foreign('color_id')->references('id')->on('colors')->onDelete('set null');
             $table->foreign('brand_id')->references('id')->on('brands')->onDelete('set null');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('changed_price_reason_id')->references('id')->on('change_price_reasons')->onDelete('set null');
             $table->foreign('sales_person_id')->references('id')->on('users')->onDelete('set null');
             $table->foreign('branch_id')->references('id')->on('branches')->onDelete('set null');
         });
