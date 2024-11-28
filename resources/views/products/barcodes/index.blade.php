@@ -56,18 +56,18 @@
                                     if (color.id === quantity.product_color_id) {
                                         const disabled = quantity.total_quantity === 0 ? 'disabled' : '';
 
-                                        return `<th class="py-1">
+                                        return `<td class="py-1">
                                             <div class="row px-2">
                                                 <div class="${quantity.total_quantity > 0 ? 'col-8' : '12'} p-0">
-                                                    <input type="number" name="product[${rowData.id}][${quantity.id}]" class="form-control py-1 barcode-quantity" min="0" value="${quantity.quantity}" ${disabled} oninput="validateMaxQuantity(this, ${quantity.total_quantity})">
+                                                    <input type="number" name="product[${rowData.id}][${quantity.id}]" id="${quantity.id}" class="form-control py-1 barcode-quantity" min="0" value="${quantity.quantity}" ${disabled} oninput="validateMaxQuantity(this, ${quantity.total_quantity})">
                                                 </div>
                                                 ${quantity.total_quantity > 0 ?
                                                     `<div class="col-4 p-0">
-                                                        <button class="btn btn-outline-secondary btn-sm">2x</button>
+                                                        <button class="btn btn-outline-secondary btn-sm double-barcode">2x</button>
                                                     </div>`
                                                 : ``}
                                             </div>
-                                        </th>`; 
+                                        </td>`; 
                                     }
                                     return '';
                                 }).join('')}
@@ -80,6 +80,18 @@
                 expandedRow.find('td').html(detailsHtml);
                 row.after(expandedRow);
             }
+
+            $(function(){
+                $('#product-table').on('click', '.double-barcode', (e) => {
+                    const barcodeQuantityInput = $(e.target).parent().parent().find('.barcode-quantity');
+                    let originalQuantity = barcodeQuantityInput.val();
+                    let quantityId = barcodeQuantityInput.attr('id');
+
+                    $(e.target).toggleClass('btn-outline-secondary btn-secondary');
+                    console.log('originalQuantity',originalQuantity)
+                    console.log('quantityId',quantityId)
+                });
+            })
         </script>
     @endpush
 @endsection
