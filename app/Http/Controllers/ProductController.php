@@ -24,6 +24,7 @@ use Illuminate\Support\MessageBag;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use Barryvdh\DomPDF\Facade\Pdf;
 
+
 class ProductController extends Controller
 {
     public function index()
@@ -558,69 +559,121 @@ class ProductController extends Controller
 
     public function downloadBarcodes()
     {
-        $generator = new BarcodeGeneratorPNG();
+        $barcodesQty = (object)Session::get('barcodesToBePrinted');
         $barcodes = [];
+
+        $generator = new BarcodeGeneratorPNG();
+
+        foreach($barcodesQty->barcodesToBePrinted as $data){
+            
+            foreach($data['product'] as $quantityDetail){
+                $products = ProductQuantity::with('product.department', 'product.brand', 'sizes.sizeDetail', 'colors.colorDetail')->where('id',$quantityDetail['id'])->get();
+
+                foreach($products as $productDetail){
+                    $article_code = $productDetail->product->article_code;
+                    $color_code = $productDetail->colors->colorDetail->color_code;
+                    $new_code = $productDetail->sizes->sizeDetail->new_code;
+                    $article_code = $article_code.$color_code.$new_code;
+                   
+                    $checkCode = $this->generateCheckDigit($article_code);
+                    for ($i=0; $i < $quantityDetail['printQty']; $i++) { 
+                        $barcode = base64_encode($generator->getBarcode($article_code, $generator::TYPE_EAN_13, 1, 20, [0, 0, 0]));
         
-        $products = ProductQuantity::with('product.department', 'sizes.sizeDetail', 'colors.colorDetail')->get();
-
-        foreach($products as $productDetail){
-            $article_code = $productDetail->product->article_code;
-            $color_code = $productDetail->colors->colorDetail->color_code;
-            $new_code = $productDetail->sizes->sizeDetail->new_code;
-            $article_code = $article_code.$color_code.$new_code;
-           
-            $checkCode = $this->generateCheckDigit($article_code);
-            for ($i=0; $i < $productDetail->quantity; $i++) { 
-                $barcode = base64_encode($generator->getBarcode($article_code.$checkCode, $generator::TYPE_CODE_39E_CHECKSUM, 1, 40));
-
-                $barcodes[] = [
-                    'barcode' => $barcode,
-                    'product_code' => $article_code.$checkCode,
-                    'department' => $productDetail->product->department->name,
-                    'manufacture_code' => $productDetail->product->manufacture_code,
-                    'size' => $productDetail->sizes->sizeDetail->size,
-                    'mrp' => $productDetail->sizes->mrp,
-                    'article_code' => $productDetail->product->article_code,
-                ];
+                        $barcodes[] = [
+                            'barcode' => $barcode,
+                            'product_code' => $article_code.$checkCode,
+                            'department' => $productDetail->product->department->name,
+                            'manufacture_code' => $productDetail->product->manufacture_code,
+                            'size' => $productDetail->sizes->sizeDetail->size,
+                            'mrp' => $productDetail->sizes->mrp,
+                            'article_code' => $productDetail->product->article_code,
+                            'short_description' => $productDetail->product->short_description,
+                            'color' => $productDetail->colors->colorDetail->color_name,
+                            'brand_short_name' => $productDetail->product->brand->short_name ?? $productDetail->product->brand->name,
+                        ];
+                    }
+                }
             }
         }
+
        $pdf = PDF::loadView('products.pdf.barcodes', ['barcodes' => $barcodes]);
 
-       //echo '<pre>';
-      // print_r($barcodes);
        return view('products.pdf.barcodes', ['barcodes' => $barcodes]);
       // return $pdf->stream('product-barcodes.pdf');
       // return $pdf->download('product_barcodes.pdf');
     }
 
-    public function generateCheckDigit($ean) {
+    public function generateCheckDigit($code) {
         
-        if (strlen($ean) != 12) {
-            throw new \Exception("EAN must have 12 digits.");
+        if (strlen($code) !== 12) {
+            throw new InvalidArgumentException('Code must be 12 digits.');
         }
     
-        $digits = str_split($ean); 
-        $oddSum = 0;
-        $evenSum = 0;
-    
-        for ($i = 0; $i < 12; $i += 2) {
-            $oddSum += $digits[$i];
+        $sum = 0;
+        for ($i = 0; $i < 12; $i++) {
+            $digit = (int) $code[$i];
+            $sum += ($i % 2 === 0) ? $digit : $digit * 3;
         }
     
-        for ($i = 1; $i < 12; $i += 2) {
-            $evenSum += $digits[$i];
-        }
-    
-        $totalSum = ($oddSum * 3) + $evenSum;
-        $checkDigit = (10 - ($totalSum % 10)) % 10;
-    
-        return $checkDigit;
+        $remainder = $sum % 10;
+        return $remainder === 0 ? 0 : 10 - $remainder;
     }
 
     public function setBarcodeSession(Request $request){
+        Session::put('barcodesToBePrinted', $request->all());
+        return response()->json([
+            "success" => true,
+            "message" => "Session stored successfully"
+        ]);
+       // return $request;
 
-        Session::put('barcodesToBePrinted', $request);
-        return $request;
+    }
+    public function generateBarcode(Request $request)
+    {
+        $type = $request->input('type', 'EAN'); // Default to EAN
+        $barcode = $request->input('barcode', '7039560000390'); // Default EAN code
+        
+        $generator = new BarcodeGeneratorPNG();
+
+        try {
+            if ($type === 'EAN') {
+                $barCodeImg = $generator->getBarcode($barcode, $generator::TYPE_EAN_13, 3, 120);
+
+                $imagick = new Imagick();
+                $imagick->readImageBlob($barCodeImg);
+                $imagick->setImageBackgroundColor('white');
+
+                // Make room for text
+                $imagick->extentImage($imagick->getImageWidth() + 25, $imagick->getImageHeight() + 15, -25, 0);
+
+                // Draw barcode numbers on the image
+                $draw = new ImagickDraw();
+                $draw->setStrokeWidth(1);
+                $draw->setFillColor('black');
+                $draw->setFont('Noto-Mono'); // Use a monospaced font
+                $draw->setFontSize(35);
+
+                preg_match('/^(\d)(\d{6})(\d{6})$/', $barcode, $parts);
+                $imagick->annotateImage($draw, 0, 135, 0, $parts[1]);
+                $imagick->annotateImage($draw, 35, 135, 0, $parts[2]);
+                $imagick->annotateImage($draw, 174, 135, 0, $parts[3]);
+                $imagick->resetIterator();
+                $imagick = $imagick->appendImages(true);
+
+                $imagick->setImageFormat('png');
+                $barCodeImg = $imagick->getImageBlob();
+            } else {
+                // Handle other barcode types (UPC, Code 128) as needed
+                return response()->json(['error' => 'Unsupported barcode type'], 400);
+            }
+
+            return response()->make(base64_encode($barCodeImg), 200, [
+                'Content-Type' => 'image/png',
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
     
 }

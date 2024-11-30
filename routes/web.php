@@ -20,9 +20,11 @@ use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BranchController;
 
+
 Route::get('/', function (){
     return redirect()->route('dashboard');
 });
+Route::get('/generate-barcode', [ProductController::class, 'generateBarcode']);
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('authenticate', [AuthController::class, 'authenticate'])->name('authenticate');
@@ -82,7 +84,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
 
     Route::post('printbarcode-store-session',[ProductController::class, 'setBarcodeSession'])->name('printbarcode.store.session');
 
-    Route::get('products/print-barcodes/list', [ProductController::class, 'downloadBarcodes'])->name('download.barcodes');
+    Route::get('products/print-barcodes/preview', [ProductController::class, 'downloadBarcodes'])->name('download.barcodes');
 
     Route::get('download-brand-sample', function() {
         $file = public_path('assets/samples/brand.csv');

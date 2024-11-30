@@ -117,7 +117,7 @@ export default {
                 quantitiesToBePrint.each(function () {
                     const inputId = $(this).attr('id'); 
                     const inputValue = $(this).val(); 
-                    const printQty = $(this).data('double') === true ? parseInt(inputValue) * 2 : inputValue;
+                    const printQty = $(this).data('double') ? parseInt(inputValue) * 2 : inputValue;
 
                     product.push({ id: inputId, orignalQty: inputValue, printQty: printQty }); 
                 });
@@ -136,7 +136,9 @@ export default {
                     barcodesToBePrinted
                 },
                 success : function(resp){
-                    console.log(resp);
+                    if(resp.success){
+                        window.location.href = '/products/print-barcodes/preview';
+                    }
                 },error : function(err){
                     console.log(err);
                 }
