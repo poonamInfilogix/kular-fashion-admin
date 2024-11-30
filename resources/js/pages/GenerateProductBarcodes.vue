@@ -110,14 +110,40 @@ export default {
                 const quantitiesToBePrint = $(productContainer).find('.barcode-quantity').not('[disabled]').filter(function() {
                     return parseFloat($(this).val()) > 0;
                 });
+
                 console.log('productContainer',quantitiesToBePrint)
 
-                barcodesToBePrinted.product = {
-                    productId
+                const product = [];
+                quantitiesToBePrint.each(function () {
+                    const inputId = $(this).attr('id'); 
+                    const inputValue = $(this).val(); 
+                    const printQty = $(this).data('double') ? parseInt(inputValue) * 2 : inputValue;
+
+                    product.push({ id: inputId, orignalQty: inputValue, printQty: printQty }); 
+                });
+
+                barcodesToBePrinted.push({
+                    productId,
+                    product,
+                });
+
+            });
+            $.ajax({
+                url : '/printbarcode-store-session',
+                type : 'POST',
+                data : {
+                    _token : $('[name="csrf-token"]').attr('content'),
+                    barcodesToBePrinted
+                },
+                success : function(resp){
+                    if(resp.success){
+                        window.location.href = '/products/print-barcodes/preview';
+                    }
+                },error : function(err){
+                    console.log(err);
                 }
             });
-
-            console.log('barcodesToBePrinted',barcodesToBePrinted)
+            console.log('barcodesToBePrinted', barcodesToBePrinted);
         }
     }
 };

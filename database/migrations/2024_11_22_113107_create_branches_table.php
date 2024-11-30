@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
-            $table->string('name',255)->nullable();
-            $table->string('email')->nullable();
-            $table->string('contact')->nullable();
+            $table->string('name', 150)->nullable();
+            $table->string('email', 150)->nullable();
+            $table->string('contact', 20)->nullable();
             $table->string('location')->nullable();
             $table->boolean('is_deleted')->default(0);
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
