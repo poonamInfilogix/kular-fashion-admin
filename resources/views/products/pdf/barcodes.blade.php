@@ -248,10 +248,23 @@
 
             }
         </style>
-        <div style="text-align: right; margin-top: 20px;">
-            <button id="print-btn" class="btn btn-primary">Print</button>
-        </div>
-        <div class="container-fluid" id="main-barcode-container">
+        
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0 font-size-18">Print Barcodes Preview</h4>
+    
+                        <div class="page-title-right">
+                            <button id="print-btn" class="btn btn-primary me-2">
+                                <i class="bx bx-printer"></i>
+                                Print
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <table id="table-content">
                 <tbody>
                     <!-- Barcode rows -->
@@ -365,8 +378,6 @@
                     ${newTableHtmlFirstPart}
                     ${selectedIndex ? newTableHtmlSecondPart : ''}
                 `;
-
-            console.log('selectedIndex',selectedIndex)
 
                 // Add any necessary styles for printing
                 var styles = $('style').map(function() {
