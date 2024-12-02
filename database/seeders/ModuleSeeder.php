@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use App\Models\Module;
 
 class ModuleSeeder extends Seeder
@@ -14,53 +13,18 @@ class ModuleSeeder extends Seeder
      */
     public function run(): void
     {
-
         $modules = [
-            [
-                "name" => "Brand",
-                "slug" => "brand",
-            ],
-            [
-                "name" => "Customer",
-                "slug" => "customer",
-            ],
-            [
-                "name" => "Color",
-                "slug" => "color",
-            ],
-            [
-                "name" => "Department",
-                "slug" => "department",
-            ],
-            [
-                "name" => "Product",
-                "slug" => "product",
-            ],
-            [
-                "name" => "Product Type",
-                "slug" => "product-type",
-            ],
-            [
-                "name" => "Size Scale",
-                "slug" => "size-scale",
-            ],
-            [
-                "name" => "Supplier",
-                "slug" => "supplier",
-            ],
-            [
-                "name" => "Tag",
-                "slug" => "tag",
-            ]
+            ['name' => 'Categories', 'slug' => 'categories'],
+            ['name' => 'Product', 'slug' => 'products'],
+            ['name' => 'Stores', 'slug' => 'stores'],
+            ['name' => 'Users', 'slug' => 'users'],
+            ['name' => 'Sales', 'slug' => 'sales'],
+            ['name' => 'Customers', 'slug' => 'customers'],
+            ['name' => 'Roles & Permissions', 'slug' => 'roles & permissions'],
         ];
 
         foreach ($modules as $module) {
-            Module::create([
-                'name' => $module['name'],
-                'slug' => $module['slug']
-            ]);
+            Module::create($module);
         }
-
-
     }
 }
