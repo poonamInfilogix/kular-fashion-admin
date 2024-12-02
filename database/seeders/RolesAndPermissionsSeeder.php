@@ -17,8 +17,8 @@ class RolesAndPermissionsSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         $permissions = [
+            'pos',
             'backend',
-            'frontend',
             'view stores', 'create stores', 'edit stores', 'delete stores',
             'view users', 'create users', 'edit users', 'delete users',
             'view categories', 'create categories', 'edit categories', 'delete categories',
@@ -36,7 +36,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'Super Admin' => Permission::all(),
             'Admin' => Permission::all(),
             'Manager' => ['backend', 'view sales', 'view customers'],
-            'Sales Person' => ['frontend']
+            'Sales Person' => ['pos']
         ];
 
         foreach ($roles as $roleName => $permissions) {

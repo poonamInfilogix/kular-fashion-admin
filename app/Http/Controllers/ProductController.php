@@ -606,7 +606,7 @@ class ProductController extends Controller
     public function generateCheckDigit($code) {
         
         if (strlen($code) !== 12) {
-            throw new InvalidArgumentException('Code must be 12 digits.');
+            throw new \Exception('Code must be 12 digits.');
         }
     
         $sum = 0;
