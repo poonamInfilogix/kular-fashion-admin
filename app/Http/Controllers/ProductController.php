@@ -428,6 +428,11 @@ class ProductController extends Controller
                 }
             }
         }
+
+        if($product->quantities->sum('total_quantity')!==$product->quantities->sum('original_printed_barcodes')){
+            $product->barcodes_printed_for_all = 0;
+            $product->save();
+        }
         
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
@@ -560,48 +565,58 @@ class ProductController extends Controller
 
     public function downloadBarcodes()
     {
-        $barcodesQty = (object)Session::get('barcodesToBePrinted');
-        $barcodes = [];
+        if(!Session::get('barcodesToBePrinted')){
+            return redirect()->route('products.print-barcodes');
+        }
 
+        $barcodesQty = (object)Session::get('barcodesToBePrinted');
+
+        if(!isset($barcodesQty->barcodesToBePrinted)){
+            return redirect()->route('products.print-barcodes');
+        }
+
+        $barcodes = [];
         $generator = new BarcodeGeneratorPNG();
 
         foreach($barcodesQty->barcodesToBePrinted as $data){
+            if(isset($data['product'])){
+                foreach($data['product'] as $quantityDetail){
+                    $products = ProductQuantity::with('product.department', 'product.brand', 'sizes.sizeDetail', 'colors.colorDetail')->where('id',$quantityDetail['id'])->get();
+    
+                    foreach($products as $productDetail){
+                        $article_code = $productDetail->product->article_code;
+                        $color_code = $productDetail->colors->colorDetail->color_code;
+                        $new_code = $productDetail->sizes->sizeDetail->new_code;
+                        $article_code = $article_code.$color_code.$new_code;
+                       
+                        $checkCode = $this->generateCheckDigit($article_code);
+                        for ($i=0; $i < $quantityDetail['printQty']; $i++) { 
+                            $barcode = base64_encode($generator->getBarcode($article_code, $generator::TYPE_EAN_13, 1, 20, [0, 0, 0]));
             
-            foreach($data['product'] as $quantityDetail){
-                $products = ProductQuantity::with('product.department', 'product.brand', 'sizes.sizeDetail', 'colors.colorDetail')->where('id',$quantityDetail['id'])->get();
-
-                foreach($products as $productDetail){
-                    $article_code = $productDetail->product->article_code;
-                    $color_code = $productDetail->colors->colorDetail->color_code;
-                    $new_code = $productDetail->sizes->sizeDetail->new_code;
-                    $article_code = $article_code.$color_code.$new_code;
-                   
-                    $checkCode = $this->generateCheckDigit($article_code);
-                    for ($i=0; $i < $quantityDetail['printQty']; $i++) { 
-                        $barcode = base64_encode($generator->getBarcode($article_code, $generator::TYPE_EAN_13, 1, 20, [0, 0, 0]));
-        
-                        $barcodes[] = [
-                            'barcode' => $barcode,
-                            'product_code' => $article_code.$checkCode,
-                            'department' => $productDetail->product->department->name,
-                            'manufacture_code' => $productDetail->product->manufacture_code,
-                            'size' => $productDetail->sizes->sizeDetail->size,
-                            'mrp' => $productDetail->sizes->mrp,
-                            'article_code' => $productDetail->product->article_code,
-                            'short_description' => $productDetail->product->short_description,
-                            'color' => $productDetail->colors->colorDetail->color_name,
-                            'brand_short_name' => $productDetail->product->brand->short_name ?? $productDetail->product->brand->name,
-                        ];
+                            $barcodes[] = [
+                                'barcode' => $barcode,
+                                'product_code' => $article_code.$checkCode,
+                                'department' => $productDetail->product->department->name,
+                                'manufacture_code' => $productDetail->product->manufacture_code,
+                                'size' => $productDetail->sizes->sizeDetail->size,
+                                'mrp' => $productDetail->sizes->mrp,
+                                'article_code' => $productDetail->product->article_code,
+                                'short_description' => $productDetail->product->short_description,
+                                'color' => $productDetail->colors->colorDetail->color_name,
+                                'brand_short_name' => $productDetail->product->brand->short_name ?? $productDetail->product->brand->name,
+                            ];
+                        }
                     }
                 }
             }
+            
         }
 
-       $pdf = PDF::loadView('products.pdf.barcodes', ['barcodes' => $barcodes]);
+        if(count($barcodes)===0){
+            return redirect()->route('products.print-barcodes');
+        }
 
        return view('products.pdf.barcodes', ['barcodes' => $barcodes]);
-      // return $pdf->stream('product-barcodes.pdf');
-      // return $pdf->download('product_barcodes.pdf');
     }
 
     public function generateCheckDigit($code) {
@@ -629,18 +644,36 @@ class ProductController extends Controller
 
     }
     public function saveBarcodes(){
-
         $getPrinted = (object)Session::get('barcodesToBePrinted');
+
         foreach($getPrinted->barcodesToBePrinted as $data){
-            foreach($data['product'] as $quantityDetail){
-                $products = ProductQuantity::where('id',$quantityDetail['id'])->where('product_id',$data['productId'])->first();
-                $products->original_printed_barcodes = $products->original_printed_barcodes + $quantityDetail['orignalQty'];
-                $products->total_printed_barcodes = $products->total_printed_barcodes + $quantityDetail['printQty'];
-                $products->save();
+            if(isset($data['product'])){
+                foreach($data['product'] as $quantityDetail){
+                    $productQuantity = ProductQuantity::where('id',$quantityDetail['id'])->where('product_id',$data['productId'])->first();
+                    $updatedOriginalQuantity = $productQuantity->original_printed_barcodes + $quantityDetail['orignalQty'];
+
+                    if($productQuantity->total_quantity >= $updatedOriginalQuantity){
+                        $productQuantity->original_printed_barcodes = $updatedOriginalQuantity;
+                    }
+    
+                    $productQuantity->total_printed_barcodes = $productQuantity->total_printed_barcodes + $quantityDetail['printQty'];
+                    $productQuantity->save();
+                }
+
+                $product = Product::find($data['productId']);
+                $product->are_barcodes_printed = 1;
+
+                if($product->quantities->sum('total_quantity')===$product->quantities->sum('original_printed_barcodes')){
+                    $product->barcodes_printed_for_all = 1;
+                }
+
+                $product->save();
             }
+            
         } 
+
         Session::forget('barcodesToBePrinted');
-        return redirect()->route('products.index')->with('success','Barcodes Printed Successfully');
+        return redirect()->route('products.print-barcodes')->with('success','Barcodes Printed Successfully');
     }
 
     public function downloadExcel()

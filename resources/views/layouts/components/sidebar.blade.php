@@ -17,12 +17,13 @@
                         <span key="t-ecommerce">Manage Products</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('departments.index')}}" key="t-products">Departments</a></li>
-                        <li><a href="{{ route('product-types.index')}}" key="t-products">Product Types</a></li>
-                        <li><a href="{{ route('brands.index') }}" key="t-products">Brands</a></li>
-                        <li><a href="{{ route('colors.index') }}" key="t-products">Colors</a></li>
-                        <li><a href="{{ route('size-scales.index') }}" key="t-products">Size Scales</a></li>
-                        <li><a href="{{ route('products.index') }}" key="t-products">Products</a></li>
+                        <li><a href="{{ route('departments.index')}}">Departments</a></li>
+                        <li><a href="{{ route('product-types.index')}}">Product Types</a></li>
+                        <li><a href="{{ route('brands.index') }}">Brands</a></li>
+                        <li><a href="{{ route('colors.index') }}">Colors</a></li>
+                        <li><a href="{{ route('size-scales.index') }}">Size Scales</a></li>
+                        <li><a href="{{ route('products.index') }}">Products</a></li>
+                        <li><a href="{{ route('products.print-barcodes') }}">Print Barcodes</a></li>
                     </ul>
                 </li>
                 <li >
@@ -66,8 +67,8 @@
                         <span key="t-ecommerce">Roles & Permissions</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('roles-and-permissions.role-list') }}" key="t-products">Manage Roles</a></li>
-                        <li><a href="{{ route('roles-and-permissions.index') }}" key="t-products">Manage Permissions</a></li>
+                        <li><a href="{{ route('roles-and-permissions.role-list') }}">Manage Roles</a></li>
+                        <li><a href="{{ route('roles-and-permissions.index') }}">Manage Permissions</a></li>
                     </ul>
                 </li>
                 <li>
@@ -76,8 +77,8 @@
                         <span key="t-ecommerce">Settings</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('settings.index')}}" key="t-products">Default Images</a></li>
-                        <li><a href="{{ route('tax-settings.index')}}" key="t-products">Tax Settings</a></li>
+                        <li><a href="{{ route('settings.index')}}">Default Images</a></li>
+                        <li><a href="{{ route('tax-settings.index')}}">Tax Settings</a></li>
                         <li><a href="{{ route('general-settings.index')}}" key="t-general-setting">General Settings</a></li>
                     </ul>
                 </li>

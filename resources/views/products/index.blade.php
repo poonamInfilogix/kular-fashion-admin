@@ -9,13 +9,8 @@
                         <h4 class="mb-sm-0 font-size-18">Products</h4>
 
                         <div class="page-title-right">
-                            {{-- <a href="{{ route('download.barcodes') }}" class="btn btn-primary">Generate Bar codes</a> --}}
                             <a href="{{ route('export.csv') }}" class="btn btn-primary primary-btn btn-md me-1"><i class="bx bx-download"></i> Download Product Configuration File</a>
                             
-                            <a href="{{ route('products.print-barcodes') }}" class="btn btn-primary me-2">
-                                <i class="bx bx-printer"></i>
-                                Print Barcodes
-                            </a>
                             <a href="{{ route('products.create') }}" class="btn btn-primary">
                                 <i class="bx bx-plus fs-16"></i>
                                 Add New Product

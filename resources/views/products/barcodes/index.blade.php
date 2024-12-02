@@ -55,11 +55,12 @@
                                 ${rowData.quantities.map(quantity => {
                                     if (color.id === quantity.product_color_id) {
                                         const disabled = quantity.total_quantity === 0 ? 'disabled' : '';
-
+                                        console.log('quantity',quantity)
+                                        
                                         return `<td class="py-1">
                                             <div class="row px-2">
                                                 <div class="${quantity.total_quantity > 0 ? 'col-8' : '12'} p-0">
-                                                    <input type="number" name="product[${rowData.id}][${quantity.id}]" id="${quantity.id}" class="form-control py-1 barcode-quantity" min="0" value="${quantity.quantity}" ${disabled} oninput="validateMaxQuantity(this, ${quantity.total_quantity})">
+                                                    <input type="number" name="product[${rowData.id}][${quantity.id}]" id="${quantity.id}" class="form-control py-1 barcode-quantity" min="0" value="${quantity.total_quantity - quantity.original_printed_barcodes}" ${disabled} oninput="validateMaxQuantity(this, ${quantity.total_quantity})">
                                                 </div>
                                                 ${quantity.total_quantity > 0 ?
                                                     `<div class="col-4 p-0">

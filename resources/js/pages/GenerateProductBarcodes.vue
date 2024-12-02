@@ -5,13 +5,10 @@
                 <h4 class="mb-sm-0 font-size-18">Print Barcodes</h4>
 
                 <div class="page-title-right">
-                    <button class="btn btn-primary me-2" @click="setBarcodesToBePrint">
+                    <button class="btn btn-primary me-2" @click="setBarcodesToBePrint" v-if="selectedArticles.length>0">
                         <i class="bx bx-printer"></i>
                         Print
                     </button>
-                    <a :href="links.productList" class="btn btn-primary">
-                        <i class="bx bx-arrow-back me-2"></i>
-                        Back to products</a>
                 </div>
 
             </div>
@@ -111,8 +108,6 @@ export default {
                     return parseFloat($(this).val()) > 0;
                 });
 
-                console.log('productContainer',quantitiesToBePrint)
-
                 const product = [];
                 quantitiesToBePrint.each(function () {
                     const inputId = $(this).attr('id'); 
@@ -126,8 +121,8 @@ export default {
                     productId,
                     product,
                 });
-
             });
+
             $.ajax({
                 url : '/printbarcode-store-session',
                 type : 'POST',
@@ -143,7 +138,6 @@ export default {
                     console.log(err);
                 }
             });
-            console.log('barcodesToBePrinted', barcodesToBePrinted);
         }
     }
 };
