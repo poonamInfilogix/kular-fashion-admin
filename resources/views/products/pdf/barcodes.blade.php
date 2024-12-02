@@ -348,11 +348,9 @@
 
                 var allTdElements = $table.find('td').toArray();
 
-                // Get the two sets of TD elements
-                var tdElementsFirstPart = allTdElements.slice(index); // From selected index to end
-                var tdElementsSecondPart = allTdElements.slice(0, index); // From start to selected index
+                var tdElementsFirstPart = allTdElements.slice(index); 
+                var tdElementsSecondPart = allTdElements.slice(0, index);
 
-                // Function to create table HTML from td elements
                 function createTableHtml(tdElements) {
                     var newRowsHtml = '';
                     for (var i = 0; i < tdElements.length; i += 4) {
@@ -360,9 +358,8 @@
                             return td.outerHTML;
                         }).join('');
 
-                        // If there are less than 4 td's, add empty ones to complete the row
                         while (rowHtml.split('<td').length - 1 < 4) {
-                            rowHtml += '<td style="width: 25%;"></td>'; // Empty td to maintain 4 columns
+                            rowHtml += '<td style="width: 25%;"></td>'; 
                         }
 
                         newRowsHtml += `<tr>${rowHtml}</tr>`;
@@ -373,18 +370,15 @@
                 var newTableHtmlFirstPart = createTableHtml(tdElementsFirstPart);
                 var newTableHtmlSecondPart = createTableHtml(tdElementsSecondPart);
 
-                // Combine the tables with a page break in between
                 var combinedHtml = `
                     ${newTableHtmlFirstPart}
                     ${selectedIndex ? newTableHtmlSecondPart : ''}
                 `;
 
-                // Add any necessary styles for printing
                 var styles = $('style').map(function() {
                     return $(this).prop('outerHTML');
                 }).get().join('');
 
-                // Prepare the print content
                 var printWindowContent = `
                 <html>
                 <head>
@@ -397,31 +391,27 @@
                 </html>
             `;
 
-                // Create a hidden iframe to use the browser's print dialog without opening a new window
                 var iframe = document.createElement('iframe');
                 iframe.style.position = 'absolute';
                 iframe.style.width = '0px';
                 iframe.style.height = '0px';
                 iframe.style.border = 'none';
 
-                // Append iframe to the document body
                 document.body.appendChild(iframe);
 
-                // Write the content into the iframe's document
                 var iframeDoc = iframe.contentWindow.document;
                 iframeDoc.open();
                 iframeDoc.write(printWindowContent);
                 iframeDoc.close();
 
-                // Trigger the print dialog after the iframe loads
                 iframe.onload = function() {
-                    iframe.contentWindow.focus(); // Focus on the iframe before printing
-                    iframe.contentWindow.print(); // Trigger the print dialog
+                    iframe.contentWindow.focus(); 
+                    iframe.contentWindow.print();
                 };
 
-                // Clean up after printing
                 iframe.contentWindow.onafterprint = function() {
-                    document.body.removeChild(iframe); // Remove the iframe after printing
+                    document.body.removeChild(iframe);
+                    window.location.href = `{{ route('save.barcodes') }}`;
                 };
             }
         });

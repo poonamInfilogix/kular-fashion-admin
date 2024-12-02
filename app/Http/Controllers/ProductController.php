@@ -625,55 +625,22 @@ class ProductController extends Controller
             "success" => true,
             "message" => "Session stored successfully"
         ]);
-       // return $request;
 
     }
-    public function generateBarcode(Request $request)
-    {
-        $type = $request->input('type', 'EAN'); // Default to EAN
-        $barcode = $request->input('barcode', '7039560000390'); // Default EAN code
-        
-        $generator = new BarcodeGeneratorPNG();
+    public function saveBarcodes(){
 
-        try {
-            if ($type === 'EAN') {
-                $barCodeImg = $generator->getBarcode($barcode, $generator::TYPE_EAN_13, 3, 120);
-
-                $imagick = new Imagick();
-                $imagick->readImageBlob($barCodeImg);
-                $imagick->setImageBackgroundColor('white');
-
-                // Make room for text
-                $imagick->extentImage($imagick->getImageWidth() + 25, $imagick->getImageHeight() + 15, -25, 0);
-
-                // Draw barcode numbers on the image
-                $draw = new ImagickDraw();
-                $draw->setStrokeWidth(1);
-                $draw->setFillColor('black');
-                $draw->setFont('Noto-Mono'); // Use a monospaced font
-                $draw->setFontSize(35);
-
-                preg_match('/^(\d)(\d{6})(\d{6})$/', $barcode, $parts);
-                $imagick->annotateImage($draw, 0, 135, 0, $parts[1]);
-                $imagick->annotateImage($draw, 35, 135, 0, $parts[2]);
-                $imagick->annotateImage($draw, 174, 135, 0, $parts[3]);
-                $imagick->resetIterator();
-                $imagick = $imagick->appendImages(true);
-
-                $imagick->setImageFormat('png');
-                $barCodeImg = $imagick->getImageBlob();
-            } else {
-                // Handle other barcode types (UPC, Code 128) as needed
-                return response()->json(['error' => 'Unsupported barcode type'], 400);
+        $getPrinted = (object)Session::get('barcodesToBePrinted');
+        foreach($getPrinted->barcodesToBePrinted as $data){
+            foreach($data['product'] as $quantityDetail){
+                $products = ProductQuantity::where('id',$quantityDetail['id'])->where('product_id',$data['productId'])->first();
+                $products->original_printed_barcodes = $products->original_printed_barcodes + $quantityDetail['orignalQty'];
+                $products->total_printed_barcodes = $products->total_printed_barcodes + $quantityDetail['printQty'];
+                $products->save();
             }
-
-            return response()->make(base64_encode($barCodeImg), 200, [
-                'Content-Type' => 'image/png',
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        } 
+        Session::forget('barcodesToBePrinted');
+        return redirect()->route('products.index')->with('success','Barcodes Printed Successfully');
     }
+
     
 }
