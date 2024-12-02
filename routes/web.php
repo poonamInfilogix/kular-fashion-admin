@@ -86,6 +86,8 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
 
     Route::get('products/print-barcodes/preview', [ProductController::class, 'downloadBarcodes'])->name('download.barcodes');
     Route::get('products/print-barcodes/save', [ProductController::class, 'saveBarcodes'])->name('save.barcodes');
+    
+    Route::get('/export/csv', [ProductController::class, 'downloadExcel'])->name('export.csv');
 
     Route::get('download-brand-sample', function() {
         $file = public_path('assets/samples/brand.csv');

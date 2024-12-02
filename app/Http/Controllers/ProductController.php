@@ -23,7 +23,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use Barryvdh\DomPDF\Facade\Pdf;
-
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class ProductController extends Controller
 {
@@ -640,6 +641,133 @@ class ProductController extends Controller
         } 
         Session::forget('barcodesToBePrinted');
         return redirect()->route('products.index')->with('success','Barcodes Printed Successfully');
+    }
+
+    public function downloadExcel()
+    {
+        $spreadsheet = new Spreadsheet();
+
+        $this->addDepartmentSheet($spreadsheet);
+        $this->addProductType($spreadsheet);
+        $this->addBrand($spreadsheet);
+        $this->addSizeScale($spreadsheet);
+        $this->addSizes($spreadsheet);
+
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'Guard_Roaster_configuration' . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $fileName . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
+        exit;
+    }
+
+    protected function addDepartmentSheet($spreadsheet)
+    {
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Departments');
+
+        $headers = ['ID', 'Name', 'Slug', 'Description', 'Status'];
+        $sheet->fromArray($headers, NULL, 'A1');
+
+        $departments = Department::all();
+
+        foreach ($departments as $key => $department) {
+            $sheet->fromArray(
+                [$department->id, $department->name, $department->slug, $department->description, $department->status],
+                NULL,
+                'A' . ($key + 2)
+            );
+        }
+
+        $spreadsheet->createSheet();
+    }
+
+    protected function addProductType($spreadsheet)
+    {
+        $spreadsheet->setActiveSheetIndex(1);
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Product Types');
+
+        $headers = ['ID', 'Department Id', 'Department', 'Product Type Id', 'Product Name'];
+        $sheet->fromArray($headers, NULL, 'A1');
+
+        $productTypeDepartments = ProductTypeDepartment::with('productTypes', 'departments')->get();
+        foreach ($productTypeDepartments as $key => $productType) {
+            $sheet->fromArray(
+                [$productType->id, $productType->department_id, $productType->departments->name, $productType->product_type_id, $productType->productTypes->product_type_name],
+                NULL,
+                'A' . ($key + 2)
+            );
+        }
+
+        $spreadsheet->createSheet();
+    }
+
+    protected function addBrand($spreadsheet)
+    {
+        $spreadsheet->setActiveSheetIndex(2);
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Brands');
+
+        $headers = ['ID', 'Name', 'Slug', 'Description', 'Margin', 'Status'];
+        $sheet->fromArray($headers, NULL, 'A1');
+
+        $brands = Brand::all();
+
+        foreach ($brands as $key => $brand) {
+            $sheet->fromArray(
+                [$brand->id, $brand->name, $brand->slug, $brand->description, $brand->margin, $brand->status],
+                NULL,
+                'A' . ($key + 2)
+            );
+        }
+
+        $spreadsheet->createSheet();
+    }
+
+    protected function addSizeScale($spreadsheet)
+    {
+        $spreadsheet->setActiveSheetIndex(3);
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Size Scales');
+
+        $headers = ['ID', 'Size Scale', 'Status'];
+        $sheet->fromArray($headers, NULL, 'A1');
+
+        $sizeScales = SizeScale::all();
+
+        foreach ($sizeScales as $key => $sizeScale) {
+            $sheet->fromArray(
+                [$sizeScale->id, $sizeScale->size_scale, $sizeScale->status],
+                NULL,
+                'A' . ($key + 2)
+            );
+        }
+
+        $spreadsheet->createSheet();
+    }
+
+    protected function addSizes($spreadsheet)
+    {
+        $spreadsheet->setActiveSheetIndex(4);
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Sizes');
+
+        $headers = ['ID', 'Size Scale Id', 'Size', 'New Code', 'Old Code', 'Length', 'Status'];
+        $sheet->fromArray($headers, NULL, 'A1');
+
+        $sizes = Size::all();
+
+        foreach ($sizes as $key => $size) {
+            $sheet->fromArray(
+                [$size->id, $size->size_scale_id, $size->size, $size->new_code, $size->old_code, $size->length, $size->status],
+                NULL,
+                'A' . ($key + 2)
+            );
+        }
     }
 
     

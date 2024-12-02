@@ -10,6 +10,8 @@
 
                         <div class="page-title-right">
                             {{-- <a href="{{ route('download.barcodes') }}" class="btn btn-primary">Generate Bar codes</a> --}}
+                            <a href="{{ route('export.csv') }}" class="btn btn-primary primary-btn btn-md me-1"><i class="bx bx-download"></i> Download Product Configuration File</a>
+                            
                             <a href="{{ route('products.print-barcodes') }}" class="btn btn-primary me-2">
                                 <i class="bx bx-printer"></i>
                                 Print Barcodes
