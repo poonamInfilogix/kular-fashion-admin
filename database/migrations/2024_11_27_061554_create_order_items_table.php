@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('barcode', 100)->nullable();
             $table->decimal('original_price')->nullable();
             $table->decimal('changed_price')->nullable();
-            $table->string('changed_price_reason_id')->nullable();
+            $table->unsignedBigInteger('changed_price_reason_id')->nullable();
             $table->string('changed_price_reason')->nullable();
             $table->integer('quantity')->nullable()->default(1);
             $table->text('description')->nullable();
