@@ -48,7 +48,8 @@
 
             h3 {
                 text-align: left;
-                margin-top: 5px;
+                margin-top: 4px;
+                margin-bottom: 4px;
                 font-size: 12px;
             }
 
@@ -155,13 +156,16 @@
                 }
 
                 td {
-                    height: 120px;
+                    height: 110px;
+                    /* Adjusted to fit 9 rows per page */
                     padding: 6px;
                     text-align: center;
                     border: 1px solid #ddd;
                     vertical-align: top;
                     border-radius: 21px;
                     box-sizing: border-box;
+                    width: 25%;
+                    /* Ensures four columns per row */
                 }
 
                 .barcode-box {
@@ -218,8 +222,11 @@
                 }
 
                 @page {
-                    size: auto;
-                    margin: 0;
+                    size: A4;
+                    margin-top: 10mm;
+                    margin-left: 0mm; /* Optional: Add left margin */
+                    margin-right: 0mm; /* Optional: Add right margin */
+                    margin-bottom: 10mm;
                 }
 
                 /* Add page-break styles for controlling spacing between pages */
@@ -245,16 +252,15 @@
                     page-break-inside: avoid;
                     /* Prevent splitting rows */
                 }
-
             }
         </style>
-        
+
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <h4 class="mb-sm-0 font-size-18">Print Barcodes Preview</h4>
-    
+
                         <div class="page-title-right">
                             <button id="print-btn" class="btn btn-primary me-2">
                                 <i class="bx bx-printer"></i>
@@ -307,6 +313,16 @@
                                 </div>
                             </div>
                         </td>
+                        @if (count($barcodes) % 4 !== 0 && $index === count($barcodes) - 1)
+                            @php
+                                $emptyCells = 4 - (count($barcodes) % 4);
+                            @endphp
+                            @for ($i = 0; $i < $emptyCells; $i++)
+                                <td></td>
+                            @endfor
+                            </tr>
+                        @endif
+
                         @if (($index + 1) % 4 == 0 || $loop->last)
                             </tr>
                         @endif
@@ -348,7 +364,7 @@
 
                 var allTdElements = $table.find('td').toArray();
 
-                var tdElementsFirstPart = allTdElements.slice(index); 
+                var tdElementsFirstPart = allTdElements.slice(index);
                 var tdElementsSecondPart = allTdElements.slice(0, index);
 
                 function createTableHtml(tdElements) {
@@ -359,7 +375,7 @@
                         }).join('');
 
                         while (rowHtml.split('<td').length - 1 < 4) {
-                            rowHtml += '<td style="width: 25%;"></td>'; 
+                            rowHtml += '<td style="width: 25%;"></td>';
                         }
 
                         newRowsHtml += `<tr>${rowHtml}</tr>`;
@@ -405,7 +421,7 @@
                 iframeDoc.close();
 
                 iframe.onload = function() {
-                    iframe.contentWindow.focus(); 
+                    iframe.contentWindow.focus();
                     iframe.contentWindow.print();
                 };
 
