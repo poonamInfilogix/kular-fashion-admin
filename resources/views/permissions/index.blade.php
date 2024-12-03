@@ -48,7 +48,7 @@
                                                                 <div class="col-3">
                                                                     <div class="checkbox-group mr-4">
                                                                         <h6>Backend</h6>
-                                                                        <input type="checkbox" class="backend-checkbox" name="permissions[]"
+                                                                        <input type="checkbox" class="form-check-input" name="permissions[]"
                                                                             id="{{ $role->id . '_' . 'backend' }}" value="backend"
                                                                             {{ $role->permissions->contains('name', 'backend') ? 'checked' : '' }}>
                                                                     </div>
@@ -56,7 +56,7 @@
                                                                 <div class="col-3">
                                                                     <div class="checkbox-group">
                                                                         <h6>POS</h6>
-                                                                        <input type="checkbox" class="backend-checkbox" name="permissions[]"
+                                                                        <input type="checkbox" class="form-check-input" name="permissions[]"
                                                                             id="{{ $role->id . '_' . 'pos' }}" value="pos"
                                                                             {{ $role->permissions->contains('name', 'pos') ? 'checked' : '' }}>
                                                                     </div>
@@ -69,7 +69,7 @@
                     
                                             </div>
                     
-                                            <div id="role-{{ $role->id }}-collapse" class="collapse {{ $loop->first ? 'show' : '' }}"
+                                            <div id="role-{{ $role->id }}-collapse" @class(['collapse', 'show' => $loop->first])
                                                 aria-labelledby="role-{{ $role->id }}-heading" data-parent="#rolesAccordion">
                                                 <div class="card-body">
                                                     <input type="hidden" name="role_id" value="{{ $role->id }}">
@@ -96,12 +96,14 @@
                                                                         </div>
                                                                     </td>
                                                                     <td>
+                                                                        @if ($module->slug!='roles & permissions')
                                                                         <div class="form-check">
                                                                             <input class="form-check-input" type="checkbox" name="permissions[]"
                                                                                 id="{{ $role->id . 'create_' . $module->slug }}"
                                                                                 value="{{ 'create ' . $module->slug }}"
                                                                                 {{ $role->permissions->contains('name', 'create ' . $module->slug) ? 'checked' : '' }}>
                                                                         </div>
+                                                                        @endif
                                                                     </td>
                                                                     <td>
                                                                         <div class="form-check">
@@ -112,12 +114,14 @@
                                                                         </div>
                                                                     </td>
                                                                     <td>
+                                                                        @if ($module->slug!='roles & permissions')
                                                                         <div class="form-check">
                                                                             <input class="form-check-input" type="checkbox" name="permissions[]"
                                                                                 id="{{ $role->id . 'delete_' . $module->slug }}"
                                                                                 value="{{ 'delete ' . $module->slug }}"
                                                                                 {{ $role->permissions->contains('name', 'delete ' . $module->slug) ? 'checked' : '' }}>
                                                                         </div>
+                                                                        @endif
                                                                     </td>
                                                                 </tr>
                                                             @endforeach

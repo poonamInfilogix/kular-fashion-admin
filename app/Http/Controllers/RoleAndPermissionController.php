@@ -19,7 +19,7 @@ class RoleAndPermissionController extends Controller
             abort(403);
         }*/
 
-        $roles = Role::where('name', '!=', 'Admin')->get();
+        $roles = Role::where('id', '!=', '1')->get();
         $modules = Module::get();
         return view('permissions.index',compact('roles', 'modules'));
     }
@@ -60,7 +60,7 @@ class RoleAndPermissionController extends Controller
      */
     public function show(string $id)
     {
-        $roles = Role::where('name', '!=', 'Admin')->get();
+        $roles = Role::where('id', '!=', 1)->get();
         return view('roles.index', compact('roles'));
     }
 
@@ -89,7 +89,8 @@ class RoleAndPermissionController extends Controller
      */
     public function destroy(string $id)
     {
-        $role = Role::where('id',$id)->delete();
+        Role::where('id',$id)->delete();
+
         return response()->json([
             'success' => true,
             'message' => 'Role deleted successfully.'
@@ -98,7 +99,7 @@ class RoleAndPermissionController extends Controller
 
     public function storeRole(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'role' => 'required|unique:roles,name',  
         ]);
     
