@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Branch;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
@@ -15,9 +16,14 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        $branch = Branch::create([
+            'name' => 'Store'
+        ]);
+
         $superAdmin = User::create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
+            'branch_id' => $branch->id,
             'password' => Hash::make('Admin@12345'),
         ]);
         $superAdminRole = Role::where('name', 'Super Admin')->first();

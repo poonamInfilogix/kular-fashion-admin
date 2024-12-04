@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('article_code')->nullable();
+            $table->string('article_code', 50)->nullable();
             $table->string('manufacture_code')->nullable();
             $table->unsignedBigInteger('brand_id')->nullable()->index();
             $table->unsignedBigInteger('department_id')->nullable()->index();
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('mrp', 10, 2)->nullable();
             $table->decimal('supplier_price', 10, 2)->nullable(); 
             $table->string('image')->nullable();
-            $table->string('season')->nullable();
+            $table->string('season', 25)->nullable();
             $table->string('supplier_ref')->nullable();
             $table->unsignedBigInteger('tax_id')->nullable()->index();
             $table->date('in_date')->nullable();
