@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('change_price_reasons', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
+            $table->string('name', 100)->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

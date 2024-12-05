@@ -19,7 +19,7 @@ use App\Http\Controllers\RoleAndPermissionController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BranchController;
-
+use App\Http\Controllers\ChangePriceReasonController;
 
 Route::get('/', function (){
     return redirect()->route('dashboard');
@@ -41,6 +41,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'size-scales'   => SizeScaleController::class,
         'suppliers'     => SupplierController::class,
         'tax-settings'  => TaxController::class,
+        'change-price-reasons'  => ChangePriceReasonController::class,
         'products'      => ProductController::class,
         'tags'          => TagController::class,
         'users'         => UserController::class,

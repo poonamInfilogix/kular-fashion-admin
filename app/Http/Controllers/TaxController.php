@@ -62,8 +62,8 @@ class TaxController extends Controller
             'tax' => 'required',
         ]);
 
-        $status = $request->status == '1' ? 1 : 0; // Convert to integer
-        $isDefault = $request->default == '1' ? 1 : 0; // Convert to integer
+        $status = $request->status == '1' ? 1 : 0;
+        $isDefault = $request->default == '1' ? 1 : 0;
 
         if($isDefault == 1) {
             Tax::where('is_default', 1)->update([

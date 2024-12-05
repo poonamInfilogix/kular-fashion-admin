@@ -26,7 +26,7 @@
                         <li><a href="{{ route('products.print-barcodes') }}">Print Barcodes</a></li>
                     </ul>
                 </li>
-                <li >
+                <li>
                     <a href="{{ route('tags.index') }}" class="waves-effect">
                         <i class="bx bx-extension"></i>
                         <span key="t-user">Manage Tags</span>
@@ -34,25 +34,25 @@
                 </li>
 
                 <li class="menu-title" key="t-menu">Users</li>
-                <li >
+                <li>
                     <a href="{{ route('branches.index') }}" class="waves-effect">
                         <i class="bx bx-store-alt"></i>
                         <span key="t-user">Manage Branches</span>
                     </a>
                 </li>
-                <li >
+                <li>
                     <a href="#" class="waves-effect">
                         <i class="bx bx-user"></i>
                         <span key="t-user">Manage Customers</span>
                     </a>
                 </li>
-                <li >
+                <li>
                     <a href="{{ route('suppliers.index') }}" class="waves-effect">
                         <i class="bx bx-user-circle"></i>
                         <span key="t-user">Manage Suppliers</span>
                     </a>
                 </li>
-                <li >
+                <li>
                     <a href="{{ route('users.index') }}" class="waves-effect">
                         <i class="bx bx-group"></i>
                         <span key="t-user">Manage Users</span>
@@ -72,6 +72,12 @@
                     </ul>
                 </li>
                 <li>
+                    <a href="{{ route('change-price-reasons.index') }}" class="waves-effect">
+                        <i class="bx bx-stats"></i>
+                        <span key="t-user">Change Price Reasons</span>
+                    </a>
+                </li>
+                <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-cog"></i>
                         <span key="t-ecommerce">Settings</span>
@@ -79,7 +85,7 @@
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{ route('settings.index')}}">Default Images</a></li>
                         <li><a href="{{ route('tax-settings.index')}}">Tax Settings</a></li>
-                        <li><a href="{{ route('general-settings.index')}}" key="t-general-setting">General Settings</a></li>
+                        <li><a href="{{ route('general-settings.index')}}">General Settings</a></li>
                     </ul>
                 </li>
             </ul>

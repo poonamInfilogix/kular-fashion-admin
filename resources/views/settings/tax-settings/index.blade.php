@@ -45,7 +45,7 @@
                                             </td>
                                             <td class="action-buttons">
                                                 <a href="{{ route('tax-settings.edit', $tax->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
-                                                <button data-source="Tax" data-endpoint="{{ route('tax-settings.destroy', $tax->id)}}"
+                                                <button data-source="tax" data-endpoint="{{ route('tax-settings.destroy', $tax->id)}}"
                                                     class="delete-btn btn btn-danger btn-sm edit">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>

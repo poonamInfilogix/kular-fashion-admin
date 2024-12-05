@@ -17,7 +17,8 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $branch = Branch::create([
-            'name' => 'Store'
+            'name' => 'Store',
+            'short_name' => 'Store',
         ]);
 
         $superAdmin = User::create([
