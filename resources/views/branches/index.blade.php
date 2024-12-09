@@ -29,6 +29,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
+                                    <th>Short Name</th>
                                     <th>Email</th>
                                     <th>Contact</th>
                                     <th>Location</th>
@@ -41,6 +42,7 @@
                                         <tr>
                                             <td>{{ ++$key }}</td>
                                             <td>{{ ucwords($branch->name) }}</td>
+                                            <td>{{ ucwords($branch->short_name) }}</td>
                                             <td>{{ $branch->email }}</td>
                                             <td>{{ $branch->contact }}</td>
                                             <td>{{ $branch->location }}</td>

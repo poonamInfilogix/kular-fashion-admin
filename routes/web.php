@@ -20,6 +20,7 @@ use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ChangePriceReasonController;
+use App\Http\Controllers\InventoryTransferController;
 
 Route::get('/', function (){
     return redirect()->route('dashboard');
@@ -47,8 +48,11 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'users'         => UserController::class,
         'roles-and-permissions' => RoleAndPermissionController::class,
         'branches' => BranchController::class,
+        'inventory-transfer' => InventoryTransferController::class,
     ]);
   
+    Route::get('product-validate/{barcode}', [ProductController::class, 'productValidate']);
+    
     Route::get('roles-and-permissions/role-list', [RoleAndPermissionController::class,'show'])->name('roles-and-permissions.role-list');
     Route::post('roles-and-permissions/store-role', [RoleAndPermissionController::class,'storeRole'])->name('roles-and-permissions.store-role');
 
