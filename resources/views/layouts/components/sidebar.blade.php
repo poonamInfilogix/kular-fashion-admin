@@ -29,42 +29,49 @@
                 <li>
                     <a href="{{ route('tags.index') }}" class="waves-effect">
                         <i class="bx bx-extension"></i>
-                        <span key="t-user">Manage Tags</span>
+                        <span>Manage Tags</span>
                     </a>
                 </li>
-
-                <li class="menu-title" key="t-menu">Users</li>
+                <li class="menu-title">Stores and Inventory</li>
                 <li>
                     <a href="{{ route('branches.index') }}" class="waves-effect">
                         <i class="bx bx-store-alt"></i>
-                        <span key="t-user">Manage Branches</span>
+                        <span>Manage Branches</span>
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('inventory-transfer.index') }}" class="waves-effect">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Inventory Transfer</span>
+                    </a>
+                </li>
+
+                <li class="menu-title">Users</li>
+                <li>
                     <a href="#" class="waves-effect">
                         <i class="bx bx-user"></i>
-                        <span key="t-user">Manage Customers</span>
+                        <span>Manage Customers</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('suppliers.index') }}" class="waves-effect">
                         <i class="bx bx-user-circle"></i>
-                        <span key="t-user">Manage Suppliers</span>
+                        <span>Manage Suppliers</span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('users.index') }}" class="waves-effect">
                         <i class="bx bx-group"></i>
-                        <span key="t-user">Manage Users</span>
+                        <span>Manage Users</span>
                     </a>
                 </li>
 
 
-                <li class="menu-title" key="t-menu">Settings</li>
+                <li class="menu-title">Settings</li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="fas fa-users-cog"></i>
-                        <span key="t-ecommerce">Roles & Permissions</span>
+                        <span>Roles & Permissions</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{ route('roles-and-permissions.role-list') }}">Manage Roles</a></li>
@@ -74,13 +81,13 @@
                 <li>
                     <a href="{{ route('change-price-reasons.index') }}" class="waves-effect">
                         <i class="bx bx-stats"></i>
-                        <span key="t-user">Change Price Reasons</span>
+                        <span>Change Price Reasons</span>
                     </a>
                 </li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-cog"></i>
-                        <span key="t-ecommerce">Settings</span>
+                        <span>Settings</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{ route('settings.index')}}">Default Images</a></li>

@@ -34,6 +34,7 @@ class BranchController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:users,email', 
             'name' => 'required', 
+            'short_name' => 'required', 
         ]);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
@@ -41,6 +42,7 @@ class BranchController extends Controller
 
         $branches = Branch::create([
             "name" => $request->name,
+            "short_name" => $request->short_name,
             "email" => $request->email,
             "contact" => $request->contact,
             "location" => $request->location,
@@ -74,6 +76,7 @@ class BranchController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:users,email', 
             'name' => 'required', 
+            'short_name' => 'required', 
         ]);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
@@ -81,6 +84,7 @@ class BranchController extends Controller
 
         $branches = Branch::create([
             "name" => $request->name,
+            "short_name" => $request->short_name,
             "email" => $request->email,
             "contact" => $request->contact,
             "location" => $request->location,

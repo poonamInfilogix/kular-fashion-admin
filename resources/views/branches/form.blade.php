@@ -1,7 +1,12 @@
 <div class="row mb-2">
     <div class="col-md-4">
         <div class="mb-3">
-            <x-form-input name="name" value="{{ old('name',$branch->name ?? '') }}" label="Branch Name" placeholder="Enter Username"  required="true" />
+            <x-form-input name="name" value="{{ old('name',$branch->name ?? '') }}" label="Branch Name" placeholder="Enter Branch Name"  required="true" />
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="mb-3">
+            <x-form-input name="short_name" value="{{ old('short_name',$branch->short_name ?? '') }}" label="Branch Short Name" placeholder="Enter Short Name"  required="true" />
         </div>
     </div>
     <div class="col-md-4">

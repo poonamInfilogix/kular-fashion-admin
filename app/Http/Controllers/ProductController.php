@@ -802,6 +802,55 @@ class ProductController extends Controller
             );
         }
     }
+    public function productValidate($barcode)
+    {
+        $transferData = Session::get('transferData', []);
+    
+        $products = ProductQuantity::with('product.brand', 'product.department', 'sizes.sizeDetail', 'colors.colorDetail')->get();
+    
+        foreach ($products as $product) {
+            $article_code = $product->product->article_code;
+            $color_code = $product->colors->colorDetail->color_code;
+            $new_code = $product->sizes->sizeDetail->new_code;
+            $article_code = $article_code . $color_code . $new_code;
+            $checkCode = $this->generateCheckDigit($article_code);
+            $generated_code = $article_code . $checkCode;
+    
+            if ($generated_code == $barcode) {
+                if (isset($transferData[$barcode])) {
+                    return "Match found";  
+                } else {
+                    $newProductData = [
+                        $barcode => [
+                            'product_id' => $product->product->id,
+                            'code' => $product->product->article_code,
+                            'description' => $product->product->short_description,
+                            'color' => $product->colors->colorDetail->color_name,
+                            'size' => $product->sizes->sizeDetail->size,
+                            'brand' => $product->product->brand->name,
+                            'price' => (float) $product->sizes->mrp,
+                            'total_quantity' => $product->quantity,
+                            'transfer_quantity' => 1,
+                            'barcode' => $barcode
+                        ]
+                    ];
+    
+                    $transferData = array_merge($transferData, $newProductData);
+    
+                    Session::put('transferData', $transferData);
+                }
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Product barcode is valid.',
+                    'product' => $newProductData[$barcode]  
+                ], 200);
+            }
+        }
+    
+        return response()->json(['success' => false, 'message' => 'Product barcode is invalid.']);
+    }
+    
+
 
     
 }
