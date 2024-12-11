@@ -6,7 +6,7 @@
                 <li>
                     <a href="#" class="waves-effect">
                         <i class="bx bx-home-alt"></i>
-                        <span key="t-dashboards">Dashboard</span>
+                        <span>Dashboard</span>
                     </a>
                 </li>
 
@@ -14,7 +14,7 @@
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-box"></i>
-                        <span key="t-ecommerce">Manage Products</span>
+                        <span>Manage Products</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="{{ route('departments.index')}}">Departments</a></li>
@@ -23,8 +23,19 @@
                         <li><a href="{{ route('colors.index') }}">Colors</a></li>
                         <li><a href="{{ route('size-scales.index') }}">Size Scales</a></li>
                         <li><a href="{{ route('products.index') }}">Products</a></li>
-                        <li><a href="{{ route('products.print-barcodes') }}">Print Barcodes</a></li>
                     </ul>
+                </li>
+                <li>
+                    <a href="{{ route('products.create') }}" class="waves-effect">
+                        <i class="bx bx-cube"></i>
+                        <span>Add new product</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('products.print-barcodes') }}" class="waves-effect">
+                        <i class="bx bx-printer"></i>
+                        <span>Print Barcodes</span>
+                    </a>
                 </li>
                 <li>
                     <a href="{{ route('tags.index') }}" class="waves-effect">

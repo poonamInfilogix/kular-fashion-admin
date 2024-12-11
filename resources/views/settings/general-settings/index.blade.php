@@ -34,6 +34,12 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="mb-3">
+                                            <label for="season" class="form-label">1 Euro = *.** pound</label>
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary w-md">Save</button>
                             </form>

@@ -30,7 +30,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::with('brand','department','productType')->latest()->get();
+        $products = Product::with('brand', 'department', 'productType')->latest()->get();
 
         return view('products.index', compact('products'));
     }
@@ -49,16 +49,17 @@ class ProductController extends Controller
         return view('products.create', compact('latestNewCode', 'brands', 'departments', 'taxes', 'tags', 'sizeScales'));
     }
 
-    public function saveStep1(Request $request){
+    public function saveStep1(Request $request)
+    {
         $request->validate([
-            'article_code' => [ 
-                'required', 
-                Rule::unique('products')->whereNull('deleted_at'), 
+            'article_code' => [
+                'required',
+                Rule::unique('products')->whereNull('deleted_at'),
             ],
             'manufacture_code' => [
                 'required',
-                    Rule::unique('products')->whereNull('deleted_at'),
-                ],
+                Rule::unique('products')->whereNull('deleted_at'),
+            ],
             'brand_id'          => 'required',
             'department_id'     => 'required',
             'product_type_id'   => 'required',
@@ -70,23 +71,24 @@ class ProductController extends Controller
         ]);
 
         $productData = $request->all();
-        
+
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = $request->article_code . '.' . $image->getClientOriginalExtension();
             $path = 'uploads/products/';
             $image->move(public_path($path), $imageName);
-        
+
             // Store only the file path in the data array
             $productData['image_path'] = $path . $imageName;
             unset($productData['image']);
         }
-        
+
         Session::put('savingProduct', $productData);
         return redirect()->route('products.create.step-2');
     }
 
-    public function updateStep1(Request $request, $productId){
+    public function updateStep1(Request $request, $productId)
+    {
         $request->validate([
             'manufacture_code' => [
                 'required',
@@ -109,15 +111,15 @@ class ProductController extends Controller
             $imageName = $request->article_code . '.' . $image->getClientOriginalExtension();
             $path = 'uploads/products/';
             $image->move(public_path($path), $imageName);
-        
+
             // Store only the file path in the data array
             $imagePath = $path . $imageName;
         }
 
-        
+
         $product = Product::find($productId);
 
-        if(!$imagePath){
+        if (!$imagePath) {
             $imagePath = $product->image;
         }
 
@@ -140,16 +142,16 @@ class ProductController extends Controller
                 'status' => $request->status,
             ]);
         }
-        if(isset($request->tag_id)){
-            foreach($request->tag_id as $tags){
+        if (isset($request->tag_id)) {
+            foreach ($request->tag_id as $tags) {
                 ProductTag::updateOrCreate(
                     [
-                        'product_id' => $productId, 
-                        'tag_id' => $tags            
+                        'product_id' => $productId,
+                        'tag_id' => $tags
                     ],
                     [
-                        'product_id' => $productId, 
-                        'tag_id' => $tags             
+                        'product_id' => $productId,
+                        'tag_id' => $tags
                     ]
                 );
             }
@@ -158,7 +160,8 @@ class ProductController extends Controller
         return redirect()->route('products.edit.step-2', $productId);
     }
 
-    public function editStep2(Product $product){
+    public function editStep2(Product $product)
+    {
         $sizes = $product->sizes;
 
         $savedColorIds = $product->colors->pluck('color_id')->toArray();
@@ -170,12 +173,13 @@ class ProductController extends Controller
             return $savedColorsMapped[$colorId] ?? null;
         }, $reversedColorIds);
 
-        $colors = Color::where('status','Active')->get();
+        $colors = Color::where('status', 'Active')->get();
 
         return view('products.steps.edit-step-2', compact('product', 'sizes', 'savedColors', 'colors'));
     }
 
-    public function saveStep2(Request $request){
+    public function saveStep2(Request $request)
+    {
         $product = Session::get('savingProduct');
         $product['size_range_min'] = $request->size_range_min;
         $product['size_range_max'] = $request->size_range_max;
@@ -188,7 +192,7 @@ class ProductController extends Controller
             'colors' => 'required|array',
             'colors.*' => 'required|distinct|exists:colors,id',
             'supplier_color_code' => 'required|array',
-            'supplier_color_code.*' => 'required|distinct|string|min:3|max:10', 
+            'supplier_color_code.*' => 'required|distinct|string|min:3|max:10',
             'size_range_min' => 'required|exists:sizes,id',
             'size_range_max' => 'required|exists:sizes,id|gte:size_range_min',
         ]);
@@ -205,25 +209,25 @@ class ProductController extends Controller
         if ($validator->fails()) {
             $errors = $validator->errors();
         } else {
-            $errors = new MessageBag(); 
+            $errors = new MessageBag();
         }
 
         $savingProduct = Session::get('savingProduct', []);
 
-        if(empty($savingProduct)){
+        if (empty($savingProduct)) {
             $savingProduct['supplier_color_codes'] = [];
             $savingProduct['colors'] = [];
         }
 
-        if(isset($request->product_id)){
+        if (isset($request->product_id)) {
             $savedProduct = Product::with('colors')->find($request->product_id);
-            if($savedProduct){
+            if ($savedProduct) {
                 $supplierColorCodes = $savedProduct->colors->pluck('supplier_color_code')->toArray();
                 $savedColorCodes = $savedProduct->colors->pluck('color_id')->toArray();
-                
+
                 $savingProduct['supplier_color_codes'] = $supplierColorCodes;
                 $savingProduct['colors'] = $savedColorCodes;
-            } 
+            }
         }
 
         if ($savingProduct) {
@@ -241,7 +245,7 @@ class ProductController extends Controller
             ], 422);
         }
 
-        if($request->product_id){
+        if ($request->product_id) {
             ProductColor::updateOrCreate(
                 [
                     'product_id' => $request->product_id,
@@ -250,13 +254,13 @@ class ProductController extends Controller
                 [
                     'supplier_color_code' => $request->supplier_color_code,
                 ]
-            );            
+            );
         }
 
-        $color = Color::where('id',$request->color_select)->first();
+        $color = Color::where('id', $request->color_select)->first();
         array_push($savingProduct['supplier_color_codes'], $request->supplier_color_code);
         array_push($savingProduct['colors'], $request->color_select);
-        $savingProduct = Session::put('savingProduct',$savingProduct);
+        $savingProduct = Session::put('savingProduct', $savingProduct);
 
         return response()->json([
             'success' => true,
@@ -271,17 +275,18 @@ class ProductController extends Controller
         ]);
     }
 
-    public function removeVariant(Request $request, $colorId){
+    public function removeVariant(Request $request, $colorId)
+    {
         // Retrieve the product session data
         $savingProduct = Session::get('savingProduct');
-        
+
         if (!$savingProduct && !$request->productId) {
             return response()->json(['error' => 'No product session found.'], 404);
         }
 
-        if($request->productId){
+        if ($request->productId) {
             $product = Product::find($request->productId);
-            if($product){
+            if ($product) {
                 $product->colors()->where('color_id', $colorId)->delete();
             }
         }
@@ -320,7 +325,7 @@ class ProductController extends Controller
             'department_id' => $productData['department_id'] ?? NULL,
             'brand_id' => $productData['brand_id'] ?? NULL,
             'product_type_id' => $productData['product_type_id'] ?? NULL,
-            'short_description' => $productData['short_description'] ?? NULL ,
+            'short_description' => $productData['short_description'] ?? NULL,
             'mrp' => $productData['mrp'] ?? NULL,
             'supplier_price' => $productData['supplier_price'] ?? NULL,
             'season' => $productData['season'] ?? NULL,
@@ -335,8 +340,8 @@ class ProductController extends Controller
             'status' => $productData['status'],
         ]);
 
-        if(isset($productData['tag_id'])){
-            foreach($productData['tag_id'] as $tags){
+        if (isset($productData['tag_id'])) {
+            foreach ($productData['tag_id'] as $tags) {
                 ProductTag::create([
                     "product_id" => $product->id,
                     "tag_id" => $tags
@@ -350,7 +355,7 @@ class ProductController extends Controller
                 'mrp' => $mrp
             ]);
         }
-    
+
         foreach ($productData['supplier_color_codes'] as $index => $supplierColorCode) {
             $productColor = ProductColor::create([
                 'product_id' => $product->id,
@@ -371,7 +376,7 @@ class ProductController extends Controller
                 ]);
             }
         }
-    
+
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
@@ -389,25 +394,25 @@ class ProductController extends Controller
         $tags  = Tag::where('status', 'Active')->latest()->get();
         $sizeScales = SizeScale::where('status', 'Active')->latest()->get();
         $sizes = Size::where('status', 'Active')->latest()->get();
-        $productTags = ProductTag::where('product_id', $product->id)->pluck('tag_id'); 
+        $productTags = ProductTag::where('product_id', $product->id)->pluck('tag_id');
 
-        return view('products.edit', compact('brands', 'productTypes', 'departments', 'product', 'taxes', 'tags', 'sizes', 'sizeScales','productTags'));
+        return view('products.edit', compact('brands', 'productTypes', 'departments', 'product', 'taxes', 'tags', 'sizes', 'sizeScales', 'productTags'));
     }
 
     public function update(Request $request, Product $product)
     {
-        foreach($request->mrp as $product_size_id => $mrp){
+        foreach ($request->mrp as $product_size_id => $mrp) {
             ProductSize::find($product_size_id)->update([
                 'mrp' => $mrp
             ]);
         }
 
-        foreach($request->quantity as $colorId => $tempQuantity){
+        foreach ($request->quantity as $colorId => $tempQuantity) {
             $productColor = ProductColor::where('product_id', $product->id)->where('color_id', $colorId)->first();
-            if($productColor){
+            if ($productColor) {
                 $productColorId = $productColor->id;
 
-                foreach($tempQuantity as $productSizeId => $newQuantity){
+                foreach ($tempQuantity as $productSizeId => $newQuantity) {
                     $quantityRecord = ProductQuantity::firstOrCreate(
                         [
                             'product_id' => $product->id,
@@ -420,7 +425,7 @@ class ProductController extends Controller
                         ]
                     );
 
-                    if($quantityRecord){
+                    if ($quantityRecord) {
                         $quantityRecord->quantity += $newQuantity;
                         $quantityRecord->total_quantity += $newQuantity;
                         $quantityRecord->save();
@@ -429,11 +434,11 @@ class ProductController extends Controller
             }
         }
 
-        if($product->quantities->sum('total_quantity')!==$product->quantities->sum('original_printed_barcodes')){
+        if ($product->quantities->sum('total_quantity') !== $product->quantities->sum('original_printed_barcodes')) {
             $product->barcodes_printed_for_all = 0;
             $product->save();
         }
-        
+
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
 
@@ -450,28 +455,28 @@ class ProductController extends Controller
     public function getProducts(Request $request)
     {
         $query = Product::with(['brand', 'department', 'quantities', 'productType', 'colors.colorDetail', 'sizes.sizeDetail']);
-    
+
         // Apply search filter if there's any search value
         if ($request->has('search') && !empty($request->input('search.value'))) {
             $search = $request->input('search.value');
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('article_code', 'like', "%{$search}%")
-                ->orWhere('manufacture_code', 'like', "%{$search}%")
-                ->orWhereHas('brand', function($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%");
-                })
-                ->orWhereHas('department', function($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%");
-                })
-                ->orWhereHas('productType', function($q) use ($search) {
-                    $q->where('product_type_name', 'like', "%{$search}%");
-                });
+                    ->orWhere('manufacture_code', 'like', "%{$search}%")
+                    ->orWhereHas('brand', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('department', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('productType', function ($q) use ($search) {
+                        $q->where('product_type_name', 'like', "%{$search}%");
+                    });
             });
         }
-        
+
         // Order by id in descending order by default
         $products = $query->orderBy('id', 'desc') // Changed to 'desc' for descending order
-                        ->paginate($request->input('length', 10));
+            ->paginate($request->input('length', 10));
 
         $data = [
             'draw' => $request->input('draw'),
@@ -482,8 +487,8 @@ class ProductController extends Controller
 
         return response()->json($data);
     }
-    
-    
+
+
     public function productStatus(Request $request)
     {
         $product = Product::find($request->id);
@@ -503,7 +508,7 @@ class ProductController extends Controller
 
     public function getDepartment($departmentId)
     {
-        $productTypes = ProductTypeDepartment::with('productTypes')->where('department_id',$departmentId)->get();
+        $productTypes = ProductTypeDepartment::with('productTypes')->where('department_id', $departmentId)->get();
 
         return response()->json($productTypes);
     }
@@ -530,15 +535,15 @@ class ProductController extends Controller
         if (empty($savingProduct->size_scale_id)) {
             return redirect()->route('products.create.step-1');
         }
-        $brand = Brand::where('id',$savingProduct->brand_id)->first();
-        $sizeScale = SizeScale::where('id',$savingProduct->size_scale_id)->first();
-        $colors = Color::where('status','Active')->get();
+        $brand = Brand::where('id', $savingProduct->brand_id)->first();
+        $sizeScale = SizeScale::where('id', $savingProduct->size_scale_id)->first();
+        $colors = Color::where('status', 'Active')->get();
         $sizes = Size::where('status', 'Active')
-                ->where('size_scale_id', $savingProduct->size_scale_id)
-                ->orderBy('id', 'asc')
-                ->get();  
+            ->where('size_scale_id', $savingProduct->size_scale_id)
+            ->orderBy('id', 'asc')
+            ->get();
 
-        return view('products.steps.step-2', compact('savingProduct','brand','sizeScale','colors','sizes'));
+        return view('products.steps.step-2', compact('savingProduct', 'brand', 'sizeScale', 'colors', 'sizes'));
     }
 
     public function productStep3(Request $request)
@@ -558,44 +563,44 @@ class ProductController extends Controller
             return $savedColorsMapped[$colorId] ?? null;
         }, $reversedColors);
 
-        $colors = Color::where('status','Active')->get();
+        $colors = Color::where('status', 'Active')->get();
 
         return view('products.steps.step-3', compact('savingProduct', 'sizes', 'savedColors', 'colors'));
     }
 
     public function downloadBarcodes()
     {
-        if(!Session::get('barcodesToBePrinted')){
+        if (!Session::get('barcodesToBePrinted')) {
             return redirect()->route('products.print-barcodes');
         }
 
         $barcodesQty = (object)Session::get('barcodesToBePrinted');
 
-        if(!isset($barcodesQty->barcodesToBePrinted)){
+        if (!isset($barcodesQty->barcodesToBePrinted)) {
             return redirect()->route('products.print-barcodes');
         }
 
         $barcodes = [];
         $generator = new BarcodeGeneratorPNG();
 
-        foreach($barcodesQty->barcodesToBePrinted as $data){
-            if(isset($data['product'])){
-                foreach($data['product'] as $quantityDetail){
-                    $products = ProductQuantity::with('product.department', 'product.brand', 'sizes.sizeDetail', 'colors.colorDetail')->where('id',$quantityDetail['id'])->get();
-    
-                    foreach($products as $productDetail){
+        foreach ($barcodesQty->barcodesToBePrinted as $data) {
+            if (isset($data['product'])) {
+                foreach ($data['product'] as $quantityDetail) {
+                    $products = ProductQuantity::with('product.department', 'product.brand', 'sizes.sizeDetail', 'colors.colorDetail')->where('id', $quantityDetail['id'])->get();
+
+                    foreach ($products as $productDetail) {
                         $article_code = $productDetail->product->article_code;
                         $color_code = $productDetail->colors->colorDetail->color_code;
                         $new_code = $productDetail->sizes->sizeDetail->new_code;
-                        $article_code = $article_code.$color_code.$new_code;
-                       
+                        $article_code = $article_code . $color_code . $new_code;
+
                         $checkCode = $this->generateCheckDigit($article_code);
-                        for ($i=0; $i < $quantityDetail['printQty']; $i++) { 
+                        for ($i = 0; $i < $quantityDetail['printQty']; $i++) {
                             $barcode = base64_encode($generator->getBarcode($article_code, $generator::TYPE_EAN_13, 1, 20, [0, 0, 0]));
-            
+
                             $barcodes[] = [
                                 'barcode' => $barcode,
-                                'product_code' => $article_code.$checkCode,
+                                'product_code' => $article_code . $checkCode,
                                 'department' => $productDetail->product->department->name,
                                 'manufacture_code' => $productDetail->product->manufacture_code,
                                 'size' => $productDetail->sizes->sizeDetail->size,
@@ -609,53 +614,54 @@ class ProductController extends Controller
                     }
                 }
             }
-            
         }
 
-        if(count($barcodes)===0){
+        if (count($barcodes) === 0) {
             return redirect()->route('products.print-barcodes');
         }
 
-       return view('products.pdf.barcodes', ['barcodes' => $barcodes]);
+        return view('products.pdf.barcodes', ['barcodes' => $barcodes]);
     }
 
-    public function generateCheckDigit($code) {
-        
+    public function generateCheckDigit($code)
+    {
+
         if (strlen($code) !== 12) {
             throw new \Exception('Code must be 12 digits.');
         }
-    
+
         $sum = 0;
         for ($i = 0; $i < 12; $i++) {
             $digit = (int) $code[$i];
             $sum += ($i % 2 === 0) ? $digit : $digit * 3;
         }
-    
+
         $remainder = $sum % 10;
         return $remainder === 0 ? 0 : 10 - $remainder;
     }
 
-    public function setBarcodeSession(Request $request){
+    public function setBarcodeSession(Request $request)
+    {
         Session::put('barcodesToBePrinted', $request->all());
         return response()->json([
             "success" => true,
             "message" => "Session stored successfully"
         ]);
-
     }
-    public function saveBarcodes(){
+    public function saveBarcodes()
+    {
         $getPrinted = (object)Session::get('barcodesToBePrinted');
 
-        foreach($getPrinted->barcodesToBePrinted as $data){
-            if(isset($data['product'])){
-                foreach($data['product'] as $quantityDetail){
-                    $productQuantity = ProductQuantity::where('id',$quantityDetail['id'])->where('product_id',$data['productId'])->first();
+        foreach ($getPrinted->barcodesToBePrinted as $data) {
+            if (isset($data['product'])) {
+                foreach ($data['product'] as $quantityDetail) {
+                    $productQuantity = ProductQuantity::where('id', $quantityDetail['id'])->where('product_id', $data['productId'])->first();
                     $updatedOriginalQuantity = $productQuantity->original_printed_barcodes + $quantityDetail['orignalQty'];
 
-                    if($productQuantity->total_quantity >= $updatedOriginalQuantity){
+                    if ($productQuantity->total_quantity >= $updatedOriginalQuantity) {
                         $productQuantity->original_printed_barcodes = $updatedOriginalQuantity;
                     }
-    
+
                     $productQuantity->total_printed_barcodes = $productQuantity->total_printed_barcodes + $quantityDetail['printQty'];
                     $productQuantity->save();
                 }
@@ -663,17 +669,16 @@ class ProductController extends Controller
                 $product = Product::find($data['productId']);
                 $product->are_barcodes_printed = 1;
 
-                if($product->quantities->sum('total_quantity')===$product->quantities->sum('original_printed_barcodes')){
+                if ($product->quantities->sum('total_quantity') === $product->quantities->sum('original_printed_barcodes')) {
                     $product->barcodes_printed_for_all = 1;
                 }
 
                 $product->save();
             }
-            
-        } 
+        }
 
         Session::forget('barcodesToBePrinted');
-        return redirect()->route('products.print-barcodes')->with('success','Barcodes Printed Successfully');
+        return redirect()->route('products.print-barcodes')->with('success', 'Barcodes Printed Successfully');
     }
 
     public function downloadExcel()
@@ -804,10 +809,8 @@ class ProductController extends Controller
     }
     public function productValidate($barcode)
     {
-        $transferData = Session::get('transferData', []);
-    
         $products = ProductQuantity::with('product.brand', 'product.department', 'sizes.sizeDetail', 'colors.colorDetail')->get();
-    
+
         foreach ($products as $product) {
             $article_code = $product->product->article_code;
             $color_code = $product->colors->colorDetail->color_code;
@@ -815,42 +818,30 @@ class ProductController extends Controller
             $article_code = $article_code . $color_code . $new_code;
             $checkCode = $this->generateCheckDigit($article_code);
             $generated_code = $article_code . $checkCode;
-    
+
             if ($generated_code == $barcode) {
-                if (isset($transferData[$barcode])) {
-                    return "Match found";  
-                } else {
-                    $newProductData = [
-                        $barcode => [
-                            'product_id' => $product->product->id,
-                            'code' => $product->product->article_code,
-                            'description' => $product->product->short_description,
-                            'color' => $product->colors->colorDetail->color_name,
-                            'size' => $product->sizes->sizeDetail->size,
-                            'brand' => $product->product->brand->name,
-                            'price' => (float) $product->sizes->mrp,
-                            'total_quantity' => $product->quantity,
-                            'transfer_quantity' => 1,
-                            'barcode' => $barcode
-                        ]
-                    ];
-    
-                    $transferData = array_merge($transferData, $newProductData);
-    
-                    Session::put('transferData', $transferData);
-                }
+                $item = [
+                    'id' => $product->id,
+                    'product_id' => $product->product->id,
+                    'code' => $product->product->article_code,
+                    'description' => $product->product->short_description,
+                    'color' => $product->colors->colorDetail->color_name,
+                    'size' => $product->sizes->sizeDetail->size,
+                    'brand' => $product->product->brand->name,
+                    'price' => (float) $product->sizes->mrp,
+                    'total_quantity' => $product->quantity,
+                    'manufacture_barcode' => $product->manufacture_barcode,
+                    'barcode' => $barcode,
+                ];
+
                 return response()->json([
                     'success' => true,
                     'message' => 'Product barcode is valid.',
-                    'product' => $newProductData[$barcode]  
+                    'product' => $item
                 ], 200);
             }
         }
-    
+
         return response()->json(['success' => false, 'message' => 'Product barcode is invalid.']);
     }
-    
-
-
-    
 }

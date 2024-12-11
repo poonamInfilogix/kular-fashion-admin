@@ -6,6 +6,7 @@
         </div>
     </div>
 </template> 
+
 <script>
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -24,8 +25,7 @@ export default {
                 const response = await axios.get(`/product-validate/${barcode}`);
                 const {product} = response.data;
                 if (product) {
-                    this.$emit('add-to-cart', product);
-                    console.log(this.$parent.orderItems);
+                    this.$emit('transfer-item', product);
                 } else {
                     Swal.fire({
                         title: 'Error!',
