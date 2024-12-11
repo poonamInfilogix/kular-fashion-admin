@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Branch;
+use App\Models\InventoryTransfer;
+use App\Models\InventoryItem;
+use App\Models\StoreInventory;
+use Illuminate\Support\Facades\Auth;
 
 class InventoryTransferController extends Controller
 {
@@ -62,5 +66,48 @@ class InventoryTransferController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function InventoryTransferItems(Request $request)
+    {
+        $transferData = $request->all();
+        $fromStoreId = $transferData['from_store_id'];
+        $toStoreId = $transferData['to_store_id'];
+        $items = $transferData['items'];
+
+        $inventory = InventoryTransfer::create([
+            'from_id'    => $fromStoreId,
+            'to_id'      => $toStoreId,
+            'send_by_id' => Auth::id()
+        ]);
+
+        foreach($items as $value)
+        {
+            InventoryItem::create([
+                'inventroy_transfer_id' => $inventory->id,
+                'product_id'            => $value['product_id'],
+                'product_quantity_id'   => $value['product_quantity_id'],
+                'product_color_id'      => $value['color_id'],
+                'product_size_id'       => $value['size_id'],
+                'brand_id'              => $value['brand_id'],
+                'quantity'              => $value['quantity'],
+            ]);
+
+            StoreInventory::create([
+                'store_id'              => $toStoreId,
+                'product_id'            => $value['product_id'],
+                'product_quantity_id'   => $value['product_quantity_id'],
+                'product_color_id'      => $value['color_id'],
+                'product_size_id'       => $value['size_id'],
+                'brand_id'              => $value['brand_id'],
+                'quantity'              => $value['quantity'],
+                'total_quantity'        => $value['total_quantity'] + $value['quantity']
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Items transferred successfully.'
+        ]);
     }
 }
