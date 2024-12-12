@@ -11,7 +11,7 @@
                     <div class="search-box mb-2">
                         <div class="position-relative">
                             <input type="number" v-model="query" class="form-control" placeholder="Scan barcode"
-                                @input="addManufactureBarcode">
+                                @input="addManufactureBarcode" ref="barcodeInput">
                             <i class="bx bx-barcode search-icon"></i>
                         </div>
                     </div>
@@ -45,7 +45,7 @@ export default {
                 });
 
                 const { success } = response.data;
-                if(success){
+                if (success) {
                     const addManufactureBarcodeModal = document.getElementById('addManufactureBarcodeModal');
                     addManufactureBarcodeModal.classList.remove('show');
                     addManufactureBarcodeModal.style.display = 'none';
@@ -58,6 +58,23 @@ export default {
                     this.query = '';
                 }
             }
+        },
+        focusOnInput() {
+            this.$nextTick(() => {
+                if (this.$refs.barcodeInput) {
+                    setTimeout(() => {
+                        this.$refs.barcodeInput.focus();
+                    }, 500);
+                }
+            });
+        }
+    },
+    watch: {
+        item: {
+            handler() {
+                this.focusOnInput();
+            },
+            immediate: true
         }
     }
 }

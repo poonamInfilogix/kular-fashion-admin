@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('inventory_transfers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('from_id');
-            $table->unsignedBigInteger('to_id');
-            $table->unsignedBigInteger('send_by_id')->nullable();
+            $table->unsignedBigInteger('sent_from');
+            $table->unsignedBigInteger('sent_to');
+            $table->unsignedBigInteger('sent_by')->nullable();
             $table->timestamps();
 
-            $table->foreign('from_id')->references('id')->on('branches')->onDelete('cascade');
-            $table->foreign('to_id')->references('id')->on('branches')->onDelete('cascade');
-            $table->foreign('send_by_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('sent_from')->references('id')->on('branches')->onDelete('cascade');
+            $table->foreign('sent_to')->references('id')->on('branches')->onDelete('cascade');
+            $table->foreign('sent_by')->references('id')->on('users')->onDelete('set null');
         });
     }
 

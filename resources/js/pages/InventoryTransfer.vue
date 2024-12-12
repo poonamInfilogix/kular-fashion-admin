@@ -22,7 +22,7 @@
     </div>
     <div class="row mt-2">
         <div class="col-md-6">
-            <BarCodeBox @transfer-item="transferItem" />
+            <BarCodeBox :item-to-be-add="itemToBeAdd" @transfer-item="transferItem" />
         </div>
     </div>
     <div class="row mt-2">
@@ -41,7 +41,7 @@
             </button>
         </div>
     </div>
-    <AddManufactureBarcodeModal ref="virtualKeyboard" :item="itemToBeAdd" @item-scanned="itemScanned" />
+    <AddManufactureBarcodeModal :item="itemToBeAdd" @item-scanned="itemScanned" />
 </template>
 
 <script>
@@ -119,7 +119,6 @@ export default {
                     });
                 }
             } catch (error) {
-                console.error('Error during transfer:', error);
                 Swal.fire({
                     title: 'Error!',
                     text: 'Something went wrong. Please try again later.',
