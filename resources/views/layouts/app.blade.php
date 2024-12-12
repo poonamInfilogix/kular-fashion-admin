@@ -85,6 +85,18 @@
                                     setTimeout(() => {
                                         location.reload();
                                     }, 2000);
+                                } else{
+                                    let message = `Something went wrong!`;
+                                    if(response.message){
+                                        message = response.message
+                                    }
+
+                                    swal({
+                                        title: "Oops!",
+                                        text: message,
+                                        type: "error",
+                                        confirmButtonText: 'Okay'
+                                    })
                                 }
                             }
                         })

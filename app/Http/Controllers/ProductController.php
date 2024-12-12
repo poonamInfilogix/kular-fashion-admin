@@ -446,6 +446,13 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        if($product->are_barcodes_printed || $product->barcodes_printed_for_all){
+            return response()->json([
+                'success' => false,
+                'message' => 'Product can\'t be deleted because you have printed the barcodes'
+            ]);
+        }
+        
         $product->delete();
 
         return response()->json([

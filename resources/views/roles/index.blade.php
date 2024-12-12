@@ -50,10 +50,10 @@
                             </table>
                         </div>
                     </div>
-                </div> <!-- end col -->
-            </div> <!-- end row -->
+                </div>
+            </div>
 
-        </div> <!-- container-fluid -->
+        </div>
     </div>
     <x-include-plugins :plugins="['dataTable']"></x-include-plugins>
 @endsection
