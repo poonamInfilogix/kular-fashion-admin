@@ -818,16 +818,19 @@ class ProductController extends Controller
             $article_code = $article_code . $color_code . $new_code;
             $checkCode = $this->generateCheckDigit($article_code);
             $generated_code = $article_code . $checkCode;
-
             if ($generated_code == $barcode) {
                 $item = [
                     'id' => $product->id,
                     'product_id' => $product->product->id,
                     'code' => $product->product->article_code,
                     'description' => $product->product->short_description,
+                    'product_quantity_id' => $product->id,
                     'color' => $product->colors->colorDetail->color_name,
+                    'color_id' => $product->colors->colorDetail->id,
                     'size' => $product->sizes->sizeDetail->size,
+                    'size_id' => $product->sizes->sizeDetail->id,
                     'brand' => $product->product->brand->name,
+                    'brand_id' => $product->product->brand->id,
                     'price' => (float) $product->sizes->mrp,
                     'total_quantity' => $product->quantity,
                     'manufacture_barcode' => $product->manufacture_barcode,

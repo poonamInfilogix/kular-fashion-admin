@@ -47,8 +47,15 @@ export default {
                 const { success } = response.data;
                 if(success){
                     const addManufactureBarcodeModal = document.getElementById('addManufactureBarcodeModal');
-                    new bootstrap.Modal(addManufactureBarcodeModal).hide();
-                    this.$emit('item-scanned');
+                    addManufactureBarcodeModal.classList.remove('show');
+                    addManufactureBarcodeModal.style.display = 'none';
+                    const backdrop = document.querySelector('.modal-backdrop');
+                    if (backdrop) {
+                        backdrop.remove();
+                    }
+
+                    this.$emit('item-scanned', this.query);
+                    this.query = '';
                 }
             }
         }

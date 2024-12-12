@@ -52,6 +52,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     ]);
   
     Route::get('product-validate/{barcode}', [ProductController::class, 'productValidate']);
+    Route::post('/inventory-transfer-items', [InventoryTransferController::class, 'InventoryTransferItems']);
     
     Route::get('roles-and-permissions/role-list', [RoleAndPermissionController::class,'show'])->name('roles-and-permissions.role-list');
     Route::post('roles-and-permissions/store-role', [RoleAndPermissionController::class,'storeRole'])->name('roles-and-permissions.store-role');
