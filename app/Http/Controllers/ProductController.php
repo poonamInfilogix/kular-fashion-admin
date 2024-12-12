@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -371,7 +372,8 @@ class ProductController extends Controller
                     'product_id' => $product->id,
                     'product_color_id' => $productColor->id,
                     'product_size_id' => $productSize->id,
-                    'quantity' => $quantity,
+                    //'quantity' => $quantity,
+                    'quantity' => 0,
                     'total_quantity' => $quantity,
                 ]);
             }
@@ -660,8 +662,13 @@ class ProductController extends Controller
 
                     if ($productQuantity->total_quantity >= $updatedOriginalQuantity) {
                         $productQuantity->original_printed_barcodes = $updatedOriginalQuantity;
+                        $productQuantity->quantity= $updatedOriginalQuantity;
                     }
 
+                    if(!$productQuantity->first_barcode_printed_date){
+                        $productQuantity->first_barcode_printed_date = Carbon::now();
+                    }
+                    
                     $productQuantity->total_printed_barcodes = $productQuantity->total_printed_barcodes + $quantityDetail['printQty'];
                     $productQuantity->save();
                 }
@@ -832,7 +839,7 @@ class ProductController extends Controller
                     'brand' => $product->product->brand->name,
                     'brand_id' => $product->product->brand->id,
                     'price' => (float) $product->sizes->mrp,
-                    'total_quantity' => $product->quantity,
+                    'available_quantity' => $product->quantity,
                     'manufacture_barcode' => $product->manufacture_barcode,
                     'barcode' => $barcode,
                 ];

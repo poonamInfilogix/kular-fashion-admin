@@ -162,9 +162,20 @@ export default {
 
             const existingProductIndex = products.findIndex(product => product.barcode === item.barcode);
 
-            if (existingProductIndex !== -1) {
+            if (existingProductIndex !== -1) {                
+                if (products[existingProductIndex].quantity < 1) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Item maximum quantity exceed',
+                        icon: 'error',
+                        confirmButtonText: 'Okay'
+                    });
+                    return;
+                }
                 products[existingProductIndex].quantity += 1;
-                if (products[existingProductIndex].quantity > products[existingProductIndex].total_quantity) {
+
+            } else {
+                if(item.available_quantity < 1){
                     Swal.fire({
                         title: 'Error!',
                         text: 'Item maximum quantity exceed',
@@ -174,7 +185,6 @@ export default {
                     return;
                 }
 
-            } else {
                 item.quantity = 1;
                 products.push(item);
             }
