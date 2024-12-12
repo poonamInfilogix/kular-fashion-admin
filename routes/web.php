@@ -21,6 +21,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ChangePriceReasonController;
 use App\Http\Controllers\InventoryTransferController;
+use Illuminate\Support\Facades\Response;
 
 Route::get('/', function (){
     return redirect()->route('dashboard');
