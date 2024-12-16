@@ -29,7 +29,8 @@ class DatabaseSeeder extends Seeder
             StateSeeder::class,
             SizeScaleSeeder::class,
             BrandSeeder::class,
-            ColorSeeder::class
+            ColorSeeder::class,
+            DefaultSettingsSeeder::class
         ]);
     }
 }

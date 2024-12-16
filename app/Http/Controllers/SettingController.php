@@ -58,6 +58,10 @@ class SettingController extends Controller
         $datas = $request->all();
         $skippedArray = array_slice($datas, 1, null, true);
 
+        $request->validate([
+            'euro_to_pound' => ['required'],
+        ]);
+
         foreach ($skippedArray as $key => $value)
         {
             Setting::updateOrCreate([

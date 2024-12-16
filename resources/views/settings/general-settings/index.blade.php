@@ -36,8 +36,7 @@
                                     </div>
                                     <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                         <div class="mb-3">
-                                            <label for="season" class="form-label">1 Euro = *.** pound</label>
-                                            <input type="text" class="form-control">
+                                            <x-form-input name="euro_to_pound" value="{{ setting('euro_to_pound') }}" label="1 Euro = *.** pound" placeholder="Enter currency conversion rate" required="true" />
                                         </div>
                                     </div>
                                 </div>
