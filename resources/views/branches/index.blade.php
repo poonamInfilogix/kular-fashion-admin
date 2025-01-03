@@ -52,10 +52,12 @@
                                             </td>
                                             <td class="action-buttons">
                                                 <a href="{{ route('branches.edit', $branch->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
+                                                @if($branch->id> 1)
                                                 <button data-source="branch" data-endpoint="{{ route('branches.destroy', $branch->id)}}"
                                                     class="delete-btn btn btn-danger btn-sm edit">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
@@ -63,10 +65,10 @@
                             </table>
                         </div>
                     </div>
-                </div> <!-- end col -->
-            </div> <!-- end row -->
+                </div>
+            </div>
 
-        </div> <!-- container-fluid -->
+        </div>
     </div>
     <x-include-plugins :plugins="['dataTable', 'update-status']"></x-include-plugins>
 
