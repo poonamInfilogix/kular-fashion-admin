@@ -44,7 +44,7 @@ class DefaultSettingsSeeder extends Seeder
             Tax::create([
                 'tax'        => $taxData['tax'],
                 'status'     => $taxData['status'],
-                'is_default' => $taxData['default']
+                'is_default' => $taxData['is_default']
             ]);
         }        
     }

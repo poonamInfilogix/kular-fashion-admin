@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('color_id')->nullable();
             $table->string('color_name', 100)->nullable();
             $table->string('color_code', 100)->nullable();
-            $table->string('ui_color_name', 100)->nullable();
+            $table->string('ui_color_code', 100)->nullable();
             $table->unsignedBigInteger('brand_id')->nullable();
             $table->string('brand_name', 100)->nullable();
             $table->string('article_code', 100)->nullable();
@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('changed_price_reason')->nullable();
             $table->integer('quantity')->nullable()->default(1);
             $table->text('description')->nullable();
+            $table->string('flag', 50)->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('sales_person_id')->nullable();
             $table->unsignedBigInteger('branch_id')->nullable();
@@ -45,6 +46,18 @@ return new class extends Migration
             $table->foreign('changed_price_reason_id')->references('id')->on('change_price_reasons')->onDelete('set null');
             $table->foreign('sales_person_id')->references('id')->on('users')->onDelete('set null');
             $table->foreign('branch_id')->references('id')->on('branches')->onDelete('set null');
+
+            $table->index('order_id');
+            $table->index('product_id');
+            $table->index('size_id');
+            $table->index('color_id');
+            $table->index('brand_id');
+            $table->index('user_id');
+            $table->index('changed_price_reason_id');
+            $table->index('sales_person_id');
+            $table->index('branch_id');
+            $table->index('article_code');
+            $table->index('barcode');
         });
     }
 

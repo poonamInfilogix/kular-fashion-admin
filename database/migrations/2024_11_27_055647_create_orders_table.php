@@ -18,10 +18,12 @@ return new class extends Migration
             $table->unsignedBigInteger('sales_person_id')->nullable();
             $table->unsignedBigInteger('branch_id')->nullable();
             $table->integer('total_items')->nullable();
+            $table->integer('total_return_items')->nullable();
             $table->decimal('total_amount')->nullable();
             $table->decimal('total_payable_amount')->nullable();
             $table->decimal('paid_amount')->nullable();
             $table->enum('source',['POS', 'Website', 'Other'])->default('Other');
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
