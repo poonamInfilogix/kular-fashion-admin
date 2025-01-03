@@ -82,7 +82,7 @@ class BranchController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $branches = Branch::create([
+        Branch::create([
             "name" => $request->name,
             "short_name" => $request->short_name,
             "email" => $request->email,
