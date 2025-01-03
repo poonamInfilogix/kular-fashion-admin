@@ -11,7 +11,7 @@
                         <div class="page-title-right">
                             <a href="{{ route('export.csv') }}" class="btn btn-primary primary-btn btn-md me-1"><i class="bx bx-download"></i> Download Product Configuration File</a>
                             
-                            <a href="{{ route('products.create') }}" class="btn btn-primary">
+                            <a href="{{ route('products.create') }}" id="add-product-link" class="btn btn-primary">
                                 <i class="bx bx-plus fs-16"></i>
                                 Add New Product
                             </a>
@@ -29,6 +29,12 @@
 
                     <div class="card">
                         <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <input type="text" id="custom-search-input" class="form-control" placeholder="Search Products">
+                                </div>
+                            </div>
+                            
                             <table id="product-table" class="table table-bordered dt-responsive nowrap w-100">
                                 <thead>
                                     <tr>
@@ -56,7 +62,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ route('get.products') }}',
+                    url: "{{ route('get.products') }}",
                     data: function (d) {
                         d.page = Math.floor(d.start / d.length) + 1;
                     }
@@ -82,7 +88,22 @@
                         } 
                     }
                 ],
-                order: [[0, 'desc']]
+                order: [[0, 'desc']],
+                drawCallback: function(settings) {
+                    let api = this.api();
+                    let rows = api.rows({ page: 'current' }).data().length;
+
+                    let searchValue = $('#custom-search-input').val();
+                    if (rows === 0 && searchValue) {
+                        $('#add-product-link').attr('href', `{{ route('products.create') }}?mfg_code=${searchValue}`)
+                    } else {
+                        $('#add-product-link').attr('href', `{{ route('products.create') }}`)
+                    }
+                }
+            });
+
+            $('#custom-search-input').on('keyup', function () {
+                table.search(this.value).draw();
             });
         });
     </script>

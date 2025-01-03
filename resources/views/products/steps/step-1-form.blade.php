@@ -6,7 +6,7 @@
     </div>
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <x-form-input name="manufacture_code" value="{{ $product->manufacture_code ?? '' }}" label="Manufacture Code" placeholder="Enter Manufacture Code"  required="true"/>
+            <x-form-input name="manufacture_code" value="{{ $product->manufacture_code ?? request()->get('mfg_code') }}" label="Manufacture Code" placeholder="Enter Manufacture Code"  required="true"/>
         </div>
     </div>
 

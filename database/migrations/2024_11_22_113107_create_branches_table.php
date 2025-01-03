@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('email', 150)->nullable();
             $table->string('contact', 20)->nullable();
             $table->string('location')->nullable();
-            $table->boolean('is_deleted')->default(0);
             $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->softDeletes();
             $table->timestamps();
