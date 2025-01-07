@@ -40,7 +40,7 @@ class BranchController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $branches = Branch::create([
+        Branch::create([
             "name" => $request->name,
             "short_name" => $request->short_name,
             "email" => $request->email,
@@ -82,7 +82,8 @@ class BranchController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        Branch::create([
+        $branch = Branch::findOrFail($id);
+        $branch->update([
             "name" => $request->name,
             "short_name" => $request->short_name,
             "email" => $request->email,

@@ -1,27 +1,27 @@
 <div class="row mb-2">
     <div class="col-md-4">
         <div class="mb-3">
-            <x-form-input name="name" value="{{ old('name',$branch->name ?? '') }}" label="Branch Name" placeholder="Enter Branch Name"  required="true" />
+            <x-form-input name="name" value="{{ $branch->name }}" label="Branch Name" placeholder="Enter Branch Name"  required="true" />
         </div>
     </div>
     <div class="col-md-4">
         <div class="mb-3">
-            <x-form-input name="short_name" value="{{ old('short_name',$branch->short_name ?? '') }}" label="Branch Short Name" placeholder="Enter Short Name"  required="true" />
+            <x-form-input name="short_name" value="{{ $branch->short_name }}" label="Branch Short Name" placeholder="Enter Short Name"  required="true" />
         </div>
     </div>
     <div class="col-md-4">
         <div class="mb-3">
-            <x-form-input name="email" value="{{ old('email', $branch->email ?? '') }}" label="Email" placeholder="Enter Email"  required="true" />
+            <x-form-input name="email" value="{{ $branch->email }}" label="Email" placeholder="Enter Email"  required="true" />
         </div>
     </div>
     <div class="col-md-4">
         <div class="mb-3">
-            <x-form-input name="contact" value="{{ old('contact', $branch->contact ?? '') }}" label="Contact" placeholder="Enter Contact"  required="true" />
+            <x-form-input name="contact" value="{{ $branch->contact }}" label="Contact" placeholder="Enter Contact"  required="true" />
         </div>
     </div>
     <div class="col-md-4">
         <div class="mb-3">
-            <x-form-input name="location" value="{{ old('location', $branch->location ?? '') }}" label="Location" placeholder="Enter Location"  required="true" />
+            <x-form-input name="location" value="{{ $branch->location }}" label="Location" placeholder="Enter Location"  required="true" />
         </div>
     </div>
     <div class="col-md-4">
