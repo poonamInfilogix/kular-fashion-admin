@@ -39,6 +39,18 @@
                                             <x-form-input name="euro_to_pound" value="{{ setting('euro_to_pound') }}" label="1 Euro = *.** pound" placeholder="Enter currency conversion rate" required="true" />
                                         </div>
                                     </div>
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="mb-3">
+                                            <label for="order_receipt_header">Order Receipt Header</label>
+                                            <textarea name="order_receipt_header" id="order_receipt_header" class="form-control" placeholder="Enter order receipt header">{{ setting('order_receipt_header') }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="mb-3">
+                                            <label for="order_receipt_footer">Order Receipt Footer</label>
+                                            <textarea name="order_receipt_footer" id="order_receipt_footer" class="form-control" placeholder="Enter order receipt footer">{{ setting('order_receipt_footer') }}</textarea>
+                                        </div>
+                                    </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary w-md">Save</button>
                             </form>

@@ -23,7 +23,10 @@ class BranchController extends Controller
      */
     public function create()
     {
-        return view('branches.create');
+        $defaultFooter = setting('order_receipt_footer');
+        $defaultHeader = setting('order_receipt_header');
+
+        return view('branches.create', compact('defaultFooter', 'defaultHeader'));
     }
 
     /**
@@ -46,6 +49,8 @@ class BranchController extends Controller
             "email" => $request->email,
             "contact" => $request->contact,
             "location" => $request->location,
+            "order_receipt_header" => $request->order_receipt_header,
+            "order_receipt_footer" => $request->order_receipt_footer,
         ]);
 
         return redirect()->route('branches.index')->with("success","Branch created successfully");
@@ -89,6 +94,8 @@ class BranchController extends Controller
             "email" => $request->email,
             "contact" => $request->contact,
             "location" => $request->location,
+            "order_receipt_header" => $request->order_receipt_header,
+            "order_receipt_footer" => $request->order_receipt_footer,
         ]);
 
         return redirect()->route('branches.edit',$id)->with("success","Branch Updated successfully");
