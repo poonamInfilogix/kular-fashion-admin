@@ -15,9 +15,9 @@ class RoleAndPermissionController extends Controller
      */
     public function index()
     {
-        /*if (!Gate::allows('view roles & permissions')) {
+        if (!Gate::allows('view roles & permissions')) {
             abort(403);
-        }*/
+        }
 
         $roles = Role::where('id', '!=', '1')->get();
         $modules = Module::get();

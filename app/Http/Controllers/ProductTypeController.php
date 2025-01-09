@@ -8,17 +8,24 @@ use App\Models\Department;
 use App\Models\ProductTypeDepartment;
 use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
 
 class ProductTypeController extends Controller
 {
     public function index()
     {
+        if(!Gate::allows('view product_types')) {
+            abort(403);
+        }
         $productTypes = ProductType::with('productTypeDepartments')->get();
         return view('product-types.index', compact('productTypes'));
     }
 
     public function create()
     {
+        if(!Gate::allows('create product_types')) {
+            abort(403);
+        }
         $departments = Department::all();
 
         return view('product-types.create', compact('departments'));
@@ -26,6 +33,9 @@ class ProductTypeController extends Controller
 
     public function store(Request $request)
     {
+        if(!Gate::allows('create product_types')) {
+            abort(403);
+        }
         $request->validate([
            'department_id'       => 'required',
            'product_type_name'   => 'required|unique:product_types,product_type_name' 
@@ -57,6 +67,9 @@ class ProductTypeController extends Controller
 
     public function edit($id)
     {
+        if(!Gate::allows('edit product_types')) {
+            abort(403);
+        }
         $departments = Department::all();
         $productType = ProductType::with('productTypeDepartments')->where('id', $id)->first();
         $selectedDeparments = $productType->productTypeDepartments->pluck('department_id')->toArray();
@@ -65,6 +78,9 @@ class ProductTypeController extends Controller
 
     public function update(Request $request, $id)
     {
+        if(!Gate::allows('edit product_types')) {
+            abort(403);
+        }
         $request->validate([
             'department_id'       => 'required',
             'product_type_name'    => 'required|unique:product_types,product_type_name,' . $id
@@ -102,6 +118,9 @@ class ProductTypeController extends Controller
 
     public function destroy(string $id)
     {
+        if(!Gate::allows('delete product_types')) {
+            abort(403);
+        }
         $productType = ProductType::where('id', $id)->delete();
         ProductTypeDepartment::where('product_type_id',$id)->delete();
         return response()->json([

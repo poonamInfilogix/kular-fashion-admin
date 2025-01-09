@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Tag;
+use Illuminate\Support\Facades\Gate;
+
 class TagController extends Controller
 {
     public function index()
     {
+        if(!Gate::allows('view tags')) {
+            abort(403);
+        }
         $tags = Tag::latest()->get();
 
         return view('tags.index', compact('tags'));
@@ -15,11 +20,17 @@ class TagController extends Controller
 
     public function create()
     {
+        if(!Gate::allows('create tags')) {
+            abort(403);
+        }
         return view('tags.create');
     }
 
     public function store(Request $request)
     {
+        if(!Gate::allows('create tags')) {
+            abort(403);
+        }
         $request->validate([
             'tag_name' => 'required|unique:tags,tag_name',
         ]);
@@ -39,11 +50,17 @@ class TagController extends Controller
 
     public function edit(Tag $tag)
     {
+        if(!Gate::allows('edit tags')) {
+            abort(403);
+        }
         return view('tags.edit', compact('tag'));
     }
 
     public function update(Request $request, Tag $tag)
     {
+        if(!Gate::allows('edit tags')) {
+            abort(403);
+        }
         $request->validate([
             'tag_name' => 'required|unique:tags,tag_name,' .$tag->id,
         ]);
@@ -58,6 +75,9 @@ class TagController extends Controller
 
     public function destroy(Tag $tag)
     {
+        if(!Gate::allows('delete tags')) {
+            abort(403);
+        }
         $tag->delete();
 
         return response()->json([

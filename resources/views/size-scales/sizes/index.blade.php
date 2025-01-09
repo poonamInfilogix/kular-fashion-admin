@@ -10,7 +10,9 @@
                         <h4 class="mb-sm-0 font-size-18">Sizes for {{ optional($sizeScale)->size_scale }}</h4>
                         <div class="page-title-right">
                             <a href="{{ route('size-scales.index') }}" class="btn btn-primary"> <i class="bx bx-arrow-back"></i> Back to size scales</a>
+                            @if(Auth::user()->can('create size'))
                             <a href="{{ route('sizes.create', $sizeScale->id) }}" class="btn btn-primary">Add New Size</a>
+                            @endif
                         </div>
 
                     </div>
@@ -33,7 +35,9 @@
                                         <th>Size</th>
                                         <th>New Code</th>
                                         <th>Status</th>
+                                        @canany(['edit size', 'delete size'])
                                         <th>Action</th>
+                                        @endcanany
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -47,13 +51,19 @@
                                                 <input type="checkbox" id="{{ $size->id }}"  class="update-status" data-id="{{ $size->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $size->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('size-status')}}"/>
                                                 <label for="{{ $size->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
+                                            @canany(['edit size', 'delete size'])
                                             <td class="action-buttons">
+                                                @if(Auth::user()->can('edit size'))
                                                 <a href="{{ route('sizes.edit', ['sizeScaleId' => $size->size_scale_id, 'size' => $size->id]) }}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
+                                                @endif
+                                                @if(Auth::user()->can('delete size'))
                                                 <button data-source="Size"  data-endpoint="{{ route('sizes.destroy', ['sizeScaleId' => $size->size_scale_id, 'size' => $size->id]) }}"
                                                     class="delete-btn btn btn-danger btn-sm edit">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
+                                                @endif
                                             </td>
+                                            @endcanany
                                         </tr>
                                     @endforeach
                                 </tbody>

@@ -10,7 +10,9 @@
                         <h4 class="mb-sm-0 font-size-18">Tax Settings</h4>
 
                         <div class="page-title-right">
+                            @if(Auth::user()->can('create tax'))
                             <a href="{{ route('tax-settings.create') }}" class="btn btn-primary">Add New Tax</a>
+                            @endif
                         </div>
 
                     </div>
@@ -31,7 +33,9 @@
                                         <th>#</th>
                                         <th>Taxes (in %)</th>
                                         <th>Status</th>
+                                        @canany(['edit tax', 'delete tax'])
                                         <th>Action</th>
+                                        @endcanany
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -43,13 +47,19 @@
                                                 <input type="checkbox" id="{{ $tax->id }}" class="update-status" data-id="{{ $tax->id }}" switch="success" data-on="Active" data-off="Inactive" {{ $tax->status === 0 ? 'checked' : '' }} data-endpoint="{{ route('tax-status') }}" />
                                                 <label for="{{ $tax->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
+                                            @canany(['edit tax', 'delete tax'])
                                             <td class="action-buttons">
+                                                @if(Auth::user()->can('edit tax'))
                                                 <a href="{{ route('tax-settings.edit', $tax->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
+                                                @endif
+                                                @if(Auth::user()->can('delete tax'))
                                                 <button data-source="tax" data-endpoint="{{ route('tax-settings.destroy', $tax->id)}}"
                                                     class="delete-btn btn btn-danger btn-sm edit">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
+                                                @endif
                                             </td>
+                                            @endcanany
                                         </tr>
                                     @endforeach
                                 </tbody>

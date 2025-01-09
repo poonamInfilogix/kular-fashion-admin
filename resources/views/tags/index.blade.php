@@ -10,7 +10,9 @@
                         <h4 class="mb-sm-0 font-size-18">Tags</h4>
 
                         <div class="page-title-right">
+                            @if(Auth::user()->can('create tags'))
                             <a href="{{ route('tags.create') }}" class="btn btn-primary">Add New Tag</a>
+                            @endif
                         </div>
 
                     </div>
@@ -31,7 +33,9 @@
                                         <th>#</th>
                                         <th>Tag</th>
                                         <th>Status</th>
+                                        @canany(['edit tags', 'delete tags'])
                                         <th>Action</th>
+                                        @endcanany
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -43,13 +47,19 @@
                                                 <input type="checkbox" id="{{ $tag->id }}" class="update-status" data-id="{{ $tag->id }}" switch="success" data-on="Active" data-off="Inactive" {{ $tag->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('tag-status') }}" />
                                                 <label for="{{ $tag->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
+                                            @canany(['edit tags', 'delete tags'])
                                             <td class="action-buttons">
+                                                @if(Auth::user()->can('edit tags'))
                                                 <a href="{{ route('tags.edit', $tag->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
+                                                @endif
+                                                @if(Auth::user()->can('delete tags'))
                                                 <button data-source="Tag" data-endpoint="{{ route('tags.destroy', $tag->id)}}"
                                                     class="delete-btn btn btn-danger btn-sm edit">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
+                                                @endif
                                             </td>
+                                            @endcanany
                                         </tr>
                                     @endforeach
                                 </tbody>

@@ -6,11 +6,15 @@ use Illuminate\Http\Request;
 use App\Models\Department;
 use Illuminate\Support\Facades\File;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
 
 class DepartmentController extends Controller
 {
     public function index()
     {
+        if(!Gate::allows('view departments')) {
+            abort(403);
+        }
         $departments = Department::latest()->get();
 
         return view('departments.index', compact('departments'));
@@ -18,11 +22,17 @@ class DepartmentController extends Controller
 
     public function create()
     {
+        if(!Gate::allows('create departments')) {
+            abort(403);
+        }
         return view('departments.create');
     }
 
     public function store(Request $request)
     {
+        if(!Gate::allows('create departments')) {
+            abort(403);
+        }
         $request->validate([
             'name' => [
                 'required',
@@ -49,6 +59,9 @@ class DepartmentController extends Controller
 
     public function edit($id)
     {
+        if(!Gate::allows('edit departments')) {
+            abort(403);
+        }
         $department = Department::where('id', $id)->first();
 
         return view('departments.edit', compact('department'));
@@ -56,6 +69,9 @@ class DepartmentController extends Controller
 
     public function update(Request $request, $id)
     {
+        if(!Gate::allows('edit departments')) {
+            abort(403);
+        }
         $request->validate([
             'name' => [
                 'required',
@@ -87,6 +103,9 @@ class DepartmentController extends Controller
 
     public function destroy(string $id)
     {
+        if(!Gate::allows('delete departments')) {
+            abort(403);
+        }
         Department::where('id', $id)->delete();
 
         return response()->json([

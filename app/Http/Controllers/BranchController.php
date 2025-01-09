@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Branch;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
 
 class BranchController extends Controller
 {
@@ -14,6 +15,9 @@ class BranchController extends Controller
      */
     public function index()
     {
+        if(!Gate::allows('view branches')) {
+            abort(403);
+        }
         $branches = Branch::all();
         return view('branches.index',compact('branches'));
     }
@@ -23,6 +27,9 @@ class BranchController extends Controller
      */
     public function create()
     {
+        if(!Gate::allows('create branches')) {
+            abort(403);
+        }
         $defaultFooter = setting('order_receipt_footer');
         $defaultHeader = setting('order_receipt_header');
 
@@ -34,6 +41,9 @@ class BranchController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Gate::allows('create branches')) {
+            abort(403);
+        }
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:users,email', 
             'name' => 'required', 
@@ -69,6 +79,9 @@ class BranchController extends Controller
      */
     public function edit(string $id)
     {
+        if(!Gate::allows('edit branches')) {
+            abort(403);
+        }
         $branch = Branch::find($id);
         return view('branches.edit',compact('branch'));
     }
@@ -78,6 +91,9 @@ class BranchController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if(!Gate::allows('edit branches')) {
+            abort(403);
+        }
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:users,email', 
             'name' => 'required', 
@@ -106,6 +122,9 @@ class BranchController extends Controller
      */
     public function destroy(string $id)
     {
+        if(!Gate::allows('delete branches')) {
+            abort(403);
+        }
         Branch::where('id', $id)->delete();
         User::where('branch_id', $id)->update([
             "branch_id" => NULL

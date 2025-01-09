@@ -14,13 +14,24 @@ class ModuleSeeder extends Seeder
     public function run(): void
     {
         $modules = [
-            ['name' => 'Categories', 'slug' => 'categories'],
-            ['name' => 'Product', 'slug' => 'products'],
-            ['name' => 'Stores', 'slug' => 'stores'],
-            ['name' => 'Users', 'slug' => 'users'],
-            ['name' => 'Sales', 'slug' => 'sales'],
+            ['name' => 'Departments', 'slug' => 'departments'],
+            ['name' => 'Product Types', 'slug' => 'product_types'],
+            ['name' => 'Brands', 'slug' => 'brands'],
+            ['name' => 'Colors', 'slug' => 'colors'],
+            ['name' => 'Size', 'slug' => 'size'],
+            ['name' => 'Size Scales', 'slug' => 'size_scales'],
+            ['name' => 'Products', 'slug' => 'products'],
+            ['name' => 'Print Barcodes', 'slug' => 'print_barcodes'],
+            ['name' => 'Tags', 'slug' => 'tags'],
+            ['name' => 'Branches', 'slug' => 'branches'],
+            ['name' => 'Inventory Transfer', 'slug' => 'inventory_transfer'],
             ['name' => 'Customers', 'slug' => 'customers'],
+            ['name' => 'Suppliers', 'slug' => 'suppliers'],
+            ['name' => 'Users', 'slug' => 'users'],
             ['name' => 'Roles & Permissions', 'slug' => 'roles & permissions'],
+            ['name' => 'Price Reasons', 'slug' => 'price_reasons'],
+            ['name' => 'Settings', 'slug' => 'settings'],
+            ['name' => 'Tax', 'slug' => 'tax']
         ];
 
         foreach ($modules as $module) {

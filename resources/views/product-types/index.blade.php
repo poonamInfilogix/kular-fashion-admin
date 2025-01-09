@@ -10,7 +10,9 @@
                         <h4 class="mb-sm-0 font-size-18">Product Type</h4>
 
                         <div class="page-title-right">
+                            @if(Auth::user()->can('create product_types'))
                             <a href="{{ route('product-types.create') }}" class="btn btn-primary">Add New Product Type</a>
+                            @endif
                         </div>
 
                     </div>
@@ -33,7 +35,9 @@
                                         <th>Department</th>
                                         <th>Image</th>
                                         <th>Status</th>
+                                        @canany(['edit product_types', 'delete product_types'])
                                         <th>Action</th>
+                                        @endcanany
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -54,13 +58,19 @@
                                                 <input type="checkbox" id="{{ $productType->id }}"  class="update-status" data-id="{{ $productType->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $productType->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('product-types-status')}}"/>
                                                 <label for="{{ $productType->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
+                                            @canany(['edit product_types', 'delete product_types'])
                                             <td class="action-buttons">
+                                                @if(Auth::user()->can('edit product_types'))
                                                 <a href="{{ route('product-types.edit', $productType->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
+                                                @endif
+                                                @if(Auth::user()->can('delete product_types'))
                                                 <button data-source="Product Type" data-endpoint="{{ route('product-types.destroy', $productType->id)}}"
                                                     class="delete-btn btn btn-danger btn-sm edit">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
+                                                @endif
                                             </td>
+                                            @endcanany
                                         </tr>
                                     @endforeach
                                 </tbody>

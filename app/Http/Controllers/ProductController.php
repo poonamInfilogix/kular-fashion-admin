@@ -26,11 +26,15 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
     public function index()
     {
+        if(!Gate::allows('view products')) {
+            abort(403);
+        }
         $products = Product::with('brand', 'department', 'productType')->latest()->get();
 
         return view('products.index', compact('products'));
@@ -38,6 +42,9 @@ class ProductController extends Controller
 
     public function create()
     {
+        if(!Gate::allows('create products')) {
+            abort(403);
+        }
         $latestProduct = Product::orderBy('article_code', 'desc')->first();
 
         $latestNewCode = $latestProduct ? (int)$latestProduct->article_code : 300000;
@@ -384,11 +391,17 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        if(!Gate::allows('view products')) {
+            abort(403);
+        }
         return view('products.show', compact('product'));
     }
 
     public function edit(Product $product)
     {
+        if(!Gate::allows('edit products')) {
+            abort(403);
+        }
         $brands = Brand::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
         $departments = Department::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
         $productTypes = ProductType::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
@@ -446,6 +459,9 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        if(!Gate::allows('delete products')) {
+            abort(403);
+        }
         if($product->are_barcodes_printed || $product->barcodes_printed_for_all){
             return response()->json([
                 'success' => false,
@@ -706,7 +722,7 @@ class ProductController extends Controller
         $this->addSizes($spreadsheet);
 
         $writer = new Xlsx($spreadsheet);
-        $fileName = 'Guard_Roaster_configuration' . '.xlsx';
+        $fileName = 'product_configuration' . '.xlsx';
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $fileName . '"');

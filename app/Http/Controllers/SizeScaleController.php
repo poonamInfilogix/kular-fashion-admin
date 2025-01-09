@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\SizeScale;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class SizeScaleController extends Controller
 {
     public function index()
     {
+        if(!Gate::allows('view size_scales')) {
+            abort(403);
+        }
         $sizeScales = SizeScale::withCount('sizes')->latest()->get();
 
         return view('size-scales.index', compact('sizeScales'));
@@ -16,11 +20,17 @@ class SizeScaleController extends Controller
 
     public function create()
     {
+        if(!Gate::allows('create size_scales')) {
+            abort(403);
+        }
         return view('size-scales.create');
     }
 
     public function store(Request $request)
     {
+        if(!Gate::allows('create size_scales')) {
+            abort(403);
+        }
         $request->validate([
             'size_scale' => 'required|unique:size_scales,size_scale',
         ]);
@@ -40,6 +50,9 @@ class SizeScaleController extends Controller
 
     public function edit($id)
     {
+        if(!Gate::allows('edit size_scales')) {
+            abort(403);
+        }
         $sizeScale = SizeScale::where('id', $id)->first();
 
         return view('size-scales.edit', compact('sizeScale'));
@@ -47,6 +60,9 @@ class SizeScaleController extends Controller
 
     public function update(Request $request, $id)
     {
+        if(!Gate::allows('edit size_scales')) {
+            abort(403);
+        }
         $request->validate([
             'size_scale' => 'required|unique:size_scales,size_scale,' . $id,
         ]);
@@ -63,6 +79,9 @@ class SizeScaleController extends Controller
 
     public function destroy(string $id)
     {
+        if(!Gate::allows('delete size_scales')) {
+            abort(403);
+        }
         SizeScale::where('id', $id)->delete();
 
         return response()->json([
