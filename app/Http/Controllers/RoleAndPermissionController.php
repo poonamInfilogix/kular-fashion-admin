@@ -29,6 +29,9 @@ class RoleAndPermissionController extends Controller
      */
     public function create()
     {
+        if (!Gate::allows('create role')) {
+            abort(403);
+        }
         return view('roles.create');
     }
 
@@ -60,8 +63,16 @@ class RoleAndPermissionController extends Controller
      */
     public function show(string $id)
     {
+        if (!Gate::allows('view role')) {
+            abort(403);
+        }
         $roles = Role::where('id', '!=', 1)->get();
-        return view('roles.index', compact('roles'));
+        $rolesWithUsers = [];
+        foreach ($roles as $role) {
+            $rolesWithUsers[$role->id] = $role->users()->exists();
+        }
+
+        return view('roles.index', compact('roles', 'rolesWithUsers'));
     }
 
     /**
@@ -69,6 +80,9 @@ class RoleAndPermissionController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Gate::allows('edit role')) {
+            abort(403);
+        }
         $role = Role::where('id', $id)->first();
         return view('roles.edit', compact('role'));
     }
@@ -78,6 +92,9 @@ class RoleAndPermissionController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if (!Gate::allows('edit role')) {
+            abort(403);
+        }
         Role::where('id',$id)->update([
             'name' => $request->role
         ]);
@@ -89,6 +106,9 @@ class RoleAndPermissionController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!Gate::allows('delete role')) {
+            abort(403);
+        }
         Role::where('id',$id)->delete();
 
         return response()->json([
@@ -99,6 +119,9 @@ class RoleAndPermissionController extends Controller
 
     public function storeRole(Request $request)
     {
+        if (!Gate::allows('create role')) {
+            abort(403);
+        }
         $request->validate([
             'role' => 'required|unique:roles,name',  
         ]);

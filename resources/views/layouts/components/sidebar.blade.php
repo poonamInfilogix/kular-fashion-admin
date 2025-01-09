@@ -115,20 +115,24 @@
                     @endcan
                 @endcanany
 
-                @canany(['view settings','view roles & permissions', 'view price_reasons', 'view tax'])
+                @canany(['view settings','view roles & permissions', 'view price_reasons', 'view tax', 'view role'])
                     <li class="menu-title">Settings</li>
-                    @can('view roles & permissions')
+                    @canany(['view roles & permissions', 'view role'])
                     <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">
                             <i class="fas fa-users-cog"></i>
                             <span>Roles & Permissions</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
+                            @can('view role')
                             <li><a href="{{ route('roles-and-permissions.role-list') }}">Manage Roles</a></li>
+                            @endcan
+                            @can('view roles & permissions')
                             <li><a href="{{ route('roles-and-permissions.index') }}">Manage Permissions</a></li>
+                            @endcan
                         </ul>
                     </li>
-                    @endcan
+                    @endcanany
                     @can('view price_reasons')
                     <li>
                         <a href="{{ route('change-price-reasons.index') }}" class="waves-effect">
@@ -137,21 +141,25 @@
                         </a>
                     </li>
                     @endcan
-                    @can('view settings')
+                    @canany(['view settings', 'view tax' ])
                     <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">
                             <i class="bx bx-cog"></i>
                             <span>Settings</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
+                            @can('view settings')
                             <li><a href="{{ route('settings.index')}}">Default Images</a></li>
+                            @endcan
                             @can('view tax')
                                 <li><a href="{{ route('tax-settings.index')}}">Tax Settings</a></li>
                             @endcan
+                            @can('view settings')
                             <li><a href="{{ route('general-settings.index')}}">General Settings</a></li>
+                            @endcan
                         </ul>
                     </li>
-                    @endcan
+                    @endcanany
                 @endcanany
             </ul>
         </div>

@@ -19,7 +19,12 @@ class BranchController extends Controller
             abort(403);
         }
         $branches = Branch::all();
-        return view('branches.index',compact('branches'));
+        $branchesWithTransfers = [];
+        foreach ($branches as $branch) {
+            $branchesWithTransfers[$branch->id] = $branch->sentTransfers()->exists() || $branch->receivedTransfers()->exists();
+        }
+
+        return view('branches.index',compact('branches', 'branchesWithTransfers'));
     }
 
     /**

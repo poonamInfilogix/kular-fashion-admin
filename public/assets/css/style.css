@@ -88,7 +88,7 @@ div.dataTables_wrapper {
 }
 @media (max-width: 1050px) {
     div.dataTables_wrapper {
-        overflow-x: auto;  /* Adds horizontal scrolling */
-        -webkit-overflow-scrolling: touch;  /* Smooth scrolling for touch devices */
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
 }
