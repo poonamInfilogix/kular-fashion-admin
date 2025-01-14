@@ -55,7 +55,7 @@ export default {
                 { title: "Product Type", data: 'product_type.product_type_name' },
                 { title: "Price", data: 'mrp' },
             ],
-            order: [[1, 'desc']],
+            order: [[1, 'asc']],
             drawCallback: function(settings) {
                 // Call expandRow for each row after table is drawn
                 table.rows().every(function() {

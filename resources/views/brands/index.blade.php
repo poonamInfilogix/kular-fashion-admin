@@ -97,7 +97,12 @@
     <x-include-plugins :plugins="['dataTable', 'update-status']"></x-include-plugins>
     <script>
         $(document).ready(function() {
-            $('#datatable').DataTable();
+            $('#datatable').DataTable({
+                columnDefs: [
+                    { type: 'string', targets: 1 } 
+                ],
+                order: [[1, 'asc']]
+            });
 
             $('#importButton').on('click', function() {
                 $('#fileInput').click();
