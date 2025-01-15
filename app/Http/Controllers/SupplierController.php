@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Supplier;
 use App\Models\Country;
 use App\Models\State;
+use Illuminate\Support\Facades\Gate;
 
 class SupplierController extends Controller
 {
@@ -14,6 +15,9 @@ class SupplierController extends Controller
      */
     public function index()
     {
+        if(!Gate::allows('view suppliers')) {
+            abort(403);
+        }
         $suppliers = Supplier::latest()->get();
 
         return view('suppliers.index', compact('suppliers'));
@@ -24,6 +28,9 @@ class SupplierController extends Controller
      */
     public function create()
     {
+        if(!Gate::allows('create suppliers')) {
+            abort(403);
+        }
         $countries = Country::latest()->get();
 
         return view('suppliers.create', compact('countries'));
@@ -34,6 +41,9 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Gate::allows('create suppliers')) {
+            abort(403);
+        }
         $request->validate([
             'short_code'          => 'required',
             'supplier_name'       => 'required',
@@ -71,6 +81,9 @@ class SupplierController extends Controller
      */
     public function edit(Supplier $supplier)
     {
+        if(!Gate::allows('edit suppliers')) {
+            abort(403);
+        }
         $countries = Country::latest()->get();
         $states = $supplier->country_id ? State::where('country_id', $supplier->country_id)->get() : [];
         return view('suppliers.edit', compact('supplier', 'countries', 'states'));
@@ -81,6 +94,9 @@ class SupplierController extends Controller
      */
     public function update(Request $request, Supplier $supplier)
     {
+        if(!Gate::allows('edit suppliers')) {
+            abort(403);
+        }
         $request->validate([
             'short_code'          => 'required',
             'supplier_name'       => 'required',
@@ -110,6 +126,9 @@ class SupplierController extends Controller
      */
     public function destroy(Supplier $supplier)
     {
+        if(!Gate::allows('delete suppliers')) {
+            abort(403);
+        }
         $supplier->delete();
 
         return response()->json([

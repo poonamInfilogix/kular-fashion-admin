@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Branch;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -16,6 +17,9 @@ class UserController extends Controller
      */
     public function index()
     {
+        if(!Gate::allows('view users')) {
+            abort(403);
+        }
         $users = User::with('branch')->get();
         return view('users.index',compact('users'));
     }
@@ -25,6 +29,9 @@ class UserController extends Controller
      */
     public function create()
     {
+        if(!Gate::allows('create users')) {
+            abort(403);
+        }
         $roles = Role::all();
         $branches = Branch::where('status','Active')->get();
         return view('users.create',compact('roles','branches'));
@@ -35,6 +42,9 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Gate::allows('create users')) {
+            abort(403);
+        }
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:users,email', 
             'name' => 'required', 
@@ -70,6 +80,9 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
+        if(!Gate::allows('edit users')) {
+            abort(403);
+        }
         $roles = Role::all();
         $user = User::find($id);
         $branches = Branch::where('status','Active')->get();
@@ -81,6 +94,9 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if(!Gate::allows('edit users')) {
+            abort(403);
+        }
         $validator = Validator::make($request->all(), [
             'email' => 'required|email', 
             'name' => 'required', 
@@ -109,6 +125,9 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
+        if(!Gate::allows('delete users')) {
+            abort(403);
+        }
         $delete = User::where('id',$id)->delete();
         return response()->json([
             'success' => true,

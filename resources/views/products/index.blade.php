@@ -11,10 +11,12 @@
                         <div class="page-title-right">
                             <a href="{{ route('export.csv') }}" class="btn btn-primary primary-btn btn-md me-1"><i class="bx bx-download"></i> Download Product Configuration File</a>
                             
+                            @if(Auth::user()->can('create products'))
                             <a href="{{ route('products.create') }}" id="add-product-link" class="btn btn-primary">
                                 <i class="bx bx-plus fs-16"></i>
                                 Add New Product
                             </a>
+                            @endif
                         </div>
 
                     </div>
@@ -77,14 +79,23 @@
                         title: "Actions", 
                         data: null, 
                         render: function (data, type, row) { 
-                        return ` <a href="{{ route('products.show', ':id') }}" class="btn btn-secondary btn-sm"> 
-                                    <i class="fas fa-eye"></i> 
-                                </a> 
-                                <a href="{{ route('products.edit', ':id') }}" class="btn btn-primary btn-sm edit"> 
-                                    <i class="fas fa-pencil-alt"></i> 
-                                </a> 
-                                <button data-source="product" data-endpoint="{{ route('products.destroy', ':id') }}" class="delete-btn btn btn-danger btn-sm"> <i class="fas fa-trash-alt"></i> </button>
-                            `.replace(/:id/g, row.id); 
+                            var actions = '<div class="action-buttons">';
+                                @can('view products')
+                                    actions += `<a href="{{ route('products.show', ':id') }}" class="btn btn-secondary btn-sm">`.replace(/:id/g, row.id);
+                                    actions += `<i class="fas fa-eye"></i>`;
+                                    actions += `</a>`; 
+                                @endcan
+
+                                @can('edit products')
+                                    actions += `<a href="{{ route('products.edit', ':id') }}" class="btn btn-primary btn-sm edit">`.replace(/:id/g, row.id);
+                                    actions += `<i class="fas fa-pencil-alt"></i>`; 
+                                    actions += `</a>`;
+                                @endcan 
+                                @can('delete products')
+                                    actions += `<button data-source="product" data-endpoint="{{ route('products.destroy', ':id') }}" class="delete-btn btn btn-danger btn-sm"> <i class="fas fa-trash-alt"></i> </button>`.replace(/:id/g, row.id);
+                                @endcan
+
+                            return actions;
                         } 
                     }
                 ],

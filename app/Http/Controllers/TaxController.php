@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Tax;
+use Illuminate\Support\Facades\Gate;
 
 class TaxController extends Controller
 {
     public function index()
     {
+        if(!Gate::allows('view tax')) {
+            abort(403);
+        }
         $taxes = Tax::latest()->get();
 
         return view('settings.tax-settings.index', compact('taxes'));
@@ -16,11 +20,17 @@ class TaxController extends Controller
 
     public function create()
     {
+        if(!Gate::allows('create tax')) {
+            abort(403);
+        }
         return view('settings.tax-settings.create');
     }
 
     public function store(Request $request)
     {
+        if(!Gate::allows('create tax')) {
+            abort(403);
+        }
         $request->validate([
             'tax' => 'required',
         ]);
@@ -51,6 +61,9 @@ class TaxController extends Controller
 
     public function edit($id)
     {
+        if(!Gate::allows('edit tax')) {
+            abort(403);
+        }
         $tax = Tax::where('id', $id)->first();
 
         return view('settings.tax-settings.edit', compact('tax'));
@@ -58,6 +71,9 @@ class TaxController extends Controller
 
     public function update(Request $request, $id)
     {
+        if(!Gate::allows('edit tax')) {
+            abort(403);
+        }
         $request->validate([
             'tax' => 'required',
         ]);
@@ -82,6 +98,9 @@ class TaxController extends Controller
 
     public function destroy($id)
     {
+        if(!Gate::allows('delete tax')) {
+            abort(403);
+        }
         $latestTax = Tax::where('id', '!=', $id)
                      ->orderBy('created_at', 'desc')
                      ->first();

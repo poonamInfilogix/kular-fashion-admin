@@ -9,6 +9,7 @@ use App\Models\InventoryItem;
 use App\Models\ProductQuantity;
 use App\Models\StoreInventory;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class InventoryTransferController extends Controller
 {
@@ -17,6 +18,9 @@ class InventoryTransferController extends Controller
      */
     public function index()
     {
+        if(!Gate::allows('view inventory_transfer')) {
+            abort(403);
+        }
         $branches = Branch::where('status','Active')->get();
         return view('inventory-transfer.index',compact('branches'));
     }

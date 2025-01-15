@@ -6,11 +6,15 @@ use Illuminate\Http\Request;
 use App\Models\Size;
 use App\Models\SizeScale;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
 
 class SizeController extends Controller
 {
     public function index(SizeScale $sizeScaleId)
     {
+        if(!Gate::allows('view size')) {
+            abort(403);
+        }
         $sizes = $sizeScaleId->sizes()->with('sizeScale')->get();
 
         return view('size-scales.sizes.index', [
@@ -21,6 +25,9 @@ class SizeController extends Controller
 
     public function create($sizeScaleId)
     {
+        if(!Gate::allows('create size')) {
+            abort(403);
+        }
         $latestSize = Size::orderBy('new_code', 'desc')->first();
 
         $latestNewCode = $latestSize ? (int)$latestSize->new_code : 0;
@@ -29,6 +36,9 @@ class SizeController extends Controller
 
     public function store(Request $request, $sizeScaleId)
     {
+        if(!Gate::allows('create size')) {
+            abort(403);
+        }
         $request->validate([
             'size' => [
                 'required',
@@ -53,11 +63,17 @@ class SizeController extends Controller
 
     public function edit($sizeScaleId, Size $size)
     {
+        if(!Gate::allows('edit size')) {
+            abort(403);
+        }
         return view('size-scales.sizes.edit', compact('size', 'sizeScaleId'));
     }
 
     public function update(Request $request, $sizeScaleId, Size $size)
     {
+        if(!Gate::allows('edit size')) {
+            abort(403);
+        }
         $request->validate([
             'size'          => [
                 'required',
@@ -80,6 +96,9 @@ class SizeController extends Controller
 
     public function destroy($sizeScaleId, Size $size)
     {
+        if(!Gate::allows('delete size')) {
+            abort(403);
+        }
         $size->delete();
 
         return response()->json([

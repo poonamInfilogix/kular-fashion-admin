@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Color;
+use Illuminate\Support\Facades\Gate;
 
 class ColorController extends Controller
 {
     public function index()
     {
+        if(!Gate::allows('view colors')) {
+            abort(403);
+        }
         $colors = Color::latest()->get();
 
         return view('colors.index', compact('colors'));
@@ -16,11 +20,17 @@ class ColorController extends Controller
 
     public function create()
     {
+        if(!Gate::allows('create colors')) {
+            abort(403);
+        }
         return view('colors.create');
     }
 
     public function store(Request $request)
     {
+        if(!Gate::allows('create colors')) {
+            abort(403);
+        }
         $request->validate([
             'color_name' => 'required|unique:colors,color_name',
             'color_code' => 'required|min:1|max:3'
@@ -43,6 +53,9 @@ class ColorController extends Controller
 
     public function edit($id)
     {
+        if(!Gate::allows('edit colors')) {
+            abort(403);
+        }
         $color = Color::where('id', $id)->first();
 
         return view('colors.edit', compact('color'));
@@ -50,6 +63,9 @@ class ColorController extends Controller
 
     public function update(Request $request, $id)
     {
+        if(!Gate::allows('edit colors')) {
+            abort(403);
+        }
         $request->validate([
             'color_name' => 'required|unique:colors,color_name,' . $id,
             'color_code' => 'required|min:1|max:3'
@@ -68,6 +84,9 @@ class ColorController extends Controller
 
     public function destroy(string $id)
     {
+        if(!Gate::allows('delete colors')) {
+            abort(403);
+        }
         Color::where('id', $id)->delete();
 
         return response()->json([

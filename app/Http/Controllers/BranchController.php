@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Branch;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
 
 class BranchController extends Controller
 {
@@ -14,8 +15,16 @@ class BranchController extends Controller
      */
     public function index()
     {
+        if(!Gate::allows('view branches')) {
+            abort(403);
+        }
         $branches = Branch::all();
-        return view('branches.index',compact('branches'));
+        $branchesWithTransfers = [];
+        foreach ($branches as $branch) {
+            $branchesWithTransfers[$branch->id] = $branch->sentTransfers()->exists() || $branch->receivedTransfers()->exists();
+        }
+
+        return view('branches.index',compact('branches', 'branchesWithTransfers'));
     }
 
     /**
@@ -23,7 +32,13 @@ class BranchController extends Controller
      */
     public function create()
     {
-        return view('branches.create');
+        if(!Gate::allows('create branches')) {
+            abort(403);
+        }
+        $defaultFooter = setting('order_receipt_footer');
+        $defaultHeader = setting('order_receipt_header');
+
+        return view('branches.create', compact('defaultFooter', 'defaultHeader'));
     }
 
     /**
@@ -31,6 +46,9 @@ class BranchController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Gate::allows('create branches')) {
+            abort(403);
+        }
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:users,email', 
             'name' => 'required', 
@@ -46,6 +64,8 @@ class BranchController extends Controller
             "email" => $request->email,
             "contact" => $request->contact,
             "location" => $request->location,
+            "order_receipt_header" => $request->order_receipt_header,
+            "order_receipt_footer" => $request->order_receipt_footer,
         ]);
 
         return redirect()->route('branches.index')->with("success","Branch created successfully");
@@ -64,6 +84,9 @@ class BranchController extends Controller
      */
     public function edit(string $id)
     {
+        if(!Gate::allows('edit branches')) {
+            abort(403);
+        }
         $branch = Branch::find($id);
         return view('branches.edit',compact('branch'));
     }
@@ -73,6 +96,9 @@ class BranchController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if(!Gate::allows('edit branches')) {
+            abort(403);
+        }
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:users,email', 
             'name' => 'required', 
@@ -89,6 +115,8 @@ class BranchController extends Controller
             "email" => $request->email,
             "contact" => $request->contact,
             "location" => $request->location,
+            "order_receipt_header" => $request->order_receipt_header,
+            "order_receipt_footer" => $request->order_receipt_footer,
         ]);
 
         return redirect()->route('branches.edit',$id)->with("success","Branch Updated successfully");
@@ -99,6 +127,9 @@ class BranchController extends Controller
      */
     public function destroy(string $id)
     {
+        if(!Gate::allows('delete branches')) {
+            abort(403);
+        }
         Branch::where('id', $id)->delete();
         User::where('branch_id', $id)->update([
             "branch_id" => NULL

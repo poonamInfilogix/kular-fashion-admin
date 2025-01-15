@@ -19,13 +19,25 @@ class RolesAndPermissionsSeeder extends Seeder
         $permissions = [
             'pos',
             'backend',
-            'view stores', 'create stores', 'edit stores', 'delete stores',
-            'view users', 'create users', 'edit users', 'delete users',
-            'view categories', 'create categories', 'edit categories', 'delete categories',
+            'view departments', 'create departments', 'edit departments', 'delete departments',
+            'view product_types', 'create product_types', 'edit product_types', 'delete product_types',
+            'view brands', 'create brands', 'edit brands', 'delete brands',
+            'view colors', 'create colors', 'edit colors', 'delete colors',
+            'view size', 'create size', 'edit size', 'delete size',
+            'view size_scales', 'create size_scales', 'edit size_scales', 'delete size_scales',
             'view products', 'create products', 'edit products', 'delete products',
-            'view sales', 'create sales', 'edit sales', 'delete sales',
+            'view print_barcodes', 'create print_barcodes', 'edit print_barcodes', 'delete print_barcodes',
+            'view tags', 'create tags', 'edit tags', 'delete tags',
+            'view branches', 'create branches', 'edit branches', 'delete branches',
+            'view inventory_transfer', 'create inventory_transfer', 'edit inventory_transfer', 'delete inventory_transfer',
             'view customers', 'create customers', 'edit customers', 'delete customers',
+            'view suppliers', 'create suppliers', 'edit suppliers', 'delete suppliers',
+            'view users', 'create users', 'edit users', 'delete users',
             'view roles & permissions', 'edit roles & permissions',
+            'view price_reasons', 'create price_reasons', 'edit price_reasons', 'delete price_reasons',
+            'view settings', 'create settings', 'edit settings', 'delete settings',
+            'view tax', 'create tax', 'edit tax', 'delete tax',
+            'view role', 'create role', 'edit role', 'delete role',
         ];
 
         foreach ($permissions as $permission) {
@@ -35,7 +47,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $roles = [
             'Super Admin' => Permission::all(),
             'Admin' => Permission::all(),
-            'Manager' => ['backend', 'view sales', 'view customers'],
+            'Manager' => ['backend', 'view customers'],
             'Sales Person' => ['pos']
         ];
 
