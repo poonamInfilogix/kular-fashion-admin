@@ -10,7 +10,10 @@
                     </a>
                 </li>
 
+                @canany(['view products', 'create products', 'view print_barcodes', 'view inventory_transfer'])
                 <li class="menu-title" key="t-menu">Catalog</li>
+                @endcanany
+
                 @can('view products')
                 <li>
                     <a href="{{ route('products.index') }}" class="waves-effect">
@@ -47,7 +50,10 @@
                 </li>
                 @endcan
 
+                @canany(['view departments', 'view product_types', 'view brands', 'view colors', 'view size_scales', 'view tags'])
                 <li class="menu-title" key="t-menu">Product Settings</li>
+                @endcanany
+
                 @can('view departments')
                 <li>
                     <a href="{{ route('departments.index') }}" class="waves-effect">
@@ -102,7 +108,10 @@
                 </li>
                 @endcan 
 
+                @canany(['view branches', 'view customers', 'view users', 'view suppliers', 'view role', 'view roles & permissions', 'view tax', 'view settings', 'view price_reasons'])
                 <li class="menu-title" key="t-menu">Admin Settings</li>
+                @endcanany
+
                 @can('view branches')
                 <li>
                     <a href="{{ route('branches.index') }}" class="waves-effect">
