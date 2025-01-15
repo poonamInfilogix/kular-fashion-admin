@@ -66,7 +66,12 @@
 
     <script>
         $(document).ready(function() {
-            $('#datatable').DataTable();
+            $('#datatable').DataTable({
+                columnDefs: [
+                    { type: 'string', targets: 1 } 
+                ],
+                order: [[1, 'asc']]
+            });
         });
     </script>
 @endsection

@@ -88,7 +88,7 @@
                         } 
                     }
                 ],
-                order: [[0, 'desc']],
+                order: [[1, 'asc']],
                 drawCallback: function(settings) {
                     let api = this.api();
                     let rows = api.rows({ page: 'current' }).data().length;
