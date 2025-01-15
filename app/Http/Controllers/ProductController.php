@@ -143,7 +143,7 @@ class ProductController extends Controller
                 'season' => $request->season,
                 'supplier_ref' => $request->supplier_ref,
                 'tax_id' => $request->tax_id,
-                'in_date' => $request->in_date,
+                //'in_date' => $request->in_date,
                 'last_date' => $request->last_date,
                 //'size_scale_id' => $request->size_scale_id,
                 'image' => $imagePath,

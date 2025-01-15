@@ -69,6 +69,10 @@
                 $('#addVariantModal').modal('show');
             });
 
+            $('input[type="number"]').on('focus', function() {
+                $(this).select();
+            });
+
             $(document).on('click', '.copy-quantity-btn', function() {
                 let selectedColorId = $(this).attr('data-color-id');
                 $(`#copy_quantity_for_color option`).show();

@@ -50,157 +50,93 @@
                 </li>
                 @endcan
 
-                @canany(['view departments', 'view product_types', 'view brands', 'view colors', 'view size_scales', 'view tags'])
-                <li class="menu-title" key="t-menu">Product Settings</li>
+                @canany(['view departments', 'view product_types', 'view brands', 'view colors', 'view size_scales', 'view tags', 'view branches', 'view customers', 'view users', 'view suppliers', 'view role', 'view roles & permissions', 'view tax', 'view settings', 'view price_reasons'])
+                <li class="menu-title">Settings</li>
                 @endcanany
+                
+                @canany(['view departments', 'view product_types', 'view brands', 'view colors', 'view size_scales', 'view tags'])
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="bx bxs-package"></i>
+                            <span>Product Settings</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            @can('view departments')
+                            <li><a href="{{ route('departments.index') }}">Departments</a></li>
+                            @endcan
 
-                @can('view departments')
-                <li>
-                    <a href="{{ route('departments.index') }}" class="waves-effect">
-                        <i class="bx bx-shield-alt"></i>
-                        <span>Departments</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view product_types')
-                <li>
-                    <a href="{{ route('product-types.index') }}" class="waves-effect">
-                        <i class="bx bxs-data"></i>
-                        <span>Product Types</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view brands')
-                <li>
-                    <a href="{{ route('brands.index') }}" class="waves-effect">
-                        <i class="bx bxl-bootstrap"></i>
-                        <span>Brands</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view colors')
-                <li>
-                    <a href="{{ route('colors.index') }}" class="waves-effect">
-                        <i class="bx bxs-color-fill"></i>
-                        <span>Colors</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view size_scales')
-                <li>
-                    <a href="{{ route('size-scales.index') }}" class="waves-effect">
-                        <i class="bx bx-font-size"></i>
-                        <span>Size Scales</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view tags')
-                <li>
-                    <a href="{{ route('tags.index') }}" class="waves-effect">
-                        <i class="bx bx-purchase-tag"></i>
-                        <span>Tags</span>
-                    </a>
-                </li>
-                @endcan 
+                            @can('view product_types')
+                            <li><a href="{{ route('product-types.index') }}">Product Types</a></li>
+                            @endcan
+            
+                            @can('view brands')
+                            <li><a href="{{ route('brands.index') }}">Brands</a></li>
+                            @endcan
+            
+                            @can('view colors')
+                            <li><a href="{{ route('colors.index') }}">Colors</a></li>
+                            @endcan
+            
+                            @can('view size_scales')
+                            <li><a href="{{ route('size-scales.index') }}">Size Scales</a></li>
+                            @endcan
+            
+                            @can('view tags')
+                            <li><a href="{{ route('tags.index') }}">Tags</a></li>
+                            @endcan 
+                        </ul>
+                    </li>
+                @endcanany
 
                 @canany(['view branches', 'view customers', 'view users', 'view suppliers', 'view role', 'view roles & permissions', 'view tax', 'view settings', 'view price_reasons'])
-                <li class="menu-title" key="t-menu">Admin Settings</li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="bx bx-cog"></i>
+                        <span>System Settings</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        @can('view branches')
+                        <li><a href="{{ route('branches.index') }}">Branches</a></li>
+                        @endcan
+
+                        @can('view customers')
+                        <li><a href="#">Customers</a></li>
+                        @endcan
+
+                        @can('view users')
+                        <li><a href="{{ route('users.index') }}">Users</a></li>
+                        @endcan
+
+                        @can('view suppliers')
+                        <li><a href="{{ route('suppliers.index') }}">Suppliers</a></li>
+                        @endcan
+
+                        @can('view role')
+                        <li><a href="{{ route('roles-and-permissions.role-list') }}">Roles</a></li>
+                        @endcan
+
+                        @can('view roles & permissions')
+                        <li><a href="{{ route('roles-and-permissions.index') }}">Permissions</a></li>
+                        @endcan
+
+                        @can('view tax')
+                        <li><a href="{{ route('tax-settings.index') }}">Tax</a></li>
+                        @endcan
+
+                        @can('view settings')
+                        <li><a href="{{ route('settings.index') }}">Default Images</a></li>
+                        @endcan
+
+                        @can('view price_reasons')
+                        <li><a href="{{ route('change-price-reasons.index') }}">Change Price Reasons</a></li>
+                        @endcan
+
+                        @can('view settings')
+                        <li><a href="{{ route('general-settings.index') }}">General</a></li>
+                        @endcan
+                    </ul>
+                </li>
                 @endcanany
-
-                @can('view branches')
-                <li>
-                    <a href="{{ route('branches.index') }}" class="waves-effect">
-                        <i class="bx bx-store-alt"></i>
-                        <span>Branches</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view customers')
-                <li>
-                    <a href="#" class="waves-effect">
-                        <i class="bx bx-group"></i>
-                        <span>Customers</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view users')
-                <li>
-                    <a href="{{ route('users.index') }}" class="waves-effect">
-                        <i class="bx bx-user"></i>
-                        <span>Users</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view suppliers')
-                <li>
-                    <a href="{{ route('suppliers.index') }}" class="waves-effect">
-                        <i class="bx bx-user-circle"></i>
-                        <span>Suppliers</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view role')
-                <li>
-                    <a href="{{ route('roles-and-permissions.role-list') }}" class="waves-effect">
-                        <i class="bx bxs-user-check"></i>
-                        <span>Roles</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view roles & permissions')
-                <li>
-                    <a href="{{ route('roles-and-permissions.index') }}" class="waves-effect">
-                        <i class="bx bxs-customize"></i>
-                        <span>Permissions</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view tax')
-                <li>
-                    <a href="{{ route('tax-settings.index') }}" class="waves-effect">
-                        <i class="bx bx-pound"></i>
-                        <span>Tax</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <li>
-                    <a href="{{ route('settings.index') }}" class="waves-effect">
-                        <i class="bx bx-images"></i>
-                        <span>Default Images</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view price_reasons')
-                <li>
-                    <a href="{{ route('change-price-reasons.index') }}" class="waves-effect">
-                        <i class="bx bx-stats"></i>
-                        <span>Change Price Reasons</span>
-                    </a>
-                </li>
-                @endcan
-
-                @can('view settings')
-                <li>
-                    <a href="{{ route('general-settings.index') }}" class="waves-effect">
-                        <i class="fas fa-cog"></i>
-                        <span>General</span>
-                    </a>
-                </li>
-                @endcan
             </ul>
         </div>
     </div>

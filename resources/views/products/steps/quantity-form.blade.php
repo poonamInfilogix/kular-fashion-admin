@@ -7,7 +7,7 @@
             @endforeach
 
             @isset($product)
-                <th class="text-center" style="width: 60px">Qty</th>
+                <th class="text-center">Qty</th>
             @endisset
 
             <th @class(['actionColumn', 'd-none' => count($savedColors) <= 1])>Action</th>
@@ -27,9 +27,9 @@
                 @endphp
 
                 <tr data-id="rm-{{ $color['id'] }}">
-                    <th>
+                    <th class="d-flex align-items-center justify-content-center flex-column text-center">
                         <div class="me-1 d-color-code" style="background: {{ $color['ui_color_code'] }}"></div>
-                        {{ $color['color_name'] }} ({{ $color['color_code'] }})
+                        <label class="font-size-12 fw-bold">{{ $color['color_name'] }} ({{ $color['color_code'] }})</label>
                     </th>
                     @foreach ($sizes as $key => $size)
                         @php
@@ -46,7 +46,7 @@
                                 value="{{ isset($quantityData) && is_array($quantityData) && isset($quantityData[$color['id']]) ? (int) $quantityData[$color['id']] : 0 }}"
                                 class="form-control">
                             @isset($product)
-                                <h6 class="mt-1 mb-0">Total in: <b>{{ $quantity }}</b></h6>
+                                <h6 class="mt-1 mb-0 font-size-12">Total in: <b>{{ $quantity }}</b></h6>
                             @endisset
                         </td>
                     @endforeach
@@ -59,16 +59,16 @@
                         <div class="d-flex gap-2">
                             @isset($product)
                                 <a href="{{ route('products.remove-variant', $color['id'] . '?productId=' . $product->id) }}"
-                                    class="btn btn-danger">
+                                    class="btn btn-danger btn-sm">
                                     <i class="fas fa-trash-alt"></i>
                                 </a>
                             @else
-                                <a href="{{ route('products.remove-variant', $color['id']) }}" class="btn btn-danger">
+                                <a href="{{ route('products.remove-variant', $color['id']) }}" class="btn btn-danger btn-sm">
                                     <i class="fas fa-trash-alt"></i>
                                 </a>
                             @endisset
 
-                            <button type="button" class="btn btn-secondary copy-quantity-btn"
+                            <button type="button" class="btn btn-secondary copy-quantity-btn btn-sm"
                                 data-color-id="{{ $color['id'] }}">
                                 <i class="mdi mdi-content-copy fs-6"></i>
                             </button>
