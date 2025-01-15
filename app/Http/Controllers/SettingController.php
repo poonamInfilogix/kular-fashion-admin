@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Setting;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
 
 class SettingController extends Controller
 {
     public function index()
     {
+        if(!Gate::allows('view settings')) {
+            abort(403);
+        }
         return view('settings.default-images.index');
     }
 

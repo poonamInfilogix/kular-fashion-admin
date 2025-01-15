@@ -23,8 +23,10 @@
                                     </label>
                                 </form>
                             </div>
+                            @if(Auth::user()->can('create brands'))
                             <a href="{{ route('brands.create') }}" class="btn btn-primary"><i class="bx bx-plus"></i> Add
                                 New Brand</a>
+                            @endif
                         </div>
 
                     </div>
@@ -55,7 +57,9 @@
                                         <th>Brand Name</th>
                                         <th>Image</th>
                                         <th>Status</th>
+                                        @canany(['edit brands', 'delete brands'])
                                         <th>Action</th>
+                                        @endcanany
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -74,16 +78,22 @@
                                                 <label for="{{ $brand->id }}" data-on-label="Active"
                                                     data-off-label="Inactive"></label>
                                             </td>
+                                            @canany(['edit brands', 'delete brands'])
                                             <td class="action-buttons">
+                                                @if(Auth::user()->can('edit brands'))
                                                 <a href="{{ route('brands.edit', $brand->id) }}"
                                                     class="btn btn-primary btn-sm edit"><i
                                                         class="fas fa-pencil-alt"></i></a>
+                                                @endif
+                                                @if(Auth::user()->can('delete brands'))
                                                 <button data-source="Brand"
                                                     data-endpoint="{{ route('brands.destroy', $brand->id) }}"
                                                     class="delete-btn btn btn-danger btn-sm edit">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
+                                                @endif
                                             </td>
+                                            @endcanany
                                         </tr>
                                     @endforeach
                                 </tbody>

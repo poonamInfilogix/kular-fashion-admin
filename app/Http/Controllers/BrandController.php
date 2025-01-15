@@ -9,11 +9,15 @@ use Illuminate\Validation\Rule;
 use App\Imports\BrandImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Gate;
 
 class BrandController extends Controller
 {
     public function index()
     {
+        if(!Gate::allows('view brands')) {
+            abort(403);
+        }
         $brands = Brand::latest()->get();
 
         return view('brands.index', compact('brands'));
@@ -21,11 +25,17 @@ class BrandController extends Controller
 
     public function create()
     {
+        if(!Gate::allows('create brands')) {
+            abort(403);
+        }
         return view('brands.create');
     }
 
     public function store(Request $request)
     {
+        if(!Gate::allows('create brands')) {
+            abort(403);
+        }
         $request->validate([
             'name' => [
                 'required',
@@ -58,6 +68,9 @@ class BrandController extends Controller
 
     public function edit($id)
     {
+        if(!Gate::allows('edit brands')) {
+            abort(403);
+        }
         $brand = Brand::where('id', $id)->first();
 
         return view('brands.edit', compact('brand'));
@@ -65,6 +78,9 @@ class BrandController extends Controller
 
     public function update(Request $request, $id)
     {
+        if(!Gate::allows('edit brands')) {
+            abort(403);
+        }
         $request->validate([
             'name' => [
                 'required',
@@ -102,6 +118,9 @@ class BrandController extends Controller
 
     public function destroy(string $id)
     {
+        if(!Gate::allows('delete brands')) {
+            abort(403);
+        }
         Brand::where('id', $id)->delete();
 
         return response()->json([

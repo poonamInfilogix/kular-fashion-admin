@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ChangePriceReason;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
 
 class ChangePriceReasonController extends Controller
 {
@@ -13,6 +14,9 @@ class ChangePriceReasonController extends Controller
      */
     public function index()
     {
+        if(!Gate::allows('view price_reasons')) {
+            abort(403);
+        }
         $reasons = ChangePriceReason::latest()->get();
         return view('settings.change-price-reasons.index', compact('reasons'));
     }
@@ -22,6 +26,9 @@ class ChangePriceReasonController extends Controller
      */
     public function create()
     {
+        if(!Gate::allows('create price_reasons')) {
+            abort(403);
+        }
         return view('settings.change-price-reasons.create');
     }
 
@@ -30,6 +37,9 @@ class ChangePriceReasonController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Gate::allows('create price_reasons')) {
+            abort(403);
+        }
         $request->validate([
             'reason' => 'required|max:100|unique:change_price_reasons,name',
         ]);
@@ -54,6 +64,9 @@ class ChangePriceReasonController extends Controller
      */
     public function edit(ChangePriceReason $changePriceReason)
     {
+        if(!Gate::allows('edit price_reasons')) {
+            abort(403);
+        }
         return view('settings.change-price-reasons.edit', compact('changePriceReason'));
     }
 
@@ -62,6 +75,9 @@ class ChangePriceReasonController extends Controller
      */
     public function update(Request $request, ChangePriceReason $changePriceReason)
     {
+        if(!Gate::allows('edit price_reasons')) {
+            abort(403);
+        }
         $request->validate([
             'reason' => [
                 'required',
@@ -80,6 +96,9 @@ class ChangePriceReasonController extends Controller
      */
     public function destroy(ChangePriceReason $changePriceReason)
     {
+        if(!Gate::allows('delete price_reasons')) {
+            abort(403);
+        }
         $changePriceReason->delete();
 
         return response()->json([
