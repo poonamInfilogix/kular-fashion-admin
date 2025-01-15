@@ -1,21 +1,21 @@
 <div class="row mb-2">
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <x-form-input name="article_code" id="article_code" value="{{ $product->article_code ?? '' }}" label="Article Code" placeholder="Enter Article Code"  required="true" readonly/>
+            <x-form-input name="article_code" id="article_code" value="{{ $product->article_code ?? '' }}" label="Article Code" placeholder="Enter Article Code"  required="true" readonly="{{ $isEditing ?? false }}"/>
         </div>
     </div>
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <x-form-input name="manufacture_code" value="{{ $product->manufacture_code ?? request()->get('mfg_code') }}" label="Manufacture Code" placeholder="Enter Manufacture Code"  required="true"/>
+            <x-form-input name="manufacture_code" value="{{ $product->manufacture_code ?? request()->get('mfg_code') }}" label="Manufacture Code" placeholder="Enter Manufacture Code"  required="true" readonly="{{$isEditing ?? false}}" />
         </div>
     </div>
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="department_id">Department<span class="text-danger">*</span></label>
-            <select name="department_id" id="department_id" class="form-control{{ $errors->has('department_id') ? ' is-invalid' : '' }}">
+            <select name="department_id" id="department_id" @disabled($isEditing ?? false) @class(['form-control', 'is-invalid' => $errors->has('department_id')])>
                 @foreach($departments as $department)
-                    <option value="{{ $department->id }}" @selected(isset($product->department_id) && $product->department_id == $department->id)>
+                    <option value="{{ $department->id }}" @selected(($product->department_id ?? '') == $department->id)>
                         {{ $department->name }}
                     </option>
                 @endforeach
@@ -29,7 +29,7 @@
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="productType">Product Type <span class="text-danger">*</span></label>
-            <select name="product_type_id" id="product_type" class="productType form-control{{ $errors->has('product_type_id') ? ' is-invalid' : '' }}">
+            <select name="product_type_id" id="product_type" @disabled($isEditing ?? false) @class(["productType form-control", 'is-invalid' => $errors->has('product_type_id')])>
                 <option value="" disabled>Select Product Type</option>
                 @if(isset($productTypes))
                     @foreach($productTypes as $productType)
@@ -48,7 +48,7 @@
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="brand_id">Brand <span class="text-danger">*</span></label>
-            <select name="brand_id" id="brand_id" class="form-control{{ $errors->has('brand_id') ? ' is-invalid' : '' }}">
+            <select name="brand_id" id="brand_id" @disabled($isEditing ?? false) class="form-control{{ $errors->has('brand_id') ? ' is-invalid' : '' }}">
                 <option value="" disabled selected>Select brand</option>
                 @foreach($brands as $brand)
                     <option value="{{ $brand->id }}" data-margin="{{ $brand->margin }}" @selected(old('brand_id', $product->brand_id ?? '') == $brand->id)>
@@ -65,7 +65,7 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <x-form-input name="supplier_ref" value="{{ $product->supplier_ref ?? '' }}" label="Supplier Ref" placeholder="Enter Supplier Ref"/>
+            <x-form-input name="supplier_ref" value="{{ $product->supplier_ref ?? '' }}" readonly="{{ $isEditing ?? false }}" label="Supplier Ref" placeholder="Enter Supplier Ref"/>
         </div>
     </div>
 
@@ -78,7 +78,7 @@
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="tag_id">Tag</label>
-            <select name="tag_id[]" id="tag_id" class="form-control{{ $errors->has('tag_id') ? ' is-invalid' : '' }}" multiple>
+            <select name="tag_id[]" id="tag_id" @disabled($isEditing ?? false) class="form-control{{ $errors->has('tag_id') ? ' is-invalid' : '' }}" multiple>
                 <option value="" disabled>Select tag</option>
                 @foreach($tags as $tag)
                     <option value="{{ $tag->id }}" @selected(old('tag_id') && in_array($tag->id, old('tag_id')))>
@@ -98,7 +98,7 @@
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="size_scale_id">Size Scale<span class="text-danger">*</span></label>
-            <select name="size_scale_id" id="size_scale_id" class="form-control{{ $errors->has('size_scale_id') ? ' is-invalid' : '' }}">
+            <select name="size_scale_id" @disabled($isEditing ?? false) id="size_scale_id" @class(["form-control", "is-invalid" => $errors->has('size_scale_id')])>
                 <option value="" disabled selected>Select size scale</option>
                 @foreach($sizeScales as $sizeScale)
                     <option value="{{ $sizeScale->id }}" @selected(old('size_scale_id', $product->size_scale_id ?? '') == $sizeScale->id)>
@@ -140,7 +140,7 @@
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="status" class="form-label">Season</label>
-            <select name="season" id="season" class="form-control{{ $errors->has('season') ? ' is-invalid' : '' }}">
+            <select name="season" id="season" @disabled($isEditing ?? false) @class(["form-control", "is-invalid" => $errors->has('season')])>
                 <option value="Summer" @selected(($product->season ?? setting('default_season')) === 'Summer')>Summer</option>
                 <option value="Winter" @selected(($product->season ?? setting('default_season')) === 'Winter')>Winter</option>
                 <option value="Autumn" @selected(($product->season ?? setting('default_season')) === 'Autumn')>Autumn</option>
@@ -155,7 +155,7 @@
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="tax_id">Tax</label>
-            <select name="tax_id" id="tax_id" class="form-control{{ $errors->has('tax_id') ? ' is-invalid' : '' }}">
+            <select name="tax_id" id="tax_id" @class(["form-control", "is-invalid" => $errors->has('tax_id')])>
                 <option value="" disabled>Select Tax</option>
                 @foreach($taxes as $tax)
                     <option value="{{ $tax->id }}" @selected(isset($product->tax_id) && $product->tax_id == $tax->id)
@@ -171,13 +171,13 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <x-form-input name="in_date" class="date-picker"  value="{{ $product->in_date ?? now()->format('Y-m-d') }}"  label="In Date" placeholder="Enter In Date"/>
+            <x-form-input name="in_date" class="date-picker" disabled="{{ $isEditing ?? false }}" value="{{ $product->in_date ?? now()->format('Y-m-d') }}"  label="In Date" placeholder="Enter In Date"/>
         </div>
     </div>
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <x-form-input name="last_date" class="date-picker" value="{{ $product->last_date ?? now()->format('Y-m-d') }}" label="Last Date" placeholder="Enter Last Date"/>
+            <x-form-input name="last_date" class="date-picker" disabled="{{ $isEditing ?? false }}" value="{{ $product->last_date ?? now()->format('Y-m-d') }}" label="Last Date" placeholder="Enter Last Date"/>
         </div>
     </div>
     

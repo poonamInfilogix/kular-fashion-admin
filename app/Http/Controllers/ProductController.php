@@ -98,14 +98,14 @@ class ProductController extends Controller
     public function updateStep1(Request $request, $productId)
     {
         $request->validate([
-            'manufacture_code' => [
+            /* 'manufacture_code' => [
                 'required',
                 Rule::unique('products')->ignore($productId)->whereNull('deleted_at'),
             ],
             'brand_id'          => 'required',
             'department_id'     => 'required',
             'product_type_id'   => 'required',
-            'size_scale_id'     => 'required',
+            'size_scale_id'     => 'required', */
             'supplier_price'    => 'required',
             'mrp'               => 'required',
             'short_description' => 'required',
@@ -133,10 +133,10 @@ class ProductController extends Controller
 
         if ($product) {
             $product->update([
-                'manufacture_code' => $request->manufacture_code,
+                /* 'manufacture_code' => $request->manufacture_code,
                 'department_id' => $request->department_id,
                 'brand_id' => $request->brand_id,
-                'product_type_id' => $request->product_type_id,
+                'product_type_id' => $request->product_type_id, */
                 'short_description' => $request->short_description,
                 'mrp' => $request->mrp,
                 'supplier_price' => $request->supplier_price,
@@ -145,7 +145,7 @@ class ProductController extends Controller
                 'tax_id' => $request->tax_id,
                 'in_date' => $request->in_date,
                 'last_date' => $request->last_date,
-                'size_scale_id' => $request->size_scale_id,
+                //'size_scale_id' => $request->size_scale_id,
                 'image' => $imagePath,
                 'status' => $request->status,
             ]);

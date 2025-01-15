@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@php
+    $isEditing = true;
+@endphp
+
 @section('content')
     <div class="page-content">
         <div class="container-fluid">

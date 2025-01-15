@@ -11,6 +11,7 @@
             name="{{ $name }}"
             id="{{ $name }}"
             value="{{ old($name, $value) }}"
+            {{ $readonly ? 'readonly' : '' }}
             {{ $attributes->merge(['class' => 'form-control' . ($errors->has($validationInputName) ? ' is-invalid' : '')]) }}
         >
     @else

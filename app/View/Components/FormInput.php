@@ -13,17 +13,19 @@ class FormInput extends Component
     public $value;
     public $label;
     public $required;
+    public $readonly;
 
     /**
      * Create a new component instance.
      */
-    public function __construct($name, $type = 'text', $value = '', $label = '', $required = '')
+    public function __construct($name, $type = 'text', $value = '', $label = '', $required = '', $readonly = '')
     {
         $this->name = $name;
         $this->type = $type;
         $this->value = $value;
         $this->label = $label;
         $this->required = $required;
+        $this->readonly = $readonly;
     }
 
     /**
