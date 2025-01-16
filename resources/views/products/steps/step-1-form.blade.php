@@ -369,5 +369,25 @@
                 }
             });
         });
+
+        //Supplier Price Validation
+        $(document).ready(function() {
+            
+    $('#supplier_price').on('keydown', function(event) {
+
+        if (['e', 'E', '+', '-'].indexOf(event.key) !== -1) {
+            event.preventDefault();
+        }
+    });
+
+    $('#supplier_price').on('input', function() {
+        var value = $(this).val();
+
+        if (!/^\d*\.?\d*$/.test(value)) {
+            $(this).val(value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/, '$1'));
+        }
+    });
+});
+
     </script>
 @endpush
