@@ -134,7 +134,7 @@
                                 .get();
 
                             let $newRow = $('<tr></tr>');
-                            let $newTh = $('<th></th>').html(
+                            let $newTh = $('<th class="d-flex align-items-center justify-content-center flex-column text-center"></th>').html(
                                 `<div class="me-1 d-color-code" style="background: ${response.data.ui_color_code}"></div>${response.data.color_name} (${response.data.color_code})`);
                             $newRow.append($newTh);
 
@@ -155,10 +155,10 @@
                             // Add delete button as the last cell
                             let $deleteTd = $('<td></td>');
                             $deleteTd.html(`
-                            <a href="{{ route('products.remove-variant', '') }}/${response.data.color_id}" class="btn btn-danger"> 
+                            <a href="{{ route('products.remove-variant', '') }}/${response.data.color_id}" class="btn btn-danger btn-sm"> 
                                <i class="fas fa-trash-alt"></i>
                             </a>
-                            <button type="button" class="btn btn-secondary copy-quantity-btn" data-color-id="${response.data.color_id}">
+                            <button type="button" class="btn btn-secondary copy-quantity-btn btn-sm" data-color-id="${response.data.color_id}">
                                 <i class="mdi mdi-content-copy fs-6"></i>
                             </button>`);
 
