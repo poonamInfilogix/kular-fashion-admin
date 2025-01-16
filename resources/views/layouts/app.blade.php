@@ -87,9 +87,9 @@
                                     setTimeout(() => {
                                         location.reload();
                                     }, 2000);
-                                } else{
+                                } else {
                                     let message = `Something went wrong!`;
-                                    if(response.message){
+                                    if (response.message) {
                                         message = response.message
                                     }
 
@@ -106,6 +106,26 @@
                 });
             })
         })
+
+        $(document).ready(function() {
+            // Restrict 'e', 'E', '+', and '-' for all input fields of type number
+            $('input[type="number"]').on('keydown', function(event) {
+                // Prevent invalid characters
+                if (['e', 'E', '+', '-'].includes(event.key)) {
+                    event.preventDefault();
+                }
+            });
+
+            // Allow only valid numbers and a single decimal point
+            $('input[type="number"]').on('input', function() {
+                let value = $(this).val();
+
+                // Replace invalid characters and allow one decimal point
+                if (!/^\d*\.?\d*$/.test(value)) {
+                    $(this).val(value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/, '$1'));
+                }
+            });
+        });
     </script>
 </body>
 

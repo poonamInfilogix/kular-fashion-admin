@@ -2,9 +2,10 @@
     <div class="col-sm-6 col-md-3">
         <div class="mb-3">
             <label for="department_id">Department <span class="text-danger">*</span></label>
-            <select name="department_id[]" id="department_id" class="form-control{{ $errors->has('department_id') ? ' is-invalid' : '' }}" multiple>
-                @foreach($departments as $department)
-                    <option value="{{ $department->id }}" >
+            <select name="department_id[]" id="department_id"
+                class="form-control{{ $errors->has('department_id') ? ' is-invalid' : '' }}" multiple >
+                @foreach ($departments as $department)
+                    <option value="{{ $department->id }}">
                         {{ $department->name }}
                     </option>
                 @endforeach
@@ -16,7 +17,8 @@
     </div>
     <div class="col-sm-6 col-md-3">
         <div class="mb-3">
-            <x-form-input name="product_type_name" value="{{ $productType->product_type_name ?? '' }}" label="Product Type" placeholder="Enter Product Type"  required="true"/>
+            <x-form-input name="product_type_name" value="{{ $productType->product_type_name ?? '' }}"
+                label="Product Type" placeholder="Enter Product Type" required="true" />
         </div>
     </div>
     <div class="col-sm-6 col-md-3">
@@ -26,8 +28,9 @@
 
             <div class="row d-block d-md-none">
                 <div class="col-md-3 mt-2">
-                    @if(isset($productType) && $productType->image)
-                        <img src="{{ asset($productType->image) }}" id="preview-productType" class="img-preview img-fluid w-50">
+                    @if (isset($productType) && $productType->image)
+                        <img src="{{ asset($productType->image) }}" id="preview-productType"
+                            class="img-preview img-fluid w-50">
                     @else
                         <img src="" id="preview-productType" class="img-fluid w-50;" name="image" hidden>
                     @endif
@@ -39,8 +42,11 @@
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
             <select name="status" id="product-type-status" class="form-control">
-                <option value="Active" {{ (isset($productType) && $productType->status === 'Active') ? 'selected' : '' }}>Active</option>
-                <option value="Inactive" {{ (isset($productType) && $productType->status === 'Inactive') ? 'selected' : '' }}>Inactive</option>
+                <option value="Active" {{ isset($productType) && $productType->status === 'Active' ? 'selected' : '' }}>
+                    Active</option>
+                <option value="Inactive"
+                    {{ isset($productType) && $productType->status === 'Inactive' ? 'selected' : '' }}>Inactive
+                </option>
             </select>
         </div>
     </div>
@@ -54,7 +60,7 @@
     <div class="col-sm-6 col-md-3"></div>
 
     <div class="col-sm-6 col-md-3 d-none d-md-block">
-        @if(isset($productType) && $productType->image)
+        @if (isset($productType) && $productType->image)
             <img src="{{ asset($productType->image) }}" id="preview-product-type" class="img-preview img-fluid w-50">
         @else
             <img src="" id="preview-product-type" class="img-fluid w-50;" name="image" hidden>
@@ -67,12 +73,20 @@
         <button type="submit" class="btn btn-primary w-md">Submit</button>
     </div>
 </div>
-<x-include-plugins :plugins="['chosen','image' ]"></x-include-plugins>
+<x-include-plugins :plugins="['chosen', 'image']"></x-include-plugins>
 <script>
-    $(function(){
+    $(function() {
         $('#department_id').chosen({
             width: '100%',
-            placeholder_text_multiple: 'Select Department'
+            placeholder_text_multiple: 'Select Department',
+            max_selected_options: 10
         });
+
+        // Ensure scrollable input for selected items
+        $('.chosen-container-multi .chosen-choices').css({
+            'max-height': '100px',
+            'overflow-y': 'auto'
+        });
+
     });
-</script>    
+</script>
