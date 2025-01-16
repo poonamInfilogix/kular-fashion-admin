@@ -114,7 +114,11 @@ class UserController extends Controller
         if($request->password){
             $user->password = Hash::make($request->password);
         }
-        $user->assignRole($request->role);
+        
+        if ($request->filled('role')) {
+            $user->syncRoles([$request->role]);
+        }
+        
         $user->save();
 
         return redirect()->back()->with('success','User updated successfully');
