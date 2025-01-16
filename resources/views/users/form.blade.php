@@ -11,7 +11,8 @@
     </div>
     <div class="col-md-4">
         <label>Role <span style="color:red;">*</span></label>
-        <select name="role" class="form-control">
+        <select name="role" class="form-control" 
+            {{ isset($user) && $user->id == auth()->id() ? 'readonly disabled' : '' }}>
             <option value="">Select Role</option>
             @foreach($roles as $role)
                 <option value="{{ $role->name }}" 

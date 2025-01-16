@@ -115,9 +115,10 @@ class UserController extends Controller
             $user->password = Hash::make($request->password);
         }
         
-        if ($request->filled('role')) {
-            $user->syncRoles([$request->role]);
-        }
+       // Ensure the logged-in user is authenticated and their ID is valid
+       if (auth()->check() && auth()->id() != $user->id && $request->filled('role')) {
+        $user->syncRoles([$request->role]);
+    }
         
         $user->save();
 
