@@ -348,46 +348,5 @@
             var departmentId = $('#department_id').val();
             refreshProductTypeDropdown(departmentId);
         });
-
-
-        // Mrp validation
-        $(document).ready(function() {
-
-            $('#mrp').on('input', function() {
-                let value = $(this).val();
-
-                // Allow only numbers and a single decimal point
-                if (!/^\d*\.?\d*$/.test(value)) {
-                    $(this).val(value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/, '$1'));
-                }
-            });
-
-            $('#mrp').on('keydown', function(event) {
-                // Prevent invalid characters (e, E, +, -)
-                if (['e', 'E', '+', '-'].includes(event.key)) {
-                    event.preventDefault();
-                }
-            });
-        });
-
-        //Supplier Price Validation
-        $(document).ready(function() {
-            
-    $('#supplier_price').on('keydown', function(event) {
-
-        if (['e', 'E', '+', '-'].indexOf(event.key) !== -1) {
-            event.preventDefault();
-        }
-    });
-
-    $('#supplier_price').on('input', function() {
-        var value = $(this).val();
-
-        if (!/^\d*\.?\d*$/.test(value)) {
-            $(this).val(value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/, '$1'));
-        }
-    });
-});
-
     </script>
 @endpush
