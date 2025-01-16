@@ -352,12 +352,19 @@
 
         // Mrp validation
         $(document).ready(function() {
+
             $('#mrp').on('input', function() {
-                $(this).val($(this).val().replace(/[eE+\-]/g, ''));
+                let value = $(this).val();
+
+                // Allow only numbers and a single decimal point
+                if (!/^\d*\.?\d*$/.test(value)) {
+                    $(this).val(value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/, '$1'));
+                }
             });
 
             $('#mrp').on('keydown', function(event) {
-                if (event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-') {
+                // Prevent invalid characters (e, E, +, -)
+                if (['e', 'E', '+', '-'].includes(event.key)) {
                     event.preventDefault();
                 }
             });
