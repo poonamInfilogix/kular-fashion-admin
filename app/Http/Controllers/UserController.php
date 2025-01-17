@@ -32,7 +32,7 @@ class UserController extends Controller
         if(!Gate::allows('create users')) {
             abort(403);
         }
-        $roles = Role::all();
+        $roles = Role::where('name', '!=', 'Super Admin')->get();
         $branches = Branch::where('status','Active')->get();
         return view('users.create',compact('roles','branches'));
     }
@@ -79,15 +79,23 @@ class UserController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
-    {
-        if(!Gate::allows('edit users')) {
-            abort(403);
-        }
-        $roles = Role::all();
-        $user = User::find($id);
-        $branches = Branch::where('status','Active')->get();
-        return view('users.edit',compact('roles','user','branches'));
+{
+    if (!Gate::allows('edit users')) {
+        abort(403);
     }
+
+    $user = User::find($id);
+
+    // Check if the user has the Super Admin role
+    $isSuperAdmin = $user->getRoleNames()->contains('Super Admin');
+
+    // Fetch roles excluding Super Admin for non-super-admin users
+    $roles = $isSuperAdmin ? Role::where('name', 'Super Admin')->get() : Role::where('name', '!=', 'Super Admin')->get();
+    $branches = Branch::where('status', 'Active')->get();
+
+    return view('users.edit', compact('roles', 'user', 'branches', 'isSuperAdmin'));
+}
+
 
     /**
      * Update the specified resource in storage.
