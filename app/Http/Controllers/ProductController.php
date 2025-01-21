@@ -193,6 +193,7 @@ class ProductController extends Controller
         $product['size_range_max'] = $request->size_range_max;
 
         $product['supplier_color_codes'] = $request->supplier_color_code;
+        $product['supplier_color_names'] = $request->supplier_color_name;
         $product['colors'] = $request->colors;
         Session::put('savingProduct', $product);
 
@@ -201,6 +202,8 @@ class ProductController extends Controller
             'colors.*' => 'required|distinct|exists:colors,id',
             'supplier_color_code' => 'required|array',
             'supplier_color_code.*' => 'required|distinct|string|min:3|max:10',
+            'supplier_color_name' => 'required|array',
+            'supplier_color_name.*' => 'required|distinct|string|min:3|max:10',
             'size_range_min' => 'required|exists:sizes,id',
             'size_range_max' => 'required|exists:sizes,id|gte:size_range_min',
         ]);
@@ -211,6 +214,7 @@ class ProductController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'supplier_color_code' => 'required|string|max:255',
+            'supplier_color_name' => 'required|string|max:255',
             'color_select' => 'required|exists:colors,id'
         ]);
 
@@ -224,6 +228,7 @@ class ProductController extends Controller
 
         if (empty($savingProduct)) {
             $savingProduct['supplier_color_codes'] = [];
+            $savingProduct['supplier_color_names'] = [];
             $savingProduct['colors'] = [];
         }
 
@@ -231,16 +236,21 @@ class ProductController extends Controller
             $savedProduct = Product::with('colors')->find($request->product_id);
             if ($savedProduct) {
                 $supplierColorCodes = $savedProduct->colors->pluck('supplier_color_code')->toArray();
+                $supplierColorNames = $savedProduct->colors->pluck('supplier_color_name')->toArray();
                 $savedColorCodes = $savedProduct->colors->pluck('color_id')->toArray();
 
                 $savingProduct['supplier_color_codes'] = $supplierColorCodes;
+                $savingProduct['supplier_color_names'] = $supplierColorNames;
                 $savingProduct['colors'] = $savedColorCodes;
             }
         }
 
         if ($savingProduct) {
             if (is_array($savingProduct['supplier_color_codes']) && in_array($request->supplier_color_code, $savingProduct['supplier_color_codes'])) {
-                $errors->add('supplier_color_code', 'Supplier Code already exists');
+                $errors->add('supplier_color_code', 'Supplier Color Code already exists');
+            }
+            if (is_array($savingProduct['supplier_color_names']) && in_array($request->supplier_color_name, $savingProduct['supplier_color_names'])) {
+                $errors->add('supplier_color_name', 'Supplier Color Name already exists');
             }
             if (is_array($savingProduct['colors']) && in_array($request->color_select, $savingProduct['colors'])) {
                 $errors->add('color_select', 'Color already exists');
@@ -261,12 +271,14 @@ class ProductController extends Controller
                 ],
                 [
                     'supplier_color_code' => $request->supplier_color_code,
+                    'supplier_color_name' => $request->supplier_color_name,
                 ]
             );
         }
 
         $color = Color::where('id', $request->color_select)->first();
         array_push($savingProduct['supplier_color_codes'], $request->supplier_color_code);
+        array_push($savingProduct['supplier_color_names'], $request->supplier_color_name);
         array_push($savingProduct['colors'], $request->color_select);
         $savingProduct = Session::put('savingProduct', $savingProduct);
 
@@ -274,6 +286,7 @@ class ProductController extends Controller
             'success' => true,
             'data' => [
                 'supplier_color_code' => $request->supplier_color_code,
+                'supplier_color_name' => $request->supplier_color_name,
                 'color_id' => $request->color_select,
                 'color_name' => $color->color_name,
                 'color_code' => $color->color_code,
@@ -311,12 +324,13 @@ class ProductController extends Controller
 
         // Remove the corresponding supplier color code from the 'supplier_color_codes' array
         unset($savingProduct['supplier_color_codes'][$key]);
+        unset($savingProduct['supplier_color_names'][$key]);
 
         // Reindex the arrays to maintain numeric indexes
         $savingProduct['colors'] = array_values($savingProduct['colors']);
         $savingProduct['supplier_color_codes'] = array_values($savingProduct['supplier_color_codes']);
+        $savingProduct['supplier_color_names'] = array_values($savingProduct['supplier_color_names']);
 
-        // Update the session with the modified product data
         Session::put('savingProduct', $savingProduct);
 
         return redirect()->back();
@@ -369,6 +383,7 @@ class ProductController extends Controller
                 'product_id' => $product->id,
                 'color_id' => $productData['colors'][$index],
                 'supplier_color_code' => $supplierColorCode,
+                'supplier_color_name' => $productData['supplier_color_names'][$index] ?? '',
             ]);
 
             $color_id = $productData['colors'][$index];
@@ -402,6 +417,7 @@ class ProductController extends Controller
         if(!Gate::allows('edit products')) {
             abort(403);
         }
+
         $brands = Brand::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
         $departments = Department::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
         $productTypes = ProductType::where('status', 'Active')->whereNull('deleted_at')->latest()->get();

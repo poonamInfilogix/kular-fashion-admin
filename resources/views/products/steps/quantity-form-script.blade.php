@@ -14,6 +14,12 @@
                         <div id="supplierColorCodeError" class="invalid-feedback"></div>
                     </div>
                     <div class="mb-3">
+                        <label for="supplier_color_name" class="form-label">Supplier Color Name</label>
+                        <input type="text" id="supplier_color_name" class="form-control"
+                            placeholder="Enter Supplier Color Name" required>
+                        <div id="supplierColorNameError" class="invalid-feedback"></div>
+                    </div>
+                    <div class="mb-3">
                         <label for="color_select" class="form-label">Select Color</label>
                         <select id="color_select" class="form-control" required>
                             <option value="" disabled selected>Select Color</option>
@@ -108,10 +114,12 @@
         $(document).ready(function() {
             $('#saveVariantBtn').on('click', function() {
                 $('#supplier_color_code').removeClass('is-invalid');
+                $('#supplier_color_name').removeClass('is-invalid');
                 $('#color_select').removeClass('is-invalid');
 
                 let formData = {
                     supplier_color_code: $('#supplier_color_code').val(),
+                    supplier_color_name: $('#supplier_color_name').val(),
                     color_select: $('#color_select').val(),
                     product_id: '{{ isset($product) ? $product->id : 0 }}',
                     _token: '{{ csrf_token() }}'
@@ -174,6 +182,10 @@
                         if (errors.supplier_color_code) {
                             $('#supplier_color_code').addClass('is-invalid');
                             $('#supplierColorCodeError').text(errors.supplier_color_code[0]);
+                        }
+                        if (errors.supplier_color_name) {
+                            $('#supplier_color_name').addClass('is-invalid');
+                            $('#supplierColorNameError').text(errors.supplier_color_name[0]);
                         }
                         if (errors.color_select) {
                             $('#color_select').addClass('is-invalid');

@@ -3,7 +3,7 @@
         <div class="mb-3">
             <x-form-input name="article_code" id="article_code" value="{{ $product->article_code ?? '' }}"
                 label="Article Code" placeholder="Enter Article Code" required="true"
-                readonly="{{ $isEditing ?? false }}" />
+                readonly="true" />
         </div>
     </div>
     <div class="col-sm-6 col-md-2">
