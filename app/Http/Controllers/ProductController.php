@@ -609,6 +609,24 @@ class ProductController extends Controller
         return view('products.steps.step-3', compact('savingProduct', 'sizes', 'savedColors', 'colors'));
     }
 
+     /**
+     * Generate a consistent two-digit code for the product ID.
+     *
+     * @param  mixed  $product_id
+     * @return string
+     */
+    public static function generateRandomProductCode($product_id)
+    {
+        // Hash the product ID and convert it to a hexadecimal string
+        $hash = hash('sha256', (string) $product_id);
+
+        // Extract the first two characters and convert to integer
+        $code = hexdec(substr($hash, 0, 2)) % 100;
+
+        // Return the two-digit code as a string (padded if necessary)
+        return str_pad($code, 2, '0', STR_PAD_LEFT);
+    }
+
     public function downloadBarcodes()
     {
         if (!Session::get('barcodesToBePrinted')) {
@@ -638,10 +656,15 @@ class ProductController extends Controller
                         $checkCode = $this->generateCheckDigit($article_code);
                         for ($i = 0; $i < $quantityDetail['printQty']; $i++) {
                             $barcode = base64_encode($generator->getBarcode($article_code, $generator::TYPE_EAN_13, 1, 20, [0, 0, 0]));
+                            $randomDigit = $this->generateRandomProductCode($productDetail->product->id);
+                            
+                            $date = Carbon::parse($productDetail->first_barcode_printed_date);
+                            $yearMonth = $date->format('ym');
 
                             $barcodes[] = [
                                 'barcode' => $barcode,
                                 'product_code' => $article_code . $checkCode,
+                                'random_digits' => $randomDigit.$yearMonth,
                                 'department' => $productDetail->product->department->name,
                                 'manufacture_code' => $productDetail->product->manufacture_code,
                                 'size' => $productDetail->sizes->sizeDetail->size,

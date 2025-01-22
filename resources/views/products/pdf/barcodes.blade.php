@@ -226,7 +226,7 @@
                     margin-top: 10mm;
                     margin-left: 0mm; /* Optional: Add left margin */
                     margin-right: 0mm; /* Optional: Add right margin */
-                    margin-bottom: 10mm;
+                    margin-bottom: 0mm;
                 }
 
                 /* Add page-break styles for controlling spacing between pages */
@@ -284,7 +284,7 @@
                                 <div class="product-header" style="width: 100%; font-size: 8px;">
                                     <span
                                         style="float: left">{{ Str::words(strtoupper($item['short_description']), 25) }}</span>
-                                    <span>{{ $item['manufacture_code'] }}</span>
+                                    <span>{{ $item['random_digits'] }}</span>
                                 </div>
                                 <div class="ch-2">
                                     <span>{{ strtoupper($item['color']) }}</span>
@@ -427,7 +427,7 @@
 
                 iframe.contentWindow.onafterprint = function() {
                     document.body.removeChild(iframe);
-                    window.location.href = `{{ route('save.barcodes') }}`;
+                    //window.location.href = `{{ route('save.barcodes') }}`;
                 };
             }
         });
