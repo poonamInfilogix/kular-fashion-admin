@@ -28,7 +28,7 @@
 
                 <tr data-id="rm-{{ $color['id'] }}">
                     <th class="d-flex align-items-center justify-content-center flex-column text-center">
-                        <div class="me-1 d-color-code" style="background: {{ $color['ui_color_code'] }}"></div>
+                        <div class="me-1 d-color-code color-selector" style="background: {{ $color['ui_color_code'] }}"></div>
                         <label class="font-size-12 fw-bold">{{ $color['color_name'] }} ({{ $color['color_code'] }})</label>
                     </th>
                     @foreach ($sizes as $key => $size)
@@ -68,7 +68,7 @@
                                 </a>
                             @endisset
 
-                            <button type="button" class="btn btn-secondary copy-quantity-btn btn-sm"
+                            <button type="button" class="btn btn-secondary copy-quantity-btn btn-sm d-none"
                                 data-color-id="{{ $color['id'] }}">
                                 <i class="mdi mdi-content-copy fs-6"></i>
                             </button>

@@ -40,37 +40,27 @@
     </div>
 </div>
 
-<div class="modal fade" id="copyQuantityModal" tabindex="-1" aria-labelledby="copyQuantityLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="copyQuantityLabel">Duplicate Quantity</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="copy_quantity_for_color" class="form-label">Select Color</label>
-                    <select id="copy_quantity_for_color" class="form-control" required>
-                        <option value="" disabled selected>Select Color</option>
-                        @foreach ($savedColors as $color)
-                            <option value="{{ $color['id'] }}">{{ $color['color_name'] }} ({{ $color['color_code'] }})
-                            </option>
-                        @endforeach
-                    </select>
-                    <div class="invalid-feedback">Please select color for which you want to copy</div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" id="copyQuantity" class="btn btn-primary">Copy Quantities</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 @push('scripts')
     <script>
         $(function() {
+            $('.color-selector').on('click', function() {
+                let isSelected = false;
+                if ($(this).hasClass('selected')) {
+                    isSelected = true;
+                }
+
+                $('.color-selector').removeClass('selected');
+
+
+                if (!isSelected) {
+                    $(this).addClass('selected');
+                    $('.copy-quantity-btn').removeClass('d-none');
+                    $(this).parents('tr').find('.copy-quantity-btn').addClass('d-none');
+                } else {
+                    $('.copy-quantity-btn').addClass('d-none');
+                }
+            });
+
             $('#add-variant-btn').on('click', function() {
                 $('#addVariantModal').modal('show');
             });
@@ -80,35 +70,29 @@
             });
 
             $(document).on('click', '.copy-quantity-btn', function() {
-                let selectedColorId = $(this).attr('data-color-id');
-                $(`#copy_quantity_for_color option`).show();
-                $(`#copy_quantity_for_color option[value="${selectedColorId}"]`).hide();
+                const $selectedColor = $('.color-selector.selected').first();
 
-                $('#copyQuantity').attr('data-selected-color-id', selectedColorId);
-                $('#copyQuantityModal').modal('show');
-            });
+                if ($selectedColor.length > 0) {
+                    const id = $selectedColor.closest('[data-id]').data('id');
 
-            $('#copyQuantity').on('click', function() {
-                let colorIdForCopy = $('#copy_quantity_for_color').val();
-                let colorIdToBeCopied = $(this).attr('data-selected-color-id');
+                    if (id) {
+                        const colorIdToBeCopied = id.split('-')[1];
+                        const colorIdForCopy = $(this).data('color-id');
 
-                if(!colorIdForCopy){
-                    $('#copy_quantity_for_color').addClass('is-invalid');
-                    return;
-                } else {
-                    $('#copy_quantity_for_color').removeClass('is-invalid');
+                        // Loop over all size elements only once
+                        $('[data-size-id]').each(function() {
+                            const $this = $(this);
+                            const sizeId = $this.data('size-id');
+                            const quantityToBeCopied = $(
+                                `[name="quantity[${colorIdToBeCopied}][${sizeId}]"]`).val();
+
+                            // Set the quantity for the other color's size
+                            $(`[name="quantity[${colorIdForCopy}][${sizeId}]"]`).val(
+                                quantityToBeCopied);
+                        });
+                    }
                 }
-
-                $('[data-size-id]').each(function() {
-                    let sizeId = $(this).attr('data-size-id');
-                    let valueToBeCopy = $(`[name="quantity[${colorIdToBeCopied}][${sizeId}]"]`).val();
-
-                    $(`[name="quantity[${colorIdForCopy}][${sizeId}]"]`).val(valueToBeCopy);
-                });
-                
-                $('#copy_quantity_for_color').val('');
-                $('#copyQuantityModal').modal('hide');
-            })
+            });
         })
 
         $(document).ready(function() {
@@ -142,15 +126,20 @@
                                 .get();
 
                             let $newRow = $('<tr></tr>');
-                            let $newTh = $('<th class="d-flex align-items-center justify-content-center flex-column text-center"></th>').html(
-                                `<div class="me-1 d-color-code" style="background: ${response.data.ui_color_code}"></div>${response.data.color_name} (${response.data.color_code})`);
+                            let $newTh = $(
+                                '<th class="d-flex align-items-center justify-content-center flex-column text-center"></th>'
+                                ).html(
+                                `<div class="me-1 d-color-code color-selector" style="background: ${response.data.ui_color_code}"></div>${response.data.color_name} (${response.data.color_code})`
+                                );
                             $newRow.append($newTh);
 
                             $.each(sizes, function(index, size) {
                                 let $newTd = $('<td></td>');
-                                let quantityCell = `<input type="number" name="quantity[${response.data.color_id}][${size}]" value="0" min="0" class="form-control">`;
+                                let quantityCell =
+                                    `<input type="number" name="quantity[${response.data.color_id}][${size}]" value="0" min="0" class="form-control">`;
                                 @isset($product)
-                                    quantityCell += `<h6 class="mt-1 mb-0">Total in: <b>0</b></h6>`;
+                                    quantityCell +=
+                                        `<h6 class="mt-1 mb-0">Total in: <b>0</b></h6>`;
                                 @endisset
                                 $newTd.html(quantityCell);
                                 $newRow.append($newTd);
@@ -166,14 +155,15 @@
                             <a href="{{ route('products.remove-variant', '') }}/${response.data.color_id}" class="btn btn-danger btn-sm"> 
                                <i class="fas fa-trash-alt"></i>
                             </a>
-                            <button type="button" class="btn btn-secondary copy-quantity-btn btn-sm" data-color-id="${response.data.color_id}">
+                            <button type="button" class="btn btn-secondary copy-quantity-btn btn-sm d-none" data-color-id="${response.data.color_id}">
                                 <i class="mdi mdi-content-copy fs-6"></i>
                             </button>`);
 
-                            $('#copy_quantity_for_color').append(`<option value="${response.data.color_id}">${response.data.color_name} (${response.data.color_code})</option>`);
+                            $('#copy_quantity_for_color').append(
+                                `<option value="${response.data.color_id}">${response.data.color_name} (${response.data.color_code})</option>`
+                                );
 
                             $newRow.append($deleteTd);
-
                             $tbody.prepend($newRow);
                         }
                     })
