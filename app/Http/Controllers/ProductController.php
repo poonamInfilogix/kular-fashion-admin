@@ -32,7 +32,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        if(!Gate::allows('view products')) {
+        if (!Gate::allows('view products')) {
             abort(403);
         }
         $products = Product::with('brand', 'department', 'productType')->latest()->get();
@@ -42,16 +42,16 @@ class ProductController extends Controller
 
     public function create()
     {
-        if(!Gate::allows('create products')) {
+        if (!Gate::allows('create products')) {
             abort(403);
         }
         $latestProduct = Product::orderBy('article_code', 'desc')->first();
 
-        $latestNewCode = $latestProduct ? (int)$latestProduct->article_code : 300000;
+        $latestNewCode = $latestProduct ? (int) $latestProduct->article_code : 300000;
         $brands = Brand::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
         $departments = Department::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
         $taxes = Tax::where('status', 'Active')->latest()->get();
-        $tags  = Tag::where('status', 'Active')->latest()->get();
+        $tags = Tag::where('status', 'Active')->latest()->get();
         $sizeScales = SizeScale::select('id', 'size_scale')->where('status', 'Active')->latest()->with('sizes')->get();
 
         return view('products.create', compact('latestNewCode', 'brands', 'departments', 'taxes', 'tags', 'sizeScales'));
@@ -68,14 +68,14 @@ class ProductController extends Controller
                 'required',
                 Rule::unique('products')->whereNull('deleted_at'),
             ],
-            'brand_id'          => 'required',
-            'department_id'     => 'required',
-            'product_type_id'   => 'required',
-            'size_scale_id'     => 'required',
-            'supplier_price'    => 'required',
-            'mrp'               => 'required',
+            'brand_id' => 'required',
+            'department_id' => 'required',
+            'product_type_id' => 'required',
+            'size_scale_id' => 'required',
+            'supplier_price' => 'required',
+            'mrp' => 'required',
             'short_description' => 'required',
-            'image'             => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048'
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048'
         ]);
 
         $productData = $request->all();
@@ -106,10 +106,10 @@ class ProductController extends Controller
             'department_id'     => 'required',
             'product_type_id'   => 'required',
             'size_scale_id'     => 'required', */
-            'supplier_price'    => 'required',
-            'mrp'               => 'required',
+            'supplier_price' => 'required',
+            'mrp' => 'required',
             'short_description' => 'required',
-            'image'             => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048'
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048'
         ]);
 
 
@@ -360,6 +360,8 @@ class ProductController extends Controller
             'min_size_id' => $productData['size_range_min'],
             'max_size_id' => $productData['size_range_max'],
             'status' => $productData['status'],
+            'in_date' => $productData['in_date'],
+            'last_date' => $productData['last_date'],
         ]);
 
         if (isset($productData['tag_id'])) {
@@ -388,7 +390,7 @@ class ProductController extends Controller
 
             $color_id = $productData['colors'][$index];
             foreach ($productData['variantData']['quantity'][$color_id] as $sizeId => $quantity) {
-                $productSize = ProductSize::where('size_id',  $sizeId)->first();
+                $productSize = ProductSize::where('size_id', $sizeId)->first();
 
                 ProductQuantity::create([
                     'product_id' => $product->id,
@@ -406,7 +408,7 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        if(!Gate::allows('view products')) {
+        if (!Gate::allows('view products')) {
             abort(403);
         }
         return view('products.show', compact('product'));
@@ -414,7 +416,7 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        if(!Gate::allows('edit products')) {
+        if (!Gate::allows('edit products')) {
             abort(403);
         }
 
@@ -422,7 +424,7 @@ class ProductController extends Controller
         $departments = Department::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
         $productTypes = ProductType::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
         $taxes = Tax::where('status', 'Active')->latest()->get();
-        $tags  = Tag::where('status', 'Active')->latest()->get();
+        $tags = Tag::where('status', 'Active')->latest()->get();
         $sizeScales = SizeScale::where('status', 'Active')->latest()->get();
         $sizes = Size::where('status', 'Active')->latest()->get();
         $productTags = ProductTag::where('product_id', $product->id)->pluck('tag_id');
@@ -475,16 +477,16 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        if(!Gate::allows('delete products')) {
+        if (!Gate::allows('delete products')) {
             abort(403);
         }
-        if($product->are_barcodes_printed || $product->barcodes_printed_for_all){
+        if ($product->are_barcodes_printed || $product->barcodes_printed_for_all) {
             return response()->json([
                 'success' => false,
                 'message' => 'Product can\'t be deleted because you have printed the barcodes'
             ]);
         }
-        
+
         $product->delete();
 
         return response()->json([
@@ -558,21 +560,21 @@ class ProductController extends Controller
     {
         $latestProduct = Product::orderBy('article_code', 'desc')->first();
 
-        $latestNewCode = $latestProduct ? (int)$latestProduct->article_code : 300000;
+        $latestNewCode = $latestProduct ? (int) $latestProduct->article_code : 300000;
         $brands = Brand::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
         $departments = Department::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
         $taxes = Tax::where('status', 'Active')->latest()->get();
-        $tags  = Tag::where('status', 'Active')->latest()->get();
+        $tags = Tag::where('status', 'Active')->latest()->get();
         $sizeScales = SizeScale::select('id', 'size_scale')->where('status', 'Active')->latest()->with('sizes')->get();
 
-        $product = (object)Session::get('savingProduct');
+        $product = (object) Session::get('savingProduct');
 
         return view('products.create', compact('latestNewCode', 'product', 'brands', 'departments', 'taxes', 'tags', 'sizeScales'));
     }
 
     public function productStep2()
     {
-        $savingProduct = (object)Session::get('savingProduct');
+        $savingProduct = (object) Session::get('savingProduct');
         if (empty($savingProduct->size_scale_id)) {
             return redirect()->route('products.create.step-1');
         }
@@ -589,7 +591,7 @@ class ProductController extends Controller
 
     public function productStep3(Request $request)
     {
-        $savingProduct = (object)Session::get('savingProduct');
+        $savingProduct = (object) Session::get('savingProduct');
         if (empty($savingProduct->size_scale_id)) {
             return redirect()->route('products.create.step-1');
         }
@@ -609,7 +611,7 @@ class ProductController extends Controller
         return view('products.steps.step-3', compact('savingProduct', 'sizes', 'savedColors', 'colors'));
     }
 
-     /**
+    /**
      * Generate a consistent two-digit code for the product ID.
      *
      * @param  mixed  $product_id
@@ -633,7 +635,7 @@ class ProductController extends Controller
             return redirect()->route('products.print-barcodes');
         }
 
-        $barcodesQty = (object)Session::get('barcodesToBePrinted');
+        $barcodesQty = (object) Session::get('barcodesToBePrinted');
 
         if (!isset($barcodesQty->barcodesToBePrinted)) {
             return redirect()->route('products.print-barcodes');
@@ -657,14 +659,14 @@ class ProductController extends Controller
                         for ($i = 0; $i < $quantityDetail['printQty']; $i++) {
                             $barcode = base64_encode($generator->getBarcode($article_code, $generator::TYPE_EAN_13, 1, 20, [0, 0, 0]));
                             $randomDigit = $this->generateRandomProductCode($productDetail->product->id);
-                            
+
                             $date = Carbon::parse($productDetail->first_barcode_printed_date);
                             $yearMonth = $date->format('ym');
 
                             $barcodes[] = [
                                 'barcode' => $barcode,
                                 'product_code' => $article_code . $checkCode,
-                                'random_digits' => $randomDigit.$yearMonth,
+                                'random_digits' => $randomDigit . $yearMonth,
                                 'department' => $productDetail->product->department->name,
                                 'manufacture_code' => $productDetail->product->manufacture_code,
                                 'size' => $productDetail->sizes->sizeDetail->size,
@@ -714,7 +716,7 @@ class ProductController extends Controller
     }
     public function saveBarcodes()
     {
-        $getPrinted = (object)Session::get('barcodesToBePrinted');
+        $getPrinted = (object) Session::get('barcodesToBePrinted');
 
         foreach ($getPrinted->barcodesToBePrinted as $data) {
             if (isset($data['product'])) {
@@ -724,13 +726,13 @@ class ProductController extends Controller
 
                     if ($productQuantity->total_quantity >= $updatedOriginalQuantity) {
                         $productQuantity->original_printed_barcodes = $updatedOriginalQuantity;
-                        $productQuantity->quantity= $updatedOriginalQuantity;
+                        $productQuantity->quantity = $updatedOriginalQuantity;
                     }
 
-                    if(!$productQuantity->first_barcode_printed_date){
+                    if (!$productQuantity->first_barcode_printed_date) {
                         $productQuantity->first_barcode_printed_date = Carbon::now();
                     }
-                    
+
                     $productQuantity->total_printed_barcodes = $productQuantity->total_printed_barcodes + $quantityDetail['printQty'];
                     $productQuantity->save();
                 }

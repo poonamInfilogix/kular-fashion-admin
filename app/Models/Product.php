@@ -15,6 +15,12 @@ class Product extends Model
     use SoftDeletes;
     protected $guarded = [];
 
+    protected $casts = [
+        'in_date' => 'datetime',
+        'last_date' => 'datetime',
+    ];
+    
+
     protected static function boot() {
         parent::boot(); 
         static::creating(function ($product) { 
