@@ -197,17 +197,17 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <x-form-input name="in_date" class="date-picker" disabled="{{ $isEditing ?? false }}"
-                value="{{ $product->created_at ? $product->created_at->format('Y-m-d') : '' }}" label="In Date"
-                placeholder="Enter In Date" readonly="true" />
+            <x-form-input name="in_date" class="date-picker" :disabled="isset($isEditing) ? $isEditing : false"
+                value="{{ isset($product) && $product->in_date ? $product->in_date->format('Y-m-d') : '' }}"
+                label="In Date" placeholder="Enter In Date" readonly="true" />
         </div>
     </div>
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <x-form-input name="last_date" class="date-picker" disabled="{{ $isEditing ?? false }}"
-                value="{{ $product->last_date ?? now()->format('Y-m-d') }}" label="Last Date"
-                placeholder="Enter Last Date" />
+            <x-form-input name="last_date" class="date-picker" :disabled="isset($isEditing) ? $isEditing : false"
+                value="{{ isset($product) && $product->last_date ? $product->last_date : now()->format('Y-m-d') }}"
+                label="Last Date" placeholder="Enter Last Date" />
         </div>
     </div>
 

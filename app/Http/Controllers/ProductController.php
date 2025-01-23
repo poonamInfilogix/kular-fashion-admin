@@ -360,6 +360,8 @@ class ProductController extends Controller
             'min_size_id' => $productData['size_range_min'],
             'max_size_id' => $productData['size_range_max'],
             'status' => $productData['status'],
+            'in_date' => $productData['in_date'],
+            'last_date' => $productData['last_date'],
         ]);
 
         if (isset($productData['tag_id'])) {
