@@ -104,7 +104,7 @@
                                     
                                     <div class="col-sm-2 col-md-2">
                                         <div class="mb-3">
-                                            <label for="color">Select Size Range(Min) <span class="text-danger">*</span></label>
+                                            <label for="color">Size Range(Min) <span class="text-danger">*</span></label>
                                             <select name="size_range_min" id="size_range_min" class="form-control{{ $errors->has('color') ? ' is-invalid' : '' }}">
                                                 @foreach($sizes as $size)
                                                     <option value="{{ old('size_range_min', $size->id) }}">
@@ -119,7 +119,7 @@
                                     </div>
                                     <div class="col-sm-2 col-md-2">
                                         <div class="mb-3">
-                                            <label for="size_range_max">Select Size Range(Max) <span class="text-danger">*</span></label>
+                                            <label for="size_range_max">Size Range(Max) <span class="text-danger">*</span></label>
                                             <select name="size_range_max" id="size_range_max" class="form-control{{ $errors->has('size_range_max') ? ' is-invalid' : '' }}">
                                                 @foreach($sizes as $index => $size)
                                                     <option value="{{ old('size_range_max', $size->id) }}" {{ $loop->last ? 'selected' : '' }}>
