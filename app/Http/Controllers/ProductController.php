@@ -660,12 +660,13 @@ class ProductController extends Controller
                             
                             $date = Carbon::parse($productDetail->first_barcode_printed_date);
                             $yearMonth = $date->format('ym');
-
+                            
                             $barcodes[] = [
                                 'barcode' => $barcode,
                                 'product_code' => $article_code . $checkCode,
                                 'random_digits' => $randomDigit.$yearMonth,
                                 'department' => $productDetail->product->department->name,
+                                'type' => $productDetail->product->productType->product_type_name,
                                 'manufacture_code' => $productDetail->product->manufacture_code,
                                 'size' => $productDetail->sizes->sizeDetail->size,
                                 'mrp' => $productDetail->sizes->mrp,

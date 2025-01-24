@@ -52,6 +52,12 @@
                 margin-bottom: 4px;
                 font-size: 12px;
             }
+            .product-header{
+                display: flex;
+                font-size: 12px;
+                justify-content: space-between;
+                margin-right: 8px;
+            }
 
             .ch-2 {
                 margin-top: 3px;
@@ -65,6 +71,7 @@
                 display: flex;
                 justify-content: space-between;
                 font-size: 10px;
+                margin-right: 8px;
             }
 
             .size-label-container .product-size {
@@ -110,7 +117,7 @@
             }
 
             span.product-name {
-                margin-right: 50px;
+                margin-right: 8px;
             }
 
             .ch-4 span {
@@ -205,6 +212,10 @@
                     margin-right: 10px;
                 }
 
+                .size-label-container .mrp{
+                    font-size: 14px
+                }
+
                 .size-label-container-top,
                 .size-label-container-bottom {
                     font-size: 9px;
@@ -253,6 +264,10 @@
                     /* Prevent splitting rows */
                 }
             }
+
+            .barcode_number{
+                font-size: 12px;
+            }
         </style>
 
         <div class="container-fluid">
@@ -281,15 +296,14 @@
                         <td @class(['barcode-box', 'bg-success-subtle' => $index == 0]) data-index="{{ $index }}">
                             <div class="main-ct">
                                 <h3><strong>{{ strtoupper($item['brand_short_name']) }}</strong></h3>
-                                <div class="product-header" style="width: 100%; font-size: 8px;">
-                                    <span
-                                        style="float: left">{{ Str::words(strtoupper($item['short_description']), 25) }}</span>
+                                <div class="product-header">
+                                    <span>{{ Str::words(strtoupper($item['short_description']), 25) }}</span>
                                     <span>{{ $item['random_digits'] }}</span>
                                 </div>
                                 <div class="ch-2">
                                     <span>{{ strtoupper($item['color']) }}</span>
-                                    <span class="product-name"
-                                        style="text-transform: uppercase;">{{ $item['department'] }}</span>
+                                    <span>{{ strtoupper($item['size']) }}</span>
+                                    <span class="product-name" style="text-transform: uppercase;">{{ $item['type'] }}</span>
                                 </div>
 
                                 <div class="ch-3">
@@ -298,18 +312,15 @@
                                             class="barcode-image">
 
                                         <div class="size-label-container">
-                                            <span class="size-label-container-top">Size</span>
                                             <div class="size-label-container-bottom">
-                                                <span class="product-size"><span
-                                                        class="txt-adj">{{ $item['size'] }}</span></span>
+                                                <span class="mrp">£{{ $item['mrp'] }}</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="ch-4">
-                                    <span>{{ $item['product_code'] }}</span>
-                                    <span>£<span class="txt-adj">{{ $item['mrp'] }}</span></span>
+                                    <span class="barcode_number">{{ $item['product_code'] }}</span>
                                 </div>
                             </div>
                         </td>
