@@ -451,7 +451,7 @@
 
                 iframe.contentWindow.onafterprint = function() {
                     document.body.removeChild(iframe);
-                    //window.location.href = `{{ route('save.barcodes') }}`;
+                    window.location.href = `{{ route('save.barcodes') }}`;
                 };
             }
         });
