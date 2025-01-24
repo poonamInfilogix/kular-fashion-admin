@@ -79,8 +79,6 @@
                         </div>
 
                         <div class="mt-4">
-                            <h5 class="mb-3">Quantities & Sizes:</h5>
-
                             <div class="table-responsive">
                                 <table class="table mb-0 table-bordered">
                                     <tbody>

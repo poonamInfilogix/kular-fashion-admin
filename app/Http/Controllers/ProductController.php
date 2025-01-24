@@ -201,9 +201,9 @@ class ProductController extends Controller
             'colors' => 'required|array',
             'colors.*' => 'required|distinct|exists:colors,id',
             'supplier_color_code' => 'required|array',
-            'supplier_color_code.*' => 'required|distinct|string|min:3|max:10',
+            'supplier_color_code.*' => 'required|distinct|string',
             'supplier_color_name' => 'required|array',
-            'supplier_color_name.*' => 'required|distinct|string|min:3|max:10',
+            'supplier_color_name.*' => 'required|distinct|string',
             'size_range_min' => 'required|exists:sizes,id',
             'size_range_max' => 'required|exists:sizes,id|gte:size_range_min',
         ]);

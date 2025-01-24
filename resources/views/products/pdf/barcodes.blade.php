@@ -52,9 +52,10 @@
                 margin-bottom: 4px;
                 font-size: 12px;
             }
-            .product-header{
+
+            .product-header {
                 display: flex;
-                font-size: 12px;
+                font-size: 11px;
                 justify-content: space-between;
                 margin-right: 8px;
             }
@@ -125,6 +126,10 @@
                 font-weight: 700;
             }
 
+            .size-label-container .mrp {
+                font-size: 18px
+            }
+
             @media print {
                 body {
                     margin: 0;
@@ -163,7 +168,7 @@
                 }
 
                 td {
-                    height: 110px;
+                    height: 115px;
                     /* Adjusted to fit 9 rows per page */
                     padding: 6px;
                     text-align: center;
@@ -212,8 +217,8 @@
                     margin-right: 10px;
                 }
 
-                .size-label-container .mrp{
-                    font-size: 14px
+                .size-label-container .mrp {
+                    font-size: 18px
                 }
 
                 .size-label-container-top,
@@ -234,9 +239,11 @@
 
                 @page {
                     size: A4;
-                    margin-top: 10mm;
-                    margin-left: 0mm; /* Optional: Add left margin */
-                    margin-right: 0mm; /* Optional: Add right margin */
+                    margin-top: 4mm;
+                    margin-left: 2mm;
+                    /* Optional: Add left margin */
+                    margin-right: 2mm;
+                    /* Optional: Add right margin */
                     margin-bottom: 0mm;
                 }
 
@@ -265,12 +272,18 @@
                 }
             }
 
-            .barcode_number{
-                font-size: 12px;
+            .barcode_number {
+                font-size: 13px;
+                margin-bottom: 4px;
+            }
+
+            .brand_name {
+                font-size: 17px;
+                margin-top: 4px;
             }
         </style>
 
-        <div class="container-fluid">
+        <div class="container px-5">
             <div class="row">
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
@@ -295,9 +308,9 @@
                         @endif
                         <td @class(['barcode-box', 'bg-success-subtle' => $index == 0]) data-index="{{ $index }}">
                             <div class="main-ct">
-                                <h3><strong>{{ strtoupper($item['brand_short_name']) }}</strong></h3>
+                                <h3 class="brand_name"><strong>{{ strtoupper($item['brand_short_name']) }}</strong></h3>
                                 <div class="product-header">
-                                    <span>{{ Str::words(strtoupper($item['short_description']), 25) }}</span>
+                                    <span>{{ Str::words(strtoupper($item['short_description']), 22) }}</span>
                                     <span>{{ $item['random_digits'] }}</span>
                                 </div>
                                 <div class="ch-2">
