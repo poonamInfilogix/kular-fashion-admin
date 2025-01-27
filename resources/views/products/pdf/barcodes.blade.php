@@ -168,7 +168,7 @@
                 }
 
                 td {
-                    height: 115px;
+                    height: 119px;
                     /* Adjusted to fit 9 rows per page */
                     padding: 6px;
                     text-align: center;
@@ -244,7 +244,7 @@
                     /* Optional: Add left margin */
                     margin-right: 2mm;
                     /* Optional: Add right margin */
-                    margin-bottom: 0mm;
+                    margin-bottom: 4mm;
                 }
 
                 /* Add page-break styles for controlling spacing between pages */
