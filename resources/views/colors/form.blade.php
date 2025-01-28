@@ -6,6 +6,11 @@
     </div>
     <div class="col-sm-6 col-md-3">
         <div class="mb-3">
+            <x-form-input name="short_name" value="{{ $color->short_name ?? '' }}" label="Short Name" placeholder="Enter Short Name"  required="true"/>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <div class="mb-3">
             <x-form-input name="color_code" value="{{ $color->color_code ?? '' }}" label="Color Code" placeholder="Enter Color Code"  required="true" maxlength="3"/>
         </div>
     </div>

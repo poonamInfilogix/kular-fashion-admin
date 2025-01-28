@@ -141,8 +141,9 @@ export default {
             localStorage.setItem('transferItems', JSON.stringify(updatedItems));
             this.items = updatedItems;
         },
-        itemScanned(scanned_barcode){
+        itemScanned(scanned_barcode) {
             this.itemToBeAdd.manufacture_barcode = scanned_barcode;
+            this.itemToBeAdd.scanned_barcode = scanned_barcode; 
             this.transferItem(this.itemToBeAdd);
             this.itemToBeAdd = {};
         },
@@ -160,37 +161,24 @@ export default {
                 products = JSON.parse(localStorage.getItem('transferItems'));
             }
 
-            const existingProductIndex = products.findIndex(product => product.barcode === item.barcode);
+            const totalQuantity = products
+                .filter(product => product.barcode === item.barcode)
+                .reduce((sum, product) => sum + product.quantity, 0);
 
-            if (existingProductIndex !== -1) {                
-                if (products[existingProductIndex].quantity < 1) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Item maximum quantity exceed',
-                        icon: 'error',
-                        confirmButtonText: 'Okay'
-                    });
-                    return;
-                }
-                products[existingProductIndex].quantity += 1;
-
-            } else {
-                if(item.available_quantity < 1){
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Item maximum quantity exceed',
-                        icon: 'error',
-                        confirmButtonText: 'Okay'
-                    });
-                    return;
-                }
-
-                item.quantity = 1;
-                products.push(item);
+            if (totalQuantity + 1 > item.available_quantity) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Item maximum quantity exceeded',
+                    icon: 'error',
+                    confirmButtonText: 'Okay'
+                });
+                return;
             }
 
+            item.quantity = 1; 
+            item.scanned_barcode = item.scanned_barcode || item.manufacture_barcode; 
+            products.push(item);
             localStorage.setItem('transferItems', JSON.stringify(products));
-
             this.items = products;
         },
     },

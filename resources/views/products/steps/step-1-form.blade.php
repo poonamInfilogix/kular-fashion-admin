@@ -17,9 +17,9 @@
         <div class="mb-3">
             <label for="department_id">Department<span class="text-danger">*</span></label>
             <select name="department_id" id="department_id" @disabled($isEditing ?? false) @class([
-    'form-control',
-    'is-invalid' => $errors->has('department_id'),
-])>
+                    'form-control',
+                    'is-invalid' => $errors->has('department_id'),
+                ])>
                 @foreach ($departments as $department)
                     <option value="{{ $department->id }}" @selected(($product->department_id ?? '') == $department->id)>
                         {{ $department->name }}
@@ -59,7 +59,7 @@
             <label for="brand_id">Brand <span class="text-danger">*</span></label>
             <select name="brand_id" id="brand_id" @disabled($isEditing ?? false)
                 class="form-control{{ $errors->has('brand_id') ? ' is-invalid' : '' }}">
-                <option value="" disabled selected>Select brand</option>
+                <option value="" disabled>Select brand</option>
                 @foreach ($brands as $brand)
                     <option value="{{ $brand->id }}" data-margin="{{ $brand->margin }}" @selected(old('brand_id', $product->brand_id ?? '') == $brand->id)>
                         {{ $brand->name }}
@@ -116,7 +116,7 @@
     'form-control',
     'is-invalid' => $errors->has('size_scale_id'),
 ])>
-                <option value="" disabled selected>Select size scale</option>
+                <option value="" disabled>Select size scale</option>
                 @foreach ($sizeScales as $sizeScale)
                     <option value="{{ $sizeScale->id }}" @selected(old('size_scale_id', $product->size_scale_id ?? '') == $sizeScale->id)>
                         {{ $sizeScale->size_scale }}
@@ -231,31 +231,32 @@
 <x-include-plugins :plugins="['chosen', 'image', 'datePicker']"></x-include-plugins>
 @push('scripts')
     <script>
-        $(function () {
-            $('#brand_id').chosen({
-                width: '100%',
-                placeholder_text_multiple: 'Select Brand'
+        $(document).ready(function () {
+            $('form').on('keypress', function (e) {
+                if (e.which === 13) { 
+                    e.preventDefault();
+                    return false; 
+                }
+            });
+        });
+        function initializeAndSortChosen(selector, placeholder = null) {
+            const $select = $(selector);
+
+            const placeholderOption = $select.find('option[disabled][selected]').detach();
+
+            const options = $select.find('option').sort((a, b) => {
+                return $(a).text().localeCompare($(b).text());
             });
 
-            $('#department_id').chosen({
-                width: '100%',
-            });
+            $select.empty();
+            if (placeholderOption.length) $select.append(placeholderOption); 
+            $select.append(options); 
 
-            $('.productType').chosen({
+            $select.chosen({
                 width: '100%',
-                placeholder_text_multiple: 'Select Product Type'
-            });
-
-            $('#tag_id').chosen({
-                width: '100%',
-                placeholder_text_multiple: 'Select Tag'
-            });
-            $('#size_scale_id').chosen({
-                width: '100%',
-                placeholder_text_multiple: 'Select Tag'
-            });
-
-        })
+                placeholder_text_multiple: placeholder || '',
+            }).trigger('chosen:updated');
+        }
 
         function refreshProductTypeDropdown(departmentId) {
             const productTypeSelect = $('#product_type');
@@ -272,23 +273,21 @@
                         if (data && data.length > 0) {
                             data.forEach(function (item) {
                                 if (item.product_types) {
-                                    const option = new Option(item.product_types.product_type_name, item
-                                        .product_type_id);
+                                    const option = new Option(item.product_types.product_type_name, item.product_type_id);
                                     productTypeSelect.append(option);
                                 }
                             });
                         }
 
-                        // After appending options, ensure the previously selected option is set
+                        initializeAndSortChosen('#product_type', 'Select Product Type');
+
                         const selectedProductTypeId =
                             "{{ old('product_type_id', $product->product_type_id ?? '') }}";
                         if (selectedProductTypeId) {
                             productTypeSelect.val(selectedProductTypeId);
                         }
 
-                        productTypeSelect.chosen({
-                            width: '100%',
-                        });
+                        productTypeSelect.trigger('chosen:updated');
                     },
                     error: function (xhr, status, error) {
                         console.error('Error fetching product types:', error);
@@ -302,11 +301,16 @@
             }
         }
 
-
         $(document).ready(function () {
+            initializeAndSortChosen('#product_type', 'Select Product Type');
+            initializeAndSortChosen('#brand_id', 'Select Brand');
+            initializeAndSortChosen('#department_id');
+            initializeAndSortChosen('#tag_id', 'Select Tag');
+            initializeAndSortChosen('#size_scale_id', 'Select Tag');
+
             @if (empty($product->article_code))
-                let lastCode = parseInt("{{ $latestNewCode ?? '300000' }}"); // Start from 300000
-                let articleCode = lastCode + 1; // Increment the code
+                let lastCode = parseInt("{{ $latestNewCode ?? '300000' }}"); 
+                let articleCode = lastCode + 1; 
                 $('#article_code').val(String(articleCode).padStart(6, '0'));
             @endif
 
@@ -317,7 +321,6 @@
 
             function updateSupplierPrice() {
                 var margin = parseFloat($('#brand_margin').val());
-                console.log(margin);
                 var mrp = parseFloat($('#mrp').val());
 
                 if (!isNaN(mrp) && margin >= 0) {
@@ -337,18 +340,18 @@
             });
 
             $('#mrp').on('input', function () {
-                updateSupplierPrice(); // Recalculate supplier price when MRP is changed
+                updateSupplierPrice(); 
             });
 
             if ($('#brand_id').val()) {
                 updateSupplierPrice();
             }
-        });
 
-        // Get product type on page load
-        $(document).ready(function () {
             var departmentId = $('#department_id').val();
             refreshProductTypeDropdown(departmentId);
         });
+
     </script>
 @endpush
+
+

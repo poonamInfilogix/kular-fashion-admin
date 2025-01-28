@@ -17,6 +17,12 @@
     </div>
     <div class="col-sm-6 col-md-3">
         <div class="mb-3">
+            <x-form-input name="short_name" value="{{ $productType->short_name ?? '' }}"
+                label="Short Name" placeholder="Enter Short Name" required="true" />
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+        <div class="mb-3">
             <x-form-input name="product_type_name" value="{{ $productType->product_type_name ?? '' }}"
                 label="Product Type" placeholder="Enter Product Type" required="true" />
         </div>

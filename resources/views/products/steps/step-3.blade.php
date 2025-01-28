@@ -38,3 +38,15 @@
 
     @include('products.steps.quantity-form-script')
 @endsection
+@push('scripts')
+    <script>
+        $(document).ready(function () {
+            $('form').on('keypress', function (e) {
+                if (e.which === 13) { 
+                    e.preventDefault();
+                    return false; 
+                }
+            });
+        });
+    </script>
+@endpush
