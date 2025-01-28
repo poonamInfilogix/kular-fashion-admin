@@ -211,6 +211,14 @@
     <x-include-plugins :plugins="['chosen']"></x-include-plugins>
     @push('scripts')
     <script>
+        $(document).ready(function () {
+            $('form').on('keypress', function (e) {
+                if (e.which === 13) { 
+                    e.preventDefault();
+                    return false; 
+                }
+            });
+        });
         $(function(){
             var colorIndex = {{ isset($savingProduct->supplier_color_codes) ? count($savingProduct->supplier_color_codes)-1 : 1 }};
 

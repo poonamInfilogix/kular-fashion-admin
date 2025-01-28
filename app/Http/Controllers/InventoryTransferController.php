@@ -79,24 +79,28 @@ class InventoryTransferController extends Controller
         $fromStoreId = $transferData['from_store_id'];
         $toStoreId = $transferData['to_store_id'];
         $items = $transferData['items'];
-
-        $inventory = InventoryTransfer::create([
-            'sent_from'    => $fromStoreId,
-            'sent_to'      => $toStoreId,
-            'sent_by' => Auth::id()
+    
+        $inventoryTransfer = InventoryTransfer::create([
+            'sent_from' => $fromStoreId,
+            'sent_to'   => $toStoreId,
+            'sent_by'   => Auth::id()
         ]);
-
-        foreach($items as $value)
-        {
+    
+        foreach ($items as $value) {
             $productQuantityId = $value['product_quantity_id'];
             $quantity = $value['quantity'];
-
+    
             $productQuantity = ProductQuantity::find($productQuantityId);
-            $productQuantity->quantity = $productQuantity->quantity - $quantity;
-            $productQuantity->save();
-            
+            if ($productQuantity) {
+                $productQuantity->quantity = $productQuantity->quantity - $quantity;
+                $productQuantity->save();
+            } else {
+                \Log::error('ProductQuantity not found for ID: ' . $productQuantityId);
+                continue;
+            }
+    
             InventoryItem::create([
-                'inventroy_transfer_id' => $inventory->id,
+                'inventroy_transfer_id' => $inventoryTransfer->id,
                 'product_id'            => $value['product_id'],
                 'product_quantity_id'   => $productQuantityId,
                 'product_color_id'      => $value['color_id'],
@@ -104,16 +108,16 @@ class InventoryTransferController extends Controller
                 'brand_id'              => $value['brand_id'],
                 'quantity'              => $quantity,
             ]);
-
-            $inventory = StoreInventory::where([
+    
+            $storeInventory = StoreInventory::where([
                 'store_id'             => $toStoreId,
                 'product_quantity_id'  => $productQuantityId,
             ])->first();
-
-            if ($inventory) {
-                $inventory->update([
-                    'quantity'       => $inventory->quantity + $quantity,
-                    'total_quantity' => $inventory->total_quantity + $quantity,
+    
+            if ($storeInventory) {
+                $storeInventory->update([
+                    'quantity'       => $storeInventory->quantity + $quantity,
+                    'total_quantity' => $storeInventory->total_quantity + $quantity,
                 ]);
             } else {
                 StoreInventory::create([
@@ -128,7 +132,7 @@ class InventoryTransferController extends Controller
                 ]);
             }
         }
-
+    
         return response()->json([
             'success' => true,
             'message' => 'Items transferred successfully.'

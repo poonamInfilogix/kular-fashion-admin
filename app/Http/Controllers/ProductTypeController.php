@@ -38,6 +38,7 @@ class ProductTypeController extends Controller
         }
         $request->validate([
            'department_id'       => 'required',
+           'short_name'          => 'required',
            'product_type_name'   => 'required|unique:product_types,product_type_name' 
         ]);
 
@@ -45,6 +46,7 @@ class ProductTypeController extends Controller
 
         $productType = ProductType::create([
             'product_type_name' => $request->product_type_name,
+            'short_name'        => $request->short_name,
             'status'             => $request->status,
             'description'        => $request->description,
             'image'              => $imageName
@@ -83,6 +85,7 @@ class ProductTypeController extends Controller
         }
         $request->validate([
             'department_id'       => 'required',
+            'short_name'       => 'required',
             'product_type_name'    => 'required|unique:product_types,product_type_name,' . $id
         ]);
 
@@ -100,6 +103,7 @@ class ProductTypeController extends Controller
 
         $productType->update([
             'product_type_name' => $request->product_type_name,
+            'short_name'        => $request->short_name,
             'status'             => $request->status,
             'description'        => $request->description,
             'image'              => $imageName ?? $oldProductTypeImage

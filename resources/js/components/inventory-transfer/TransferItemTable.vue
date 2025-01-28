@@ -5,6 +5,7 @@
             <thead class="table-light">
                 <tr>
                     <th class="align-middle">Article Code</th>
+                    <th class="align-middle">Barcode</th>
                     <th class="align-middle">Description</th>
                     <th class="align-middle">Color</th>
                     <th class="align-middle">Size</th>
@@ -17,6 +18,7 @@
             <tbody>
                 <tr v-for="(item, index) in items" :key="item.code">
                     <td>{{ item.code }}</td>
+                    <td>{{ item.scanned_barcode }}</td>
                     <td>{{ item.description }}</td>
                     <td>{{ item.color }}</td>
                     <td>{{ item.size }}</td>
