@@ -52,25 +52,48 @@
                                         data-color-id="${color.color_detail.id}">
                                     </div>
                                 </th>
-                                ${rowData.quantities.map(quantity => {
-                                    if (color.id === quantity.product_color_id) {
-                                        const disabled = quantity.total_quantity === 0 ? 'disabled' : '';
-                                        console.log('quantity',quantity)
-                                        
+                                ${rowData.sizes.map(size => {
+                                    const quantity = rowData.quantities.find(q => 
+                                        parseInt(q.product_size_id) === parseInt(size.id)
+                                    );
+                                    if (!quantity) {
                                         return `<td class="py-1">
                                             <div class="row px-2">
-                                                <div class="${quantity.total_quantity > 0 ? 'col-8' : '12'} p-0">
-                                                    <input type="number" name="product[${rowData.id}][${quantity.id}]" id="${quantity.id}" class="form-control py-1 barcode-quantity" min="0" value="${quantity.total_quantity - quantity.original_printed_barcodes}" ${disabled} oninput="validateMaxQuantity(this, ${quantity.total_quantity})">
+                                                <div class="col-8 p-0">
+                                                    <input type="number" 
+                                                        name="product[${rowData.id}][${size.size_id}]" 
+                                                        id="${size.size_id}" 
+                                                        class="form-control py-1 barcode-quantity" 
+                                                        min="0" 
+                                                        value="0" 
+                                                        disabled>
                                                 </div>
-                                                ${quantity.total_quantity > 0 ?
-                                                    `<div class="col-4 p-0">
-                                                        <button class="btn btn-outline-secondary btn-sm double-barcode btn2x" name="product[${rowData.id}][${quantity.id}]">2x</button>
-                                                    </div>`
-                                                : ``}
+                                                <div class="col-4 p-0">
+                                                    <button class="btn btn-outline-secondary btn-sm double-barcode btn2x" disabled>2x</button>
+                                                </div>
                                             </div>
-                                        </td>`; 
+                                        </td>`;
                                     }
-                                    return '';
+                                    const disabled = quantity.total_quantity === 0 ? 'disabled' : '';
+                                    return `<td class="py-1">
+                                        <div class="row px-2">
+                                            <div class="${quantity.total_quantity > 0 ? 'col-8' : '12'} p-0">
+                                                <input type="number" 
+                                                    name="product[${rowData.id}][${quantity.id}]" 
+                                                    id="${quantity.id}" 
+                                                    class="form-control py-1 barcode-quantity" 
+                                                    min="0" 
+                                                    value="${quantity.total_quantity - quantity.original_printed_barcodes}" 
+                                                    ${disabled} 
+                                                    oninput="validateMaxQuantity(this, ${quantity.total_quantity})">
+                                            </div>
+                                            ${quantity.total_quantity > 0 ?
+                                                `<div class="col-4 p-0">
+                                                    <button class="btn btn-outline-secondary btn-sm double-barcode btn2x" name="product[${rowData.id}][${quantity.id}]">2x</button>
+                                                </div>`
+                                            : ``}
+                                        </div>
+                                    </td>`;
                                 }).join('')}
                             </tr>
                         `).join('')}

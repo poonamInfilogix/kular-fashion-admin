@@ -23,6 +23,11 @@ use App\Http\Controllers\ChangePriceReasonController;
 use App\Http\Controllers\InventoryTransferController;
 use Illuminate\Support\Facades\Response;
 
+use App\Http\Controllers\ProductImportExportController;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ProductExport;
+use App\Imports\ProductImport;
+
 Route::get('/', function () {
     return redirect()->route('dashboard');
 });
@@ -31,6 +36,9 @@ Route::get('/generate-barcode', [ProductController::class, 'generateBarcode']);
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('authenticate', [AuthController::class, 'authenticate'])->name('authenticate');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::get('/products/export', [ProductImportExportController::class, 'export'])->name('products.export');
+    Route::post('/products/import', [ProductImportExportController::class, 'import'])->name('products.import');
 
 Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -51,6 +59,8 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'branches' => BranchController::class,
         'inventory-transfer' => InventoryTransferController::class,
     ]);
+
+    
 
     Route::get('product-validate/{barcode}', [ProductController::class, 'productValidate']);
     Route::post('/inventory-transfer-items', [InventoryTransferController::class, 'InventoryTransferItems']);

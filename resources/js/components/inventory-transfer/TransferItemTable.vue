@@ -16,7 +16,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item, index) in items" :key="item.code">
+                <!-- Add class conditionally based on index -->
+                <tr v-for="(item, index) in items" :key="item.code" :class="index % 2 === 0 ? 'even' : 'odd'">
                     <td>{{ item.code }}</td>
                     <td>{{ item.scanned_barcode }}</td>
                     <td>{{ item.description }}</td>
@@ -35,7 +36,6 @@
         </table>
     </div>
 </template>
-
 
 <script>
 export default {
@@ -56,3 +56,15 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+/* For odd rows */
+table tbody tr.odd {
+    background-color: #f2f2f2; /* Light gray */
+}
+
+/* For even rows */
+table tbody tr.even {
+    background-color: #ffffff; /* White */
+}
+</style>
