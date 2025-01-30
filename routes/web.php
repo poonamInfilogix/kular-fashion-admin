@@ -37,8 +37,8 @@ Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('authenticate', [AuthController::class, 'authenticate'])->name('authenticate');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/products/export', [ProductImportExportController::class, 'export'])->name('products.export');
-    Route::post('/products/import', [ProductImportExportController::class, 'import'])->name('products.import');
+Route::get('/products/export', [ProductImportExportController::class, 'exportProductsToCSV'])->name('products.export');
+Route::post('/products/import', [ProductImportExportController::class, 'importProductsFromCSV'])->name('products.import');
 
 Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
