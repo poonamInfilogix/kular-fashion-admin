@@ -75,8 +75,8 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <x-form-input name="supplier_ref" value="{{ $product->supplier_ref ?? '' }}"
-                readonly="{{ $isEditing ?? false }}" label="Supplier Ref" placeholder="Enter Supplier Ref" />
+            <label class="form-label">Image</label>
+            <input type="file" name="image" id="add-product-image" class="form-control" accept="image/*">
         </div>
     </div>
 
@@ -139,25 +139,12 @@
                 label="Short Description" placeholder="Enter Short Description" required="true" maxlength="22" />
         </div>
     </div>
-
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <label class="form-label">Image</label>
-            <input type="file" name="image" id="add-product-image" class="form-control" accept="image/*">
-
-            <div class="col-md-12 mt-2">
-                @if (isset($product->image_path) || isset($product->image))
-                    <img src="{{ asset($product->image_path ?? $product->image) }}" id="preview-product"
-                        class="img-preview img-fluid w-100"
-                        onerror="this.onerror=null; this.src='{{ asset(setting('default_product_image')) }}';">
-                @else
-                    <img src="{{ asset(setting('default_product_image')) }}" id="preview-product" class="img-fluid w-100;"
-                        name="image">
-                @endif
-            </div>
+            <x-form-input name="supplier_ref" value="{{ $product->supplier_ref ?? '' }}"
+                readonly="{{ $isEditing ?? false }}" label="Supplier Ref" placeholder="Enter Supplier Ref" />
         </div>
     </div>
-
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="status" class="form-label">Season</label>
@@ -218,6 +205,18 @@
                 <option value="Active" @selected(($product->status ?? '') === 'Active')>Active</option>
                 <option value="Inactive" @selected(($product->status ?? '') === 'Inactive')>Inactive</option>
             </select>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-2">
+        <div class="col-md-12 mt-2">
+            @if (isset($product->image_path) || isset($product->image))
+                <img src="{{ asset($product->image_path ?? $product->image) }}" id="preview-product"
+                    class="img-preview img-fluid w-100"
+                    onerror="this.onerror=null; this.src='{{ asset(setting('default_product_image')) }}';">
+            @else
+                <img src="{{ asset(setting('default_product_image')) }}" id="preview-product" class="img-fluid w-100;"
+                    name="image">
+            @endif
         </div>
     </div>
 </div>

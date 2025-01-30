@@ -9,7 +9,7 @@
                         <h4 class="mb-sm-0 font-size-18">Products</h4>
 
                         <div class="page-title-right">
-                            <a href="{{ route('export.csv') }}" class="btn btn-primary primary-btn btn-md me-1"><i class="bx bx-download"></i> Download Product Configuration File</a>
+                            <a href="{{ route('products.export') }}" class="btn btn-primary primary-btn btn-md me-1"><i class="bx bx-download"></i> Download Product Configuration File</a>
                             
                             @if(Auth::user()->can('create products'))
                             <a href="{{ route('products.create') }}" id="add-product-link" class="btn btn-primary">
