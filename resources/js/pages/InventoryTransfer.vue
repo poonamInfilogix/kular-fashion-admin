@@ -68,11 +68,13 @@ export default {
         },
     },
     data() {
+        const storedItems = localStorage.getItem('transferItems') ? JSON.parse(localStorage.getItem('transferItems')) : [];
+        const sortedItems = storedItems.sort((a, b) => b.sno - a.sno);
         return {
             fromStore: this.currentUserStore,
             toStore: null,
             itemToBeAdd: {},
-            items: localStorage.getItem('transferItems') ? JSON.parse(localStorage.getItem('transferItems')) : []
+            items: sortedItems
         };
     },
     watch: {
@@ -174,10 +176,12 @@ export default {
                 });
                 return;
             }
-
+            let highestSno = products.length > 0 ? Math.max(...products.map(product => product.sno)) : 0;
             item.quantity = 1; 
             item.scanned_barcode = item.scanned_barcode || item.manufacture_barcode; 
+            item.sno = highestSno + 1;
             products.push(item);
+            products.sort((a, b) => b.sno - a.sno);
             localStorage.setItem('transferItems', JSON.stringify(products));
             this.items = products;
         },

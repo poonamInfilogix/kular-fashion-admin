@@ -1,32 +1,30 @@
 <template>
     <h4 class="card-title my-2">Transfer Items</h4>
     <div class="table-responsive">
-        <table class="table align-middle table-nowrap mb-0">
+        <table class="table align-middle table-nowrap mb-0 table-striped">
             <thead class="table-light">
                 <tr>
-                    <th class="align-middle">Article Code</th>
-                    <th class="align-middle">Barcode</th>
-                    <th class="align-middle">Description</th>
-                    <th class="align-middle">Color</th>
-                    <th class="align-middle">Size</th>
-                    <th class="align-middle">Brand</th>
-                    <th class="align-middle">Price</th>
-                    <th class="align-middle">Quantity</th>
-                    <th class="align-middle">Action</th>
+                    <th class="align-middle p-2">#</th>
+                    <th class="align-middle p-2">Article Code</th>
+                    <th class="align-middle p-2">Description</th>
+                    <th class="align-middle p-2">Color</th>
+                    <th class="align-middle p-2">Size</th>
+                    <th class="align-middle p-2">Brand</th>
+                    <th class="align-middle p-2">Price</th>
+                    <th class="align-middle p-2">Action</th>
                 </tr>
             </thead>
             <tbody>
                 <!-- Add class conditionally based on index -->
                 <tr v-for="(item, index) in items" :key="item.code" :class="index % 2 === 0 ? 'even' : 'odd'">
-                    <td>{{ item.code }}</td>
-                    <td>{{ item.scanned_barcode }}</td>
-                    <td>{{ item.description }}</td>
-                    <td>{{ item.color }}</td>
-                    <td>{{ item.size }}</td>
-                    <td>{{ item.brand }}</td>
-                    <td>{{ item.price }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>
+                    <td class="p-1">{{ items.length - index }}</td>
+                    <td class="p-1">{{ item.code }}</td>
+                    <td class="p-1">{{ item.description }}</td>
+                    <td class="p-1">{{ item.color }}</td>
+                    <td class="p-1">{{ item.size }}</td>
+                    <td class="p-1">{{ item.brand }}</td>
+                    <td class="p-1">{{ item.price }}</td>
+                    <td class="p-1">
                         <button class="btn btn-danger btn-sm" @click="deleteItem(index)">
                             <i class="fas fa-trash-alt"></i>
                         </button>
