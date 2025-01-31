@@ -98,16 +98,30 @@ class InventoryTransferController extends Controller
                 \Log::error('ProductQuantity not found for ID: ' . $productQuantityId);
                 continue;
             }
-    
-            InventoryItem::create([
+
+            $existingInventoryItem = InventoryItem::where([
                 'inventroy_transfer_id' => $inventoryTransfer->id,
                 'product_id'            => $value['product_id'],
                 'product_quantity_id'   => $productQuantityId,
                 'product_color_id'      => $value['color_id'],
                 'product_size_id'       => $value['size_id'],
                 'brand_id'              => $value['brand_id'],
-                'quantity'              => $quantity,
-            ]);
+            ])->first();
+
+            if ($existingInventoryItem) {
+                $existingInventoryItem->quantity += $quantity;
+                $existingInventoryItem->save();
+            } else {
+                InventoryItem::create([
+                    'inventroy_transfer_id' => $inventoryTransfer->id,
+                    'product_id'            => $value['product_id'],
+                    'product_quantity_id'   => $productQuantityId,
+                    'product_color_id'      => $value['color_id'],
+                    'product_size_id'       => $value['size_id'],
+                    'brand_id'              => $value['brand_id'],
+                    'quantity'              => $quantity,
+                ]);
+            }
     
             $storeInventory = StoreInventory::where([
                 'store_id'             => $toStoreId,
