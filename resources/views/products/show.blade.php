@@ -53,12 +53,12 @@
                                         <div class="col-sm-4">
                                             @if($product->in_date && $product->last_date && $product->in_date->eq($product->last_date))
                                                 <h6 class="mb-2">In Date:
-                                                    <strong>{{ $product->in_date->format('Y-m-d') }}</strong>
+                                                    <strong>{{ $product->in_date->format('d-m-Y') }}</strong>
                                                 </h6>
                                             @else
                                                     @if($product->in_date)
                                                         <h6 class="mb-2">In Date: 
-                                                        <strong>{{ $product->in_date->format('Y-m-d') }}</strong>
+                                                        <strong>{{ $product->in_date->format('d-m-Y') }}</strong>
                                                     </h6>
                                                     @endif
                                                 </div>
@@ -66,7 +66,7 @@
                                                 <div class="col-sm-4">
                                                     @if($product->last_date)
                                                         <h6 class="mb-2">Last In Date: 
-                                                        <strong>{{ $product->last_date->format('Y-m-d') }}</strong>
+                                                        <strong>{{ $product->last_date->format('d-m-Y') }}</strong>
                                                         </h6>
                                                     @endif
                                             @endif

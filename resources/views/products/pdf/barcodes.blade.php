@@ -316,7 +316,7 @@
                                 <div class="ch-2">
                                     <span>{{ strtoupper($item['color']) }}</span>
                                     <span>{{ strtoupper($item['size']) }}</span>
-                                    <span class="product-name" style="text-transform: uppercase;">{{ $item['type'] }}</span>
+                                    <span class="product-name" style="text-transform: uppercase;">{{ $item['short_name'] }}</span>
                                 </div>
 
                                 <div class="ch-3">
