@@ -144,7 +144,7 @@ class ProductController extends Controller
                 'supplier_ref' => $request->supplier_ref,
                 'tax_id' => $request->tax_id,
                 //'in_date' => $request->in_date,
-                'last_date' => $request->last_date,
+                'last_date' => $request->last_date ?? $product->last_date,
                 //'size_scale_id' => $request->size_scale_id,
                 'image' => $imagePath,
                 'status' => $request->status,
@@ -359,9 +359,7 @@ class ProductController extends Controller
             'image' => $productData['image_path'] ?? NULL,
             'min_size_id' => $productData['size_range_min'],
             'max_size_id' => $productData['size_range_max'],
-            'status' => $productData['status'],
-            'in_date' => $productData['in_date'],
-            'last_date' => $productData['last_date'],
+            'status' => $productData['status']
         ]);
 
         if (isset($productData['tag_id'])) {

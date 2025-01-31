@@ -45,7 +45,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             flatpickr('.date-picker', {
-                dateFormat: "Y-m-d",
+                dateFormat: "d-m-Y",
                 allowInput: true,
                 maxDate: "today"
             });

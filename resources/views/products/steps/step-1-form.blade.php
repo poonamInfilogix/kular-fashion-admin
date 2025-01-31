@@ -185,7 +185,7 @@
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <x-form-input name="in_date" class="date-picker" :disabled="isset($isEditing) ? $isEditing : false"
-                        value="{{ isset($product->in_date) && $product->in_date ? $product->in_date->format('Y-m-d') : now()->format('Y-m-d') }}"
+                        value="{{ isset($product->in_date) && $product->in_date ? $product->in_date->format('d-m-Y') : now()->format('d-m-Y') }}"
                 label="In Date" placeholder="Enter In Date" readonly="true" />
         </div>
     </div>
@@ -193,7 +193,7 @@
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <x-form-input name="last_date" class="date-picker" :disabled="isset($isEditing) ? $isEditing : false"
-                value="{{ isset($product) && $product->last_date ? $product->last_date : now()->format('Y-m-d') }}"
+                value="{{ isset($product->last_date) && $product->last_date ? $product->last_date->format('d-m-Y') : now()->format('d-m-Y') }}"
                 label="Last In Date" placeholder="Enter Last In Date" />
         </div>
     </div>
