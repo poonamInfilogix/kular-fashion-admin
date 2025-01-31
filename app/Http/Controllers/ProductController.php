@@ -667,6 +667,7 @@ class ProductController extends Controller
                                 'random_digits' => $randomDigit . $yearMonth,
                                 'department' => $productDetail->product->department->name,
                                 'type' => $productDetail->product->productType->product_type_name,
+                                'short_name' => $productDetail->product->productType->short_name,
                                 'manufacture_code' => $productDetail->product->manufacture_code,
                                 'size' => $productDetail->sizes->sizeDetail->size,
                                 'mrp' => $productDetail->sizes->mrp,
