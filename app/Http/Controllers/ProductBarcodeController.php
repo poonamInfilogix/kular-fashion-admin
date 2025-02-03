@@ -13,7 +13,7 @@ class ProductBarcodeController extends Controller
         if(!Gate::allows('view print_barcodes')) {
             abort(403);
         }
-        $defaultProductsToBePrinted = Product::where('barcodes_printed_for_all', 0)->get()->pluck('id');
+        $defaultProductsToBePrinted = Product::where('are_barcodes_printed', 0)->orWhere('barcodes_printed_for_all', 0)->get()->pluck('id');
         return view('products.barcodes.index', compact('defaultProductsToBePrinted'));
     }
 
