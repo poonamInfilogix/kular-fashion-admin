@@ -45,7 +45,7 @@
                                             <td>{{ $tag->tag_name }}</td>
                                             <td>
                                                 <input type="checkbox" id="{{ $tag->id }}" class="update-status" data-id="{{ $tag->id }}" switch="success" data-on="Active" data-off="Inactive" {{ $tag->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('tag-status') }}" />
-                                                <label for="{{ $tag->id }}" data-on-label="Active" data-off-label="Inactive"></label>
+                                                <label class="mb-0" for="{{ $tag->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
                                             @canany(['edit tags', 'delete tags'])
                                             <td>
@@ -80,7 +80,7 @@
                 ],
                 order: [[1, 'asc']],
                 drawCallback: function(settings) {
-                    $('#datatable th, #datatable td').addClass('p-2');
+                    $('#datatable th, #datatable td').addClass('p-1');
                 }
             });
         });

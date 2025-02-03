@@ -73,7 +73,7 @@
                                                 aria-labelledby="role-{{ $role->id }}-heading" data-parent="#rolesAccordion">
                                                 <div class="card-body">
                                                     <input type="hidden" name="role_id" value="{{ $role->id }}">
-                                                    <table class="table">
+                                                    <table class="table table-striped">
                                                         <thead>
                                                             <tr>
                                                                 <th>Module Name</th>

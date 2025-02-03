@@ -47,7 +47,7 @@
                                             <td>{{ $sizeScale->sizes_count }}</td>
                                             <td>
                                                 <input type="checkbox" id="{{ $sizeScale->id }}"  class="update-status" data-id="{{ $sizeScale->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $sizeScale->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('size-scale-status')}}"/>
-                                                <label for="{{ $sizeScale->id }}" data-on-label="Active" data-off-label="Inactive"></label>
+                                                <label  class="mb-0" for="{{ $sizeScale->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
                                             @canany(['view size', 'edit size_scales', 'delete size_scales'])
                                             <td>
@@ -85,7 +85,7 @@
                 ],
                 order: [[1, 'asc']],
                 drawCallback: function(settings) {
-                    $('#datatable th, #datatable td').addClass('p-2');
+                    $('#datatable th, #datatable td').addClass('p-1');
                 }
             });
         });

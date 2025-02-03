@@ -29,20 +29,20 @@
                             <table id="datatable" class="table table-bordered table-striped dt-responsive  nowrap w-100">
                                 <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>Role</th>
+                                    <th class="p-1">#</th>
+                                    <th class="p-1">Role</th>
                                     @canany(['edit role', 'delete role'])
-                                    <th>Action</th>
+                                    <th class="p-1">Action</th>
                                     @endcanany
                                 </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($roles as $key=> $role)
                                     <tr>
-                                        <td>{{ ++$key }}</td>
-                                        <td>{{ ucwords($role->name) }}</td>
+                                        <td class="p-1">{{ ++$key }}</td>
+                                        <td class="p-1">{{ ucwords($role->name) }}</td>
                                         @canany(['edit role', 'delete role'])
-                                        <td>
+                                        <td class="p-1">
                                             @if(Auth::user()->can('edit role'))
                                             <a href="{{ route('roles-and-permissions.edit', $role->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
                                             @endif

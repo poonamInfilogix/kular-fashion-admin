@@ -47,7 +47,7 @@
                                             <td>{{ $color->color_code }}</td>
                                             <td>
                                                 <input type="checkbox" id="{{ $color->id }}"  class="update-status" data-id="{{ $color->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $color->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('color-status')}}"/>
-                                                <label for="{{ $color->id }}" data-on-label="Active" data-off-label="Inactive"></label>
+                                                <label class="mb-0" for="{{ $color->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
                                             @canany(['edit colors', 'delete colors'])
                                             <td>
@@ -82,7 +82,7 @@
                 ],
                 order: [[1, 'asc']],
                 drawCallback: function(settings) {
-                    $('#datatable th, #datatable td').addClass('p-2');
+                    $('#datatable th, #datatable td').addClass('p-1');
                 }
             });
         });

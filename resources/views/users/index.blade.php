@@ -29,26 +29,26 @@
                             <table id="datatable" class="table table-bordered table-striped dt-responsive  nowrap w-100">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Role</th>
-                                        <th>Branch</th>
+                                        <th class="p-1">#</th>
+                                        <th class="p-1">Name</th>
+                                        <th class="p-1">Email</th>
+                                        <th class="p-1">Role</th>
+                                        <th class="p-1">Branch</th>
                                         @canany(['edit users', 'delete users'])
-                                            <th>Action</th>
+                                            <th class="p-1">Action</th>
                                         @endcanany
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($users as $key => $user)
                                         <tr>
-                                            <td>{{ ++$key }}</td>
-                                            <td>{{ ucwords($user->name) }}</td>
-                                            <td>{{ $user->email }}</td>
-                                            <td>{{ $user->getRoleNames()->first() }}</td>
-                                            <td>{{ $user->branch->name ?? 'N/A' }}</td>
+                                            <td class="p-1">{{ ++$key }}</td>
+                                            <td class="p-1">{{ ucwords($user->name) }}</td>
+                                            <td class="p-1">{{ $user->email }}</td>
+                                            <td class="p-1">{{ $user->getRoleNames()->first() }}</td>
+                                            <td class="p-1">{{ $user->branch->name ?? 'N/A' }}</td>
                                             @canany(['edit users', 'delete users'])
-                                                <td>
+                                                <td class="p-1">
                                                     @if (Auth::user()->can('edit users') &&
                                                             (Auth::user()->hasRole('Super Admin') || $user->getRoleNames()->first() !== 'Super Admin'))
                                                         <a href="{{ route('users.edit', $user->id) }}"
