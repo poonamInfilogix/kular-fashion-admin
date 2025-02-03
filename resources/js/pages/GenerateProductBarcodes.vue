@@ -52,7 +52,8 @@ export default {
     watch: {
         selectedArticles: {
             handler() {
-                $('#product-table').attr('data-selected-articles', this.selectedArticles)
+                $('#product-table').attr('data-selected-articles', this.selectedArticles);
+                this.setBarcodesToBePrint();
             },
             deep: true
         }
@@ -104,6 +105,7 @@ export default {
 
             selectedProductIds.forEach((productId) => {
                 const productContainer = $(`[data-product-barcode-quantity="${productId}"]`);
+                
                 const quantitiesToBePrint = $(productContainer).find('.barcode-quantity').not('[disabled]').filter(function() {
                     return parseFloat($(this).val()) > 0;
                 });
@@ -132,7 +134,7 @@ export default {
                 },
                 success : function(resp){
                     if(resp.success){
-                        window.location.href = '/products/print-barcodes/preview';
+                        //window.location.href = '/products/print-barcodes/preview';
                     }
                 },error : function(err){
                     console.log(err);

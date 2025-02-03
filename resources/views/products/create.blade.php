@@ -49,7 +49,10 @@
         $('form').on('submit', function (e) {
             e.preventDefault();
 
-            var manufactureCode = $('#manufacture_code').val();
+            let manufactureCode = $('#manufacture_code').val();
+            if(!manufactureCode){
+                $('form')[0].submit();
+            }
 
             checkManufactureCodeExists(manufactureCode).done(function(response) {
                 if (response.exists) {
