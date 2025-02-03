@@ -52,7 +52,7 @@
                                             <td>{{ $branch->location }}</td>
                                             <td>
                                                 <input type="checkbox" id="{{ $branch->id }}"  class="update-status" data-id="{{ $branch->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $branch->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('branch-status')}}"/>
-                                                <label for="{{ $branch->id }}" data-on-label="Active" data-off-label="Inactive"></label>
+                                                <label class="mb-0" for="{{ $branch->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
                                             @canany(['edit branches', 'delete branches'])
                                             <td>
@@ -90,7 +90,7 @@
                 ],
                 order: [[1, 'asc']],
                 drawCallback: function(settings) {
-                    $('#datatable th, #datatable td').addClass('p-2');
+                    $('#datatable th, #datatable td').addClass('p-1');
                 }
             });
         });

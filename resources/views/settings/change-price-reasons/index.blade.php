@@ -30,20 +30,20 @@
                             <table id="dataTable" class="table table-bordered table-striped dt-responsive nowrap w-100">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Reason</th>
+                                        <th class="p-1">#</th>
+                                        <th class="p-1">Reason</th>
                                         @canany(['edit price_reasons', 'delete price_reasons'])
-                                        <th>Action</th>
+                                        <th class="p-1">Action</th>
                                         @endcanany
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($reasons as $key => $reason)
                                         <tr>
-                                            <td>{{ ++$key }}</td>
-                                            <td>{{ $reason->name }}</td>
+                                            <td class="p-1">{{ ++$key }}</td>
+                                            <td class="p-1">{{ $reason->name }}</td>
                                             @canany(['edit price_reasons', 'delete price_reasons'])
-                                            <td>
+                                            <td class="p-1">
                                                 @if(Auth::user()->can('edit price_reasons'))
                                                 <a href="{{ route('change-price-reasons.edit', $reason->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
                                                 @endif

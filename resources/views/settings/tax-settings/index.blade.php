@@ -30,25 +30,25 @@
                             <table id="dataTable" class="table table-bordered table-striped dt-responsive nowrap w-100">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Taxes (in %)</th>
-                                        <th>Status</th>
+                                        <th class="p-1">#</th>
+                                        <th class="p-1">Taxes (in %)</th>
+                                        <th class="p-1">Status</th>
                                         @canany(['edit tax', 'delete tax'])
-                                        <th>Action</th>
+                                        <th class="p-1">Action</th>
                                         @endcanany
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($taxes as $key => $tax)
                                         <tr>
-                                            <td>{{ ++$key }}</td>
-                                            <td>{{ $tax->tax }}</td>
-                                            <td>
+                                            <td class="p-1">{{ ++$key }}</td>
+                                            <td class="p-1">{{ $tax->tax }}</td>
+                                            <td class="p-1">
                                                 <input type="checkbox" id="{{ $tax->id }}" class="update-status" data-id="{{ $tax->id }}" switch="success" data-on="Active" data-off="Inactive" {{ $tax->status === 0 ? 'checked' : '' }} data-endpoint="{{ route('tax-status') }}" />
-                                                <label for="{{ $tax->id }}" data-on-label="Active" data-off-label="Inactive"></label>
+                                                <label class="mb-0" for="{{ $tax->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
                                             @canany(['edit tax', 'delete tax'])
-                                            <td>
+                                            <td class="p-1">
                                                 @if(Auth::user()->can('edit tax'))
                                                 <a href="{{ route('tax-settings.edit', $tax->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
                                                 @endif
@@ -74,11 +74,7 @@
     
     <script>
         $(function() {
-            $('#dataTable').DataTable({
-                drawCallback: function(settings) {
-                    $('#datatable th, #datatable td').addClass('p-1');
-                }
-            });
+            $('#dataTable').DataTable();
 
             $('.update-status').change(function() {
                 var status = $(this).prop('checked') ? '0' : '1';

@@ -49,7 +49,7 @@
                                             <td>{{ $size->new_code }}</td>
                                             <td>
                                                 <input type="checkbox" id="{{ $size->id }}"  class="update-status" data-id="{{ $size->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $size->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('size-status')}}"/>
-                                                <label for="{{ $size->id }}" data-on-label="Active" data-off-label="Inactive"></label>
+                                                <label class="mb-0" for="{{ $size->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
                                             @canany(['edit size', 'delete size'])
                                             <td>
@@ -80,7 +80,7 @@
         $(document).ready(function() {
             $('#datatable').DataTable({
                 drawCallback: function(settings) {
-                    $('#datatable th, #datatable td').addClass('p-2');
+                    $('#datatable th, #datatable td').addClass('p-1');
                 }
             });
         });

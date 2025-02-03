@@ -67,7 +67,7 @@
                                         <tr>
                                             <td>{{ ++$key }}</td>
                                             <td>{{ $brand->name }}</td>
-                                            <td><img src="{{ asset($brand->image) }}" width="50" height="50"
+                                            <td><img src="{{ asset($brand->image) }}" width="50" height="30"
                                                     onerror="this.onerror=null; this.src='{{ asset(setting('default_brand_image')) }}';">
                                             </td>
                                             <td>
@@ -112,6 +112,9 @@
                     { type: 'string', targets: 1 } 
                 ],
                 order: [[1, 'asc']],
+                drawCallback: function(settings) {
+                    $('#datatable th, #datatable td').addClass('p-1');
+                }
             });
 
             $('#importButton').on('click', function() {

@@ -124,3 +124,7 @@ table tbody tr.even {
 .page-title-right .btn {
     white-space: nowrap;
 }
+
+.table {
+    vertical-align: middle !important;
+}

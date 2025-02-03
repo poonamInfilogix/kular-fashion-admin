@@ -53,7 +53,7 @@
                                             <td>{{ $supplier->telephone }}</td>
                                             <td>
                                                 <input type="checkbox" id="{{ $supplier->id }}"  class="update-status" data-id="{{ $supplier->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $supplier->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('supplier-status')}}"/>
-                                                <label for="{{ $supplier->id }}" data-on-label="Active" data-off-label="Inactive"></label>
+                                                <label class="mb-0" for="{{ $supplier->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
                                             @canany(['edit suppliers', 'delete suppliers'])
                                             <td>
@@ -88,7 +88,7 @@
                 ],
                 order: [[1, 'asc']],
                 drawCallback: function(settings) {
-                    $('#datatable th, #datatable td').addClass('p-2');
+                    $('#datatable th, #datatable td').addClass('p-1');
                 }
             });
         });

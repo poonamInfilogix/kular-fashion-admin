@@ -44,7 +44,7 @@
                                         <tr>
                                             <td>{{ ++$key }}</td>
                                             <td>{{ $department->name }}</td>
-                                            <td><img src="{{ asset($department->image) }}" width="50" height="50" 
+                                            <td><img src="{{ asset($department->image) }}" width="50" height="30" 
                                                 onerror="this.onerror=null; this.src='{{ asset(setting('default_department_image')) }}';" >
                                             </td>
                                             <td>
@@ -82,7 +82,10 @@
                 columnDefs: [
                     { type: 'string', targets: 1 } 
                 ],
-                order: [[1, 'asc']]
+                order: [[1, 'asc']],
+                drawCallback: function(settings) {
+                    $('#datatable th, #datatable td').addClass('p-1');
+                }
             });
         });
     </script>
