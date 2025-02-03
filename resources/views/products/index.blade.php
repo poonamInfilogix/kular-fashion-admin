@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    {{-- <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <h4 class="mb-sm-0 font-size-18">Products</h4>
             
                         <div class="page-title-right d-flex align-items-center gap-2">
@@ -27,7 +27,7 @@
                             </a>
                             @endif
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             
@@ -46,7 +46,7 @@
                                 </div>
                             </div>
                             
-                            <table id="product-table" class="table table-bordered dt-responsive nowrap w-100">
+                            <table id="product-table" class="table table-bordered dt-responsive nowrap w-100 table-striped">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -111,6 +111,8 @@
                 order: [[1, 'asc']],
                 drawCallback: function(settings) {
                     let api = this.api();
+                    $('#product-table th, #product-table td').addClass('p-2');
+
                     let rows = api.rows({ page: 'current' }).data().length;
 
                     let searchValue = $('#custom-search-input').val();

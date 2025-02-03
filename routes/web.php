@@ -114,4 +114,5 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     // Profile Routes
     Route::get('/profile', [UserController::class, 'editProfile'])->name('profile.edit');
     Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/check-manufacture-code/{manufactureCode}', [ProductController::class, 'checkManufactureCode'])->name('check.manufacture.code');
 });

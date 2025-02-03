@@ -120,3 +120,7 @@ table tbody tr.odd {
 table tbody tr.even {
     background-color: #ffffff; /* White */
 }
+
+.page-title-right .btn {
+    white-space: nowrap;
+}
