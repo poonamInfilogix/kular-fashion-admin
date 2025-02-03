@@ -49,7 +49,7 @@
                                             </td>
                                             <td>
                                                 <input type="checkbox" id="{{ $department->id }}"  class="update-status" data-id="{{ $department->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $department->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('department-status')}}"/>
-                                                <label for="{{ $department->id }}" data-on-label="Active" data-off-label="Inactive"></label>
+                                                <label class="mb-0" for="{{ $department->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
                                             @canany(['edit departments', 'delete departments'])
                                             <td>

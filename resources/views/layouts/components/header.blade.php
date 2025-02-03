@@ -25,7 +25,7 @@
                 <i class="fa fa-fw fa-bars"></i>
             </button>
         </div>
-        @if(request()->routeIs('products.create') || request()->routeIs('products.edit'))
+        @if(request()->routeIs('products.create') || request()->routeIs('products.edit') || request()->routeIs('products.show'))
             <div class="d-flex w-100 justify-content-between align-items-center">
                 <!-- Conditional Title -->
                 <h4 class="mb-0 font-size-16">
@@ -33,6 +33,8 @@
                         Create a new product
                     @elseif(request()->routeIs('products.edit'))
                         Edit product {{ $product->article_code }}
+                    @elseif(request()->routeIs('products.show'))
+                        View Article
                     @endif
                 </h4>
 
@@ -49,7 +51,7 @@
                 <h4 class="mb-0 font-size-16">Products</h4>
             </div>
             <div class="page-title-right d-flex align-items-center gap-2">
-                <form action="{{ route('products.import') }}" method="POST" enctype="multipart/form-data" id="importForm" class="d-inline">
+                {{-- <form action="{{ route('products.import') }}" method="POST" enctype="multipart/form-data" id="importForm" class="d-inline">
                     @csrf
                     <input type="file" name="file" id="fileInput" accept=".csv" required style="display: none;" onchange="document.getElementById('importForm').submit();">
                     <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click();">
@@ -59,12 +61,35 @@
 
                 <a href="{{ route('products.export') }}" class="btn btn-primary">
                     <i class="bx bx-download"></i> Download Product Configuration File
-                </a>
+                </a> --}}
                 @if(Auth::user()->can('create products'))
                 <a href="{{ route('products.create') }}" id="add-product-link" class="btn btn-primary">
                     <i class="bx bx-plus fs-16"></i> Add New Product
                 </a>
                 @endif
+            </div>
+        @elseif(request()->routeIs('products.create.step-2'))
+            <div class="d-flex w-100 justify-content-between align-items-center">
+                <h4 class="mb-0 font-size-16">Step 2</h4>
+            </div>
+
+            <div class="page-title-right">
+                <a href="{{ route('products.create.step-1') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to Step 1</a>
+            </div>
+        @elseif(request()->routeIs('products.create.step-3'))
+            <div class="d-flex w-100 justify-content-between align-items-center">
+                <h4 class="mb-0 font-size-16">Step 3</h4>
+            </div>
+
+            <div class="page-title-right">
+                <a href="{{ route('products.create.step-2') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to Step 2</a>
+            </div>
+        @elseif(request()->routeIs('products.edit.step-2'))
+            <div class="d-flex w-100 justify-content-between align-items-center">
+                <h4 class="mb-0 font-size-16">Edit variations for article {{ $product->article_code }} </h4>
+            </div>
+            <div class="page-title-right">
+                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to Step 1</a>
             </div>
         @endif
 

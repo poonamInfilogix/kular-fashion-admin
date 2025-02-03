@@ -16,7 +16,7 @@
 
                             <div class="col-xl-9">
                                 <div class="mt-4 mt-xl-3">
-                                    <div class="row mb-1">
+                                    {{-- <div class="row mb-1">
                                         <div class="col-sm-8">
                                             <h5 class="mb-sm-0">View Article</h5>
                                         </div>
@@ -25,7 +25,7 @@
                                             <a href="{{ route('products.index') }}"><i class="bx bx-arrow-back"></i>
                                                 Back to products</a>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                     <div class="row">
                                         <div class="col-sm-4">
@@ -45,10 +45,6 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <h6 class="mb-2">Manufacture Code: {{ $product->manufacture_code }}</h6>
-                                        </div>
-                                        <div class="col-sm-4"></div>
-                                        <div class="col-sm-4">
-                                            <h6>Price: <b>£{{ $product->mrp }}</b></h6>
                                         </div>
                                         <div class="col-sm-4">
                                             @if($product->in_date && $product->last_date && $product->in_date->eq($product->last_date))
@@ -70,6 +66,12 @@
                                                         </h6>
                                                     @endif
                                             @endif
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <h6>Price: <b>£{{ $product->mrp }}</b></h6>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            
                                         </div>
 
                                     </div>

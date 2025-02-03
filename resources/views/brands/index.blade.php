@@ -75,7 +75,7 @@
                                                     data-id="{{ $brand->id }}" switch="success" data-on="Active"
                                                     data-off="Inactive" {{ $brand->status === 'Active' ? 'checked' : '' }}
                                                     data-endpoint="{{ route('brand-status') }}" />
-                                                <label for="{{ $brand->id }}" data-on-label="Active"
+                                                <label class="mb-0" for="{{ $brand->id }}" data-on-label="Active"
                                                     data-off-label="Inactive"></label>
                                             </td>
                                             @canany(['edit brands', 'delete brands'])

@@ -56,7 +56,7 @@
                                             </td>
                                             <td>
                                                 <input type="checkbox" id="{{ $productType->id }}"  class="update-status" data-id="{{ $productType->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $productType->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('product-types-status')}}"/>
-                                                <label for="{{ $productType->id }}" data-on-label="Active" data-off-label="Inactive"></label>
+                                                <label class="mb-0" for="{{ $productType->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
                                             @canany(['edit product_types', 'delete product_types'])
                                             <td>
