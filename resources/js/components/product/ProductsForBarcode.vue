@@ -11,6 +11,7 @@
                 <th>Description</th>
                 <th>Product Type</th>
                 <th>Brand</th>
+                <th>Quantity</th>
                 <th>Price</th>
             </tr>
         </thead>
@@ -28,25 +29,26 @@ export default {
                 url: '/get-products',
                 data: function (d) {
                     d.page = Math.floor(d.start / d.length) + 1;
+                    d.new_products_only = true
                 }
             },
             columns: [
                 {
                     title: `<div class="form-check form-check-primary">
-                            <input class="form-check-input" type="checkbox" id="select-all">
+                            <input class="form-check-input" type="checkbox" id="select-all" checked>
                         </div>`,
                     orderable: false,
                     render: function (data, type, row) {
                         let selectedArticles = $('#product-table').attr('data-selected-articles').split(',');
                         let checked = selectedArticles.includes(String(row.id)) ? 'checked' : '';
 
-                        if(!checked && !row.barcodes_printed_for_all){
+                        if (!checked && !row.barcodes_printed_for_all) {
                             checked = 'checked';
                         }
 
                         return `<div class="form-check form-check-primary">
-                                <input class="form-check-input select-row" type="checkbox" value="${row.id}" ${checked}>
-                            </div>`
+                            <input class="form-check-input select-row" type="checkbox" value="${row.id}" ${checked}>
+                        </div>`
                     }
                 },
                 { title: "Article Code", data: 'article_code' },
@@ -54,15 +56,20 @@ export default {
                 { title: "Brand", data: 'brand.name' },
                 { title: "Product Type", data: 'product_type.product_type_name' },
                 { title: "Price", data: 'mrp' },
+                {
+                    title: "Quantity", render: function (data, type, row) {
+                        return row.quantities.reduce((acc, item) => acc + (item.total_quantity - item.original_printed_barcodes), 0);
+                    }
+                },
             ],
             order: [[1, 'asc']],
-            drawCallback: function(settings) {
+            drawCallback: function (settings) {
                 // Call expandRow for each row after table is drawn
-                table.rows().every(function() {
-                    const rowData = this.data();
-                    const row = this.node();
-                    expandRow($(row), rowData);
-                });
+                  table.rows().every(function() {
+                     const rowData = this.data();
+                     const row = this.node();
+                     expandRow($(row), rowData);
+                 }); 
             }
         });
 

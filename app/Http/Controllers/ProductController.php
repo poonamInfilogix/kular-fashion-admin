@@ -494,6 +494,10 @@ class ProductController extends Controller
     {
         $query = Product::with(['brand', 'department', 'quantities', 'productType', 'colors.colorDetail', 'sizes.sizeDetail']);
 
+        if($request->new_products_only){
+            $query->where('are_barcodes_printed', 0)->orWhere('barcodes_printed_for_all', 0);
+        }
+
         // Apply search filter if there's any search value
         if ($request->has('search') && !empty($request->input('search.value'))) {
             $search = $request->input('search.value');
