@@ -27,7 +27,7 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <table id="datatable" class="table table-bordered dt-responsive nowrap w-100">
+                            <table id="datatable" class="table table-bordered table-striped dt-responsive nowrap w-100">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -50,7 +50,7 @@
                                                 <label for="{{ $sizeScale->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
                                             @canany(['view size', 'edit size_scales', 'delete size_scales'])
-                                            <td class="action-buttons">
+                                            <td>
                                                 @if(Auth::user()->can('view size'))
                                                 <a href="{{ route('sizes.index', $sizeScale->id) }}" class="btn btn-primary btn-sm">Manage Size</a>
                                                 @endif
@@ -83,7 +83,10 @@
                 columnDefs: [
                     { type: 'string', targets: 1 } 
                 ],
-                order: [[1, 'asc']]
+                order: [[1, 'asc']],
+                drawCallback: function(settings) {
+                    $('#datatable th, #datatable td').addClass('p-2');
+                }
             });
         });
     </script>

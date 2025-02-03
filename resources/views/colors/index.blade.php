@@ -27,7 +27,7 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <table id="datatable" class="table table-bordered dt-responsive nowrap w-100">
+                            <table id="datatable" class="table table-striped table-bordered dt-responsive nowrap w-100">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -50,7 +50,7 @@
                                                 <label for="{{ $color->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
                                             @canany(['edit colors', 'delete colors'])
-                                            <td class="action-buttons">
+                                            <td>
                                                 @if(Auth::user()->can('edit colors'))
                                                 <a href="{{ route('colors.edit', $color->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
                                                 @endif
@@ -80,7 +80,10 @@
                 columnDefs: [
                     { type: 'string', targets: 1 } 
                 ],
-                order: [[1, 'asc']]
+                order: [[1, 'asc']],
+                drawCallback: function(settings) {
+                    $('#datatable th, #datatable td').addClass('p-2');
+                }
             });
         });
     </script>

@@ -50,7 +50,7 @@
                     @endif
                     <div class="card">
                         <div class="card-body">
-                            <table id="datatable" class="table table-bordered dt-responsive nowrap w-100">
+                            <table id="datatable" class="table table-bordered table-striped dt-responsive nowrap w-100">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -79,7 +79,7 @@
                                                     data-off-label="Inactive"></label>
                                             </td>
                                             @canany(['edit brands', 'delete brands'])
-                                            <td class="action-buttons">
+                                            <td>
                                                 @if(Auth::user()->can('edit brands'))
                                                 <a href="{{ route('brands.edit', $brand->id) }}"
                                                     class="btn btn-primary btn-sm edit"><i
@@ -111,7 +111,7 @@
                 columnDefs: [
                     { type: 'string', targets: 1 } 
                 ],
-                order: [[1, 'asc']]
+                order: [[1, 'asc']],
             });
 
             $('#importButton').on('click', function() {

@@ -26,7 +26,7 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <table id="datatable" class="table table-bordered dt-responsive  nowrap w-100">
+                            <table id="datatable" class="table table-bordered table-striped dt-responsive  nowrap w-100">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -48,7 +48,7 @@
                                             <td>{{ $user->getRoleNames()->first() }}</td>
                                             <td>{{ $user->branch->name ?? 'N/A' }}</td>
                                             @canany(['edit users', 'delete users'])
-                                                <td class="action-buttons">
+                                                <td>
                                                     @if (Auth::user()->can('edit users') &&
                                                             (Auth::user()->hasRole('Super Admin') || $user->getRoleNames()->first() !== 'Super Admin'))
                                                         <a href="{{ route('users.edit', $user->id) }}"

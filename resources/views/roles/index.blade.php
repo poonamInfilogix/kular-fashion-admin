@@ -26,7 +26,7 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <table id="datatable" class="table table-bordered dt-responsive  nowrap w-100">
+                            <table id="datatable" class="table table-bordered table-striped dt-responsive  nowrap w-100">
                                 <thead>
                                 <tr>
                                     <th>#</th>
@@ -42,7 +42,7 @@
                                         <td>{{ ++$key }}</td>
                                         <td>{{ ucwords($role->name) }}</td>
                                         @canany(['edit role', 'delete role'])
-                                        <td class="action-buttons">
+                                        <td>
                                             @if(Auth::user()->can('edit role'))
                                             <a href="{{ route('roles-and-permissions.edit', $role->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
                                             @endif
