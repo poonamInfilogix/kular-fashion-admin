@@ -27,7 +27,7 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <table id="dataTable" class="table table-bordered dt-responsive nowrap w-100">
+                            <table id="dataTable" class="table table-bordered table-striped dt-responsive nowrap w-100">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -43,7 +43,7 @@
                                             <td>{{ ++$key }}</td>
                                             <td>{{ $reason->name }}</td>
                                             @canany(['edit price_reasons', 'delete price_reasons'])
-                                            <td class="action-buttons">
+                                            <td>
                                                 @if(Auth::user()->can('edit price_reasons'))
                                                 <a href="{{ route('change-price-reasons.edit', $reason->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
                                                 @endif

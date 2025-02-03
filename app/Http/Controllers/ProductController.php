@@ -64,10 +64,7 @@ class ProductController extends Controller
                 'required',
                 Rule::unique('products')->whereNull('deleted_at'),
             ],
-            'manufacture_code' => [
-                'required',
-                Rule::unique('products')->whereNull('deleted_at'),
-            ],
+            'manufacture_code' => 'required',
             'brand_id' => 'required',
             'department_id' => 'required',
             'product_type_id' => 'required',
@@ -675,6 +672,7 @@ class ProductController extends Controller
                                 'short_description' => $productDetail->product->short_description,
                                 'color' => $productDetail->colors->colorDetail->color_name,
                                 'brand_short_name' => $productDetail->product->brand->short_name ?? $productDetail->product->brand->name,
+                                'brand_name' => $productDetail->product->brand->name,
                             ];
                         }
                     }
@@ -917,5 +915,11 @@ class ProductController extends Controller
         }
 
         return response()->json(['success' => false, 'message' => 'Product barcode is invalid.']);
+    }
+
+    public function checkManufactureCode($manufactureCode)
+    {
+        $exists = Product::where('manufacture_code', $manufactureCode)->whereNull('deleted_at')->exists();
+        return response()->json(['exists' => $exists]);
     }
 }

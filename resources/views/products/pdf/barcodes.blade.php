@@ -308,7 +308,7 @@
                         @endif
                         <td @class(['barcode-box', 'bg-success-subtle' => $index == 0]) data-index="{{ $index }}">
                             <div class="main-ct">
-                                <h3 class="brand_name"><strong>{{ strtoupper($item['brand_short_name']) }}</strong></h3>
+                                <h3 class="brand_name"><strong>{{ strtoupper(Str::limit($item['brand_name'], 15)) }}</strong></h3>
                                 <div class="product-header">
                                     <span>{{ Str::words(strtoupper($item['short_description']), 22) }}</span>
                                     <span>{{ $item['random_digits'] }}</span>

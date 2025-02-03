@@ -25,9 +25,51 @@
                 <i class="fa fa-fw fa-bars"></i>
             </button>
         </div>
+        @if(request()->routeIs('products.create') || request()->routeIs('products.edit'))
+            <div class="d-flex w-100 justify-content-between align-items-center">
+                <!-- Conditional Title -->
+                <h4 class="mb-0 font-size-16">
+                    @if(request()->routeIs('products.create'))
+                        Create a new product
+                    @elseif(request()->routeIs('products.edit'))
+                        Edit product {{ $product->article_code }}
+                    @endif
+                </h4>
 
-        <div class="d-flex">
-            <div class="dropdown d-none d-lg-inline-block ms-1">
+                <!-- Button -->
+                <div class="page-title-right">
+                    <a href="{{ route('products.index') }}" class="btn btn-primary">
+                        <i class="bx bx-arrow-back"></i> Back to products
+                    </a>
+                </div>
+            </div>
+        @elseif(request()->routeIs('products.index'))
+            <!-- Display title for product listing -->
+            <div class="d-flex w-100 justify-content-between align-items-center">
+                <h4 class="mb-0 font-size-16">Products</h4>
+            </div>
+            <div class="page-title-right d-flex align-items-center gap-2">
+                <form action="{{ route('products.import') }}" method="POST" enctype="multipart/form-data" id="importForm" class="d-inline">
+                    @csrf
+                    <input type="file" name="file" id="fileInput" accept=".csv" required style="display: none;" onchange="document.getElementById('importForm').submit();">
+                    <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click();">
+                        <i class="fas fa-file-import"></i> Import Products
+                    </button>
+                </form>
+
+                <a href="{{ route('products.export') }}" class="btn btn-primary">
+                    <i class="bx bx-download"></i> Download Product Configuration File
+                </a>
+                @if(Auth::user()->can('create products'))
+                <a href="{{ route('products.create') }}" id="add-product-link" class="btn btn-primary">
+                    <i class="bx bx-plus fs-16"></i> Add New Product
+                </a>
+                @endif
+            </div>
+        @endif
+
+            <div class="d-flex">
+                <div class="dropdown d-none d-lg-inline-block ms-1">
                 <button type="button" class="btn header-item noti-icon waves-effect" data-bs-toggle="fullscreen">
                     <i class="bx bx-fullscreen"></i>
                 </button>
