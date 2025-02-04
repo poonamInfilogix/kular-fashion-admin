@@ -51,16 +51,19 @@
                 <h4 class="mb-0 font-size-16">Products</h4>
             </div>
             <div class="page-title-right d-flex align-items-center gap-2">
-                {{-- <form action="{{ route('products.import') }}" method="POST" enctype="multipart/form-data" id="importForm" class="d-inline">
+                <form action="{{ route('products.import') }}" method="POST" enctype="multipart/form-data" id="importForm" class="d-inline">
                     @csrf
                     <input type="file" name="file" id="fileInput" accept=".csv" required style="display: none;" onchange="document.getElementById('importForm').submit();">
                     <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click();">
                         <i class="fas fa-file-import"></i> Import Products
                     </button>
                 </form>
-
+                <a href="{{ route('export.csv') }}" class="btn btn-primary primary-btn btn-md me-1"><i class="bx bx-download"></i> Download Product Configuration File</a>
                 <a href="{{ route('products.export') }}" class="btn btn-primary">
-                    <i class="bx bx-download"></i> Download Product Configuration File
+                    <i class="bx bx-download"></i> Sample Product
+                </a>
+                {{-- <a href="{{ url('download-product-sample') }}" class="btn btn-primary">
+                    <i class="bx bx-download"></i> Sample Product
                 </a> --}}
                 @if(Auth::user()->can('create products'))
                 <a href="{{ route('products.create') }}" id="add-product-link" class="btn btn-primary">

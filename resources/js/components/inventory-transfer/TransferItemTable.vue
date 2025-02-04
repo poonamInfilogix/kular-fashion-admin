@@ -25,7 +25,7 @@
                     <td class="p-1">{{ item.brand }}</td>
                     <td class="p-1">{{ item.price }}</td>
                     <td class="p-1">
-                        <button class="btn btn-danger btn-sm" @click="deleteItem(index)">
+                        <button class="btn btn-danger btn-sm  py-0 px-1" @click="deleteItem(index)">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </td>
