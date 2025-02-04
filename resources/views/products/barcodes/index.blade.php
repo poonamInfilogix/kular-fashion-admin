@@ -28,7 +28,7 @@
                 const nextRow = $(row).next('.expanded-row');
                 if (!rowData || nextRow.length) { return; }
                 
-                const expandedRow = $(`<tr class="expanded-row" data-product-barcode-quantity="${rowData.id}"><td colspan="7"></td></tr>`);
+                const expandedRow = $(`<tr class="expanded-row" data-product-barcode-quantity="${rowData.id}"><td colspan="7" class="py-0"></td></tr>`);
                 const detailsHtml = `
                 <div class="row">
                     <table class="table mt-2">
@@ -119,9 +119,6 @@
                     $('[name="'+inpName+'"]').attr('data-double', function(_, value) {
                         return value === "true" ? "false" : "true"; 
                     });
-
-                    console.log('originalQuantity', originalQuantity);
-                    console.log('quantityId', quantityId);
                 });
             });
         </script>

@@ -15,13 +15,10 @@
             }
 
             td {
-                padding: 6px;
                 text-align: center;
-                border: 1px solid #ddd;
                 vertical-align: top;
-                width: 23%;
+                width: 22%;
                 height: 120px;
-                border-radius: 21px;
             }
 
             .barcode-box img {
@@ -34,8 +31,15 @@
                 color: #666;
             }
 
+            .barcode-box{
+                border-radius: 21px;
+            }
+
             .main-ct {
+                padding: 6px;
                 padding-left: 8px;
+                border: 2px solid #ddd;
+                border-radius: 21px;
             }
 
             .size-label {
@@ -170,14 +174,6 @@
                 td {
                     height: 119px;
                     /* Adjusted to fit 9 rows per page */
-                    padding: 6px;
-                    text-align: center;
-                    border: 1px solid #ddd;
-                    vertical-align: top;
-                    border-radius: 21px;
-                    box-sizing: border-box;
-                    width: 25%;
-                    /* Ensures four columns per row */
                 }
 
                 .barcode-box {
@@ -307,7 +303,7 @@
                             <tr>
                         @endif
                         <td @class(['barcode-box', 'bg-success-subtle' => $index == 0]) data-index="{{ $index }}">
-                            <div class="main-ct">
+                            <div @class(['main-ct'])>
                                 <h3 class="brand_name"><strong>{{ strtoupper(Str::limit($item['brand_name'], 15)) }}</strong></h3>
                                 <div class="product-header">
                                     <span>{{ Str::words(strtoupper($item['short_description']), 22) }}</span>
@@ -451,7 +447,7 @@
 
                 iframe.contentWindow.onafterprint = function() {
                     document.body.removeChild(iframe);
-                    window.location.href = `{{ route('save.barcodes') }}`;
+                   // window.location.href = `{{ route('save.barcodes') }}`;
                 };
             }
         });
