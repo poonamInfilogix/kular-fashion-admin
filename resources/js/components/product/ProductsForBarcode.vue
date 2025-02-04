@@ -65,11 +65,11 @@ export default {
             order: [[1, 'asc']],
             drawCallback: function (settings) {
                 // Call expandRow for each row after table is drawn
-                table.rows().every(function () {
+                /* table.rows().every(function () {
                     const rowData = this.data();
                     const row = this.node();
-                    expandRow($(row), rowData);
-                });
+                    expandRow($(row), rowData, false);
+                }); */
             }
         });
 
