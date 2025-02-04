@@ -5,8 +5,8 @@
         <style>
             @page {
                 size: A4;
-                margin-top: 15mm;
-                margin-bottom: 15mm;
+                margin-top: 15.3mm;
+                margin-bottom: 15.3mm;
                 margin-left: 4.8mm;
                 margin-right: 4.8mm;
             }
@@ -50,7 +50,7 @@
             }
 
             .brand-name {
-                font-size: 16px;
+                font-size: 14px;
                 margin: 0;
                 font-weight: bold;
             }
@@ -79,17 +79,29 @@
                 display: flex;
                 gap: 4px;
             }
+
             .barcode-container img{
-                width: 112px
+                width: 130px
             }
 
             .barcode-right-section{
+                width: calc(100% - 130px);
+            }
+
+            .mrp{
+                font-size: 14px;
+                font-weight: bold;
+            }
+
+            .size-name{
+                text-align: center;
+                font-weight: bold;
                 font-size: 16px;
+                margin-top: 6px;
             }
 
             .department-name{
                 text-align: center;
-                font-weight: bold;
             }
         </style>
     @endpush
@@ -120,22 +132,21 @@
                         ])>
                             <h6 class="brand-name">{{ Str::limit($item['brand_name'], 14) }}</h6>
                             <div class="description-container">
-                                <p>{{ Str::words(strtoupper($item['short_description']), 22) }}</p>
+                                <p>{{ Str::limit(strtoupper($item['short_description']), 17) }}</p>
                                 <p>{{ $item['random_digits'] }}</p>
                             </div>
                             <div class="variant-info">
                                 <p>{{ strtoupper($item['color']) }}</p>
-                                <p>{{ strtoupper($item['size']) }}</p>
                                 <p>{{ strtoupper($item['product_type_short_name']) }}</p>
+                                <p class="mrp">£{{ $item['mrp'] }}</p>
                             </div>
                             <div class="barcode-container">
                                 <div class="barcode-left-section">
                                     <img src="data:image/png;base64,{{ $item['barcode'] }}" alt="Barcode">
-                                    <p>{{ $item['product_code'] }}</p>
+                                    <p>{{ $item['product_code'] }}{{ substr($item['department'], 0, 1) }}</p>
                                 </div>
                                 <div class="barcode-right-section">
-                                    <div class="department-name">{{ substr($item['department'], 0, 1) }}</div>
-                                    <div>£{{ $item['mrp'] }}</div>
+                                    <div class="size-name">{{ strtoupper($item['size']) }}</div>
                                 </div>
                             </div>
                         </div>
