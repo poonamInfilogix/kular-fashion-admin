@@ -82,13 +82,13 @@
                                             <td>
                                                 @if(Auth::user()->can('edit brands'))
                                                 <a href="{{ route('brands.edit', $brand->id) }}"
-                                                    class="btn btn-primary btn-sm edit"><i
+                                                    class="btn btn-primary btn-sm edit py-0 px-1"><i
                                                         class="fas fa-pencil-alt"></i></a>
                                                 @endif
                                                 @if(Auth::user()->can('delete brands'))
                                                 <button data-source="Brand"
                                                     data-endpoint="{{ route('brands.destroy', $brand->id) }}"
-                                                    class="delete-btn btn btn-danger btn-sm edit">
+                                                    class="delete-btn btn btn-danger btn-sm edit py-0 px-1">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                                 @endif

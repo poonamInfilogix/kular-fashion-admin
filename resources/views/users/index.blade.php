@@ -52,7 +52,7 @@
                                                     @if (Auth::user()->can('edit users') &&
                                                             (Auth::user()->hasRole('Super Admin') || $user->getRoleNames()->first() !== 'Super Admin'))
                                                         <a href="{{ route('users.edit', $user->id) }}"
-                                                            class="btn btn-primary btn-sm edit">
+                                                            class="btn btn-primary btn-sm edit py-0 px-1">
                                                             <i class="fas fa-pencil-alt"></i>
                                                         </a>
                                                     @endif
@@ -60,7 +60,7 @@
                                                     @if (Auth::user()->can('delete users') && $user->getRoleNames()->first() !== 'Super Admin')
                                                         <button data-source="user"
                                                             data-endpoint="{{ route('users.destroy', $user->id) }}"
-                                                            class="delete-btn btn btn-danger btn-sm edit">
+                                                            class="delete-btn btn btn-danger btn-sm edit py-0 px-1">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </button>
                                                     @endif

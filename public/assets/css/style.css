@@ -128,3 +128,7 @@ table tbody tr.even {
 .table {
     vertical-align: middle !important;
 }
+
+#custom-search-input {
+    width: 200px;
+}

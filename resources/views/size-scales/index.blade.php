@@ -52,14 +52,14 @@
                                             @canany(['view size', 'edit size_scales', 'delete size_scales'])
                                             <td>
                                                 @if(Auth::user()->can('view size'))
-                                                <a href="{{ route('sizes.index', $sizeScale->id) }}" class="btn btn-primary btn-sm">Manage Size</a>
+                                                <a href="{{ route('sizes.index', $sizeScale->id) }}" class="btn btn-primary btn-sm py-0 px-1">Manage Size</a>
                                                 @endif
                                                 @if(Auth::user()->can('create size_scales'))
-                                                <a href="{{ route('size-scales.edit', $sizeScale->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
+                                                <a href="{{ route('size-scales.edit', $sizeScale->id)}}" class="btn btn-primary btn-sm edit py-0 px-1"><i class="fas fa-pencil-alt"></i></a>
                                                 @endif
                                                 @if(Auth::user()->can('delete size_scales'))
                                                 <button data-source="Size Scale" data-endpoint="{{ route('size-scales.destroy', $sizeScale->id)}}"
-                                                    class="delete-btn btn btn-danger btn-sm edit">
+                                                    class="delete-btn btn btn-danger btn-sm edit py-0 px-1">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                                 @endif
@@ -85,7 +85,7 @@
                 ],
                 order: [[1, 'asc']],
                 drawCallback: function(settings) {
-                    $('#datatable th, #datatable td').addClass('p-1');
+                    $('#datatable th, #datatable td').addClass('p-0');
                 }
             });
         });

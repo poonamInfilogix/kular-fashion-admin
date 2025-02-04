@@ -40,12 +40,9 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <input type="text" id="custom-search-input" class="form-control" placeholder="Search Products">
-                                </div>
+                            <div class="d-flex justify-content-end">
+                                <input type="text" id="custom-search-input" class="form-control" placeholder="Search Products">
                             </div>
-                            
                             <table id="product-table" class="table table-bordered dt-responsive nowrap w-100 table-striped">
                                 <thead>
                                     <tr>
@@ -72,6 +69,7 @@
             var table = $('#product-table').DataTable({
                 processing: true,
                 serverSide: true,
+                searching: false,
                 ajax: {
                     url: "{{ route('get.products') }}",
                     data: function (d) {
@@ -90,18 +88,18 @@
                         render: function (data, type, row) { 
                             var actions = '<div class="action-buttons">';
                                 @can('view products')
-                                    actions += `<a href="{{ route('products.show', ':id') }}" class="btn btn-secondary btn-sm">`.replace(/:id/g, row.id);
+                                    actions += `<a href="{{ route('products.show', ':id') }}" class="btn btn-secondary btn-sm py-0 px-1">`.replace(/:id/g, row.id);
                                     actions += `<i class="fas fa-eye"></i>`;
                                     actions += `</a>`; 
                                 @endcan
 
                                 @can('edit products')
-                                    actions += `<a href="{{ route('products.edit', ':id') }}" class="btn btn-primary btn-sm edit">`.replace(/:id/g, row.id);
+                                    actions += `<a href="{{ route('products.edit', ':id') }}" class="btn btn-primary btn-sm edit py-0 px-1">`.replace(/:id/g, row.id);
                                     actions += `<i class="fas fa-pencil-alt"></i>`; 
                                     actions += `</a>`;
                                 @endcan 
                                 @can('delete products')
-                                    actions += `<button data-source="product" data-endpoint="{{ route('products.destroy', ':id') }}" class="delete-btn btn btn-danger btn-sm"> <i class="fas fa-trash-alt"></i> </button>`.replace(/:id/g, row.id);
+                                    actions += `<button data-source="product" data-endpoint="{{ route('products.destroy', ':id') }}" class="delete-btn btn btn-danger btn-sm py-0 px-1"> <i class="fas fa-trash-alt"></i> </button>`.replace(/:id/g, row.id);
                                 @endcan
 
                             return actions;
@@ -111,7 +109,7 @@
                 order: [[1, 'asc']],
                 drawCallback: function(settings) {
                     let api = this.api();
-                    $('#product-table th, #product-table td').addClass('p-2');
+                    $('#product-table th, #product-table td').addClass('p-1');
 
                     let rows = api.rows({ page: 'current' }).data().length;
 

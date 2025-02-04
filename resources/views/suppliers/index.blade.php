@@ -58,11 +58,11 @@
                                             @canany(['edit suppliers', 'delete suppliers'])
                                             <td>
                                                 @if(Auth::user()->can('edit suppliers'))
-                                                <a href="{{ route('suppliers.edit', $supplier->id)}}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
+                                                <a href="{{ route('suppliers.edit', $supplier->id)}}" class="btn btn-primary btn-sm edit py-0 px-1"><i class="fas fa-pencil-alt"></i></a>
                                                 @endif
                                                 @if(Auth::user()->can('delete suppliers'))
                                                 <button data-source="Supplier" data-endpoint="{{ route('suppliers.destroy', $supplier->id)}}"
-                                                    class="delete-btn btn btn-danger btn-sm edit">
+                                                    class="delete-btn btn btn-danger btn-sm edit py-0 px-1">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                                 @endif
@@ -88,7 +88,7 @@
                 ],
                 order: [[1, 'asc']],
                 drawCallback: function(settings) {
-                    $('#datatable th, #datatable td').addClass('p-1');
+                    $('#datatable th, #datatable td').addClass('p-0');
                 }
             });
         });

@@ -76,18 +76,18 @@
                                                     <table class="table table-striped">
                                                         <thead>
                                                             <tr>
-                                                                <th>Module Name</th>
-                                                                <th>View</th>
-                                                                <th>Add</th>
-                                                                <th>Update</th>
-                                                                <th>Delete</th>
+                                                                <th class="p-1">Module Name</th>
+                                                                <th class="p-1">View</th>
+                                                                <th class="p-1">Add</th>
+                                                                <th class="p-1">Update</th>
+                                                                <th class="p-1">Delete</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             @foreach ($modules as $module)
                                                                 <tr>
-                                                                    <th scope="row">{{ $module->name }}</th>
-                                                                    <td>
+                                                                    <th scope="row" class="p-1">{{ $module->name }}</th>
+                                                                    <td class="p-1">
                                                                         <div class="form-check">
                                                                             <input class="form-check-input" type="checkbox" name="permissions[]"
                                                                                 id="{{ $role->id . 'view_' . $module->slug }}"
@@ -95,7 +95,7 @@
                                                                                 {{ $role->permissions->contains('name', 'view ' . $module->slug) ? 'checked' : '' }}>
                                                                         </div>
                                                                     </td>
-                                                                    <td>
+                                                                    <td class="p-1">
                                                                         @if ($module->slug!='roles & permissions')
                                                                         <div class="form-check">
                                                                             <input class="form-check-input" type="checkbox" name="permissions[]"
@@ -105,7 +105,7 @@
                                                                         </div>
                                                                         @endif
                                                                     </td>
-                                                                    <td>
+                                                                    <td class="p-1">
                                                                         <div class="form-check">
                                                                             <input class="form-check-input" type="checkbox" name="permissions[]"
                                                                                 id="{{ $role->id . 'edit_' . $module->slug }}"
@@ -113,7 +113,7 @@
                                                                                 {{ $role->permissions->contains('name', 'edit ' . $module->slug) ? 'checked' : '' }}>
                                                                         </div>
                                                                     </td>
-                                                                    <td>
+                                                                    <td class="p-1">
                                                                         @if ($module->slug!='roles & permissions')
                                                                         <div class="form-check">
                                                                             <input class="form-check-input" type="checkbox" name="permissions[]"

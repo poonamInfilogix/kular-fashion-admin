@@ -54,11 +54,11 @@
                                             @canany(['edit size', 'delete size'])
                                             <td>
                                                 @if(Auth::user()->can('edit size'))
-                                                <a href="{{ route('sizes.edit', ['sizeScaleId' => $size->size_scale_id, 'size' => $size->id]) }}" class="btn btn-primary btn-sm edit"><i class="fas fa-pencil-alt"></i></a>
+                                                <a href="{{ route('sizes.edit', ['sizeScaleId' => $size->size_scale_id, 'size' => $size->id]) }}" class="btn btn-primary btn-sm edit py-0 px-1"><i class="fas fa-pencil-alt"></i></a>
                                                 @endif
                                                 @if(Auth::user()->can('delete size'))
                                                 <button data-source="Size"  data-endpoint="{{ route('sizes.destroy', ['sizeScaleId' => $size->size_scale_id, 'size' => $size->id]) }}"
-                                                    class="delete-btn btn btn-danger btn-sm edit">
+                                                    class="delete-btn btn btn-danger btn-sm edit py-0 px-1">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                                 @endif
@@ -80,7 +80,7 @@
         $(document).ready(function() {
             $('#datatable').DataTable({
                 drawCallback: function(settings) {
-                    $('#datatable th, #datatable td').addClass('p-1');
+                    $('#datatable th, #datatable td').addClass('p-0');
                 }
             });
         });

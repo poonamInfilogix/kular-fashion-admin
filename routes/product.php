@@ -21,4 +21,6 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
 
     // Generate product barcodes
     Route::get('/products/print-barcodes', [ProductBarcodeController::class, 'index'])->name('products.print-barcodes');
+    Route::get('/export/csv', [ProductController::class, 'downloadExcel'])->name('export.csv');
+
 });
