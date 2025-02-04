@@ -69,7 +69,6 @@
             var table = $('#product-table').DataTable({
                 processing: true,
                 serverSide: true,
-                searching: false,
                 ajax: {
                     url: "{{ route('get.products') }}",
                     data: function (d) {
