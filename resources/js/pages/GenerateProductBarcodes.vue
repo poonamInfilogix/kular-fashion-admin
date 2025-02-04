@@ -53,7 +53,6 @@ export default {
         selectedArticles: {
             handler() {
                 $('#product-table').attr('data-selected-articles', this.selectedArticles);
-                this.setBarcodesToBePrint();
             },
             deep: true
         }
@@ -134,7 +133,7 @@ export default {
                 },
                 success : function(resp){
                     if(resp.success){
-                        //window.location.href = '/products/print-barcodes/preview';
+                        window.location.href = '/products/print-barcodes/preview';
                     }
                 },error : function(err){
                     console.log(err);

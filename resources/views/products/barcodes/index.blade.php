@@ -24,7 +24,7 @@
                 }
             }
 
-            function expandRow(row, rowData) {
+            function expandRow(row, rowData, shoudlShould = true) {
                 const nextRow = $(row).next('.expanded-row');
                 if (!rowData || nextRow.length) { return; }
                 

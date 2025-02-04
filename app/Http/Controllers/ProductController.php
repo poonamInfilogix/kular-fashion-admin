@@ -494,7 +494,7 @@ class ProductController extends Controller
     {
         $query = Product::with(['brand', 'department', 'quantities', 'productType', 'colors.colorDetail', 'sizes.sizeDetail']);
 
-        if($request->new_products_only){
+        if ($request->new_products_only) {
             $query->where('are_barcodes_printed', 0)->orWhere('barcodes_printed_for_all', 0);
         }
 
@@ -644,6 +644,23 @@ class ProductController extends Controller
         $generator = new BarcodeGeneratorPNG();
 
         foreach ($barcodesQty->barcodesToBePrinted as $data) {
+            if(!isset($data['product'])){
+                $defaultProductsToBePrinted = Product::where('are_barcodes_printed', 0)->orWhere('barcodes_printed_for_all', 0)->with('quantities')->get();
+                foreach($defaultProductsToBePrinted as $product){
+                    $filteredQuantities = $product->quantities->filter(function($quantity) {
+                        return ($quantity->total_quantity - $quantity->original_printed_barcodes) > 0;
+                    });
+
+                    foreach($filteredQuantities as $filteredQuantity){
+                        $data['product'][] = [
+                            'id' => $filteredQuantity->id,
+                            'orignalQty' => $filteredQuantity->total_quantity - $filteredQuantity->original_printed_barcodes,
+                            'printQty' => $filteredQuantity->total_quantity - $filteredQuantity->original_printed_barcodes
+                        ];
+                    }
+                }
+            }
+
             if (isset($data['product'])) {
                 foreach ($data['product'] as $quantityDetail) {
                     $products = ProductQuantity::with('product.department', 'product.brand', 'sizes.sizeDetail', 'colors.colorDetail')->where('id', $quantityDetail['id'])->get();
@@ -655,26 +672,28 @@ class ProductController extends Controller
                         $article_code = $article_code . $color_code . $new_code;
 
                         $checkCode = $this->generateCheckDigit($article_code);
+
                         for ($i = 0; $i < $quantityDetail['printQty']; $i++) {
-                            $barcode = base64_encode($generator->getBarcode($article_code, $generator::TYPE_EAN_13, 1, 20, [0, 0, 0]));
+                            $barcode = base64_encode($generator->getBarcode($article_code, $generator::TYPE_EAN_13, 1, 25, [0, 0, 0]));
                             $randomDigit = $this->generateRandomProductCode($productDetail->product->id);
 
                             $date = Carbon::parse($productDetail->first_barcode_printed_date);
                             $yearMonth = $date->format('ym');
-                            
+
                             $barcodes[] = [
                                 'barcode' => $barcode,
                                 'product_code' => $article_code . $checkCode,
                                 'random_digits' => $randomDigit . $yearMonth,
                                 'department' => $productDetail->product->department->name,
                                 'type' => $productDetail->product->productType->product_type_name,
-                                'short_name' => $productDetail->product->productType->short_name,
+                                'product_type_short_name' => $productDetail->product->productType->short_name,
                                 'manufacture_code' => $productDetail->product->manufacture_code,
                                 'size' => $productDetail->sizes->sizeDetail->size,
                                 'mrp' => $productDetail->sizes->mrp,
                                 'article_code' => $productDetail->product->article_code,
                                 'short_description' => $productDetail->product->short_description,
                                 'color' => $productDetail->colors->colorDetail->color_name,
+                                'color_short_name' => $productDetail->colors->colorDetail->short_name,
                                 'brand_short_name' => $productDetail->product->brand->short_name ?? $productDetail->product->brand->name,
                                 'brand_name' => $productDetail->product->brand->name,
                             ];
