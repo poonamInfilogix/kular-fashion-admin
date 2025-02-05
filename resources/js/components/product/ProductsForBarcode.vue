@@ -1,5 +1,6 @@
 <template>
-    <table id="product-table" data-selected-articles="" class="table table-striped table-bordered dt-responsive nowrap w-100">
+    <table id="product-table" data-selected-articles=""
+        class="table table-striped table-bordered dt-responsive nowrap w-100">
         <thead>
             <tr>
                 <th class="p-1">
@@ -12,6 +13,7 @@
                 <th class="p-1">Product Type</th>
                 <th class="p-1">Brand</th>
                 <th class="p-1">Quantity</th>
+                <th class="p-1">Last In</th>
                 <th class="p-1">Price</th>
             </tr>
         </thead>
@@ -61,13 +63,22 @@ export default {
                         return row.quantities.reduce((acc, item) => acc + (item.total_quantity - item.original_printed_barcodes), 0);
                     }
                 },
+                {
+                    title: "Last In", render: function (data, type, row) {
+                        // Format date using moment.js
+                        if (row.last_date) {
+                            return moment(row.last_date).format('DD-MM-YYYY');
+                        }
+                        return '';
+                    }
+                },
             ],
-            order: [[1, 'asc']],
+            order: [[6, 'desc']],
             drawCallback: function (settings) {
                 $('#product-table tbody tr').each(function () {
                     $(this).children('td').addClass('p-1');
                 });
-                
+
                 // Call expandRow for each row after table is drawn
                 /* table.rows().every(function () {
                     const rowData = this.data();

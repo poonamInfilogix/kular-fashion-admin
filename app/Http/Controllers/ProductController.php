@@ -519,7 +519,7 @@ class ProductController extends Controller
         }
 
         // Order by id in descending order by default
-        $products = $query->orderBy('id', 'desc') // Changed to 'desc' for descending order
+        $products = $query->orderBy('updated_at', 'desc') // Changed to 'desc' for descending order
             ->paginate($request->input('length', 10));
 
         $data = [
