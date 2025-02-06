@@ -53,8 +53,8 @@ input[switch=danger]:label {
 .d-color-code{
     border: 1px solid; 
     border-radius: 4px; 
-    height: 1.5rem; 
-    width: 1.5rem; 
+    height: 1.0rem; 
+    width: 1.0rem; 
     cursor: pointer;
 }
 

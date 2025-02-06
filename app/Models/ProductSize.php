@@ -18,7 +18,7 @@ class ProductSize extends Model
         if ($product_color_id) {
             $query->where('product_color_id', $product_color_id);
         }
-        
+
         return $query->first()->quantity ?? 0;
     }
 
@@ -30,5 +30,15 @@ class ProductSize extends Model
         }
         
         return $query->first()->total_quantity ?? 0;
+    }
+
+    public function inventoryAvailableQuantity($product_color_id = null, $storeId = null){
+        $inventory = StoreInventory::where('store_id', $storeId)->where('product_size_id', $this->size_id)->where('product_color_id', $product_color_id);
+        return $inventory->first()->quantity ?? 0;
+    }
+
+    public function inventoryTotalQuantity($product_color_id = null, $storeId = null){
+        $inventory = StoreInventory::where('store_id', $storeId)->where('product_size_id', $this->size_id)->where('product_color_id', $product_color_id);
+        return $inventory->first()->total_quantity ?? 0;
     }
 }

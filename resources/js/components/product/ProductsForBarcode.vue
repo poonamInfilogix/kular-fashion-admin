@@ -66,10 +66,10 @@ export default {
                 {
                     title: "Last In", render: function (data, type, row) {
                         // Format date using moment.js
-                        if (row.last_date) {
-                            return moment(row.last_date).format('DD-MM-YYYY');
+                        if (row.updated_at) {
+                            return moment(row.updated_at).format('DD-MM-YYYY');
                         }
-                        return '';
+                        return '-';
                     }
                 },
             ],

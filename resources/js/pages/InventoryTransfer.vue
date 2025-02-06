@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-3">
+        <div class="col-2">
             <label>From</label>
             <select class="form-control" v-model="fromStore">
                 <option disabled value="">Select a store</option>
@@ -9,7 +9,7 @@
                 </option>
             </select>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <label>To</label>
             <select class="form-control" v-model="toStore">
                 <option disabled value="">Select a store</option>
@@ -19,9 +19,7 @@
                 </option>
             </select>
         </div>
-    </div>
-    <div class="row mt-2">
-        <div class="col-md-6">
+        <div class="col-4">
             <BarCodeBox :item-to-be-add="itemToBeAdd" @transfer-item="transferItem" />
         </div>
     </div>

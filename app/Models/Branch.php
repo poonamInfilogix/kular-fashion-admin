@@ -19,4 +19,9 @@ class Branch extends Model
     {
         return $this->hasMany(InventoryTransfer::class, 'sent_to');
     }
+
+    public function inventory()
+    {
+        return $this->hasMany(StoreInventory::class, 'store_id');
+    }
 }

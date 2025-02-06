@@ -65,7 +65,11 @@
                         </div>
 
                         <div class="mt-4">
-                            <div class="table-responsive">
+                            <div class="d-flex justify-content-between">
+                                <h5>{{ $branches->first()->name }} Inventory</h5>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#inventoryModal">View inventory in all stores</button>
+                            </div>
+                            <div class="table-responsive mt-2">
                                 <table class="table mb-0 table-bordered">
                                     <tbody>
                                         <tr>
@@ -91,7 +95,6 @@
                                             </tr>
                                         @endforeach
 
-
                                         @php
                                             $mrpValues = $product->sizes->pluck('mrp');
                                             $isDifferent = $mrpValues->unique()->count() > 1;
@@ -116,4 +119,117 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="inventoryModal" tabindex="-1" aria-labelledby="inventoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="inventoryModalLabel">All Stores Inventory</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mt-0">
+                <div class="d-flex justify-content-between">
+                    <h6><strong>{{ $branches->first()->name }}</strong></h6>
+                </div>
+                <div class="table-responsive">
+                    <table class="table mb-0 table-bordered">
+                        <tbody>
+                            <tr>
+                                <th scope="row" class="p-1">Size</th>
+                                @foreach ($product->sizes as $size)
+                                    <th class="p-1">{{ $size->sizeDetail->size }}</th>
+                                @endforeach
+                            </tr>
+
+                            @foreach ($product->colors as $color)
+                                <tr>
+                                    <th class="d-flex p-1">
+                                        <div class="me-1 d-color-code"
+                                            style="background: {{ $color->colorDetail->ui_color_code }}"></div>
+                                        <h6 class="m-0">{{ $color->colorDetail->color_name }}
+                                            ({{ $color->colorDetail->color_code }})</h6>
+                                    </th>
+                                    @foreach ($product->sizes as $size)
+                                        <td class="p-1"><strong>{{ $size->quantity($color->id) }}</strong> /
+                                            {{ $size->totalQuantity($color->id) }}
+                                        </td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+
+                            @php
+                                $mrpValues = $product->sizes->pluck('mrp');
+                                $isDifferent = $mrpValues->unique()->count() > 1;
+                            @endphp
+
+                            @if($isDifferent)
+                                <tr>
+                                    <th scope="row" class="p-1">MRP</th>
+                                    @foreach ($product->sizes as $size)
+                                        <td class="p-1">£{{ $size->mrp }}</td>
+                                    @endforeach
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            @foreach ($branches->skip(1) as $branch)
+            <div class="d-flex justify-content-between mt-3">
+                <h6><strong>{{ $branch->name }}</strong></h6>
+            </div>
+            <div class="table-responsive">
+                <table class="table mb-0 table-bordered">
+                    <tbody>
+                        <tr>
+                            <th scope="row" class="p-1">Size</th>
+                            @foreach ($product->sizes as $size)
+                                <th class="p-1">{{ $size->sizeDetail->size }}</th>
+                            @endforeach
+                        </tr>
+
+                        @foreach ($product->colors as $color)
+                            <tr>
+                                <th class="d-flex p-1">
+                                    <div class="me-1 d-color-code"
+                                        style="background: {{ $color->colorDetail->ui_color_code }}"></div>
+                                    <h6 class="m-0">{{ $color->colorDetail->color_name }}
+                                        ({{ $color->colorDetail->color_code }})</h6>
+                                </th>
+                                @foreach ($product->sizes as $size)
+                                    <td class="p-1"><strong>{{ $size->inventoryAvailableQuantity($color->id, $branch->id) }}</strong> /
+                                        {{ $size->inventoryTotalQuantity($color->id, $branch->id) }}
+                                    </td>
+                                @endforeach
+                            </tr>
+                        @endforeach
+
+                        @php
+                            $mrpValues = $product->sizes->pluck('mrp');
+                            $isDifferent = $mrpValues->unique()->count() > 1;
+                        @endphp
+
+                        @if($isDifferent)
+                            <tr>
+                                <th scope="row" class="p-1">MRP</th>
+                                @foreach ($product->sizes as $size)
+                                    <td class="p-1">£{{ $size->mrp }}</td>
+                                @endforeach
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+            @endforeach
+            
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection

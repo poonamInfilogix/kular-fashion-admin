@@ -94,10 +94,7 @@ class InventoryTransferController extends Controller
             if ($productQuantity) {
                 $productQuantity->quantity = $productQuantity->quantity - $quantity;
                 $productQuantity->save();
-            } else {
-                \Log::error('ProductQuantity not found for ID: ' . $productQuantityId);
-                continue;
-            }
+            } 
 
             $existingInventoryItem = InventoryItem::where([
                 'inventroy_transfer_id' => $inventoryTransfer->id,

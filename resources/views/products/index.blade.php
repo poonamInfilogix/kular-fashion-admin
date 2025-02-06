@@ -40,9 +40,6 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <div class="d-flex justify-content-end">
-                                <input type="text" id="custom-search-input" class="form-control" placeholder="Search Products">
-                            </div>
                             <table id="product-table" class="table table-bordered dt-responsive nowrap w-100 table-striped">
                                 <thead>
                                     <tr>
@@ -121,10 +118,20 @@
                 }
             });
 
+            $('#product-table_filter').prepend(`<input type="text" id="custom-search-input" class="form-control" placeholder="Search Products">`);
+
             $('#custom-search-input').on('keyup', function () {
                 table.search(this.value).draw();
             });
         });
     </script>
+
+    @push('styles')
+        <style>
+            #product-table_filter label{
+                display: none;
+            }
+        </style>
+    @endpush
 @endsection
 

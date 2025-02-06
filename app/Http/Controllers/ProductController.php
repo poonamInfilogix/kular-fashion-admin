@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branch;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\ProductColor;
@@ -128,6 +129,7 @@ class ProductController extends Controller
             $imagePath = $product->image;
         }
 
+
         if ($product) {
             $product->update([
                 /* 'manufacture_code' => $request->manufacture_code,
@@ -145,6 +147,7 @@ class ProductController extends Controller
                 //'size_scale_id' => $request->size_scale_id,
                 'image' => $imagePath,
                 'status' => $request->status,
+                'updated_at' => now()
             ]);
         }
         if (isset($request->tag_id)) {
@@ -408,7 +411,12 @@ class ProductController extends Controller
         if (!Gate::allows('view products')) {
             abort(403);
         }
-        return view('products.show', compact('product'));
+
+        $branches = Branch::with(['inventory' => function($query) use ($product) {
+            $query->where('product_id', $product->id);
+        }])->get();
+
+        return view('products.show', compact('product', 'branches'));
     }
 
     public function edit(Product $product)
