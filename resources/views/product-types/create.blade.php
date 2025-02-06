@@ -2,11 +2,10 @@
 
 @section('title', 'Create a new product type')
 @section('header-button')
-<div class="page-title-right">
+@if(Auth::user()->can('create product_types'))
     <a href="{{ route('product-types.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to product types</a>
-</div>
+@endif
 @endsection
-
 
 @section('content')
     <div class="page-content">
