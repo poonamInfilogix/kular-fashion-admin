@@ -2,9 +2,8 @@
 
 @section('title', 'Print Barcodes Preview')
 @section('header-button')
-<button id="print-btn" class="btn btn-primary me-2"><i class="bx bx-printer"></i> Print</button>
+    <button id="print-btn" class="btn btn-primary me-2"><i class="bx bx-printer"></i> Print</button>
 @endsection
-
 
 @section('content')
     @push('styles')
@@ -91,8 +90,8 @@
             }
 
             /* .barcode-left-section p{
-                        margin: 0;
-                    } */
+                                margin: 0;
+                            } */
 
             .barcode-right-section {
                 width: calc(100% - 130px);
