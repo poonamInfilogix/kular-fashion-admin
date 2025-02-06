@@ -1,5 +1,11 @@
 @extends('layouts.app')
 
+@section('title', 'Print Barcodes Preview')
+@section('header-button')
+<button id="print-btn" class="btn btn-primary me-2"><i class="bx bx-printer"></i> Print</button>
+@endsection
+
+
 @section('content')
     @push('styles')
         <style id="tickets-css">
@@ -111,21 +117,6 @@
     @endpush
 
     <div class="page-content">
-        <div class="row page-header">
-            <div class="col-12">
-                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0 font-size-18">Print Barcodes Preview</h4>
-
-                    <div class="page-title-right">
-                        <button id="print-btn" class="btn btn-primary me-2">
-                            <i class="bx bx-printer"></i>
-                            Print
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="pages">
             @foreach (array_chunk($barcodes, 36) as $pageIndex => $barcode)
                 <div class="page">

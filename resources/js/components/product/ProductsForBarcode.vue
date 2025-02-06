@@ -73,7 +73,7 @@ export default {
                     }
                 },
             ],
-            order: [[6, 'desc']],
+            order: [[7, 'desc']],
             drawCallback: function (settings) {
                 $('#product-table tbody tr').each(function () {
                     $(this).children('td').addClass('p-1');

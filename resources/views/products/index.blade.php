@@ -1,38 +1,29 @@
 @extends('layouts.app')
 
+@section('title', 'Products') 
+@section('header-button') 
+    {{-- <form action="{{ route('products.import') }}" method="POST" enctype="multipart/form-data" id="importForm" class="d-inline">
+        @csrf
+        <input type="file" name="file" id="fileInput" accept=".csv" required style="display: none;" onchange="document.getElementById('importForm').submit();">
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click();">
+            <i class="fas fa-file-import"></i> Import Products
+        </button>
+    </form>
+
+    <a href="{{ route('products.export') }}" class="btn btn-primary">
+        <i class="bx bx-download"></i> Download Product Configuration File
+    </a> --}}
+
+    @if(Auth::user()->can('create products'))
+    <a href="{{ route('products.create') }}" id="add-product-link" class="btn btn-primary">
+        <i class="bx bx-plus fs-16"></i> Add New Product
+    </a>
+    @endif
+@endsection
+
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    {{-- <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Products</h4>
-            
-                        <div class="page-title-right d-flex align-items-center gap-2">
-                            <form action="{{ route('products.import') }}" method="POST" enctype="multipart/form-data" id="importForm" class="d-inline">
-                                @csrf
-                                <input type="file" name="file" id="fileInput" accept=".csv" required style="display: none;" onchange="document.getElementById('importForm').submit();">
-                                <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click();">
-                                    <i class="fas fa-file-import"></i> Import Products
-                                </button>
-                            </form>
-            
-                            <a href="{{ route('products.export') }}" class="btn btn-primary">
-                                <i class="bx bx-download"></i> Download Product Configuration File
-                            </a>
-            
-                            @if(Auth::user()->can('create products'))
-                            <a href="{{ route('products.create') }}" id="add-product-link" class="btn btn-primary">
-                                <i class="bx bx-plus fs-16"></i> Add New Product
-                            </a>
-                            @endif
-                        </div>
-                    </div> --}}
-                </div>
-            </div>
-            
-            <!-- end page title -->
-
             <div class="row">
                 <div class="col-12">
                     <x-error-message :message="$errors->first('message')" />

@@ -1,23 +1,14 @@
 <template>
-    <div class="row">
-        <div class="col-12">
-            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0 font-size-18">Print Barcodes</h4>
+    <div class="d-flex justify-content-between">
+        <h5>{{ selectedArticles.length }} selected Articles</h5>
 
-                <div class="page-title-right">
-                    <button class="btn btn-primary me-2" @click="setBarcodesToBePrint" v-if="selectedArticles.length>0">
-                        <i class="bx bx-printer"></i>
-                        Print
-                    </button>
-                </div>
-
-            </div>
-        </div>
+        <button class="btn btn-primary btn-sm" @click="setBarcodesToBePrint" v-if="selectedArticles.length > 0">
+            <i class="bx bx-printer"></i>
+            Print
+        </button>
     </div>
 
-    <h5>{{ selectedArticles.length }} selected Articles</h5>
-
-    <div class="row">
+    <div class="row mt-2">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
@@ -98,24 +89,24 @@ export default {
                 this.selectedArticles.splice(index, 1);
             }
         },
-        setBarcodesToBePrint(){
+        setBarcodesToBePrint() {
             const selectedProductIds = this.selectedArticles;
             const barcodesToBePrinted = [];
 
             selectedProductIds.forEach((productId) => {
                 const productContainer = $(`[data-product-barcode-quantity="${productId}"]`);
-                
-                const quantitiesToBePrint = $(productContainer).find('.barcode-quantity').not('[disabled]').filter(function() {
+
+                const quantitiesToBePrint = $(productContainer).find('.barcode-quantity').not('[disabled]').filter(function () {
                     return parseFloat($(this).val()) > 0;
                 });
 
                 const product = [];
                 quantitiesToBePrint.each(function () {
-                    const inputId = $(this).attr('id'); 
-                    const inputValue = $(this).val(); 
+                    const inputId = $(this).attr('id');
+                    const inputValue = $(this).val();
                     const printQty = $(this).data('double') ? parseInt(inputValue) * 2 : inputValue;
 
-                    product.push({ id: inputId, orignalQty: inputValue, printQty: printQty }); 
+                    product.push({ id: inputId, orignalQty: inputValue, printQty: printQty });
                 });
 
                 barcodesToBePrinted.push({
@@ -125,17 +116,17 @@ export default {
             });
 
             $.ajax({
-                url : '/printbarcode-store-session',
-                type : 'POST',
-                data : {
-                    _token : $('[name="csrf-token"]').attr('content'),
+                url: '/printbarcode-store-session',
+                type: 'POST',
+                data: {
+                    _token: $('[name="csrf-token"]').attr('content'),
                     barcodesToBePrinted
                 },
-                success : function(resp){
-                    if(resp.success){
+                success: function (resp) {
+                    if (resp.success) {
                         window.location.href = '/products/print-barcodes/preview';
                     }
-                },error : function(err){
+                }, error: function (err) {
                     console.log(err);
                 }
             });
