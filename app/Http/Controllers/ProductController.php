@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Branch;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\ProductColor;
@@ -128,6 +129,7 @@ class ProductController extends Controller
             $imagePath = $product->image;
         }
 
+
         if ($product) {
             $product->update([
                 /* 'manufacture_code' => $request->manufacture_code,
@@ -145,6 +147,7 @@ class ProductController extends Controller
                 //'size_scale_id' => $request->size_scale_id,
                 'image' => $imagePath,
                 'status' => $request->status,
+                'updated_at' => now()
             ]);
         }
         if (isset($request->tag_id)) {
@@ -367,6 +370,7 @@ class ProductController extends Controller
                 ]);
             }
         }
+
         foreach ($productData['variantData']['mrp'] as $sizeId => $mrp) {
             ProductSize::create([
                 'product_id' => $product->id,
@@ -384,6 +388,7 @@ class ProductController extends Controller
             ]);
 
             $color_id = $productData['colors'][$index];
+
             foreach ($productData['variantData']['quantity'][$color_id] as $sizeId => $quantity) {
                 $productSize = ProductSize::where('size_id', $sizeId)->first();
 
@@ -406,7 +411,12 @@ class ProductController extends Controller
         if (!Gate::allows('view products')) {
             abort(403);
         }
-        return view('products.show', compact('product'));
+
+        $branches = Branch::with(['inventory' => function($query) use ($product) {
+            $query->where('product_id', $product->id);
+        }])->get();
+
+        return view('products.show', compact('product', 'branches'));
     }
 
     public function edit(Product $product)
@@ -517,7 +527,7 @@ class ProductController extends Controller
         }
 
         // Order by id in descending order by default
-        $products = $query->orderBy('id', 'desc') // Changed to 'desc' for descending order
+        $products = $query->orderBy('updated_at', 'desc') // Changed to 'desc' for descending order
             ->paginate($request->input('length', 10));
 
         $data = [
@@ -643,15 +653,15 @@ class ProductController extends Controller
         $barcodes = [];
         $generator = new BarcodeGeneratorPNG();
 
-        foreach ($barcodesQty->barcodesToBePrinted as $data) {
-            if(!isset($data['product'])){
+        foreach ($barcodesQty->barcodesToBePrinted as $key => $data) {
+            if (!isset($data['product'])) {
                 $defaultProductsToBePrinted = Product::where('are_barcodes_printed', 0)->orWhere('barcodes_printed_for_all', 0)->with('quantities')->get();
-                foreach($defaultProductsToBePrinted as $product){
-                    $filteredQuantities = $product->quantities->filter(function($quantity) {
+                foreach ($defaultProductsToBePrinted as $product) {
+                    $filteredQuantities = $product->quantities->filter(function ($quantity) {
                         return ($quantity->total_quantity - $quantity->original_printed_barcodes) > 0;
                     });
 
-                    foreach($filteredQuantities as $filteredQuantity){
+                    foreach ($filteredQuantities as $filteredQuantity) {
                         $data['product'][] = [
                             'id' => $filteredQuantity->id,
                             'orignalQty' => $filteredQuantity->total_quantity - $filteredQuantity->original_printed_barcodes,
@@ -659,6 +669,9 @@ class ProductController extends Controller
                         ];
                     }
                 }
+
+                $barcodesQty->barcodesToBePrinted[$key] = $data;
+                Session::put('barcodesToBePrinted', (array) $barcodesQty);
             }
 
             if (isset($data['product'])) {
@@ -740,9 +753,26 @@ class ProductController extends Controller
         $getPrinted = (object) Session::get('barcodesToBePrinted');
 
         foreach ($getPrinted->barcodesToBePrinted as $data) {
+            if (!isset($data['product'])) {
+                $product = Product::with('quantities')->find($data['productId']);
+
+                $filteredQuantities = $product->quantities->filter(function ($quantity) {
+                    return ($quantity->total_quantity - $quantity->original_printed_barcodes) > 0;
+                });
+
+                foreach ($filteredQuantities as $filteredQuantity) {
+                    $data['product'][] = [
+                        'id' => $filteredQuantity->id,
+                        'orignalQty' => $filteredQuantity->total_quantity - $filteredQuantity->original_printed_barcodes,
+                        'printQty' => $filteredQuantity->total_quantity - $filteredQuantity->original_printed_barcodes
+                    ];
+                }
+            }
+
             if (isset($data['product'])) {
                 foreach ($data['product'] as $quantityDetail) {
-                    $productQuantity = ProductQuantity::where('id', $quantityDetail['id'])->where('product_id', $data['productId'])->first();
+                    $productQuantity = ProductQuantity::where('id', $quantityDetail['id'])->first();
+
                     $updatedOriginalQuantity = $productQuantity->original_printed_barcodes + $quantityDetail['orignalQty'];
 
                     if ($productQuantity->total_quantity >= $updatedOriginalQuantity) {

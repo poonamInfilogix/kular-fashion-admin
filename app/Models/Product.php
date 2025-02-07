@@ -14,12 +14,12 @@ class Product extends Model
 {
     use SoftDeletes;
     protected $guarded = [];
+    public $timestamps = true;
 
     protected $casts = [
         'in_date' => 'datetime',
         'last_date' => 'datetime',
     ];
-    
 
     protected static function boot() {
         parent::boot(); 

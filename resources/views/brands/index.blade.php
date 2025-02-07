@@ -1,40 +1,27 @@
 @extends('layouts.app')
 
+@section('title', 'Brands')
+@section('header-button')
+    <a href="{{ url('download-brand-sample') }}" class="btn btn-primary primary-btn btn-md me-2"><i class="bx bx-download"></i>
+        Download Brands Sample </a>
+    <div class="d-inline-block me-2">
+        <form id="importForm" action="{{ route('import.brands') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <label for="fileInput" class="btn btn-primary primary-btn btn-md mb-0">
+                <i class="bx bx-cloud-download"></i> Import Brands
+                <input type="file" id="fileInput" name="file" accept=".csv, .xlsx" style="display:none;">
+            </label>
+        </form>
+    </div>
+    @if (Auth::user()->can('create brands'))
+        <a href="{{ route('brands.create') }}" class="btn btn-primary"><i class="bx bx-plus"></i> Add
+            New Brand</a>
+    @endif
+@endsection
+
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-            <!-- start page title -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Brands</h4>
-
-                        <div class="page-title-right">
-                            <a href="{{ url('download-brand-sample') }}" class="btn btn-primary primary-btn btn-md me-2"><i
-                                    class="bx bx-download"></i> Download Brands Sample </a>
-                            <div class="d-inline-block me-2">
-                                <form id="importForm" action="{{ route('import.brands') }}" method="POST"
-                                    enctype="multipart/form-data">
-                                    @csrf
-                                    <label for="fileInput" class="btn btn-primary primary-btn btn-md mb-0">
-                                        <i class="bx bx-cloud-download"></i> Import Brands
-                                        <input type="file" id="fileInput" name="file" accept=".csv, .xlsx"
-                                            style="display:none;">
-                                    </label>
-                                </form>
-                            </div>
-                            @if(Auth::user()->can('create brands'))
-                            <a href="{{ route('brands.create') }}" class="btn btn-primary"><i class="bx bx-plus"></i> Add
-                                New Brand</a>
-                            @endif
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-            <!-- end page title -->
-
             <div class="row">
                 <div class="col-12">
                     <x-error-message :message="$errors->first('message')" />
@@ -58,7 +45,7 @@
                                         <th>Image</th>
                                         <th>Status</th>
                                         @canany(['edit brands', 'delete brands'])
-                                        <th>Action</th>
+                                            <th>Action</th>
                                         @endcanany
                                     </tr>
                                 </thead>
@@ -79,20 +66,20 @@
                                                     data-off-label="Inactive"></label>
                                             </td>
                                             @canany(['edit brands', 'delete brands'])
-                                            <td>
-                                                @if(Auth::user()->can('edit brands'))
-                                                <a href="{{ route('brands.edit', $brand->id) }}"
-                                                    class="btn btn-primary btn-sm edit py-0 px-1"><i
-                                                        class="fas fa-pencil-alt"></i></a>
-                                                @endif
-                                                @if(Auth::user()->can('delete brands'))
-                                                <button data-source="Brand"
-                                                    data-endpoint="{{ route('brands.destroy', $brand->id) }}"
-                                                    class="delete-btn btn btn-danger btn-sm edit py-0 px-1">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                                @endif
-                                            </td>
+                                                <td>
+                                                    @if (Auth::user()->can('edit brands'))
+                                                        <a href="{{ route('brands.edit', $brand->id) }}"
+                                                            class="btn btn-primary btn-sm edit py-0 px-1"><i
+                                                                class="fas fa-pencil-alt"></i></a>
+                                                    @endif
+                                                    @if (Auth::user()->can('delete brands'))
+                                                        <button data-source="Brand"
+                                                            data-endpoint="{{ route('brands.destroy', $brand->id) }}"
+                                                            class="delete-btn btn btn-danger btn-sm edit py-0 px-1">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    @endif
+                                                </td>
                                             @endcanany
                                         </tr>
                                     @endforeach
@@ -108,10 +95,13 @@
     <script>
         $(document).ready(function() {
             $('#datatable').DataTable({
-                columnDefs: [
-                    { type: 'string', targets: 1 } 
+                columnDefs: [{
+                    type: 'string',
+                    targets: 1
+                }],
+                order: [
+                    [1, 'asc']
                 ],
-                order: [[1, 'asc']],
                 drawCallback: function(settings) {
                     $('#datatable th, #datatable td').addClass('p-1');
                 }

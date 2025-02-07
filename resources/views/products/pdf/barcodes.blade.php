@@ -1,8 +1,13 @@
 @extends('layouts.app')
 
+@section('title', 'Print Barcodes Preview')
+@section('header-button')
+    <button id="print-btn" class="btn btn-primary me-2"><i class="bx bx-printer"></i> Print</button>
+@endsection
+
 @section('content')
     @push('styles')
-        <style>
+        <style id="tickets-css">
             @page {
                 size: A4;
                 margin-top: 15.3mm;
@@ -80,48 +85,37 @@
                 gap: 4px;
             }
 
-            .barcode-container img{
+            .barcode-container img {
                 width: 130px
             }
 
-            .barcode-right-section{
+            /* .barcode-left-section p{
+                                margin: 0;
+                            } */
+
+            .barcode-right-section {
                 width: calc(100% - 130px);
             }
 
-            .mrp{
+            .mrp {
                 font-size: 14px;
                 font-weight: bold;
             }
 
-            .size-name{
+            .size-name {
                 text-align: center;
                 font-weight: bold;
                 font-size: 16px;
                 margin-top: 6px;
             }
 
-            .department-name{
+            .department-name {
                 text-align: center;
             }
         </style>
     @endpush
 
     <div class="page-content">
-        <div class="row page-header">
-            <div class="col-12">
-                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0 font-size-18">Print Barcodes Preview</h4>
-
-                    <div class="page-title-right">
-                        <button id="print-btn" class="btn btn-primary me-2">
-                            <i class="bx bx-printer"></i>
-                            Print
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="pages">
             @foreach (array_chunk($barcodes, 36) as $pageIndex => $barcode)
                 <div class="page">
@@ -129,7 +123,7 @@
                         <div @class([
                             'ticket-container',
                             'bg-success-subtle' => $pageIndex == 0 && $index == 0,
-                        ])>
+                        ]) data-index="{{ $index }}">
                             <h6 class="brand-name">{{ Str::limit($item['brand_name'], 14) }}</h6>
                             <div class="description-container">
                                 <p>{{ Str::limit(strtoupper($item['short_description']), 17) }}</p>
@@ -155,16 +149,116 @@
             @endforeach
 
         </div>
-
     </div>
 
     @push('scripts')
         <script>
             $(function() {
+                let selectedIndex = null;
+                let barcodes = [];
+
+                // Make the first barcode selected by default
+                let firstBarcode = $('.ticket-container').first();
+                firstBarcode.addClass('bg-success-subtle');
+                selectedIndex = firstBarcode.data('index');
+
+                $(document).on('click', '.ticket-container', function() {
+                    $('.ticket-container').removeClass('bg-success-subtle');
+                    $(this).addClass('bg-success-subtle');
+
+                    selectedIndex = $(this).data('index');
+                });
+
                 $('#print-btn').click(function() {
-                    window.print();
-                })
-            })
+                    if (selectedIndex === null) {
+                        alert('Please select a barcode first.');
+                        return;
+                    }
+
+                    openPrintWindowFromIndex(selectedIndex);
+                });
+            });
+
+            function openPrintWindowFromIndex(index) {
+                let tickets = $('.pages').find('.ticket-container').toArray();
+
+                var firstPart = tickets.slice(0, index);
+                var secondPart = tickets.slice(index);
+
+                var firstTicketsPage = createTicketsPage(firstPart);
+                var secondTicketsPage = createTicketsPage(secondPart);
+
+                var combinedHtml = `
+                    ${firstTicketsPage.length > 0 ? firstTicketsPage.join('') : ''}
+                    ${secondTicketsPage.length > 0 ? secondTicketsPage.join('') : ''}
+                `;
+
+                var styles = $('#tickets-css').html();
+
+                var printWindowContent = `
+                <html>
+                <head>
+                    <title>Print Barcode</title>
+                    <style>${styles}</style>
+                </head>
+                <body>
+                    <div>${combinedHtml}</div>
+                </body>
+                </html>
+                `;
+
+                var iframe = document.createElement('iframe');
+                iframe.style.position = 'absolute';
+                iframe.style.width = '0px';
+                iframe.style.height = '0px';
+                iframe.style.border = 'none';
+
+                document.body.appendChild(iframe);
+
+                var iframeDoc = iframe.contentWindow.document;
+                iframeDoc.open();
+                iframeDoc.write(printWindowContent);
+                iframeDoc.close();
+
+                iframe.onload = function() {
+                    iframe.contentWindow.focus();
+                    iframe.contentWindow.print();
+                };
+
+                iframe.contentWindow.onafterprint = function() {
+                    document.body.removeChild(iframe);
+                    window.location.href = `{{ route('save.barcodes') }}`;
+                };
+            }
+
+
+            function createTicketsPage(elements) {
+                let chunkedBarcodes = [];
+
+                // Chunk the elements array into groups of 36
+                for (let i = 0; i < elements.length; i += 36) {
+                    chunkedBarcodes.push(elements.slice(i, i + 36));
+                }
+
+                // Create an array to hold all the generated pages
+                let allPages = [];
+
+                chunkedBarcodes.forEach(function(barcodePage, pageIndex) {
+                    let pageDiv = $('<div class="page"></div>'); // Create a page div
+
+                    // Append each barcode item to the page
+                    barcodePage.forEach(function(item, index) {
+                        // Assuming `item` is the barcode content to be appended
+                        pageDiv.append($(item).clone());
+                    });
+
+                    // Append the constructed page to the array of all pages
+                    allPages.push(`<div class="page">${$($(pageDiv).clone()).html()}</div>`);
+                });
+
+                // Return all the pages as an array
+                return allPages;
+            }
         </script>
     @endpush
 @endsection

@@ -22,11 +22,8 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ChangePriceReasonController;
 use App\Http\Controllers\InventoryTransferController;
 use Illuminate\Support\Facades\Response;
-
 use App\Http\Controllers\ProductImportExportController;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ProductExport;
-use App\Imports\ProductImport;
+use App\Http\Controllers\PurchaseOrderController;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -58,9 +55,8 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'roles-and-permissions' => RoleAndPermissionController::class,
         'branches' => BranchController::class,
         'inventory-transfer' => InventoryTransferController::class,
+        'purchase-orders' => PurchaseOrderController::class,
     ]);
-
-    
 
     Route::get('product-validate/{barcode}', [ProductController::class, 'productValidate']);
     Route::post('/inventory-transfer-items', [InventoryTransferController::class, 'InventoryTransferItems']);

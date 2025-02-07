@@ -1,18 +1,20 @@
 <template>
-    <table id="product-table" data-selected-articles="" class="table table-bordered dt-responsive nowrap w-100">
+    <table id="product-table" data-selected-articles=""
+        class="table table-striped table-bordered dt-responsive nowrap w-100">
         <thead>
             <tr>
-                <th>
+                <th class="p-1">
                     <div class="form-check form-check-primary mb-3">
                         <input class="form-check-input" type="checkbox" id="select-all">
                     </div>
                 </th>
-                <th>Article Code</th>
-                <th>Description</th>
-                <th>Product Type</th>
-                <th>Brand</th>
-                <th>Quantity</th>
-                <th>Price</th>
+                <th class="p-1">Article Code</th>
+                <th class="p-1">Description</th>
+                <th class="p-1">Product Type</th>
+                <th class="p-1">Brand</th>
+                <th class="p-1">Quantity</th>
+                <th class="p-1">Last In</th>
+                <th class="p-1">Price</th>
             </tr>
         </thead>
     </table>
@@ -61,9 +63,22 @@ export default {
                         return row.quantities.reduce((acc, item) => acc + (item.total_quantity - item.original_printed_barcodes), 0);
                     }
                 },
+                {
+                    title: "Last In", render: function (data, type, row) {
+                        // Format date using moment.js
+                        if (row.updated_at) {
+                            return moment(row.updated_at).format('DD-MM-YYYY');
+                        }
+                        return '-';
+                    }
+                },
             ],
-            order: [[1, 'asc']],
+            order: [[7, 'desc']],
             drawCallback: function (settings) {
+                $('#product-table tbody tr').each(function () {
+                    $(this).children('td').addClass('p-1');
+                });
+
                 // Call expandRow for each row after table is drawn
                 /* table.rows().every(function () {
                     const rowData = this.data();

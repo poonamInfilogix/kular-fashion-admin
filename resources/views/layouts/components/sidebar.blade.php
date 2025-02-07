@@ -50,6 +50,15 @@
                 </li>
                 @endcan
 
+                @can('view inventory_transfer')
+                <li>
+                    <a href="{{ route('purchase-orders.index') }}" class="waves-effect">
+                        <i class="fas fa-box"></i>
+                        <span>Purchase Orders</span>
+                    </a>
+                </li>
+                @endcan
+
                 @canany(['view departments', 'view product_types', 'view brands', 'view colors', 'view size_scales', 'view tags', 'view branches', 'view customers', 'view users', 'view suppliers', 'view role', 'view roles & permissions', 'view tax', 'view settings', 'view price_reasons'])
                 <li class="menu-title">Settings</li>
                 @endcanany

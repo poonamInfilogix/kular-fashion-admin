@@ -1,25 +1,16 @@
 @extends('layouts.app')
 
+
+@section('title', 'Departments')
+@section('header-button')
+    @if (Auth::user()->can('create departments'))
+        <a href="{{ route('departments.create') }}" class="btn btn-primary">Add New Department</a>
+    @endif
+@endsection
+
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-            <!-- start page title -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Departments</h4>
-
-                        <div class="page-title-right">
-                            @if(Auth::user()->can('create departments'))
-                            <a href="{{ route('departments.create') }}" class="btn btn-primary">Add New Department</a>
-                            @endif
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-            <!-- end page title -->
-
             <div class="row">
                 <div class="col-12">
                     <x-error-message :message="$errors->first('message')" />
@@ -35,34 +26,42 @@
                                         <th>Image</th>
                                         <th>Status</th>
                                         @canany(['edit departments', 'delete departments'])
-                                        <th>Action</th>
+                                            <th>Action</th>
                                         @endcanany
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($departments as $key => $department)
+                                    @foreach ($departments as $key => $department)
                                         <tr>
                                             <td>{{ ++$key }}</td>
                                             <td>{{ $department->name }}</td>
-                                            <td><img src="{{ asset($department->image) }}" width="50" height="30" 
-                                                onerror="this.onerror=null; this.src='{{ asset(setting('default_department_image')) }}';" >
+                                            <td><img src="{{ asset($department->image) }}" width="50" height="30"
+                                                    onerror="this.onerror=null; this.src='{{ asset(setting('default_department_image')) }}';">
                                             </td>
                                             <td>
-                                                <input type="checkbox" id="{{ $department->id }}"  class="update-status" data-id="{{ $department->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $department->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('department-status')}}"/>
-                                                <label class="mb-0" for="{{ $department->id }}" data-on-label="Active" data-off-label="Inactive"></label>
+                                                <input type="checkbox" id="{{ $department->id }}" class="update-status"
+                                                    data-id="{{ $department->id }}" switch="success" data-on="Active"
+                                                    data-off="Inactive"
+                                                    {{ $department->status === 'Active' ? 'checked' : '' }}
+                                                    data-endpoint="{{ route('department-status') }}" />
+                                                <label class="mb-0" for="{{ $department->id }}" data-on-label="Active"
+                                                    data-off-label="Inactive"></label>
                                             </td>
                                             @canany(['edit departments', 'delete departments'])
-                                            <td>
-                                                 @if(Auth::user()->can('edit departments'))
-                                                <a href="{{ route('departments.edit', $department->id)}}" class="btn btn-primary btn-sm edit py-0 px-1"><i class="fas fa-pencil-alt"></i></a>
-                                                @endif
-                                                @if(Auth::user()->can('delete departments'))
-                                                <button data-source="Department" data-endpoint="{{ route('departments.destroy', $department->id)}}"
-                                                    class="delete-btn btn btn-danger btn-sm edit py-0 px-1">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                                @endif
-                                            </td>
+                                                <td>
+                                                    @if (Auth::user()->can('edit departments'))
+                                                        <a href="{{ route('departments.edit', $department->id) }}"
+                                                            class="btn btn-primary btn-sm edit py-0 px-1"><i
+                                                                class="fas fa-pencil-alt"></i></a>
+                                                    @endif
+                                                    @if (Auth::user()->can('delete departments'))
+                                                        <button data-source="Department"
+                                                            data-endpoint="{{ route('departments.destroy', $department->id) }}"
+                                                            class="delete-btn btn btn-danger btn-sm edit py-0 px-1">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    @endif
+                                                </td>
                                             @endcanany
                                         </tr>
                                     @endforeach
@@ -74,15 +73,18 @@
             </div>
         </div>
     </div>
-    <x-include-plugins :plugins="['dataTable', 'update-status' ]"></x-include-plugins>
+    <x-include-plugins :plugins="['dataTable', 'update-status']"></x-include-plugins>
 
     <script>
         $(document).ready(function() {
             $('#datatable').DataTable({
-                columnDefs: [
-                    { type: 'string', targets: 1 } 
+                columnDefs: [{
+                    type: 'string',
+                    targets: 1
+                }],
+                order: [
+                    [1, 'asc']
                 ],
-                order: [[1, 'asc']],
                 drawCallback: function(settings) {
                     $('#datatable th, #datatable td').addClass('p-0');
                 }

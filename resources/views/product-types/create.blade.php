@@ -1,24 +1,15 @@
 @extends('layouts.app')
 
+@section('title', 'Create a new product type')
+@section('header-button')
+@if(Auth::user()->can('create product_types'))
+    <a href="{{ route('product-types.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to product types</a>
+@endif
+@endsection
+
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-
-            <!-- start page title -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Create a new product type</h4>
-
-                        <div class="page-title-right">
-                            <a href="{{ route('product-types.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to product types</a>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-            <!-- end page title -->
-
             <div class="row">
                 <div class="col-12">
                     <x-error-message :message="session('message')" />
@@ -36,5 +27,4 @@
             </div>
         </div>
     </div>
-
 @endsection
