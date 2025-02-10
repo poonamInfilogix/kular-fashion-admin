@@ -63,55 +63,50 @@
                                             <div class="col-sm-6 col-md-2">
                                                 <div class="mb-3">
                                                     <label for="product_code">Product Code <span class="text-danger">*</span></label>
-                                                    <input type="text" name="product_code[]" class="form-control" placeholder="Enter Product Code" required>
+                                                    <input type="text" name="product_code[]" class="form-control" placeholder="Enter Product Code">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-md-4">
                                                 <div class="mb-3">
                                                     <label for="short_description">Short Description <span class="text-danger">*</span></label>
-                                                    <input type="text" name="short_description[]" class="form-control" placeholder="Enter Short Description" required>
+                                                    <input type="text" name="short_description[]" class="form-control" placeholder="Enter Short Description">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-md-2">
                                                 <div class="mb-3">
                                                     <label for="supplier_color_code">Supplier Color Code<span class="text-danger">*</span></label>
-                                                    <input type="text" name="supplier_color_code[]" class="form-control" placeholder="Enter Supplier Color Code" required>
+                                                    <input type="text" name="supplier_color_code[]" class="form-control" placeholder="Enter Supplier Color Code">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-md-2">
                                                 <div class="mb-3">
                                                     <div class="mb-3">
                                                         <label for="color">Select Color <span class="text-danger">*</span></label>
-                                                        <select name="colors[]" id="color" @class(["form-control", "is-invalid" =>  $errors->has('colors')])>
+                                                        <select name="colors[]" class="form-control">
                                                             <option value="" disabled selected>Select Color</option> 
                                                             @foreach($colors as $color)
                                                                 <option value="{{ $color->id }}"> {{ $color->color_name }} ({{ $color->color_code }})</option>
                                                             @endforeach
                                                         </select>
-                                                        @error('colors')
-                                                            <span class="invalid-feedback">{{ $message }}</span>
-                                                        @enderror
+                                                        <span class="invalid-feedback"></span>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-md-2">
                                                 <div class="mb-3">
                                                     <label for="product_type">Product_Type<span class="text-danger">*</span></label>
-                                                    <select name="product_type[]" id="product_type" @class(["form-control", "is-invalid" =>  $errors->has('product_type')])>
+                                                    <select name="product_type[]" class="form-control">
                                                         <option value="" disabled selected>Select Product Type</option> 
                                                         @foreach($productTypes as $productType)
                                                             <option value="{{ $productType->id }}">{{ $productType->product_type_name }}</option>
                                                         @endforeach
                                                     </select>
-                                                    @error('product_type')
-                                                        <span class="invalid-feedback">{{ $message }}</span>
-                                                    @enderror
                                                 </div>
                                             </div>
                                             <div class="col-sm-6 col-md-2">
                                                 <div class="mb-3">
                                                     <label for="size_scale_id">Size Scale<span class="text-danger">*</span></label>
-                                                    <select name="size_scale_id" id="size_scale_id"  class="form-control size-scale-dropdown">
+                                                    <select name="size_scale_id[]" class="form-control size-scale-dropdown">
                                                         <option value="" disabled selected>Select size scale</option>
                                                         @foreach ($sizeScales as $sizeScale)
                                                             <option value="{{ $sizeScale->id }}" @selected(old('size_scale_id', $product->size_scale_id ?? '') == $sizeScale->id)>
@@ -123,9 +118,6 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                    @error('size_scale_id')
-                                                        <span class="invalid-feedback">{{ $message }}</span>
-                                                    @enderror
                                                 </div>
                                             </div>
 
@@ -179,9 +171,8 @@
             </div>
         </div>
     </div>
-    <x-include-plugins :plugins="['chosen', 'datePicker']"></x-include-plugins>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+    <x-include-plugins :plugins="['chosen', 'datePicker', 'jQueryValidate']"></x-include-plugins>
+    @push('scripts')
     <script>
         $(function(){
             $('#product_type').chosen({
@@ -197,6 +188,7 @@
                 placeholder_text_multiple: 'Select Color'
             });
         });
+
         $(document).ready(function() {
             $("form").validate({
                 rules: {
@@ -250,6 +242,9 @@
                         required: true,
                         number: true,
                         min: 0.01
+                    },
+                    "manufacture_code": {
+                        required: true,
                     }
                 },
                 messages: {
@@ -303,17 +298,30 @@
                         required: "Please enter the unit price.",
                         number: "Please enter a valid number.",
                         min: "Price must be at least 0.01."
+                    },
+                    "manufacture_code": {
+                        required: "Please enter the manufacture code.",
                     }
                 },
+                errorClass: "is-invalid",
+                validClass: "is-valid",
                 errorPlacement: function(error, element) {
-                    if (element.attr("name") == "colors[]" || element.attr("name") == "product_type[]" || element.attr("name") == "size_scale_id[]" || element.attr("name") == "min_size_id[]" || element.attr("name") == "max_size_id[]") {
+                    if (element.hasClass("chosen-select") || element.hasClass("select2")) {
                         error.insertAfter(element.next('.chosen-container'));
                     } else {
                         error.insertAfter(element);
                     }
+
+                    if (!error.hasClass('invalid-feedback')) {
+                        error.wrap('<span class="invalid-feedback"></span>');
+                    }
                 },
                 submitHandler: function(form) {
                     form.submit();
+                },
+                onreset: function() {
+                    $(".is-invalid").removeClass("is-invalid");
+                    $(".invalid-feedback").remove(); 
                 }
             });
 
@@ -343,7 +351,7 @@
                                 <div class="mb-3">
                                     <div class="mb-3">
                                         <label for="color">Select Color <span class="text-danger">*</span></label>
-                                        <select name="colors[]" id="color" class="form-control color-dropdown">
+                                        <select name="colors[]" class="form-control color-dropdown">
                                             <option value="" disabled selected>Select Color</option> 
                                             @foreach($colors as $color)
                                                 <option value="{{ $color->id }}"> {{ $color->color_name }} ({{ $color->color_code }})</option>
@@ -355,7 +363,7 @@
                             <div class="col-sm-6 col-md-2">
                                 <div class="mb-3">
                                     <label for="color">Product_Type<span class="text-danger">*</span></label>
-                                    <select name="product_type[]" id="product_type" class="form-control product-type-dropdown">
+                                    <select name="product_type[]" class="form-control product-type-dropdown">
                                         <option value="" disabled selected>Select Product Type</option> 
                                         @foreach($productTypes as $productType)
                                             <option value="{{ $productType->id }}">{{ $productType->product_type_name }}</option>
@@ -366,7 +374,7 @@
                             <div class="col-sm-6 col-md-2">
                                 <div class="mb-3">
                                     <label for="size_scale_id">Size Scale<span class="text-danger">*</span></label>
-                                    <select name="size_scale_id[]" id="size_scale_id" class="form-control size-scale-dropdown">
+                                    <select name="size_scale_id[]" class="form-control size-scale-dropdown">
                                         <option value="" disabled selected>Select Size Scale</option>
                                         @foreach ($sizeScales as $sizeScale)
                                             <option value="{{ $sizeScale->id }}">
@@ -475,4 +483,5 @@
             });
         });
     </script>
+    @endpush
 @endsection
