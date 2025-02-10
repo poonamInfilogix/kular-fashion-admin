@@ -6,6 +6,7 @@
 
 @section('title', 'Edit Article '.$product->article_code)
 @section('header-button')
+    <a href="{{ route('products.edit.web-configuration', $product->id) }}" class="btn btn-primary"><i class="bx bx-landscape"></i> Product Web Configuration</a>
     <a href="{{ route('products.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to products</a>
 @endsection
 

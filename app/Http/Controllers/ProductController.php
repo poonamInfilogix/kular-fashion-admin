@@ -975,4 +975,9 @@ class ProductController extends Controller
         $exists = Product::where('manufacture_code', $manufactureCode)->whereNull('deleted_at')->exists();
         return response()->json(['exists' => $exists]);
     }
+
+
+    public function editWebConfigration(Product $product){
+        return view('products.web-configuration.edit', compact('product'));
+    }
 }

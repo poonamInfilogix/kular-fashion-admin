@@ -17,9 +17,9 @@
         <div class="mb-3">
             <label for="department_id">Department<span class="text-danger">*</span></label>
             <select name="department_id" id="department_id" @disabled($isEditing ?? false) @class([
-                    'form-control',
-                    'is-invalid' => $errors->has('department_id'),
-                ])>
+                'form-control',
+                'is-invalid' => $errors->has('department_id'),
+            ])>
                 @foreach ($departments as $department)
                     <option value="{{ $department->id }}" @selected(($product->department_id ?? '') == $department->id)>
                         {{ $department->name }}
@@ -36,9 +36,9 @@
         <div class="mb-3">
             <label for="productType">Product Type <span class="text-danger">*</span></label>
             <select name="product_type_id" id="product_type" @disabled($isEditing ?? false) @class([
-    'productType form-control',
-    'is-invalid' => $errors->has('product_type_id'),
-])>
+                'productType form-control',
+                'is-invalid' => $errors->has('product_type_id'),
+            ])>
                 <option value="" disabled>Select Product Type</option>
                 @if (isset($productTypes))
                     @foreach ($productTypes as $productType)
@@ -61,7 +61,8 @@
                 class="form-control{{ $errors->has('brand_id') ? ' is-invalid' : '' }}">
                 <option value="" disabled>Select brand</option>
                 @foreach ($brands as $brand)
-                    <option value="{{ $brand->id }}" data-margin="{{ $brand->margin }}" @selected(old('brand_id', $product->brand_id ?? '') == $brand->id)>
+                    <option value="{{ $brand->id }}" data-margin="{{ $brand->margin }}"
+                        @selected(old('brand_id', $product->brand_id ?? '') == $brand->id)>
                         {{ $brand->name }}
                     </option>
                 @endforeach
@@ -104,8 +105,9 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <x-form-input name="supplier_price" type="number" step="0.01" value="{{ $product->supplier_price ?? '' }}"
-                label="Supplier Price" placeholder="Enter Supplier Price" required="true" />
+            <x-form-input name="supplier_price" type="number" step="0.01"
+                value="{{ $product->supplier_price ?? '' }}" label="Supplier Price" placeholder="Enter Supplier Price"
+                required="true" />
         </div>
     </div>
 
@@ -113,9 +115,9 @@
         <div class="mb-3">
             <label for="size_scale_id">Size Scale<span class="text-danger">*</span></label>
             <select name="size_scale_id" @disabled($isEditing ?? false) id="size_scale_id" @class([
-    'form-control',
-    'is-invalid' => $errors->has('size_scale_id'),
-])>
+                'form-control',
+                'is-invalid' => $errors->has('size_scale_id'),
+            ])>
                 <option value="" disabled>Select size scale</option>
                 @foreach ($sizeScales as $sizeScale)
                     <option value="{{ $sizeScale->id }}" @selected(old('size_scale_id', $product->size_scale_id ?? '') == $sizeScale->id)>
@@ -170,8 +172,7 @@
             <select name="tax_id" id="tax_id" @class(['form-control', 'is-invalid' => $errors->has('tax_id')])>
                 <option value="" disabled>Select Tax</option>
                 @foreach ($taxes as $tax)
-                    <option value="{{ $tax->id }}" @selected(isset($product->tax_id) && $product->tax_id == $tax->id)
-                        @selected(!isset($product->tax_id) && $tax->is_default == 1)>
+                    <option value="{{ $tax->id }}" @selected(isset($product->tax_id) && $product->tax_id == $tax->id) @selected(!isset($product->tax_id) && $tax->is_default == 1)>
                         {{ $tax->tax }}%
                     </option>
                 @endforeach
@@ -185,7 +186,7 @@
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <x-form-input name="in_date" class="date-picker" :disabled="isset($isEditing) ? $isEditing : false"
-                        value="{{ isset($product->in_date) && $product->in_date ? \Carbon\Carbon::parse($product->in_date)->format('d-m-Y') : now()->format('d-m-Y') }}"
+                value="{{ isset($product->in_date) && $product->in_date ? \Carbon\Carbon::parse($product->in_date)->format('d-m-Y') : now()->format('d-m-Y') }}"
                 label="In Date" placeholder="Enter In Date" readonly="true" />
         </div>
     </div>
@@ -193,8 +194,7 @@
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <x-form-input name="last_date" class="date-picker" :disabled="isset($isEditing) ? $isEditing : false"
-                value="{{ now()->format('d-m-Y') }}"
-                label="Last In Date" placeholder="Enter Last In Date" />
+                value="{{ now()->format('d-m-Y') }}" label="Last In Date" placeholder="Enter Last In Date" />
         </div>
     </div>
 
@@ -214,10 +214,36 @@
                     class="img-preview img-fluid w-100"
                     onerror="this.onerror=null; this.src='{{ asset(setting('default_product_image')) }}';">
             @else
-                <img src="{{ asset(setting('default_product_image')) }}" id="preview-product" class="img-fluid w-100;"
-                    name="image">
+                <img src="{{ asset(setting('default_product_image')) }}" id="preview-product"
+                    class="img-fluid w-100;" name="image">
             @endif
         </div>
+    </div>
+</div>
+
+<div class="row mb-2">
+    <h5>Product Web Basic Info</h5>
+    <div class="col-md-4">
+        <x-form-input name="product_name" value="{{ $product->product_name ?? '' }}"
+            label="Product Name" placeholder="Enter Product Name" required="true" />
+    </div>
+    <div class="col-md-2">
+        <x-form-input name="web_price" type="number" step="0.01" value="{{ $product->web_price ?? '' }}" label="Web Price"
+            placeholder="Enter Web Price" required="true" />
+    </div>
+    <div class="col-md-2">
+        <x-form-input name="sale_price" type="number" step="0.01" value="{{ $product->sale_price ?? '' }}" label="Sale Price"
+            placeholder="Enter Sale Price" />
+    </div>
+    <div class="col-md-2">
+        <x-form-input name="sale_start_at" class="date-picker"
+                value="{{ isset($product->in_date) && $product->in_date ? \Carbon\Carbon::parse($product->in_date)->format('d-m-Y') : '' }}"
+                label="Sale Start at" placeholder="Sale Start at" />
+    </div>
+    <div class="col-md-2">
+        <x-form-input name="sale_end_at" class="date-picker"
+                value="{{ isset($product->in_date) && $product->in_date ? \Carbon\Carbon::parse($product->in_date)->format('d-m-Y') : '' }}"
+                label="Sale End at" placeholder="Sale End at" />
     </div>
 </div>
 
@@ -230,14 +256,15 @@
 <x-include-plugins :plugins="['chosen', 'image', 'datePicker']"></x-include-plugins>
 @push('scripts')
     <script>
-        $(document).ready(function () {
-            $('form').on('keypress', function (e) {
-                if (e.which === 13) { 
+        $(document).ready(function() {
+            $('form').on('keypress', function(e) {
+                if (e.which === 13) {
                     e.preventDefault();
-                    return false; 
+                    return false;
                 }
             });
         });
+
         function initializeAndSortChosen(selector, placeholder = null) {
             const $select = $(selector);
 
@@ -248,8 +275,8 @@
             });
 
             $select.empty();
-            if (placeholderOption.length) $select.append(placeholderOption); 
-            $select.append(options); 
+            if (placeholderOption.length) $select.append(placeholderOption);
+            $select.append(options);
 
             $select.chosen({
                 width: '100%',
@@ -268,11 +295,12 @@
                     url: `/get-product-type/${departmentId}`,
                     type: 'GET',
                     dataType: 'json',
-                    success: function (data) {
+                    success: function(data) {
                         if (data && data.length > 0) {
-                            data.forEach(function (item) {
+                            data.forEach(function(item) {
                                 if (item.product_types) {
-                                    const option = new Option(item.product_types.product_type_name, item.product_type_id);
+                                    const option = new Option(item.product_types.product_type_name, item
+                                        .product_type_id);
                                     productTypeSelect.append(option);
                                 }
                             });
@@ -288,7 +316,7 @@
 
                         productTypeSelect.trigger('chosen:updated');
                     },
-                    error: function (xhr, status, error) {
+                    error: function(xhr, status, error) {
                         console.error('Error fetching product types:', error);
                     }
                 });
@@ -300,7 +328,7 @@
             }
         }
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             initializeAndSortChosen('#product_type', 'Select Product Type');
             initializeAndSortChosen('#brand_id', 'Select Brand');
             initializeAndSortChosen('#department_id');
@@ -308,12 +336,12 @@
             initializeAndSortChosen('#size_scale_id', 'Select Tag');
 
             @if (empty($product->article_code))
-                let lastCode = parseInt("{{ $latestNewCode ?? '300000' }}"); 
-                let articleCode = lastCode + 1; 
+                let lastCode = parseInt("{{ $latestNewCode ?? '300000' }}");
+                let articleCode = lastCode + 1;
                 $('#article_code').val(String(articleCode).padStart(6, '0'));
             @endif
 
-            $('#department_id').change(function () {
+            $('#department_id').change(function() {
                 const departmentId = $(this).val();
                 refreshProductTypeDropdown(departmentId);
             });
@@ -330,7 +358,7 @@
                 }
             }
 
-            $('#brand_id').change(function () {
+            $('#brand_id').change(function() {
                 var selectedBrand = $(this).find('option:selected');
                 var margin = selectedBrand.data('margin');
 
@@ -338,8 +366,9 @@
                 updateSupplierPrice();
             });
 
-            $('#mrp').on('input', function () {
-                updateSupplierPrice(); 
+            $('#mrp').on('input', function() {
+                $('[name="web_price"]').val($(this).val());
+                updateSupplierPrice();
             });
 
             if ($('#brand_id').val()) {
@@ -349,8 +378,5 @@
             var departmentId = $('#department_id').val();
             refreshProductTypeDropdown(departmentId);
         });
-
     </script>
 @endpush
-
-
