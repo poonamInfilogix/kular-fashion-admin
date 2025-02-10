@@ -116,7 +116,8 @@
 
 @if ($hasPlugin('jQueryValidate'))
     @push('scripts')
-        <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
+        <script src="{{ asset('assets/js/jquery/jquery.validate.min.js') }}"></script>
+        <script src="{{ asset('assets/js/jquery/additional-methods.min.js') }}"></script>
     @endpush
 @endif
 
