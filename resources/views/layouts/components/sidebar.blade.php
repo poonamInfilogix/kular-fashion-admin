@@ -40,7 +40,16 @@
                     </a>
                 </li>
                 @endcan
-
+ 
+                @can('view inventory_transfer')
+                <li>
+                    <a href="{{ route('inventory-history') }}" class="waves-effect">
+                        <i class="fas fa-truck"></i>
+                        <span>Inventory Transfer History</span>
+                    </a>
+                </li>
+                @endcan
+                
                 @can('view inventory_transfer')
                 <li>
                     <a href="{{ route('inventory-transfer.index') }}" class="waves-effect">
@@ -50,6 +59,7 @@
                 </li>
                 @endcan
 
+               
                 @can('view inventory_transfer')
                 <li>
                     <a href="{{ route('purchase-orders.index') }}" class="waves-effect">

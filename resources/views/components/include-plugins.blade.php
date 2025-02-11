@@ -175,7 +175,6 @@
                                 }
                             });
                         } else {
-                            console.log('sasd');
                             toggleButton.prop('checked', !toggleButton.prop('checked'));
                         }
                     });
