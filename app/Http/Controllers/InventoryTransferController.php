@@ -149,4 +149,17 @@ class InventoryTransferController extends Controller
             'message' => 'Items transferred successfully.'
         ]);
     }
+
+
+    public function inventoryHistory()
+    {
+        $inventory_transfer = InventoryTransfer::with('get_sent_from', 'get_sent_by', 'get_sent_to')->get();
+        foreach($inventory_transfer as $transfer)
+        {       
+            $inventory_transfer->total_quantity = InventoryItem::where('inventroy_transfer_id', $transfer->id)
+                ->sum('quantity');
+        }
+       
+        return view('inventory-transfer.history', ['inventory_transfer' => $inventory_transfer]);
+    }
 }
