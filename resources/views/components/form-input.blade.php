@@ -2,7 +2,7 @@
     <label for="{{ $name }}">{{ $label }} @if($required)<span class="text-danger">*</span>@endif</label>
     
     @php
-        $validationInputName = preg_replace('/\[(\d+)\]/', '.\1', $name);
+        $validationInputName = preg_replace('/\[(\d+)\]|\[(\w+)\]/', '.$1$2', $name);
     @endphp
 
     @if($type!=='password')
@@ -10,7 +10,7 @@
             type="{{ $type }}"
             name="{{ $name }}"
             id="{{ $name }}"
-            value="{{ old($name, $value) }}"
+            value="{{ old($validationInputName, $value) }}"
             {{ $readonly ? 'readonly' : '' }}
             {{ $attributes->merge(['class' => 'form-control' . ($errors->has($validationInputName) ? ' is-invalid' : '')]) }}
         >
@@ -23,8 +23,8 @@
         >
         <button class="btn btn-light" type="button" id="password-addon">
             <i class="mdi mdi-eye-outline"></i>
-        </button><br>
-
+        </button>
+    </div>
     @endif
 
     @if ($errors->has($validationInputName))
