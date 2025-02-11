@@ -89,9 +89,9 @@
                 width: 130px
             }
 
-            /* .barcode-left-section p{
-                                margin: 0;
-                            } */
+            .barcode-left-section p {
+                margin: 0;
+            }
 
             .barcode-right-section {
                 width: calc(100% - 130px);
@@ -227,10 +227,9 @@
 
                 iframe.contentWindow.onafterprint = function() {
                     document.body.removeChild(iframe);
-                    window.location.href = `{{ route('save.barcodes') }}`;
+                    //window.location.href = `{{ route('save.barcodes') }}`;
                 };
             }
-
 
             function createTicketsPage(elements) {
                 let chunkedBarcodes = [];

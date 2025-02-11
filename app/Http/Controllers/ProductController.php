@@ -691,7 +691,7 @@ class ProductController extends Controller
                             $randomDigit = $this->generateRandomProductCode($productDetail->product->id);
 
                             $date = Carbon::parse($productDetail->first_barcode_printed_date);
-                            $yearMonth = $date->format('ym');
+                            $yearMonth = substr($date->format('ym'), 1);
 
                             $barcodes[] = [
                                 'barcode' => $barcode,
