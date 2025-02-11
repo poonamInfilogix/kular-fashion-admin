@@ -28,9 +28,9 @@
                                     @foreach($inventory_transfer as $key => $transfer)
                                         <tr>
                                             <td >{{++$key}}</td>
-                                            <td>{{$transfer->get_sent_from->name}}</td>
-                                            <td>{{$transfer->get_sent_to->name}}</td>
-                                            <td>{{$transfer->get_sent_by->name}}</td>
+                                            <td>{{$transfer->getSentFrom->name}}</td>
+                                            <td>{{$transfer->getSentTo->name}}</td>
+                                            <td>{{$transfer->getSentBy->name}}</td>
                                             <td>{{ $inventory_transfer->total_quantity}}</td>
                                             <td>{{ date('m-d-Y', strtotime($transfer->created_at))}}</td>
                                         </tr>

@@ -9,7 +9,7 @@ class InventoryTransfer extends Model
 {
     protected $guarded =[];
 
-
+   
     public function getSentFrom()
     {
         return $this->belongsTo(Branch::class, 'sent_from','id');
