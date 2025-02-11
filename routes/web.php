@@ -57,7 +57,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'inventory-transfer' => InventoryTransferController::class,
         'purchase-orders' => PurchaseOrderController::class,
     ]);
-
+    Route::get('inventory-history', [InventoryTransferController::class, 'inventoryHistory'])->name('inventory-history');
     Route::get('product-validate/{barcode}', [ProductController::class, 'productValidate']);
     Route::post('/inventory-transfer-items', [InventoryTransferController::class, 'InventoryTransferItems']);
 
