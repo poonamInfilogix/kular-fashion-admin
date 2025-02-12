@@ -60,6 +60,8 @@
                             </div>
 
                             <div class="mt-4">
+
+                            
                                 <div class="d-flex justify-content-between">
                                     <h5>{{ $branches->first()->name }} Inventory</h5>
                                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal"

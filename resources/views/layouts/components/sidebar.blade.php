@@ -44,7 +44,7 @@
                 @can('view inventory_transfer')
                 <li>
                     <a href="{{ route('inventory-history') }}" class="waves-effect">
-                        <i class="fas fa-truck"></i>
+                        <i class="fas fa-truck fs-5"></i>
                         <span>Inventory Transfer History</span>
                     </a>
                 </li>

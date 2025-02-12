@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Color;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductColor extends Model
