@@ -1,6 +1,6 @@
 @extends('layouts.app',['isVueComponent' => true])
 
-@section('title', 'Inventory Transfer')
+@section('title', 'Inventory Transfer History')
 
 @section('content')
     <div class="page-content">
@@ -9,8 +9,7 @@
                 <div class="col-12">
                     <x-error-message :message="$errors->first('message')" />
                     <x-success-message :message="session('success')" />
-               
-                       <!-- ============= -->
+
                        <div class="card">
                         <div class="card-body">
                             <table id="datatable" class="table table-sm table-bordered table-striped dt-responsive nowrap w-100">
@@ -20,19 +19,26 @@
                                         <th>Sent From</th>
                                         <th>Sent To</th>
                                         <th>Sent By</th>
-                                        <th>Transfer Item</th>
+                                        <th>Transfer Items</th>
                                         <th>Transfer Date</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($inventory_transfer as $key => $transfer)
                                         <tr>
                                             <td >{{++$key}}</td>
-                                            <td>{{$transfer->getSentFrom->name}}</td>
-                                            <td>{{$transfer->getSentTo->name}}</td>
-                                            <td>{{$transfer->getSentBy->name}}</td>
+                                            <td>{{$transfer->sentFrom->name}}</td>
+                                            <td>{{$transfer->sentTo->name}}</td>
+                                            <td>{{$transfer->sentBy->name}}</td>
                                             <td>{{ $inventory_transfer->total_quantity}}</td>
                                             <td>{{ date('m-d-Y', strtotime($transfer->created_at))}}</td>
+                                            <td>                                        
+                                                   <a  href="{{ route('inventory-transfer-view', ['id' => $transfer->id]) }}"
+                                                            class="btn btn-secondary btn-sm  py-0 px-1">
+                                                            <i class="fas fa-eye"></i>
+                                                    </a>
+                                            </td>
                                         </tr>
                                     @endforeach
 
@@ -50,7 +56,9 @@
 
     <script>
         $(document).ready(function() {
+         
             $('#datatable').DataTable({
+
                 columnDefs: [{
                     type: 'string',
                     targets: 1
@@ -64,5 +72,6 @@
             });
            
         });
+      
     </script>
 @endsection

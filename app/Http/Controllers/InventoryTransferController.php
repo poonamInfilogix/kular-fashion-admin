@@ -46,7 +46,7 @@ class InventoryTransferController extends Controller
      */
     public function show(string $id)
     {
-        //
+        
     }
 
     /**
@@ -153,7 +153,7 @@ class InventoryTransferController extends Controller
 
     public function inventoryHistory()
     {
-        $inventory_transfer = InventoryTransfer::with('getSentFrom', 'getSentTo', 'getSentBy')->get();
+        $inventory_transfer = InventoryTransfer::with('sentFrom', 'sentTo', 'sentBy')->get();
         foreach($inventory_transfer as $transfer)
         {       
             $inventory_transfer->total_quantity = InventoryItem::where('inventroy_transfer_id', $transfer->id)
@@ -161,5 +161,15 @@ class InventoryTransferController extends Controller
         }
        
         return view('inventory-transfer.history', ['inventory_transfer' => $inventory_transfer]);
+    }
+
+
+    public function inventoryTransferShow($id)
+    {
+        $inventoryTransfer = InventoryTransfer::with('sentFrom', 'sentTo', 'sentBy')->where('id', $id)->first();
+        $invenTransferRecord = InventoryItem::with('brand', 'product', 'productSize', 'productColor', 'inventoryTransfer')->where('inventroy_transfer_id', $id)->get();
+
+      
+        return view('inventory-transfer.show', ['invenTransferRecord' => $invenTransferRecord, 'inventoryTransfer' => $inventoryTransfer]);
     }
 }

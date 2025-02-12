@@ -3,15 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Size;
 
 class ProductSize extends Model
 {
     protected $guarded =[];
 
     public function sizeDetail(){
-        return $this->belongsTo(Size::class, 'size_id');
+        return $this->belongsTo(Size::class, 'size_id', 'id');
     }
-
+  
     public function quantity($product_color_id = null){
         $query = $this->hasMany(ProductQuantity::class, 'product_size_id', 'id');
     
