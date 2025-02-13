@@ -21,9 +21,9 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title mb-3">Product Description</h4>
+                            <h4 class="card-title mb-3">Product Images</h4>
 
-                            <div class="dropzone" id="product-dropzone">
+                            <div class="dropzone" id="product-dropzone" >
                                 <div class="fallback">
                                     <input name="file" type="file" multiple="multiple">
                                 </div>
@@ -44,7 +44,23 @@
                         </div>
                     </div>
 
-
+                    <div class="card">
+                        <div class="card-body" id="product-specification">
+                            <h4 class="card-title">Product Specification</h4>
+                            <div class="mb-3">
+                                <label for=""></label>
+                                <input id="product_name" name="product_name" type="text" class="form-control"
+                                    placeholder="Product Name">
+                            </div>
+                           
+                            <textarea name="editor" id="editor" class="editor" rows="2"></textarea>
+                                  <!-- Add Button -->
+                            <button id="add-specification" class="btn btn-primary mt-3">Add Specification</button>
+                            
+                            <!-- Container for dynamically added divs -->
+                            <div id="specification-container"></div>
+                        </div>
+                    </div>
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">SEO</h4>
@@ -106,6 +122,35 @@
                         });
                     }
                 });
+            
+                $(document).ready(function() {
+
+                    let specCount = 0;
+
+                    $('#add-specification').click(function() {
+                        specCount++; 
+
+                        const newDiv = `
+                            <div class="specification-item mb-3" id="spec-${specCount}">
+                                <div class="mb-3">
+                                    <label for="spec-name-${specCount}">Specification ${specCount}</label>
+                                    <input id="spec-name-${specCount}" name="spec-name-${specCount}" type="text" class="form-control" placeholder="Specification Name">
+                                </div>
+                                <textarea name="spec-editor-${specCount}" id="spec-editor-${specCount}" class="editor" rows="2"></textarea>
+                                <button class="btn btn-danger btn-sm delete-specification mt-2" data-spec-id="spec-${specCount}">Delete</button>
+                            </div>
+                        `;
+
+                        $('#specification-container').append(newDiv);
+                    });
+
+           
+                    $(document).on('click', '.delete-specification', function() {
+                        const specId = $(this).data('spec-id'); 
+                        $(`#${specId}`).remove(); 
+                    });
+                });
+            
             </script>
         @endpush
     @endsection
