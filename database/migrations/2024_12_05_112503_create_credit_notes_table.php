@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('barcode', 13);
             $table->decimal('amount', 10, 2)->nullable();
-            $table->unsignedBigInteger('generated_by')->nullable();
+            $table->unsignedBigInteger('generated_by')->nullable()->index();
             $table->softDeletes();
             $table->timestamps();
 

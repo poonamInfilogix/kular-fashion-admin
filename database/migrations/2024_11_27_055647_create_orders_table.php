@@ -22,6 +22,7 @@ return new class extends Migration
             $table->decimal('total_amount')->nullable();
             $table->decimal('total_payable_amount')->nullable();
             $table->decimal('paid_amount')->nullable();
+            $table->string('note')->nullable();
             $table->enum('source',['POS', 'Website', 'Other'])->default('Other');
             $table->softDeletes();
             $table->timestamps();

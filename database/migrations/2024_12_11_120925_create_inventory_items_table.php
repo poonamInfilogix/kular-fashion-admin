@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('inventory_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('inventroy_transfer_id');
-            $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('product_quantity_id');
-            $table->unsignedBigInteger('product_color_id')->nullable();
-            $table->unsignedBigInteger('product_size_id')->nullable(); 
+            $table->unsignedBigInteger('inventroy_transfer_id')->index();
+            $table->unsignedBigInteger('product_id')->index();
+            $table->unsignedBigInteger('product_quantity_id')->index();
+            $table->unsignedBigInteger('product_color_id')->nullable()->index();
+            $table->unsignedBigInteger('product_size_id')->nullable()->index(); 
             $table->unsignedBigInteger('brand_id')->nullable()->index();
             $table->integer('quantity')->default(0);
             $table->timestamps();

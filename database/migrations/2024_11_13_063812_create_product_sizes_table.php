@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('product_sizes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_id'); 
-            $table->unsignedBigInteger('size_id');
+            $table->unsignedBigInteger('product_id')->index(); 
+            $table->unsignedBigInteger('size_id')->index();
             $table->decimal('mrp', 8, 2)->default(0.00);
             $table->timestamps();
 

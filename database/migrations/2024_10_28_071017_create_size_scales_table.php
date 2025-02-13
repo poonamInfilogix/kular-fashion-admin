@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('size_scales', function (Blueprint $table) {
             $table->id();
             $table->string('size_scale');
-            $table->enum('status', ['Active', 'Inactive'])->default('Active');
+            $table->enum('status', ['Active', 'Inactive'])->default('Active')->index();
 
             $table->timestamps();
         });

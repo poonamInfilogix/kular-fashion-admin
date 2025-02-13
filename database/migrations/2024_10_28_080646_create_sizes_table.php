@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('new_code', 100)->nullable();
             $table->string('old_code', 100)->nullable();
             $table->string('length', 25)->nullable();
-            $table->enum('status', ['Active', 'Inactive'])->default('Active');
+            $table->enum('status', ['Active', 'Inactive'])->default('Active')->index();
             $table->timestamps();
 
             $table->foreign('size_scale_id')->references('id')->on('size_scales')->onDelete('cascade');
