@@ -5,7 +5,7 @@ use App\Models\Branch;
 use App\Models\Product;
 use App\Models\ProductSize;
 use App\Models\ProductColor;
-use App\Models\InventoryItem;
+
 use App\Models\InventoryTransfer;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,11 +29,6 @@ class InventoryItem extends Model
     public function productColor()
     {
         return $this->belongsTo(Color::class,'product_color_id', 'id');
-    }
-
-    public function inventoryItem()
-    {
-        return $this->belongsTo(InventoryItem::class,'inventroy_transfer_id', 'id');
     }
 
     public function inventoryTransfer()

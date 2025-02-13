@@ -6,6 +6,7 @@ use App\Models\ProductSize;
 use App\Models\ProductColor;
 use App\Models\User;
 use App\Models\Brand;
+use App\Models\InventoryItem;
 use Illuminate\Database\Eloquent\Model;
 
 class InventoryTransfer extends Model
@@ -29,5 +30,8 @@ class InventoryTransfer extends Model
         return $this->belongsTo(User::class,'sent_by', 'id');
     }
    
-    
+    public function inventoryItems()
+    {
+        return $this->hasMany(InventoryItem::class, 'inventroy_transfer_id', 'id');
+    }
 }

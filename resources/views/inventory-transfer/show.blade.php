@@ -20,7 +20,7 @@
                         </h6>
                     </div>
                     <div class="col-sm-3">
-                        <h6 class="mb-2">Sent By: <strong>{{$inventoryTransfer->sentBy->name}}</strong></h6>
+                        <h6 class="mb-2">Sent By: <strong>{{$inventoryTransfer->sentBy->name }}</strong></h6>
                     </div>
                     <div class="col-sm-3">
                         <h6 class="mb-2">Transfer Date: <strong><td>{{ date('m-d-Y', strtotime($inventoryTransfer->created_at))}}</td></strong></h6>
@@ -45,20 +45,19 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                           
-                                    @foreach($invenTransferRecord as $key => $transfer)
-                                        @for($i = 0; $i < $transfer->quantity; $i++)  
+                                    @foreach($inventoryTransfer->inventoryItems as $key => $item)
+                                        @for($i=0;$i<$item->quantity;$i++)
                                             <tr>
                                                 <td>{{++$key}}</td>
-                                                <td>{{$transfer->product->article_code}}</td>
-                                                <td>{{$transfer->product->manufacture_code}}</td>
-                                                <td>{{$transfer->brand->name}}</td>
-                                                <td>{{$transfer->productColor->color_name}}</td>
-                                                <td>{{$transfer->productSize->size ?? 'N/A' }}</td>
+                                                <td>{{ $item->product->article_code ?? 'N/A' }}</td> 
+                                                <td>{{ $item->product->manufacture_code ?? 'N/A' }}</td> 
+                                                <td>{{ $item->brand->name ?? 'N/A' }}</td> 
+                                                <td>{{$item->productColor->color_name ?? 'N/A'}}</td>
+                                                <td>{{$item->productSize->size ?? 'N/A' }}</td>
+                                            
                                             </tr>
                                         @endfor
                                     @endforeach
-                                
 
                                 </tbody>
                             </table>
