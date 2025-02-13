@@ -375,6 +375,10 @@
                 updateSupplierPrice();
             }
 
+            $('#short_description').on('input', function() {
+                $('[name="product_name"]').val($(this).val());
+            });
+
             var departmentId = $('#department_id').val();
             refreshProductTypeDropdown(departmentId);
         });
