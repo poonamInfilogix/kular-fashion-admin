@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Department;
 use App\Models\Brand;
 use App\Models\ProductType;
-use App\Models\ProductTag;
+use Cviebrock\EloquentSluggable\Sluggable;
 use App\Models\Tag;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, Sluggable;
     protected $guarded = [];
     public $timestamps = true;
 
@@ -27,6 +27,15 @@ class Product extends Model
             $lastProduct = self::orderBy('id', 'desc')->first(); 
             $product->article_code = $lastProduct ? $lastProduct->article_code + 1 : 300001; 
         }); 
+    }
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
     }
 
     public function department()

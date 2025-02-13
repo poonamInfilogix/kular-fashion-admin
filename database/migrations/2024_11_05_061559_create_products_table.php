@@ -14,14 +14,19 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('article_code', 50)->nullable()->index();
+            $table->string('slug')->unique();
+            $table->string('name');
             $table->string('manufacture_code')->nullable();
-            $table->string('product_name')->nullable();
             $table->unsignedBigInteger('brand_id')->nullable()->index();
             $table->unsignedBigInteger('department_id')->nullable()->index();
             $table->unsignedBigInteger('product_type_id')->nullable()->index();
             $table->string('short_description')->nullable();
-            $table->decimal('mrp', 10, 2)->nullable();
-            $table->decimal('supplier_price', 10, 2)->nullable(); 
+            $table->decimal('mrp', 10, 2)->nullable()->index();
+            $table->decimal('price', 10, 2)->nullable()->index();
+            $table->decimal('sale_price', 10, 2)->nullable()->index();
+            $table->datetime('sale_start')->nullable()->index();
+            $table->datetime('sale_end')->nullable();
+            $table->decimal('supplier_price', 10, 2)->nullable();
             $table->string('image')->nullable();
             $table->string('season', 25)->nullable();
             $table->string('supplier_ref')->nullable();

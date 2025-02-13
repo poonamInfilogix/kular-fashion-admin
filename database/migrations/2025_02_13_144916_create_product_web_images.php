@@ -11,17 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_web_info', function (Blueprint $table) {
+        Schema::create('product_web_images', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_id')->nullable()->index();
-            $table->string('meta_title')->nullable();
-            $table->string('meta_description')->nullable();
-            $table->string('meta_keywords')->nullable();
-            $table->longText('description')->nullable();
-            $table->tinyInteger('status')->default(1)->index();
+            $table->unsignedBigInteger('product_id')->index();
+            $table->unsignedBigInteger('product_color_id')->index();
+            $table->string('path');
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('product_color_id')->references('id')->on('product_colors')->onDelete('cascade');
         });
     }
 
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_web_info');
+        Schema::dropIfExists('product_web_images');
     }
 };

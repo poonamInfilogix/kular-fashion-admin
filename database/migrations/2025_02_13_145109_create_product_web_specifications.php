@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_web_info', function (Blueprint $table) {
+        Schema::create('product_web_specifications', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_id')->nullable()->index();
-            $table->string('meta_title')->nullable();
-            $table->string('meta_description')->nullable();
-            $table->string('meta_keywords')->nullable();
-            $table->longText('description')->nullable();
-            $table->tinyInteger('status')->default(1)->index();
+            $table->unsignedBigInteger('product_id')->index();
+            $table->string('key')->index();
+            $table->text('description');
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_web_info');
+        Schema::dropIfExists('product_web_specifications');
     }
 };
