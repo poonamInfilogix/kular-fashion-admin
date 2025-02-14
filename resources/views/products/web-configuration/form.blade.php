@@ -47,18 +47,26 @@
                     <div class="card">
                         <div class="card-body" id="product-specification">
                             <h4 class="card-title">Product Specification</h4>
-                            <div class="mb-3">
-                                <label for=""></label>
-                                <input id="product_name" name="product_name" type="text" class="form-control"
-                                    placeholder="Product Name">
-                            </div>
-                           
-                            <textarea name="editor" id="editor" class="editor" rows="2"></textarea>
-                                  <!-- Add Button -->
-                            <button id="add-specification" class="btn btn-primary mt-3">Add Specification</button>
                             
-                            <!-- Container for dynamically added divs -->
-                            <div id="specification-container"></div>
+                            <!-- Initial Specification Div -->
+                            <div class="row" id="specification-container">
+                                <div class="col-md-6 specification-item mb-3" id="spec-0">
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                              <x-form-input name="key-0" type="text" label="Key" placeholder="Key" class="form-control" required="true" />                       
+                                        </div>
+                                        <div class="col-md-6">
+                                            <x-form-input name="value-0" type="text" label="Value" placeholder="Value" class="form-control" required="true" />                       
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button class="btn btn-danger delete-specification mt-4" data-spec-id="spec-0"><i class="fas fa-trash-alt"></i> </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                            <!-- Add Button -->
+                            <button id="add-specification" class="btn btn-primary mt-3">Add Specification</button>
                         </div>
                     </div>
                     <div class="card">
@@ -69,14 +77,10 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="mb-3">
-                                        <label for="metatitle">Meta title</label>
-                                        <input id="metatitle" name="productname" type="text" class="form-control"
-                                            placeholder="Metatitle">
+                                        <x-form-input name="productname" id="metatitle" type="text" label="Meta title" placeholder="Metatitle" class="form-control" required="true" />                       
                                     </div>
                                     <div class="mb-3">
-                                        <label for="metakeywords">Meta Keywords</label>
-                                        <input id="metakeywords" name="manufacturername" type="text" class="form-control"
-                                            placeholder="Meta Keywords">
+                                        <x-form-input  type="text" label="Meta Keywords" id="metakeywords" name="manufacturername" class="form-control" placeholder="Meta Keywords" />                       
                                     </div>
                                 </div>
 
@@ -122,35 +126,41 @@
                         });
                     }
                 });
-            
+                
+
                 $(document).ready(function() {
+                let specCount = 0;
 
-                    let specCount = 0;
+                // Function to add a new specification
+                $('#add-specification').click(function() {
+                    specCount++; 
 
-                    $('#add-specification').click(function() {
-                        specCount++; 
-
-                        const newDiv = `
-                            <div class="specification-item mb-3" id="spec-${specCount}">
-                                <div class="mb-3">
-                                    <label for="spec-name-${specCount}">Specification ${specCount}</label>
-                                    <input id="spec-name-${specCount}" name="spec-name-${specCount}" type="text" class="form-control" placeholder="Specification Name">
+                    const newDiv = `
+                        <div class="col-md-6 specification-item mb-3" id="spec-${specCount}">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <x-form-input name="key-${specCount}" type="text" label="Key" placeholder="Key" class="form-control" required="true" />
                                 </div>
-                                <textarea name="spec-editor-${specCount}" id="spec-editor-${specCount}" class="editor" rows="2"></textarea>
-                                <button class="btn btn-danger btn-sm delete-specification mt-2" data-spec-id="spec-${specCount}">Delete</button>
+                                <div class="col-md-6">
+                                    <x-form-input name="value-${specCount}" type="text" label="Value" placeholder="Value" class="form-control" required="true" />
+                                </div>
+                           
+                               <div class="col-md-1">
+                                    <button class="btn btn-danger delete-specification mt-4" data-spec-id="spec-${specCount}"><i class="fas fa-trash-alt"></i> </button>
+                                </div>
                             </div>
-                        `;
+                        </div>
+                    `;
 
-                        $('#specification-container').append(newDiv);
-                    });
-
-           
-                    $(document).on('click', '.delete-specification', function() {
-                        const specId = $(this).data('spec-id'); 
-                        $(`#${specId}`).remove(); 
-                    });
+                    $('#specification-container').append(newDiv);
                 });
-            
+
+                // Function to delete a specification
+                $(document).on('click', '.delete-specification', function() {
+                    const specId = $(this).data('spec-id'); 
+                    $(`#${specId}`).remove(); 
+                });
+            });
             </script>
         @endpush
     @endsection

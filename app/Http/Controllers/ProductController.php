@@ -980,4 +980,8 @@ class ProductController extends Controller
     public function editWebConfigration(Product $product){
         return view('products.web-configuration.edit', compact('product'));
     }
+
+    public function updateWebConfigration(Request $request){
+        dd($request->all());
+    }
 }
