@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('colors', function (Blueprint $table) {
+        Schema::create('product_web_specifications', function (Blueprint $table) {
             $table->id();
-            $table->string('color_name');
-            $table->string('short_name', 7)->nullable();
-            $table->string('color_code', 5)->nullable();
-            $table->string('ui_color_code')->nullable();
-            $table->enum('status', ['Active', 'Inactive'])->default('Active')->index();
-
+            $table->unsignedBigInteger('product_id')->index();
+            $table->string('key')->index();
+            $table->string('value');
             $table->timestamps();
+
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
     }
 
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('colors');
+        Schema::dropIfExists('product_web_specifications');
     }
 };

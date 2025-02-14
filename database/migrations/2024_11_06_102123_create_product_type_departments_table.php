@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('product_type_departments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_type_id');
-            $table->unsignedBigInteger('department_id');
+            $table->unsignedBigInteger('product_type_id')->index();
+            $table->unsignedBigInteger('department_id')->index();
             $table->timestamps();
     
             // Foreign key constraint for product_type_id

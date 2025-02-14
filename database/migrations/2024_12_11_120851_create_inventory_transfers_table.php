@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('inventory_transfers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('sent_from');
-            $table->unsignedBigInteger('sent_to');
-            $table->unsignedBigInteger('sent_by')->nullable();
+            $table->unsignedBigInteger('sent_from')->index();
+            $table->unsignedBigInteger('sent_to')->index();
+            $table->unsignedBigInteger('sent_by')->nullable()->index();
             $table->timestamps();
 
             $table->foreign('sent_from')->references('id')->on('branches')->onDelete('cascade');

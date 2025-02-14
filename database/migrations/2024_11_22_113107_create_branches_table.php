@@ -18,7 +18,9 @@ return new class extends Migration
             $table->string('email', 150)->nullable();
             $table->string('contact', 20)->nullable();
             $table->string('location')->nullable();
-            $table->enum('status', ['Active', 'Inactive'])->default('Active');
+            $table->text('order_receipt_header')->nullable();
+            $table->text('order_receipt_footer')->nullable();
+            $table->enum('status', ['Active', 'Inactive'])->default('Active')->index();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -236,13 +236,13 @@
             placeholder="Enter Sale Price" />
     </div>
     <div class="col-md-2">
-        <x-form-input name="sale_start_at" class="date-picker"
-                value="{{ isset($product->in_date) && $product->in_date ? \Carbon\Carbon::parse($product->in_date)->format('d-m-Y') : '' }}"
+        <x-form-input name="sale_start_at" class="sale-date-picker"
+                value="{{ isset($product->sale_start) && $product->sale_start ? \Carbon\Carbon::parse($product->sale_start)->format('d-m-Y') : '' }}"
                 label="Sale Start at" placeholder="Sale Start at" />
     </div>
     <div class="col-md-2">
-        <x-form-input name="sale_end_at" class="date-picker"
-                value="{{ isset($product->in_date) && $product->in_date ? \Carbon\Carbon::parse($product->in_date)->format('d-m-Y') : '' }}"
+        <x-form-input name="sale_end_at" class="sale-date-picker"
+                value="{{ isset($product->sale_end) && $product->sale_end ? \Carbon\Carbon::parse($product->sale_end)->format('d-m-Y') : '' }}"
                 label="Sale End at" placeholder="Sale End at" />
     </div>
 </div>
@@ -257,6 +257,13 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            flatpickr('.sale-date-picker', {
+                dateFormat: "d-m-Y",
+                allowInput: true,
+                minDate: "today"
+            });
+
+
             $('form').on('keypress', function(e) {
                 if (e.which === 13) {
                     e.preventDefault();

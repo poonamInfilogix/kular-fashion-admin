@@ -4,7 +4,7 @@
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title" key="t-menu">Dashboard</li>
                 <li>
-                    <a href="#" class="waves-effect">
+                    <a href="{{ route('dashboard') }}" class="waves-effect">
                         <i class="bx bx-home-alt"></i>
                         <span>Dashboard</span>
                     </a>

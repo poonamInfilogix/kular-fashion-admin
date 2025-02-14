@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_sizes', function (Blueprint $table) {
+        Schema::create('product_web_images', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_id')->index(); 
-            $table->unsignedBigInteger('size_id')->index();
-            $table->decimal('mrp', 8, 2)->default(0.00);
+            $table->unsignedBigInteger('product_id')->index();
+            $table->unsignedBigInteger('product_color_id')->nullable()->index();
+            $table->string('path');
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('size_id')->references('id')->on('sizes')->onDelete('cascade');
+            $table->foreign('product_color_id')->references('id')->on('product_colors')->onDelete('cascade');
         });
     }
 
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_sizes');
+        Schema::dropIfExists('product_web_images');
     }
 };

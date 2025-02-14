@@ -65,6 +65,11 @@ class ProductController extends Controller
                 'required',
                 Rule::unique('products')->whereNull('deleted_at'),
             ],
+            'product_name' => 'required',
+            'web_price' => 'required',
+            'sale_price' => 'nullable|numeric',
+            'sale_start_at' => 'nullable|date',
+            'sale_end_at' => 'nullable|date|after_or_equal:sale_start_at',
             'manufacture_code' => 'required',
             'brand_id' => 'required',
             'department_id' => 'required',
@@ -343,6 +348,7 @@ class ProductController extends Controller
         Session::put('savingProduct', $productData);
 
         $product = Product::create([
+            'name' => $productData['product_name'],
             'manufacture_code' => $productData['manufacture_code'] ?? NULL,
             'department_id' => $productData['department_id'] ?? NULL,
             'brand_id' => $productData['brand_id'] ?? NULL,
@@ -359,6 +365,10 @@ class ProductController extends Controller
             'image' => $productData['image_path'] ?? NULL,
             'min_size_id' => $productData['size_range_min'],
             'max_size_id' => $productData['size_range_max'],
+            'price' => $productData['price'] ?? $productData['mrp'],
+            'sale_price' => $productData['sale_price'] ?? null,
+            'sale_start' => $productData['sale_start_at'] ?? null,
+            'sale_end' => $productData['sale_end_at'] ?? null,
             'status' => $productData['status']
         ]);
 
@@ -691,7 +701,7 @@ class ProductController extends Controller
                             $randomDigit = $this->generateRandomProductCode($productDetail->product->id);
 
                             $date = Carbon::parse($productDetail->first_barcode_printed_date);
-                            $yearMonth = $date->format('ym');
+                            $yearMonth = substr($date->format('ym'), 1);
 
                             $barcodes[] = [
                                 'barcode' => $barcode,

@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('product_quantities', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('product_color_id');
-            $table->unsignedBigInteger('product_size_id'); 
+            $table->unsignedBigInteger('product_id')->index();
+            $table->unsignedBigInteger('product_color_id')->index();
+            $table->unsignedBigInteger('product_size_id')->index(); 
             $table->integer('quantity')->default(0);
             $table->integer('total_quantity')->default(0);
             $table->date('first_barcode_printed_date')->nullable();

@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('brands', function (Blueprint $table) {
+        Schema::create('collections', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('slug')->unique();
-            $table->string('short_name', 100)->unique()->nullable(); 
-            $table->text('description')->nullable();
             $table->string('image')->nullable();
-            $table->decimal('margin', 5, 2)->default('50');
-            $table->enum('status', ['Active', 'Inactive'])->default('Active')->index();
-            $table->softDeletes();
+            $table->enum('condition_type', ['include', 'exclude'])->default('include');
+            $table->json('conditions');
+            $table->string('meta_title')->nullable();
+            $table->string('meta_keywords')->nullable();
+            $table->string('meta_description')->nullable();
+            $table->tinyInteger('status')->default(1)->index();
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('brands');
+        Schema::dropIfExists('collections');
     }
 };

@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('taxes', function (Blueprint $table) {
             $table->id();
             $table->decimal('tax', 5, 2)->default(0);
-            $table->boolean('status')->default(0);
-            $table->boolean('is_default')->default(0);
+            $table->boolean('status')->default(0)->index();
+            $table->boolean('is_default')->default(0)->index();
             $table->timestamps();
         });
     }

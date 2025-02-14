@@ -158,20 +158,6 @@
                                             @endforeach
                                         </tr>
                                     @endforeach
-
-                                    @php
-                                        $mrpValues = $product->sizes->pluck('mrp');
-                                        $isDifferent = $mrpValues->unique()->count() > 1;
-                                    @endphp
-
-                                    @if ($isDifferent)
-                                        <tr>
-                                            <th scope="row" class="p-1">MRP</th>
-                                            @foreach ($product->sizes as $size)
-                                                <td class="p-1">£{{ $size->mrp }}</td>
-                                            @endforeach
-                                        </tr>
-                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -209,20 +195,6 @@
                                             @endforeach
                                         </tr>
                                     @endforeach
-
-                                    @php
-                                        $mrpValues = $product->sizes->pluck('mrp');
-                                        $isDifferent = $mrpValues->unique()->count() > 1;
-                                    @endphp
-
-                                    @if ($isDifferent)
-                                        <tr>
-                                            <th scope="row" class="p-1">MRP</th>
-                                            @foreach ($product->sizes as $size)
-                                                <td class="p-1">£{{ $size->mrp }}</td>
-                                            @endforeach
-                                        </tr>
-                                    @endif
                                 </tbody>
                             </table>
                         </div>

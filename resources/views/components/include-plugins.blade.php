@@ -43,7 +43,7 @@
     @push('scripts')
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
+            $(function() {
                 flatpickr('.date-picker', {
                     dateFormat: "d-m-Y",
                     allowInput: true,
