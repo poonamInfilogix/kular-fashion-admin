@@ -2,7 +2,7 @@
 
 @section('title', 'Size Scales')
 @section('header-button')
-    @if (Auth::user()->can('create size_scales'))
+    @if (Auth::user()->can('create size scales'))
         <a href="{{ route('size-scales.create') }}" class="btn btn-primary">Add New Size Scale</a>
     @endif
 @endsection
@@ -24,7 +24,7 @@
                                         <th>Size Scale</th>
                                         <th>Total Sizes</th>
                                         <th>Status</th>
-                                        @canany(['view size', 'edit size_scales', 'delete size_scales'])
+                                        @canany(['view size', 'edit size scales', 'delete size scales'])
                                             <th>Action</th>
                                         @endcanany
                                     </tr>
@@ -44,18 +44,18 @@
                                                 <label class="mb-0" for="{{ $sizeScale->id }}" data-on-label="Active"
                                                     data-off-label="Inactive"></label>
                                             </td>
-                                            @canany(['view size', 'edit size_scales', 'delete size_scales'])
+                                            @canany(['view size', 'edit size scales', 'delete size scales'])
                                                 <td>
                                                     @if (Auth::user()->can('view size'))
                                                         <a href="{{ route('sizes.index', $sizeScale->id) }}"
                                                             class="btn btn-primary btn-sm py-0 px-1">Manage Size</a>
                                                     @endif
-                                                    @if (Auth::user()->can('create size_scales'))
+                                                    @if (Auth::user()->can('create size scales'))
                                                         <a href="{{ route('size-scales.edit', $sizeScale->id) }}"
                                                             class="btn btn-primary btn-sm edit py-0 px-1"><i
                                                                 class="fas fa-pencil-alt"></i></a>
                                                     @endif
-                                                    @if (Auth::user()->can('delete size_scales'))
+                                                    @if (Auth::user()->can('delete size scales'))
                                                         <button data-source="Size Scale"
                                                             data-endpoint="{{ route('size-scales.destroy', $sizeScale->id) }}"
                                                             class="delete-btn btn btn-danger btn-sm edit py-0 px-1">

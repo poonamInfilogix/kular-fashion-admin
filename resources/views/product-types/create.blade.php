@@ -2,7 +2,7 @@
 
 @section('title', 'Create a new product type')
 @section('header-button')
-@if(Auth::user()->can('create product_types'))
+@if(Auth::user()->can('create product types'))
     <a href="{{ route('product-types.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to product types</a>
 @endif
 @endsection

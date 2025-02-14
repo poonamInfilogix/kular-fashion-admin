@@ -2,7 +2,7 @@
 
 @section('title', 'Product Type')
 @section('header-button')
-    @if(Auth::user()->can('create product_types'))
+    @if(Auth::user()->can('create product types'))
     <a href="{{ route('product-types.create') }}" class="btn btn-primary">Add New Product Type</a>
     @endif
 @endsection
@@ -25,7 +25,7 @@
                                         <th>Department</th>
                                         <th>Image</th>
                                         <th>Status</th>
-                                        @canany(['edit product_types', 'delete product_types'])
+                                        @canany(['edit product types', 'delete product types'])
                                         <th>Action</th>
                                         @endcanany
                                     </tr>
@@ -48,12 +48,12 @@
                                                 <input type="checkbox" id="{{ $productType->id }}"  class="update-status" data-id="{{ $productType->id }}" switch="success"  data-on="Active" data-off="Inactive" {{ $productType->status === 'Active' ? 'checked' : '' }} data-endpoint="{{ route('product-types-status')}}"/>
                                                 <label class="mb-0" for="{{ $productType->id }}" data-on-label="Active" data-off-label="Inactive"></label>
                                             </td>
-                                            @canany(['edit product_types', 'delete product_types'])
+                                            @canany(['edit product types', 'delete product types'])
                                             <td>
-                                                @if(Auth::user()->can('edit product_types'))
+                                                @if(Auth::user()->can('edit product types'))
                                                 <a href="{{ route('product-types.edit', $productType->id)}}" class="btn btn-primary btn-sm edit py-0 px-1"><i class="fas fa-pencil-alt"></i></a>
                                                 @endif
-                                                @if(Auth::user()->can('delete product_types'))
+                                                @if(Auth::user()->can('delete product types'))
                                                 <button data-source="Product Type" data-endpoint="{{ route('product-types.destroy', $productType->id)}}"
                                                     class="delete-btn btn btn-danger btn-sm edit py-0 px-1">
                                                     <i class="fas fa-trash-alt"></i>

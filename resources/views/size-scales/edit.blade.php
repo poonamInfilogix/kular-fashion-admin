@@ -2,7 +2,7 @@
 
 @section('title', 'Update Size Scales')
 @section('header-button')
-    @if (Auth::user()->can('create size_scales'))
+    @if (Auth::user()->can('create size scales'))
         <a href="{{ route('size-scales.create') }}" class="btn btn-primary">Add New Size Scale</a>
     @endif
 @endsection

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Gate;
 class ProductBarcodeController extends Controller
 {
     public function index(){
-        if(!Gate::allows('view print_barcodes')) {
+        if(!Gate::allows('view print barcodes')) {
             abort(403);
         }
         $defaultProductsToBePrinted = Product::where('are_barcodes_printed', 0)->orWhere('barcodes_printed_for_all', 0)->get()->pluck('id');
