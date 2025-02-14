@@ -25,15 +25,13 @@
     </div>
     <div class="row mt-2">
         <div class="col-md-12">
-            <TransferItemTable :items="items" @update-items="updateItems"/>
+            <TransferItemTable :items="items" @update-items="updateItems" />
         </div>
     </div>
 
     <div class="row mt-3">
         <div class="col-md-12 text-right">
-            <button 
-                class="btn btn-success"
-                @click="handleTransfer"
+            <button class="btn btn-success" @click="handleTransfer"
                 :disabled="!fromStore || !toStore || fromStore === toStore || items.length === 0">
                 Transfer
             </button>
@@ -96,7 +94,7 @@ export default {
                 from_store_id: this.fromStore,
                 to_store_id: this.toStore,
                 items: this.items
-            }; 
+            };
             try {
                 const response = await axios.post('/inventory-transfer-items', transferData);
 
@@ -143,11 +141,11 @@ export default {
         },
         itemScanned(scanned_barcode) {
             this.itemToBeAdd.manufacture_barcode = scanned_barcode;
-            this.itemToBeAdd.scanned_barcode = scanned_barcode; 
+            this.itemToBeAdd.scanned_barcode = scanned_barcode;
             this.transferItem(this.itemToBeAdd);
             this.itemToBeAdd = {};
         },
-        transferItem(item) {
+        transferItem(item, forceAdd = false) {
             if (!item.manufacture_barcode) {
                 this.itemToBeAdd = item;
 
@@ -165,18 +163,27 @@ export default {
                 .filter(product => product.barcode === item.barcode)
                 .reduce((sum, product) => sum + product.quantity, 0);
 
-            if (totalQuantity + 1 > item.available_quantity) {
+            if (totalQuantity + 1 > item.available_quantity && !forceAdd) {
                 Swal.fire({
-                    title: 'Error!',
-                    text: 'Item maximum quantity exceeded',
-                    icon: 'error',
-                    confirmButtonText: 'Okay'
+                    title: 'Warning!',
+                    text: 'Product is out of stock. Do you still want to add this project?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, Add Project',
+                    cancelButtonText: 'No, Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.transferItem(item, true);
+                    }
                 });
-                return;
+
+                if(!this.forceAdd){
+                    return;
+                }
             }
             let highestSno = products.length > 0 ? Math.max(...products.map(product => product.sno)) : 0;
-            item.quantity = 1; 
-            item.scanned_barcode = item.scanned_barcode || item.manufacture_barcode; 
+            item.quantity = 1;
+            item.scanned_barcode = item.scanned_barcode || item.manufacture_barcode;
             item.sno = highestSno + 1;
             products.push(item);
             products.sort((a, b) => b.sno - a.sno);

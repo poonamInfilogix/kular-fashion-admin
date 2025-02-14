@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class CollectionController extends Controller
 {
@@ -12,6 +13,10 @@ class CollectionController extends Controller
      */
     public function index()
     {
+        if(!Gate::allows('view collections')) {
+            abort(403);
+        }
+
         $collections = Collection::all();
         return view('collections.index', compact('collections'));
     }
@@ -21,7 +26,11 @@ class CollectionController extends Controller
      */
     public function create()
     {
-        //
+        if(!Gate::allows('create collections')) {
+            abort(403);
+        }
+
+        return view('collections.create');
     }
 
     /**
@@ -29,7 +38,9 @@ class CollectionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if(!Gate::allows('create collections')) {
+            abort(403);
+        }
     }
 
     /**
