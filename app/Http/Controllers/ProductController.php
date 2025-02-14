@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
+use Carbon\Carbon, Log;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Support\Facades\Gate;
@@ -448,7 +448,7 @@ class ProductController extends Controller
     }
 
     public function update(Request $request, Product $product)
-    {
+    {   
         foreach ($request->mrp as $product_size_id => $mrp) {
             ProductSize::find($product_size_id)->update([
                 'mrp' => $mrp
@@ -991,7 +991,24 @@ class ProductController extends Controller
         return view('products.web-configuration.edit', compact('product'));
     }
 
-    public function updateWebConfigration(Request $request){
-        dd($request->all());
+    public function updateWebConfigration(Request $request, $product){
+    
+        $request->validate([
+            
+            'meta_description' => 'required',
+            'meta_keywords' => 'required',
+            'product_desc' => 'nullable|numeric',
+            'specifications.*.key' => 'required|string',
+            'specifications.*.value' => 'required|string',
+         
+        ]);
+       
+        $specifications = $request->input('specifications'); 
+    
+       
+
+
+      
+
     }
 }

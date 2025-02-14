@@ -20,6 +20,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::put('products/update/step-2/{product}', [ProductController::class, 'updateStep2'])->name('products.update-step-2');
 
     Route::get('products/edit/web-configuration/{product}', [ProductController::class, 'editWebConfigration'])->name('products.edit.web-configuration');
+    Route::put('products/update/web-configuration/{product}', [ProductController::class, 'updateWebConfigration'])->name('products.update.web-configuration');
     Route::post('product/{product}/upload-images', [ProductController::class, 'uploadImages'])->name('product.uploadImages');
 
     // Generate product barcodes
