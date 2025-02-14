@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Colors')
+@section('title', 'Collections')
 @section('header-button')
     @if (Auth::user()->can('create collections'))
-        <a href="{{ route('collections.create') }}" class="btn btn-primary">Add New Color</a>
+        <a href="{{ route('collections.create') }}" class="btn btn-primary">Add New Collection</a>
     @endif
 @endsection
 
@@ -21,38 +21,39 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Color Name</th>
-                                        <th>Color Short Code</th>
+                                        <th>Name</th>
+                                        <th>Image</th>
+                                        <th>Included Products</th>
                                         <th>Status</th>
-                                        @canany(['edit colors', 'delete colors'])
+                                        @canany(['edit collections', 'delete collections'])
                                             <th>Action</th>
                                         @endcanany
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($colors as $key => $color)
+                                    @foreach ($collections as $key => $collection)
                                         <tr>
                                             <td>{{ ++$key }}</td>
-                                            <td>{{ ucwords($color->color_name) }}</td>
-                                            <td>{{ $color->color_code }}</td>
+                                            <td>{{ ucwords($collection->name) }}</td>
+                                            <td>{{ $collection->image }}</td>
                                             <td>
-                                                <input type="checkbox" id="{{ $color->id }}" class="update-status"
-                                                    data-id="{{ $color->id }}" switch="success" data-on="Active"
-                                                    data-off="Inactive" {{ $color->status === 'Active' ? 'checked' : '' }}
-                                                    data-endpoint="{{ route('color-status') }}" />
-                                                <label class="mb-0" for="{{ $color->id }}" data-on-label="Active"
+                                                <input type="checkbox" id="{{ $collection->id }}" class="update-status"
+                                                    data-id="{{ $collection->id }}" switch="success" data-on="Active"
+                                                    data-off="Inactive" {{ $collection->status === 'Active' ? 'checked' : '' }}
+                                                    data-endpoint="{{ route('collection-status') }}" />
+                                                <label class="mb-0" for="{{ $collection->id }}" data-on-label="Active"
                                                     data-off-label="Inactive"></label>
                                             </td>
-                                            @canany(['edit colors', 'delete colors'])
+                                            @canany(['edit collections', 'delete collections'])
                                                 <td>
-                                                    @if (Auth::user()->can('edit colors'))
-                                                        <a href="{{ route('colors.edit', $color->id) }}"
+                                                    @if (Auth::user()->can('edit collections'))
+                                                        <a href="{{ route('collections.edit', $collection->id) }}"
                                                             class="btn btn-primary btn-sm edit py-0 px-1"><i
                                                                 class="fas fa-pencil-alt"></i></a>
                                                     @endif
-                                                    @if (Auth::user()->can('delete colors'))
-                                                        <button data-source="Color"
-                                                            data-endpoint="{{ route('colors.destroy', $color->id) }}"
+                                                    @if (Auth::user()->can('delete collections'))
+                                                        <button data-source="Collection"
+                                                            data-endpoint="{{ route('collections.destroy', $collection->id) }}"
                                                             class="delete-btn btn btn-danger btn-sm edit py-0 px-1">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </button>
