@@ -70,8 +70,8 @@
                 @endcan
 
                 <li>
-                    <a href="{{ route('dashboard') }}" class="waves-effect">
-                        <i class="bx bx-home-alt"></i>
+                    <a href="{{ route('collections.index') }}" class="waves-effect">
+                        <i class="bx bx-collection"></i>
                         <span>Collections</span>
                     </a>
                 </li>
