@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('product_web_images', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id')->index();
-            $table->unsignedBigInteger('product_color_id')->index();
+            $table->unsignedBigInteger('product_color_id')->nullable()->index();
             $table->string('path');
             $table->timestamps();
 
