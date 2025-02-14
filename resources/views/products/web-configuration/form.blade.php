@@ -40,23 +40,21 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Product Description</h4>
-                            <textarea name="editor" id="editor" class="editor" rows="2"></textarea>
+                            <textarea name="editor" id="product_desc" class="editor" rows="2"></textarea>
                         </div>
                     </div>
 
                     <div class="card">
                         <div class="card-body" id="product-specification">
                             <h4 class="card-title">Product Specification</h4>
-                            
-                            <!-- Initial Specification Div -->
                             <div class="row" id="specification-container">
                                 <div class="col-md-6 specification-item mb-3" id="spec-0">
                                     <div class="row">
                                         <div class="col-md-5">
-                                              <x-form-input name="key-0" type="text" label="Key" placeholder="Key" class="form-control" required="true" />                       
+                                            <x-form-input name="specifications[0][key]" type="text" label="Key" placeholder="Key" class="form-control" required="true" />                       
                                         </div>
                                         <div class="col-md-6">
-                                            <x-form-input name="value-0" type="text" label="Value" placeholder="Value" class="form-control" required="true" />                       
+                                            <x-form-input name="specifications[0][value]" type="text" label="Value" placeholder="Value" class="form-control" required="true" />                       
                                         </div>
                                         <div class="col-md-1">
                                             <button class="btn btn-danger delete-specification mt-4" data-spec-id="spec-0"><i class="fas fa-trash-alt"></i> </button>
@@ -64,38 +62,28 @@
                                     </div>
                                 </div>
                             </div>
-                    
-                            <!-- Add Button -->
                             <button id="add-specification" class="btn btn-primary mt-3">Add Specification</button>
                         </div>
                     </div>
+                    <!-- SEO -->
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">SEO</h4>
-                           {{--  <p class="card-title-desc">Fill all information below</p> --}}
-
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="mb-3">
-                                        <x-form-input name="productname" id="metatitle" type="text" label="Meta title" placeholder="Metatitle" class="form-control" required="true" />                       
+                                        <x-form-input name="meta_title"label="Meta title" placeholder="Metatitle" required="true" />                       
                                     </div>
                                     <div class="mb-3">
-                                        <x-form-input  type="text" label="Meta Keywords" id="metakeywords" name="manufacturername" class="form-control" placeholder="Meta Keywords" />                       
+                                        <x-form-input name="meta_keywords" label="Meta Keywords" placeholder="Meta Keywords" />                       
                                     </div>
                                 </div>
-
                                 <div class="col-sm-6">
                                     <div class="mb-3">
-                                        <label for="metadescription">Meta Description</label>
-                                        <textarea class="form-control" id="metadescription" rows="5" placeholder="Meta Description"></textarea>
+                                        <label for="meta_description">Meta Description</label>
+                                        <textarea class="form-control" id="meta_description" rows="5" placeholder="Meta Description"></textarea>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="d-flex flex-wrap gap-2">
-                                <button type="submit" class="btn btn-primary waves-effect waves-light">Save
-                                    Changes</button>
-                                <button type="submit" class="btn btn-secondary waves-effect waves-light">Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -132,9 +120,9 @@
                 let specCount = 0;
 
                 // Function to add a new specification
-                $('#add-specification').click(function() {
+                $('#add-specification').click(function(event) {
                     specCount++; 
-
+                    event.preventDefault();
                     const newDiv = `
                         <div class="col-md-6 specification-item mb-3" id="spec-${specCount}">
                             <div class="row">
@@ -161,6 +149,8 @@
                     $(`#${specId}`).remove(); 
                 });
             });
+
+          
             </script>
         @endpush
-    @endsection
+@endsection
