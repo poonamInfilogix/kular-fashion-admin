@@ -17,11 +17,15 @@
     <div class="col-md-12 mb-3">
         <div class="row">
             <div class="col-md-6 d-flex justify-content-between">
-                <h6>Include Condition</h6>
-                <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#addConditionModal">Add new condition</button>
-            </div>
-        </div>
-        
+                <div>
+                    <h6>Include Condition</h6>
+                    <div class="include-container d-none">
+
+                    </div>
+                </div>
+                <button type="button" style="height:28px" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#addConditionModal">Add new condition</button>
+            </div>            
+        </div>  
     </div>
 
     <div class="col-md-12">
@@ -67,23 +71,24 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <label for="selectOption" class="form-label">Select Condition</label>
-                    <select class="form-select" id="selectOption" aria-label="Select option">
-                        <option value="0">Have one of these tags</option>
-                        <option value="1">Be in the category</option>
-                        <option value="2">Be in the price list</option>
-                        <option value="2">Be in the price range</option>
-                        <option value="2">Have the price status</option>
+                    <select class="form-select" id="selectCondition" aria-label="Select option">
+                        <option value="tags" data-title="Tags">Have one of these tags</option>
+                        <option value="category" data-title="Category">Be in the category</option>
+                        <option value="price_list" data-title="Price List">Be in the price list</option>
+                        <option value="price_range" data-title="Price Range">Be in the price range</option>
+                        <option value="price_status" data-title="Price Status">Have the price status</option>
+                        <option value="publish_within" data-title="Published Within">Have been published within</option>
                     </select>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" id="saveCollOption">Save changes</button>
             </div>
         </div>
     </div>
 </div>
-
+<x-include-plugins :plugins="['colorPicker' ]"></x-include-plugins>
 @push('scripts')
 <script>
     $(document).ready(function() {
@@ -95,6 +100,27 @@
             }
             reader.readAsDataURL(this.files[0]);
         });
+        
+    });
+    $(document).on('click','#saveCollOption',function(){
+        var selectedOpt = $('#selectCondition option:selected').data('title');
+        var selectedOptVal = $('#selectCondition option:selected').val();
+        $('#includeLabel').text(selectedOpt);
+        $('.include-container').removeClass('d-none');
+        $.ajax({
+            url : `{{ route('collection-option-data') }}/${selectedOptVal}`,
+            success : function(respData){
+                console.log(respData);
+                $('.include-container').html(respData.view);
+                $('#multipleSelect').select2({
+                    placeholder : 'Select Option'
+                });
+                $('#addConditionModal').modal('hide');
+            },error : function(err){
+                console.log("Collection AjAx Error");
+            }
+        });
+
     });
 </script>
 @endpush
