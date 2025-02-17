@@ -13,6 +13,9 @@ use App\Models\Color;
 use App\Models\Department;
 use App\Models\ProductType;
 use App\Models\ProductTag;
+use App\Models\ProductWebImage;
+use App\Models\ProductWebInfo;
+use App\Models\ProductWebSpecification;
 use App\Models\ProductTypeDepartment;
 use App\Models\Size;
 use App\Models\SizeScale;
@@ -24,7 +27,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 use Picqer\Barcode\BarcodeGeneratorPNG;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon, Log;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Support\Facades\Gate;
@@ -988,27 +992,94 @@ class ProductController extends Controller
 
 
     public function editWebConfigration(Product $product){
-        return view('products.web-configuration.edit', compact('product'));
+
+        // Product   ProductWebSpecification ProductWebInfo ProductWebImage
+
+        $product = Product::with('webInfo','webSpecification','webImage')->where('id', $product->id)->first();
+        // dd($product->toArray());
+        $data['meta_title'] = $product->webInfo->meta_title ?? '';
+        $data['meta_description'] = $product->webInfo->meta_description ?? '';
+        $data['meta_keywords'] = $product->webInfo->meta_keywords ?? '';
+        $data['description'] = $product->webInfo->description ?? '';
+        return view('products.web-configuration.edit', compact('product'),  ['data' => $data]);
     }
 
     public function updateWebConfigration(Request $request, $product){
-    
+      
         $request->validate([
-            
-            'meta_description' => 'required',
+            'meta_description' => '',
             'meta_keywords' => 'required',
-            'product_desc' => 'nullable|numeric',
+            'product_desc' => 'nullable|string',
             'specifications.*.key' => 'required|string',
             'specifications.*.value' => 'required|string',
-         
         ]);
-       
+
+   
         $specifications = $request->input('specifications'); 
-    
-       
 
+        foreach($specifications as $specification)
+        {   
+            ProductWebSpecification::updateOrCreate(
+                    [
+                        'product_id' => $product,
+                        'key' => $specification['key'],
+                    ],
+                    [
+                        'value' => $specification['value'],
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]
+                );
+        }
+            
+            ProductWebInfo::updateOrCreate(
+                    ['product_id' => $product],
+                    [  
+                        'short_description' => $request->product_desc,
+                        'description' =>$request->product_desc,
+                        'meta_title' => $request->meta_keywords,
+                        'meta_keywords' => $request->meta_keywords,
+                        'meta_description'=>$request->meta_description,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]
+                );
+                return redirect()->route('products.index')->with('success', 'Product web configuration successfully.');
 
-      
+             
+    }
+
+    public function uploadImages(Request $request, Product $product)
+    {
+        $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240'  // 10 MB max
+        ]);
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $imageName = uniqid(). $file->getClientOriginalName();
+
+            $directoryPath = public_path("/uploads/products/web-config");
+
+            if (!file_exists($directoryPath)) {
+                mkdir($directoryPath, 0777, true);
+            }
+
+            $file->move($directoryPath, $imageName);
+            // $imageName = $directoryPath . $imageName;
+            $relativePath = "uploads/products/web-config/{$imageName}";
+
+                ProductWebImage::updateOrCreate(
+                    [  'product_id' => $product->id],
+                    [
+                
+                        'path' => $relativePath
+                    ]
+                );
+            return response()->json(['message' => 'Image uploaded successfully!'], 200);
+        } else {
+            return response()->json(['error' => 'No file uploaded'], 400);
+        }
 
     }
 }
