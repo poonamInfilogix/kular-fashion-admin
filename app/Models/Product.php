@@ -8,6 +8,9 @@ use App\Models\Brand;
 use App\Models\ProductType;
 use Cviebrock\EloquentSluggable\Sluggable;
 use App\Models\Tag;
+use App\Models\ProductWebSpecification;
+use App\Models\ProductWebInfo;
+use App\Models\ProductWebImage;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
@@ -70,5 +73,17 @@ class Product extends Model
 
     public function quantities(){
         return $this->hasMany(ProductQuantity::class);
+    }
+   
+    public function webSpecification(){
+        return $this->hasMany(ProductWebSpecification::class);
+    }
+    
+    public function webImage(){
+        return $this->hasMany(ProductWebImage::class);
+    }
+
+    public function webInfo(){
+        return $this->hasOne(ProductWebInfo::class);
     }
 }
