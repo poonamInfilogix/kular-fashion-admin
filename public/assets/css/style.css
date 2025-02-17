@@ -132,3 +132,14 @@ table tbody tr.even {
 #custom-search-input {
     width: 200px;
 }
+
+.include-container {
+    width: 100%;
+    background: #80808045;
+    padding: 10px;
+    border-radius: 5px;
+}
+div[data-select2-id="5"] {
+    width: 65%;
+    margin-right: 25px;
+}
