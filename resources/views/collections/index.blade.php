@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Size Scales')
+@section('title', 'Collections')
 @section('header-button')
-    @if (Auth::user()->can('create size scales'))
-        <a href="{{ route('size-scales.create') }}" class="btn btn-primary">Add New Size Scale</a>
+    @if (Auth::user()->can('create collections'))
+        <a href="{{ route('collections.create') }}" class="btn btn-primary">Add New Collection</a>
     @endif
 @endsection
 
@@ -17,47 +17,43 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <table id="datatable" class="table table-bordered table-striped dt-responsive nowrap w-100">
+                            <table id="datatable" class="table table-striped table-bordered dt-responsive nowrap w-100">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Size Scale</th>
-                                        <th>Total Sizes</th>
+                                        <th>Name</th>
+                                        <th>Image</th>
+                                        <th>Included Products</th>
                                         <th>Status</th>
-                                        @canany(['view size', 'edit size scales', 'delete size scales'])
+                                        @canany(['edit collections', 'delete collections'])
                                             <th>Action</th>
                                         @endcanany
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($sizeScales as $key => $sizeScale)
+                                    @foreach ($collections as $key => $collection)
                                         <tr>
                                             <td>{{ ++$key }}</td>
-                                            <td>{{ ucwords($sizeScale->size_scale) }}</td>
-                                            <td>{{ $sizeScale->sizes_count }}</td>
+                                            <td>{{ ucwords($collection->name) }}</td>
+                                            <td>{{ $collection->image }}</td>
                                             <td>
-                                                <input type="checkbox" id="{{ $sizeScale->id }}" class="update-status"
-                                                    data-id="{{ $sizeScale->id }}" switch="success" data-on="Active"
-                                                    data-off="Inactive"
-                                                    {{ $sizeScale->status === 'Active' ? 'checked' : '' }}
-                                                    data-endpoint="{{ route('size-scale-status') }}" />
-                                                <label class="mb-0" for="{{ $sizeScale->id }}" data-on-label="Active"
+                                                <input type="checkbox" id="{{ $collection->id }}" class="update-status"
+                                                    data-id="{{ $collection->id }}" switch="success" data-on="Active"
+                                                    data-off="Inactive" {{ $collection->status === 'Active' ? 'checked' : '' }}
+                                                    data-endpoint="{{ route('collection-status') }}" />
+                                                <label class="mb-0" for="{{ $collection->id }}" data-on-label="Active"
                                                     data-off-label="Inactive"></label>
                                             </td>
-                                            @canany(['view size', 'edit size scales', 'delete size scales'])
+                                            @canany(['edit collections', 'delete collections'])
                                                 <td>
-                                                    @if (Auth::user()->can('view size'))
-                                                        <a href="{{ route('sizes.index', $sizeScale->id) }}"
-                                                            class="btn btn-primary btn-sm py-0 px-1">Manage Size</a>
-                                                    @endif
-                                                    @if (Auth::user()->can('create size scales'))
-                                                        <a href="{{ route('size-scales.edit', $sizeScale->id) }}"
+                                                    @if (Auth::user()->can('edit collections'))
+                                                        <a href="{{ route('collections.edit', $collection->id) }}"
                                                             class="btn btn-primary btn-sm edit py-0 px-1"><i
                                                                 class="fas fa-pencil-alt"></i></a>
                                                     @endif
-                                                    @if (Auth::user()->can('delete size scales'))
-                                                        <button data-source="Size Scale"
-                                                            data-endpoint="{{ route('size-scales.destroy', $sizeScale->id) }}"
+                                                    @if (Auth::user()->can('delete collections'))
+                                                        <button data-source="Collection"
+                                                            data-endpoint="{{ route('collections.destroy', $collection->id) }}"
                                                             class="delete-btn btn btn-danger btn-sm edit py-0 px-1">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </button>

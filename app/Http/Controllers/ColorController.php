@@ -31,6 +31,7 @@ class ColorController extends Controller
         if(!Gate::allows('create colors')) {
             abort(403);
         }
+        
         $request->validate([
             'color_name' => 'required|unique:colors,color_name',
             'short_name' => 'required|min:1|max:5',

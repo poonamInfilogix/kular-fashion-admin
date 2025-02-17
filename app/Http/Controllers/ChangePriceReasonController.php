@@ -14,7 +14,7 @@ class ChangePriceReasonController extends Controller
      */
     public function index()
     {
-        if(!Gate::allows('view price_reasons')) {
+        if(!Gate::allows('view price reasons')) {
             abort(403);
         }
         $reasons = ChangePriceReason::latest()->get();
@@ -26,7 +26,7 @@ class ChangePriceReasonController extends Controller
      */
     public function create()
     {
-        if(!Gate::allows('create price_reasons')) {
+        if(!Gate::allows('create price reasons')) {
             abort(403);
         }
         return view('settings.change-price-reasons.create');
@@ -37,7 +37,7 @@ class ChangePriceReasonController extends Controller
      */
     public function store(Request $request)
     {
-        if(!Gate::allows('create price_reasons')) {
+        if(!Gate::allows('create price reasons')) {
             abort(403);
         }
         $request->validate([
@@ -64,7 +64,7 @@ class ChangePriceReasonController extends Controller
      */
     public function edit(ChangePriceReason $changePriceReason)
     {
-        if(!Gate::allows('edit price_reasons')) {
+        if(!Gate::allows('edit price reasons')) {
             abort(403);
         }
         return view('settings.change-price-reasons.edit', compact('changePriceReason'));
@@ -75,7 +75,7 @@ class ChangePriceReasonController extends Controller
      */
     public function update(Request $request, ChangePriceReason $changePriceReason)
     {
-        if(!Gate::allows('edit price_reasons')) {
+        if(!Gate::allows('edit price reasons')) {
             abort(403);
         }
         $request->validate([
@@ -96,7 +96,7 @@ class ChangePriceReasonController extends Controller
      */
     public function destroy(ChangePriceReason $changePriceReason)
     {
-        if(!Gate::allows('delete price_reasons')) {
+        if(!Gate::allows('delete price reasons')) {
             abort(403);
         }
         $changePriceReason->delete();

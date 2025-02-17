@@ -1,10 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Create a new product type')
+@section('title', 'Create a new Collection')
 @section('header-button')
-@if(Auth::user()->can('create product types'))
-    <a href="{{ route('product-types.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to product types</a>
-@endif
+<a href="{{ route('collections.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to colors</a>
 @endsection
 
 @section('content')
@@ -12,14 +10,14 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <x-error-message :message="session('message')" />
+                    <x-error-message :message="$errors->first('message')" />
                     <x-success-message :message="session('success')" />
 
                     <div class="card">
                         <div class="card-body">
-                            <form action="{{ route('product-types.store') }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('collections.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
-                                @include('product-types.form')
+                                @include('collections.form')
                             </form>    
                         </div>    
                     </div>

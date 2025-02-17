@@ -18,7 +18,7 @@ class InventoryTransferController extends Controller
      */
     public function index()
     {
-        if(!Gate::allows('view inventory_transfer')) {
+        if(!Gate::allows('view inventory transfer')) {
             abort(403);
         }
         $branches = Branch::where('status','Active')->get();
@@ -153,15 +153,15 @@ class InventoryTransferController extends Controller
 
     public function inventoryHistory()
     {
-        $inventory_transfer = InventoryTransfer::with('sentFrom', 'sentTo', 'sentBy')->get();
+        $inventoryTransfer = InventoryTransfer::with('sentFrom', 'sentTo', 'sentBy')->get();
        
-        foreach($inventory_transfer as $transfer)
+        foreach($inventoryTransfer as $transfer)
         {       
-            $inventory_transfer->total_quantity = InventoryItem::where('inventroy_transfer_id', $transfer->id)
+            $inventoryTransfer->total_quantity = InventoryItem::where('inventroy_transfer_id', $transfer->id)
                 ->sum('quantity');
         }
        
-        return view('inventory-transfer.history', ['inventory_transfer' => $inventory_transfer]);
+        return view('inventory-transfer.history', ['inventory_transfer' => $inventoryTransfer]);
     }
 
 

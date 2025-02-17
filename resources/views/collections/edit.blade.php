@@ -1,10 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Update Size Scales')
+@section('title', 'Update Color')
 @section('header-button')
-    @if (Auth::user()->can('create size scales'))
-        <a href="{{ route('size-scales.create') }}" class="btn btn-primary">Add New Size Scale</a>
-    @endif
+    <a href="{{ route('collections.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to all colors</a>
 @endsection
 
 @section('content')
@@ -17,12 +15,13 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <form action="{{ route('size-scales.update', $sizeScale->id) }}" method="post" enctype="multipart/form-data">
+                            <form action="{{ route('collections.update', $color->id) }}" method="post"
+                                enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
-                                @include('size-scales.form')
-                            </form>    
-                        </div>    
+                                @include('collections.form')
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

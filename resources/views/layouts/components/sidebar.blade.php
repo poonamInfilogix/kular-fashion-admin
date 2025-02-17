@@ -10,7 +10,7 @@
                     </a>
                 </li>
 
-                @canany(['view products', 'create products', 'view print_barcodes', 'view inventory_transfer'])
+                @canany(['view products', 'create products', 'view print barcodes', 'view inventory transfer'])
                 <li class="menu-title" key="t-menu">Catalog</li>
                 @endcanany
 
@@ -32,7 +32,7 @@
                 </li>
                 @endcan
 
-                @can('view print_barcodes')
+                @can('view print barcodes')
                 <li>
                     <a href="{{ route('products.print-barcodes') }}" class="waves-effect">
                         <i class="bx bx-printer"></i>
@@ -41,7 +41,7 @@
                 </li>
                 @endcan
  
-                @can('view inventory_transfer')
+                @can('view inventory transfer')
                 <li>
                     <a href="{{ route('inventory-history') }}" class="waves-effect">
                         <i class="fas fa-truck fs-5"></i>
@@ -50,7 +50,7 @@
                 </li>
                 @endcan
                 
-                @can('view inventory_transfer')
+                @can('view inventory transfer')
                 <li>
                     <a href="{{ route('inventory-transfer.index') }}" class="waves-effect">
                         <i class="fas fa-exchange-alt"></i>
@@ -60,7 +60,7 @@
                 @endcan
 
                
-                @can('view inventory_transfer')
+                @can('view inventory transfer')
                 <li>
                     <a href="{{ route('purchase-orders.index') }}" class="waves-effect">
                         <i class="fas fa-box"></i>
@@ -69,11 +69,18 @@
                 </li>
                 @endcan
 
-                @canany(['view departments', 'view product_types', 'view brands', 'view colors', 'view size_scales', 'view tags', 'view branches', 'view customers', 'view users', 'view suppliers', 'view role', 'view roles & permissions', 'view tax', 'view settings', 'view price_reasons'])
+                <li>
+                    <a href="{{ route('collections.index') }}" class="waves-effect">
+                        <i class="bx bx-collection"></i>
+                        <span>Collections</span>
+                    </a>
+                </li>
+
+                @canany(['view departments', 'view product types', 'view brands', 'view colors', 'view size scales', 'view tags', 'view branches', 'view customers', 'view users', 'view suppliers', 'view role', 'view roles & permissions', 'view tax', 'view settings', 'view price reasons'])
                 <li class="menu-title">Settings</li>
                 @endcanany
                 
-                @canany(['view departments', 'view product_types', 'view brands', 'view colors', 'view size_scales', 'view tags'])
+                @canany(['view departments', 'view product types', 'view brands', 'view colors', 'view size scales', 'view tags'])
                     <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">
                             <i class="bx bxs-package"></i>
@@ -84,7 +91,7 @@
                             <li><a href="{{ route('departments.index') }}">Departments</a></li>
                             @endcan
 
-                            @can('view product_types')
+                            @can('view product types')
                             <li><a href="{{ route('product-types.index') }}">Product Types</a></li>
                             @endcan
             
@@ -96,7 +103,7 @@
                             <li><a href="{{ route('colors.index') }}">Colors</a></li>
                             @endcan
             
-                            @can('view size_scales')
+                            @can('view size scales')
                             <li><a href="{{ route('size-scales.index') }}">Size Scales</a></li>
                             @endcan
             
@@ -107,7 +114,7 @@
                     </li>
                 @endcanany
 
-                @canany(['view branches', 'view customers', 'view users', 'view suppliers', 'view role', 'view roles & permissions', 'view tax', 'view settings', 'view price_reasons'])
+                @canany(['view branches', 'view customers', 'view users', 'view suppliers', 'view role', 'view roles & permissions', 'view tax', 'view settings', 'view price reasons'])
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="bx bx-cog"></i>
@@ -146,7 +153,7 @@
                         <li><a href="{{ route('settings.index') }}">Default Images</a></li>
                         @endcan
 
-                        @can('view price_reasons')
+                        @can('view price reasons')
                         <li><a href="{{ route('change-price-reasons.index') }}">Change Price Reasons</a></li>
                         @endcan
 

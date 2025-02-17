@@ -50,7 +50,7 @@ class BranchController extends Controller
             abort(403);
         }
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:users,email', 
+            'email' => 'required|email|unique:branches,email', 
             'name' => 'required', 
             'short_name' => 'required', 
         ]);
@@ -100,7 +100,7 @@ class BranchController extends Controller
             abort(403);
         }
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:users,email', 
+            'email' => 'required|email|unique:branches,email,' . $id,
             'name' => 'required', 
             'short_name' => 'required', 
         ]);

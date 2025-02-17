@@ -10,7 +10,7 @@ class SizeScaleController extends Controller
 {
     public function index()
     {
-        if(!Gate::allows('view size_scales')) {
+        if(!Gate::allows('view size scales')) {
             abort(403);
         }
         $sizeScales = SizeScale::withCount('sizes')->latest()->get();
@@ -20,7 +20,7 @@ class SizeScaleController extends Controller
 
     public function create()
     {
-        if(!Gate::allows('create size_scales')) {
+        if(!Gate::allows('create size scales')) {
             abort(403);
         }
         return view('size-scales.create');
@@ -28,7 +28,7 @@ class SizeScaleController extends Controller
 
     public function store(Request $request)
     {
-        if(!Gate::allows('create size_scales')) {
+        if(!Gate::allows('create size scales')) {
             abort(403);
         }
         $request->validate([
@@ -50,7 +50,7 @@ class SizeScaleController extends Controller
 
     public function edit($id)
     {
-        if(!Gate::allows('edit size_scales')) {
+        if(!Gate::allows('edit size scales')) {
             abort(403);
         }
         $sizeScale = SizeScale::where('id', $id)->first();
@@ -60,7 +60,7 @@ class SizeScaleController extends Controller
 
     public function update(Request $request, $id)
     {
-        if(!Gate::allows('edit size_scales')) {
+        if(!Gate::allows('edit size scales')) {
             abort(403);
         }
         $request->validate([
@@ -79,7 +79,7 @@ class SizeScaleController extends Controller
 
     public function destroy(string $id)
     {
-        if(!Gate::allows('delete size_scales')) {
+        if(!Gate::allows('delete size scales')) {
             abort(403);
         }
         SizeScale::where('id', $id)->delete();

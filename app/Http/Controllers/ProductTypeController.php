@@ -14,7 +14,7 @@ class ProductTypeController extends Controller
 {
     public function index()
     {
-        if(!Gate::allows('view product_types')) {
+        if(!Gate::allows('view product types')) {
             abort(403);
         }
         $productTypes = ProductType::with('productTypeDepartments')->get();
@@ -23,7 +23,7 @@ class ProductTypeController extends Controller
 
     public function create()
     {
-        if(!Gate::allows('create product_types')) {
+        if(!Gate::allows('create product types')) {
             abort(403);
         }
         $departments = Department::all();
@@ -33,7 +33,7 @@ class ProductTypeController extends Controller
 
     public function store(Request $request)
     {
-        if(!Gate::allows('create product_types')) {
+        if(!Gate::allows('create product types')) {
             abort(403);
         }
         $request->validate([
@@ -69,7 +69,7 @@ class ProductTypeController extends Controller
 
     public function edit($id)
     {
-        if(!Gate::allows('edit product_types')) {
+        if(!Gate::allows('edit product types')) {
             abort(403);
         }
         $departments = Department::all();
@@ -80,7 +80,7 @@ class ProductTypeController extends Controller
 
     public function update(Request $request, $id)
     {
-        if(!Gate::allows('edit product_types')) {
+        if(!Gate::allows('edit product types')) {
             abort(403);
         }
         $request->validate([
@@ -122,7 +122,7 @@ class ProductTypeController extends Controller
 
     public function destroy(string $id)
     {
-        if(!Gate::allows('delete product_types')) {
+        if(!Gate::allows('delete product types')) {
             abort(403);
         }
         $productType = ProductType::where('id', $id)->delete();
