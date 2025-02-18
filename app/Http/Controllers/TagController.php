@@ -32,11 +32,11 @@ class TagController extends Controller
             abort(403);
         }
         $request->validate([
-            'tag_name' => 'required|unique:tags,tag_name',
+            'name' => 'required|unique:tags,name',
         ]);
 
         Tag::create([
-            'tag_name' => $request->tag_name,
+            'name' => $request->name,
             'status'   => $request->status,
         ]);
 
@@ -62,11 +62,11 @@ class TagController extends Controller
             abort(403);
         }
         $request->validate([
-            'tag_name' => 'required|unique:tags,tag_name,' .$tag->id,
+            'name' => 'required|unique:tags,name,' .$tag->id,
         ]);
 
         $tag->update([
-            'tag_name' => $request->tag_name,
+            'name' => $request->name,
             'status'   => $request->status,
         ]);
 

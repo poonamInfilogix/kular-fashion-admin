@@ -96,7 +96,7 @@
                 <option value="" disabled>Select tag</option>
                 @foreach ($tags as $tag)
                     <option value="{{ $tag->id }}" @selected(old('tag_id') && in_array($tag->id, old('tag_id')))>
-                        {{ $tag->tag_name }}
+                        {{ $tag->name }}
                     </option>
                 @endforeach
             </select>

@@ -90,7 +90,22 @@
                                         @endforeach
                                     @endif
                                 </div>
-                                <button id="add-specification" class="btn btn-primary mt-3">Add Specification</button>
+                                <button id="add-specification" class="btn btn-secondary mt-3">Add Specification</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Status & Visibility</h4>
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                       <select name="visibilty" id="visibilty" class="form-control">
+                                        <option value="0">Inactive</option>
+                                        <option value="1">Active</option>
+                                        <option value="2">Hide When Out Of Stock</option>
+                                       </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

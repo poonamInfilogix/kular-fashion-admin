@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id')->index();
             $table->unsignedBigInteger('product_color_id')->nullable()->index();
             $table->string('path');
+            $table->string('alt')->nullable();
+            $table->boolean('is_default')->default(false);
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');

@@ -1027,7 +1027,6 @@ class ProductController extends Controller
 
     public function updateWebConfigration(Request $request, Product $product)
     {
-        dd($request->all());
         $request->validate([
             'meta_title' => 'required',
             'meta_keywords' => 'required',
@@ -1046,6 +1045,7 @@ class ProductController extends Controller
                 'meta_title' => $request->meta_title,
                 'meta_keywords' => $request->meta_keywords,
                 'meta_description' => $request->meta_description,
+                'status' => $request->visibilty,
             ]
         );
 

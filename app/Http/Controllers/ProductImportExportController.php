@@ -340,7 +340,7 @@ class ProductImportExportController extends Controller
     
         foreach ($tags as $key => $tag) {
             $sheet->fromArray(
-                [$tag->id, $tag->tag_name],
+                [$tag->id, $tag->name],
                 NULL,
                 'A' . ($key + 2)
             );

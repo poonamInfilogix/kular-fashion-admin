@@ -7,10 +7,10 @@ use App\Models\Product;
 
 class Tag extends Model
 {
-    protected $guarded =[];
+    protected $guarded = [];
+    
     public function products()
-{
-    return $this->belongsToMany(Product::class);
-}
-
+    {
+        return $this->belongsToMany(Product::class);
+    }
 }
