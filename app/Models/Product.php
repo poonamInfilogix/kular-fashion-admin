@@ -86,4 +86,9 @@ class Product extends Model
     public function webInfo(){
         return $this->hasOne(ProductWebInfo::class);
     }
+
+    public function specifications()
+    {
+        return $this->hasMany(ProductWebSpecification::class);
+    }
 }
