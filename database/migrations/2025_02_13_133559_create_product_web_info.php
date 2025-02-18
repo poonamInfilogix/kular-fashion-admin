@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('meta_title')->nullable();
             $table->string('meta_keywords')->nullable();
             $table->string('meta_description')->nullable();
+            $table->boolean('is_splitted_with_colors')->default(false)->index();
             $table->tinyInteger('status')->default(1)->index();
             $table->timestamps();
 

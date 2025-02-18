@@ -25,7 +25,7 @@ return new class extends Migration
             $table->unsignedBigInteger('country_id')->index()->nullable();
             $table->string('postal_code')->nullable();
             $table->enum('status', ['Active', 'Inactive'])->default('Active')->index();
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

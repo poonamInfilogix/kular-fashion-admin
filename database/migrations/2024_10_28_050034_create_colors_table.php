@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('colors', function (Blueprint $table) {
             $table->id();
+            $table->string('slug')->unique();
             $table->string('color_name');
             $table->string('short_name', 7)->nullable();
             $table->string('color_code', 5)->nullable();
             $table->string('ui_color_code')->nullable();
             $table->enum('status', ['Active', 'Inactive'])->default('Active')->index();
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

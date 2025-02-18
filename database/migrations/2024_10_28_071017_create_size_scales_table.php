@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('size_scale');
             $table->enum('status', ['Active', 'Inactive'])->default('Active')->index();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

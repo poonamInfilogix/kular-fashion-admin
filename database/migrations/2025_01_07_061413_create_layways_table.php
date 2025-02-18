@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_id')->index();
             $table->unsignedBigInteger('order_id')->nullable()->index();
             $table->string('status')->default('In progress');
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }
