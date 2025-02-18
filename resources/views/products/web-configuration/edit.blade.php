@@ -40,8 +40,8 @@
                                             <div class="col-sm-3">
                                                 <img src="{{ asset($image->path) }}" alt="Product Images"
                                                     class="img-thumbnail" width="100px" height="100px">
-                                                <button type="button" class="btn btn-danger delete-image mt-4"
-                                                    data-id="{{ $image->id }}">
+                                                <button type="button" class="btn btn-danger delete-btn mt-4"
+                                                data-source="image" data-endpoint="{{ route('product.destroy.image', $image->id)}}">
                                                     <i class="fas fa-trash-alt"></i>
                                                 </button>
                                             </div>
@@ -194,53 +194,6 @@
                     const specId = $(this).data('spec-id');
                     $(`#${specId}`).remove();
                 });
-            });
-
-
-            //Delete Product Image
-
-            $(document).on('click', '.delete-image', function() {
-                let imageId = $(this).data('id');
-                let imageContainer = $(this).closest('.image-container');
-
-                swal({
-                    title: "Are you sure?",
-                    text: `You really want to this image?`,
-                    type: "warning",
-                    showCancelButton: true,
-                    closeOnConfirm: false,
-                }, function(isConfirm) {
-                    if (isConfirm) {
-                        $.ajax({
-                            type: "DELETE",
-                            dataType: "json",
-                            url: "{{ route('product.destroy.image', '') }}/" + imageId,
-                            data: {
-                                '_token': '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                if (response.success) {
-                                    swal({
-                                        title: "Success!",
-                                        text: response.message,
-                                        type: "success",
-                                        showConfirmButton: false
-                                    })
-
-                                    setTimeout(() => {
-                                        location.reload();
-                                    }, 2000);
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('Error updating status:', error);
-                            }
-                        });
-                    } else {
-                        toggleButton.prop('checked', !toggleButton.prop('checked'));
-                    }
-                });
-
             });
         </script>
     @endpush
