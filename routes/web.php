@@ -24,6 +24,7 @@ use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\InventoryTransferController;
 use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\ProductImportExportController;
+use App\Http\Controllers\CouponDiscountController;
 use App\Http\Controllers\PurchaseOrderController;
 
 Route::get('/', function () {
@@ -58,6 +59,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'inventory-transfer' => InventoryTransferController::class,
         'purchase-orders' => PurchaseOrderController::class,
         'collections' => CollectionController::class,
+        'coupons-discounts' => CouponDiscountController::class,
     ]);
     Route::get('collection-option-data/{type?}', [CollectionController::class, 'collectionOptionData'])->name('collection-option-data');
 
