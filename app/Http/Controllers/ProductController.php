@@ -426,7 +426,7 @@ class ProductController extends Controller
             abort(403);
         }
 
-        $branches = Branch::with(['inventory' => function($query) use ($product) {
+        $branches = Branch::with(['inventory' => function ($query) use ($product) {
             $query->where('product_id', $product->id);
         }])->get();
 
@@ -452,7 +452,7 @@ class ProductController extends Controller
     }
 
     public function update(Request $request, Product $product)
-    {   
+    {
         foreach ($request->mrp as $product_size_id => $mrp) {
             ProductSize::find($product_size_id)->update([
                 'mrp' => $mrp
@@ -990,99 +990,90 @@ class ProductController extends Controller
         return response()->json(['exists' => $exists]);
     }
 
-
-    public function editWebConfigration(Product $product){
-
-        // Product   ProductWebSpecification ProductWebInfo ProductWebImage
-
-        $product = Product::with('webInfo','webSpecification','webImage')->where('id', $product->id)->first();
-        // dd($product->toArray());
-        $data['meta_title'] = $product->webInfo->meta_title ?? '';
-        $data['meta_description'] = $product->webInfo->meta_description ?? '';
-        $data['meta_keywords'] = $product->webInfo->meta_keywords ?? '';
-        $data['description'] = $product->webInfo->description ?? '';
-        return view('products.web-configuration.edit', compact('product'),  ['data' => $data]);
+    public function editWebConfigration(Product $product)
+    {
+        return view('products.web-configuration.edit', compact('product'));
     }
 
-    public function updateWebConfigration(Request $request, $product){
-      
+    protected function syncSpecifications($productId, $specifications)
+    {
+        foreach ($specifications as $specification) {
+            ProductWebSpecification::updateOrCreate(
+                [
+                    'product_id' => $productId,
+                    'key' => $specification['key'],
+                ],
+                [
+                    'value' => $specification['value'],
+                    'updated_at' => now(),
+                ]
+            );
+        }
+
+        $currentSpecificationKeys = ProductWebSpecification::where('product_id', $productId)
+            ->pluck('key')
+            ->toArray();
+
+        $newSpecificationKeys = array_column($specifications, 'key');
+
+        $keysToDelete = array_diff($currentSpecificationKeys, $newSpecificationKeys);
+
+        if (!empty($keysToDelete)) {
+            ProductWebSpecification::where('product_id', $productId)
+                ->whereIn('key', $keysToDelete)
+                ->delete();
+        }
+    }
+
+    public function updateWebConfigration(Request $request, Product $product)
+    {
+        dd($request->all());
         $request->validate([
-            'meta_description' => '',
+            'meta_title' => 'required',
             'meta_keywords' => 'required',
             'product_desc' => 'nullable|string',
             'specifications.*.key' => 'required|string',
             'specifications.*.value' => 'required|string',
         ]);
 
-   
-        $specifications = $request->input('specifications'); 
+        $this->syncSpecifications($product->id, $request->specifications);
 
-        foreach($specifications as $specification)
-        {   
-            ProductWebSpecification::updateOrCreate(
-                    [
-                        'product_id' => $product,
-                        'key' => $specification['key'],
-                    ],
-                    [
-                        'value' => $specification['value'],
-                        'created_at' => now(),
-                        'updated_at' => now()
-                    ]
-                );
-        }
-            
-            ProductWebInfo::updateOrCreate(
-                    ['product_id' => $product],
-                    [  
-                        'short_description' => $request->product_desc,
-                        'description' =>$request->product_desc,
-                        'meta_title' => $request->meta_keywords,
-                        'meta_keywords' => $request->meta_keywords,
-                        'meta_description'=>$request->meta_description,
-                        'created_at' => now(),
-                        'updated_at' => now()
-                    ]
-                );
-              
-                return redirect()->route('products.index')->with('success', 'Product web configuration successfully.');
+        ProductWebInfo::updateOrCreate(
+            ['product_id' => $product->id],
+            [
+                'short_description' => $request->product_desc,
+                'description' => $request->product_desc,
+                'meta_title' => $request->meta_title,
+                'meta_keywords' => $request->meta_keywords,
+                'meta_description' => $request->meta_description,
+            ]
+        );
 
-             
+        return redirect()->back()->with('success', 'Product web configuration updated successfully.');
     }
 
     public function uploadImages(Request $request, Product $product)
     {
         $request->validate([
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240'  // 10 MB max
+            'image' => 'required|image|max:10240' // 10 MB max
         ]);
-        $relativePath = "";
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $imageName = uniqid(). $file->getClientOriginalName();
 
-            $directoryPath = public_path("/uploads/products");
+        if ($request->hasFile('image')) {
+            $imagePath = uploadFile($request->file('image'), 'uploads/products/');
 
-            if (!file_exists($directoryPath)) {
-                mkdir($directoryPath, 0777, true);
-            }
-            
-            $file->move($directoryPath, $imageName);
-          
-            $relativePath = "uploads/products/{$imageName}";
-            // Log::info(['relativePath', $relativePath]);
-                ProductWebImage::create(
-                    [  'product_id' => $product->id,
-                    'path' => $relativePath
+            $webImage = ProductWebImage::create(
+                [
+                    'product_id' => $product->id,
+                    'path' => $imagePath
                 ]
-                );
-            return response()->json(['message' => 'Image uploaded successfully!'], 200);
+            );
+            return response()->json(['id' => $webImage->id, 'message' => 'Image uploaded successfully!'], 200);
         } else {
-            return response()->json(['error' => 'No file uploaded'], 400);
+            return response()->json(['error' => 'No image being uploaded'], 400);
         }
-
     }
 
-  
+
     public function destroyProductImage($imageId)
     {
         $image = ProductWebImage::find($imageId);
@@ -1107,6 +1098,4 @@ class ProductController extends Controller
             'message' => 'Product image deleted successfully!'
         ]);
     }
-
-
 }
