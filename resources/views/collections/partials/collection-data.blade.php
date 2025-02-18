@@ -17,7 +17,7 @@
             </div>
         </div>
     </div>
-@elseif($type == 'category')
+@elseif($type == 'categories')
     <div class="col-md-6 my-2">
         <div class="row">
             <div class="col-md-10">

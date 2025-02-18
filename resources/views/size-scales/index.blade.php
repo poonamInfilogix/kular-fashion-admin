@@ -33,7 +33,12 @@
                                     @foreach ($sizeScales as $key => $sizeScale)
                                         <tr>
                                             <td>{{ ++$key }}</td>
-                                            <td>{{ ucwords($sizeScale->size_scale) }}</td>
+                                            <td>{{ ucwords($sizeScale->size_scale) }}
+                                                @if (isset($sizeScale->sizes))
+                                                    ({{ $sizeScale->sizes->first()->size }} -
+                                                    {{ $sizeScale->sizes->last()->size }})
+                                                @endif
+                                            </td>
                                             <td>{{ $sizeScale->sizes_count }}</td>
                                             <td>
                                                 <input type="checkbox" id="{{ $sizeScale->id }}" class="update-status"

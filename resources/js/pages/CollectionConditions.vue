@@ -27,10 +27,8 @@
                 </div>
             </div>
 
-            <AddedConditions :conditions="conditions.include"></AddedConditions>
+            <AddedConditions :conditionType="'include'" :conditions="conditions.include" @removeCondition="removeCondition"></AddedConditions>
         </div>
-
-        {{ conditionDependencies }}
 
         <div class="col-md-12">
             <div class="row">
@@ -40,7 +38,7 @@
                         condition</button>
                 </div>
             </div>
-            <AddedConditions :conditions="conditions.exclude"></AddedConditions>
+            <AddedConditions :conditionType="'exclude'" :conditions="conditions.exclude" @removeCondition="removeCondition"></AddedConditions>
         </div>
 
         <div class="col-sm-6 col-md-3">
@@ -63,16 +61,17 @@
         </div>
     </div>
 
-    <IncludeConditionModal :conditionType="conditionType" @addCondition="addCondition"></IncludeConditionModal>
+    <AddConditionModal :conditionType="conditionType" :addedConditions="conditions[conditionType]"
+        @addCondition="addCondition"></AddConditionModal>
 </template>
 
 <script>
-import IncludeConditionModal from '../components/collections/includeConditionModal.vue';
+import AddConditionModal from '../components/collections/AddConditionModal.vue';
 import AddedConditions from '../components/collections/AddedConditions.vue';
 
 export default {
     components: {
-        IncludeConditionModal,
+        AddConditionModal,
         AddedConditions
     },
     props: {
@@ -104,23 +103,84 @@ export default {
             this.conditionType = conditionType;
             $('#addConditionModal').modal('show');
         },
+        removeCondition(payload){
+            this.conditions[payload.conditionType].splice(payload.conditionIndex, 1);
+        },
         addCondition(condition) {
-            if (condition.name === 'tags') {
-                condition.type = 'select';
-                condition.values = this.conditionDependencies.tags;
-            } else if (condition.name === 'category') {
-                condition.type = 'select';
-                condition.values = this.conditionDependencies.ProductTypes;
-            } else if (condition.name === 'price_range') {
-                condition.type = 'range';
-                condition.values = { min: 0, max: this.conditionDependencies.maxProductPrice };
-            } else if (condition.name === 'price_range') {
-                condition.type = 'range';
-                condition.values = { min: 0, max: this.conditionDependencies.maxProductPrice };
+            switch (condition.name) {
+                case 'tags':
+                    condition.type = 'select';
+                    condition.multiple = true;
+                    condition.values = this.conditionDependencies.tags;
+                    break;
+                case 'categories':
+                    condition.type = 'select';
+                    condition.multiple = true;
+                    condition.values = this.conditionDependencies.ProductTypes;
+                    break;
+                case 'price_list':
+                    condition.type = 'number';
+                    break;
+                case 'price_range':
+                    condition.type = 'range';
+                    condition.values = { min: 0, max: this.conditionDependencies.maxProductPrice };
+                    break;
+                case 'published_within':
+                    condition.type = 'select';
+
+                    condition.values = [{
+                        id: 'Days',
+                        value: 'Days',
+                    }, {
+                        id: 'Range',
+                        value: 'Range',
+                    }];
+
+                    condition.subFields = [{
+                        type: 'number',
+                        name: 'number_of_days',
+                        label: 'Number Of Days',
+                        value: 30,
+                        basedOn: 'Days'
+                    }, {
+                        type: 'date',
+                        name: 'published_between',
+                        label: 'Published Between',
+                        multiple: true,
+                        basedOn: 'Range'
+                    }];
+
+
+                    break;
+                case 'price_status':
+                    condition.type = 'select';
+                    condition.values = [{
+                        id: 'Reduce Item Only',
+                        value: 'Reduce Item Only'
+                    }, {
+                        id: 'Full Price Item Only',
+                        value: 'Full Price Item Only'
+                    }];
+                    break;
+                default:
+                    condition.type = 'text';
+                    break;
             }
 
-            console.log('condition', condition)
             this.conditions[this.conditionType].push({ condition: condition, value: '' });
+
+            setTimeout(function () {
+                if (condition.type === 'select' && condition.multiple) {
+                    $('.multiSelect').each(function () {
+                        let defaultPlaceholder = $(this).find('option').first().html();
+
+                        $(this).chosen({
+                            width: '100%',
+                            placeholder_text_multiple: defaultPlaceholder,
+                        });
+                    });
+                }
+            });
         }
     }
 };

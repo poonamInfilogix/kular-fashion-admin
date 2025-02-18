@@ -25,4 +25,6 @@
             </div>
         </div>
     </div>
+
+    <x-include-plugins :plugins="['chosen']"></x-include-plugins>
 @endsection

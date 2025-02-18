@@ -12,12 +12,10 @@
                         <label for="selectOption" class="form-label">Select Condition</label>
                         <select class="form-select" id="selectCondition" aria-label="Select option"
                             v-model="selectedCondition">
-                            <option value="tags">Have one of these tags</option>
-                            <option value="category">Be in the category</option>
-                            <option value="price_list">Be in the price list</option>
-                            <option value="price_range">Be in the price range</option>
-                            <option value="price_status">Have the price status</option>
-                            <option value="published_within">Have been published within</option>
+                            <option v-for="(label, condition) in availableConditions" :key="condition"
+                                :value="condition">
+                                {{ label }}
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -37,6 +35,10 @@ export default {
         conditionType: {
             type: String,
             default: 'include'
+        },
+        addedConditions: {
+            type: Array,
+            default: []
         }
     },
     data() {
@@ -44,12 +46,24 @@ export default {
             selectedCondition: '',
             conditionMap: {
                 tags: "Have one of these tags",
-                category: "Be in the category",
+                categories: "Be in the category",
                 price_list: "Be in the price list",
                 price_range: "Be in the price range",
                 price_status: "Have the price status",
                 published_within: "Have been published within"
             }
+        }
+    },
+    computed: {
+        availableConditions() {
+            const addedConditionNames = this.addedConditions.map(addedCondition => addedCondition.condition.name);
+
+            return Object.keys(this.conditionMap).reduce((result, key) => {
+                if (!addedConditionNames.includes(key)) {
+                    result[key] = this.conditionMap[key];
+                }
+                return result;
+            }, {});
         }
     },
     methods: {
@@ -59,8 +73,9 @@ export default {
                 name: this.selectedCondition,
                 label: conditionLabel
             };
-            
-            this.$emit('addCondition', conditionObject)
+
+            this.$emit('addCondition', conditionObject);
+            $('#addConditionModal').modal('hide');
         }
     }
 }
