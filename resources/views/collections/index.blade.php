@@ -23,8 +23,6 @@
                                         <th>#</th>
                                         <th>Name</th>
                                         <th>Image</th>
-                                        <th>Included Products</th>
-                                        <th>Status</th>
                                         @canany(['edit collections', 'delete collections'])
                                             <th>Action</th>
                                         @endcanany
@@ -36,14 +34,6 @@
                                             <td>{{ ++$key }}</td>
                                             <td>{{ ucwords($collection->name) }}</td>
                                             <td>{{ $collection->image }}</td>
-                                            <td>
-                                                <input type="checkbox" id="{{ $collection->id }}" class="update-status"
-                                                    data-id="{{ $collection->id }}" switch="success" data-on="Active"
-                                                    data-off="Inactive" {{ $collection->status === 'Active' ? 'checked' : '' }}
-                                                    data-endpoint="#" />
-                                                <label class="mb-0" for="{{ $collection->id }}" data-on-label="Active"
-                                                    data-off-label="Inactive"></label>
-                                            </td>
                                             @canany(['edit collections', 'delete collections'])
                                                 <td>
                                                     @if (Auth::user()->can('edit collections'))

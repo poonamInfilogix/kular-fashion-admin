@@ -1,8 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.app', ['isVueComponent' => true])
 
-@section('title', 'Update Color')
+@section('title', 'Create a new Collection')
 @section('header-button')
-    <a href="{{ route('collections.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to all colors</a>
+<a href="{{ route('collections.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to colors</a>
 @endsection
 
 @section('content')
@@ -15,16 +15,16 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <form action="{{ route('collections.update', $color->id) }}" method="post"
-                                enctype="multipart/form-data">
+                            <form action="{{ route('collections.update', $collection->id) }}" method="post" enctype="multipart/form-data">
                                 @csrf
-                                @method('PUT')
-                                <collection-conditions></collection-conditions>
-                            </form>
-                        </div>
+                                <collection-conditions :saved-collection='@json($collection)' :condition-dependencies='@json($conditionDependencies)'></collection-conditions>
+                            </form>    
+                        </div>    
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <x-include-plugins :plugins="['chosen']"></x-include-plugins>
 @endsection

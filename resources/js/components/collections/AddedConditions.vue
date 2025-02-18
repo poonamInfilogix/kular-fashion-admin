@@ -16,7 +16,7 @@
                                 field.value }}</option>
                         </select>
 
-                        <input v-else :type="addedCondition.condition.type || 'text'" class="form-control"
+                        <input v-else :id="addedCondition.condition.name" :name="`${conditionType}[${addedCondition.condition.name}]`" :type="addedCondition.condition.type || 'text'" class="form-control"
                             :placeholder="`Enter ${addedCondition.condition.label}`">
                     </div>
                 </div>

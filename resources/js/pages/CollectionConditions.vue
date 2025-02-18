@@ -4,7 +4,7 @@
             <div class="form-group">
                 <div class="mb-3">
                     <label for="collection_name">Collection Name<span class="text-danger">*</span></label>
-                    <input class="form-control" name="collection_name" value="" placeholder="Enter Collection Name" />
+                    <input class="form-control" v-model="collection.name" name="collection_name" placeholder="Enter Collection Name" />
                 </div>
             </div>
         </div>
@@ -57,7 +57,7 @@
 
     <div class="row mb-2">
         <div class="col-lg-6 mb-2">
-            <button type="submit" class="btn btn-primary w-md">Submit</button>
+            <button type="submit" class="btn btn-primary w-md" :disabled="!collection.name">Submit</button>
         </div>
     </div>
 
@@ -76,8 +76,12 @@ export default {
     },
     props: {
         conditionDependencies: {
-            type: Array,
+            type: Object,
             requied: true
+        },
+        savedCollection: {
+            type: Object,
+            default: {}
         }
     },
     data() {
@@ -87,6 +91,9 @@ export default {
                 'include': [],
                 'exclude': []
             },
+            collection: {
+                name: this.savedCollection.name
+            }
         }
     },
     mounted() {

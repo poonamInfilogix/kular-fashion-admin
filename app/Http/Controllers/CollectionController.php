@@ -16,7 +16,7 @@ class CollectionController extends Controller
      */
     public function index()
     {
-        if(!Gate::allows('view collections')) {
+        if (!Gate::allows('view collections')) {
             abort(403);
         }
 
@@ -29,7 +29,7 @@ class CollectionController extends Controller
      */
     public function create()
     {
-        if(!Gate::allows('create collections')) {
+        if (!Gate::allows('create collections')) {
             abort(403);
         }
 
@@ -47,24 +47,19 @@ class CollectionController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
-        $key = $request->include_condition;
+        if (!Gate::allows('create collections')) {
+            abort(403);
+        }
+
         Collection::create([
             'name' => $request->collection_name,
-            'condition_type' => $request->condition_type,
-            'conditions' => json_encode(
-                [
-                    "condition_type" => $request->condition_type,
-                    $key => $request->$key
-                ]
-            ),
+            'include_conditions' => json_encode($request->include),
+            'exclude_conditions' => json_encode($request->exclude),
             'status' => $request->status,
         ]);
 
         return redirect()->route('collections.index')->with('success', 'Collection Added successfully.');
-        if(!Gate::allows('create collections')) {
-            abort(403);
-        }
+       
     }
 
     /**
@@ -80,7 +75,17 @@ class CollectionController extends Controller
      */
     public function edit(Collection $collection)
     {
-        //
+        if (!Gate::allows('edit collections')) {
+            abort(403);
+        }
+        
+        $conditionDependencies = [
+            'tags' => Tag::select('id', 'name as value')->where('status', 'Active')->get(),
+            'ProductTypes' => ProductType::select('id', 'product_type_name as value')->where('status', 'Active')->whereNull('deleted_at')->get(),
+            'maxProductPrice' => Product::max('price') ?? 9999,
+        ];
+
+        return view('collections.edit', compact('collection', 'conditionDependencies'));
     }
 
     /**
