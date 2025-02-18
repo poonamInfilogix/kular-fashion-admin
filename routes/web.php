@@ -24,6 +24,7 @@ use App\Http\Controllers\CollectionController;
 use App\Http\Controllers\InventoryTransferController;
 use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\ProductImportExportController;
+use App\Http\Controllers\CouponDiscountController;
 use App\Http\Controllers\PurchaseOrderController;
 
 Route::get('/', function () {
@@ -58,6 +59,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'inventory-transfer' => InventoryTransferController::class,
         'purchase-orders' => PurchaseOrderController::class,
         'collections' => CollectionController::class,
+        'coupons-discounts' => CouponDiscountController::class,
     ]);
 
     Route::get('inventory-history', [InventoryTransferController::class, 'inventoryHistory'])->name('inventory-history');
@@ -73,6 +75,9 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
 
     Route::get('general-settings', [SettingController::class, 'generalSetting'])->name('general-settings.index');
     Route::post('general-settings.store', [SettingController::class, 'generalSettingStore'])->name('general-settings.store');
+
+    Route::get('web-settings', [SettingController::class, 'webSetting'])->name('web-settings.index');
+    Route::post('web-settings.store', [SettingController::class, 'webSettingStore'])->name('web-settings.store');
 
     Route::get('size-scales/sizes/{sizeScaleId}', [SizeController::class, 'index'])->name('sizes.index');
     Route::get('size-scales/sizes/{sizeScaleId}/create', [SizeController::class, 'create'])->name('sizes.create');
@@ -122,4 +127,5 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
     Route::get('/check-manufacture-code/{manufactureCode}', [ProductController::class, 'checkManufactureCode'])->name('check.manufacture.code');
     Route::get('/get-size-range', [PurchaseOrderController::class, 'getSizeRange']);
+
 });
