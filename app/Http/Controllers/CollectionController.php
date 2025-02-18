@@ -41,13 +41,14 @@ class CollectionController extends Controller
      */
     public function store(Request $request)
     {
+        $key = $request->include_condition;
         Collection::create([
             'name' => $request->collection_name,
             'condition_type' => $request->condition_type,
             'conditions' => json_encode(
                 [
                     "condition_type" => $request->condition_type,
-                    "tags" => $request->tags
+                    $key => $request->$key
                 ]
             ),
             'status' => $request->status,

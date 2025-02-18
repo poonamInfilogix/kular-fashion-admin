@@ -8,8 +8,8 @@
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
             <select name="status" id="color-status" class="form-control">
-                <option value="Active" @selected($collection->status ?? '' === 1)>Active</option>
-                <option value="Inactive" @selected($collection->status ?? '' === 0)>Inactive</option>
+                <option value="1" @selected($collection->status ?? '' === 1)>Active</option>
+                <option value="0" @selected($collection->status ?? '' === 0)>Inactive</option>
             </select>
         </div>
     </div>
@@ -71,7 +71,7 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <label for="selectOption" class="form-label">Select Condition</label>
-                    <select class="form-select" id="selectCondition" aria-label="Select option">
+                    <select class="form-select" id="selectCondition" aria-label="Select option" name="include_condition">
                         <option value="tags" data-title="Tags">Have one of these tags</option>
                         <option value="category" data-title="Category">Be in the category</option>
                         <option value="price_list" data-title="Price List">Be in the price list</option>
