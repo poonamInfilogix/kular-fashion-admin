@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Web Configuration')
+@section('title', 'Edit web configuration for artcle: '.$product->article_code)
 @section('header-button')
     <a href="{{ route('products.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to products</a>
 @endsection
@@ -9,6 +9,15 @@
     <div class="page-content">
         <div class="container-fluid">
             <div class="row">
+                <div class="col-md-5 mb-2 fs-5">
+                    <strong>Product Name:</strong> {{ $product->name }}
+                </div>
+                <div class="col-md-4 mb-2 fs-5">
+                    <strong>Brand Name:</strong> {{ $product->brand->name }}
+                </div>
+                <div class="col-md-3 mb-2 fs-5">
+                    <strong>Product Type:</strong> {{ $product->productType->product_type_name }}
+                </div>
                 <div class="col-12">
                     <x-error-message :message="$errors->first('message')" />
                     <x-success-message :message="session('success')" />
@@ -62,7 +71,7 @@
                         <!-- Product Specification -->
                         <div class="card">
                             <div class="card-body" id="product-specification">
-                                <h4 class="card-title">Product Specification</h4>
+                                <h4 class="card-title">Product Specifications</h4>
                                 <div class="row" id="specification-container">
                                     @if (isset($product->webSpecification) && count($product->webSpecification) > 0)
                                         @foreach ($product->webSpecification as $specificationIndex => $specification)
@@ -100,9 +109,9 @@
                                 <div class="row">
                                     <div class="col-sm-4">
                                        <select name="visibilty" id="visibilty" class="form-control">
-                                        <option value="0">Inactive</option>
-                                        <option value="1">Active</option>
-                                        <option value="2">Hide When Out Of Stock</option>
+                                        <option value="0" @selected($product->webInfo->status ?? '' === '0')>Inactive</option>
+                                        <option value="1" @selected($product->webInfo->status ?? '' === '1')>Active</option>
+                                        <option value="2" @selected($product->webInfo->status ?? '' === '2')>Hide When Out Of Stock</option>
                                        </select>
                                     </div>
                                 </div>
