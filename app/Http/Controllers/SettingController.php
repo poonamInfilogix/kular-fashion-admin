@@ -59,6 +59,7 @@ class SettingController extends Controller
 
     public function generalSettingStore(Request $request)
     {
+ 
         $datas = $request->all();
         $skippedArray = array_slice($datas, 1, null, true);
 
@@ -76,5 +77,48 @@ class SettingController extends Controller
         }
 
         return redirect()->route('general-settings.index')->with('success', 'General Setting updated successfully');
+    }
+
+
+    public function webSetting(){
+        return view('settings.web-settings.index');
+    }
+
+    public function webSettingStore(Request $request){
+        $request->validate([
+            'web_site_title' => 'required',
+            "web_contact_email" => 'required',
+            "web_contact_no" => 'required',
+        ]);
+
+        $skippedArray = array_slice($request->all(), 1, null, true);
+
+        $web_settings = [
+            'web_icon'  => 'web_icon',
+            'web_favicon' => 'web_favicon',
+        ];
+
+        foreach ($web_settings as $settingKey) {
+            $setting = Setting::where('key', $settingKey)->first();
+            $oldImagePath = $setting ? $setting->value : null;
+           
+            if ($request->hasFile($settingKey)) {
+                $newImageName = uploadFile($request->file($settingKey), 'uploads/default-images/');
+                $fullOldImagePath = public_path($oldImagePath);
+
+                if ($oldImagePath && File::exists($fullOldImagePath)) {
+                    File::delete($fullOldImagePath);
+                }
+                $skippedArray[$settingKey] = $newImageName;
+            } else {
+                $skippedArray[$settingKey] = $oldImagePath;
+            }
+        }
+
+        foreach ($skippedArray as $key => $value) {
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
+
+        return redirect()->route('web-settings.index')->with('success', 'Web Setting updated successfully');
     }
 }

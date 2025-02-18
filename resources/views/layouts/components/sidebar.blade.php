@@ -110,6 +110,7 @@
                             @can('view tags')
                             <li><a href="{{ route('tags.index') }}">Tags</a></li>
                             @endcan 
+ 
                         </ul>
                     </li>
                 @endcanany
@@ -159,6 +160,10 @@
 
                         @can('view settings')
                         <li><a href="{{ route('general-settings.index') }}">General</a></li>
+                        @endcan
+
+                        @can('view settings')
+                        <li><a href="{{ route('web-settings.index') }}">Web Settings</a></li>
                         @endcan
                     </ul>
                 </li>
