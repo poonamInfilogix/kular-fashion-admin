@@ -36,7 +36,7 @@ class CollectionController extends Controller
         $conditionDependencies = [
             'tags' => Tag::select('id', 'name')->where('status', 'Active')->get(),
             'ProductTypes' => ProductType::select('id', 'product_type_name')->where('status', 'Active')->whereNull('deleted_at')->get(),
-            'maxPrice' => Product::max('price') ?? 0,
+            'maxProductPrice' => Product::max('price') ?? 9999,
         ];
 
         return view('collections.create', compact('conditionDependencies'));

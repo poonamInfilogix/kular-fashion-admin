@@ -26,9 +26,11 @@
                         condition</button>
                 </div>
             </div>
-            
+
             <AddedConditions :conditions="conditions.include"></AddedConditions>
         </div>
+
+        {{ conditionDependencies }}
 
         <div class="col-md-12">
             <div class="row">
@@ -80,7 +82,7 @@ export default {
         }
     },
     data() {
-        return{
+        return {
             conditionType: 'include',
             conditions: {
                 'include': [],
@@ -88,10 +90,10 @@ export default {
             },
         }
     },
-    mounted(){
-        $('[name="collection_image"]').change(function(event) {
+    mounted() {
+        $('[name="collection_image"]').change(function (event) {
             var reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 $('#preview-collection').attr('src', e.target.result).removeAttr('hidden');
             }
             reader.readAsDataURL(this.files[0]);
@@ -102,13 +104,22 @@ export default {
             this.conditionType = conditionType;
             $('#addConditionModal').modal('show');
         },
-        addCondition(condition){
-            if(condition.name==='tags'){
-                condition.type='select';
-                condition.values=this.conditionDependencies.tags;
+        addCondition(condition) {
+            if (condition.name === 'tags') {
+                condition.type = 'select';
+                condition.values = this.conditionDependencies.tags;
+            } else if (condition.name === 'category') {
+                condition.type = 'select';
+                condition.values = this.conditionDependencies.ProductTypes;
+            } else if (condition.name === 'price_range') {
+                condition.type = 'range';
+                condition.values = { min: 0, max: this.conditionDependencies.maxProductPrice };
+            } else if (condition.name === 'price_range') {
+                condition.type = 'range';
+                condition.values = { min: 0, max: this.conditionDependencies.maxProductPrice };
             }
 
-            console.log('condition',condition)
+            console.log('condition', condition)
             this.conditions[this.conditionType].push({ condition: condition, value: '' });
         }
     }
