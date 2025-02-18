@@ -127,6 +127,4 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::get('/check-manufacture-code/{manufactureCode}', [ProductController::class, 'checkManufactureCode'])->name('check.manufacture.code');
     Route::get('/get-size-range', [PurchaseOrderController::class, 'getSizeRange']);
 
-
-    // web-settings.index
 });
