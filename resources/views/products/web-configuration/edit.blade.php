@@ -24,8 +24,7 @@
                                 <h4 class="card-title mb-3">Product Images</h4>
                                 <div class="dropzone" id="product-dropzone">
                                     <div class="fallback">
-                                        {{-- <input name="product_image" type="file" multiple="multiple"> --}}
-                                        <x-form-input name="product_image" type="file" multiple="multiple" />
+                                        <x-form-input name="images[]" id="productImages" type="file" multiple="multiple" />
                                     </div>
                                     <div class="dz-message needsclick">
                                         <div class="mb-3">
@@ -52,94 +51,78 @@
                             </div>
                         </div>
 
-                                <!-- Product Description -->
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h4 class="card-title">Product Description</h4>
-                                        <textarea name="product_desc" id="product_desc" class="editor" rows="2">{{ $data['description'] ?? '' }}</textarea>
-                                    </div>
-                                </div>
+                        <!-- Product Description -->
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Product Description</h4>
+                                <textarea name="product_desc" id="product_desc" class="editor" rows="2">{{ $product->webInfo->description ?? '' }}</textarea>
+                            </div>
+                        </div>
 
-                                <!-- Product Specification -->
-                                <div class="card">
-                                    <div class="card-body" id="product-specification">
-                                        <h4 class="card-title">Product Specification</h4>
-                                        <div class="row" id="specification-container">
-                                            @if (isset($product->webSpecification) && count($product->webSpecification) > 0)
-
-                                                @foreach ($product->webSpecification as $specificationIndex => $specification)
-                                                    <div class="col-md-6 specification-item mb-3" id="spec-0">
-                                                        <div class="row">
-                                                            <div class="col-md-5">
-                                                                <x-form-input
-                                                                    name="specifications[{{ $specificationIndex }}][key]"
-                                                                    value="{{ $specification->key }}" label="Key"
-                                                                    placeholder="Key" class="form-control"
-                                                                    required="true" />
-                                                            </div>
-
-                                                            <div class="col-md-5">
-                                                                <x-form-input
-                                                                    name="specifications[{{ $specificationIndex }}][value]"
-                                                                    value="{{ $specification->value }}" label="Value"
-                                                                    placeholder="Value" class="form-control"
-                                                                    required="true" />
-                                                            </div>
-                                                            <div class="col-md-2">
-                                                                <button class="btn btn-danger delete-specification mt-4"
-                                                                    data-spec-id="spec-0"><i class="fas fa-trash-alt"></i>
-                                                                </button>
-                                                            </div>
-                                                        </div>
+                        <!-- Product Specification -->
+                        <div class="card">
+                            <div class="card-body" id="product-specification">
+                                <h4 class="card-title">Product Specification</h4>
+                                <div class="row" id="specification-container">
+                                    @if (isset($product->webSpecification) && count($product->webSpecification) > 0)
+                                        @foreach ($product->webSpecification as $specificationIndex => $specification)
+                                            <div class="col-md-6 specification-item mb-3" id="spec-0">
+                                                <div class="row">
+                                                    <div class="col-md-5">
+                                                        <x-form-input name="specifications[{{ $specificationIndex }}][key]"
+                                                            value="{{ $specification->key }}" label="Key"
+                                                            placeholder="Key" class="form-control" required="true" />
                                                     </div>
-                                                @endforeach
-                                            @endif
-                                        </div>
-                                        <button id="add-specification" class="btn btn-primary mt-3">Add
-                                            Specification</button>
-                                    </div>
+
+                                                    <div class="col-md-5">
+                                                        <x-form-input
+                                                            name="specifications[{{ $specificationIndex }}][value]"
+                                                            value="{{ $specification->value }}" label="Value"
+                                                            placeholder="Value" class="form-control" required="true" />
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button class="btn btn-danger delete-specification mt-4"
+                                                            data-spec-id="spec-0"><i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
                                 </div>
+                                <button id="add-specification" class="btn btn-primary mt-3">Add Specification</button>
+                            </div>
+                        </div>
 
-                                <!-- SEO -->
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h4 class="card-title">SEO</h4>
-                                        <div class="row">
-                                            <div class="col-sm-4">
-                                                <div class="mb-3">
-                                                    <x-form-input name="meta_title" label="Meta title"
-                                                        value="{{ $data['meta_title'] ?? '' }}" placeholder="Meta title"
-                                                        required="true" />
-                                                </div>
-                                                <div class="mb-3">
-                                                    <x-form-input name="meta_keywords" label="Meta Keywords"
-                                                        value="{{ $data['meta_keywords'] ?? '' }}"
-                                                        placeholder="Meta Keywords" />
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="mb-3">
-                                                    <label for="meta_description">Meta Description</label>
-
-                                                    <textarea name="meta_description" class="form-control" id="meta_description" rows="5"
-                                                        placeholder="Meta Description">{{ $data['meta_description'] ?? '' }}
-                                    
-                                                    </textarea>
-                                                </div>
-                                            </div>
-
-                                            <!-- Form Buttons -->
-                                            <div class="d-flex flex-wrap gap-2">
-                                                <button type="submit" class="btn btn-primary waves-effect waves-light">Save
-                                                    Changes</button>
-                                                <button type="button"
-                                                    class="btn btn-secondary waves-effect waves-light">Cancel</button>
-                                            </div>
+                        <!-- SEO -->
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">SEO</h4>
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="mb-3">
+                                            <x-form-input name="meta_title" label="Meta title" required="true"
+                                                value="{{ $product->webInfo->meta_title ?? '' }}"
+                                                placeholder="Meta title" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <x-form-input name="meta_keywords" label="Meta Keywords"
+                                                value="{{ $product->webInfo->meta_keywords ?? '' }}"
+                                                placeholder="Meta Keywords" />
                                         </div>
                                     </div>
+                                    <div class="col-sm-6">
+                                        <div class="mb-3">
+                                            <label for="meta_description">Meta Description</label>
+                                            <textarea name="meta_description" class="form-control" id="meta_description" rows="5"
+                                                placeholder="Meta Description">{{ $product->webInfo->meta_description ?? '' }}</textarea>
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
+                        </div>
 
-
+                        <button type="submit" class="btn btn-primary waves-effect waves-light">Save Changes</button>
                     </form>
                 </div>
             </div>
@@ -152,24 +135,31 @@
         <script>
             // Initialize Dropzone
             const dropzone = new Dropzone("#product-dropzone", {
-
                 url: "{{ route('product.uploadImages', $product->id) }}",
-                paramName: "file",
+                paramName: "image",
                 maxFilesize: 10,
                 acceptedFiles: "image/*",
                 addRemoveLinks: true,
                 dictDefaultMessage: "Drop files here or click to upload.",
                 dictRemoveFile: "Remove",
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
                 },
                 init: function() {
                     this.on("success", function(file, response) {
-                        console.log(response);
+                        file.previewElement.setAttribute("data-id", response.id);
                     });
-                    this.on("error", function(file, response) {
-                        console.log(response);
-                    });
+                    this.on('removedfile', function(file) {
+                        const imageId = file.previewElement.getAttribute("data-id");
+
+                        $.ajax({
+                            type: "DELETE",
+                            url: "{{ route('product.destroy.image', '') }}/" + imageId,
+                            data: {
+                                '_token': '{{ csrf_token() }}'
+                            },
+                        });
+                    })
                 }
             });
 
@@ -187,10 +177,10 @@
                                 <div class="col-md-5">
                                     <x-form-input name="specifications[${specCount}][key]" type="text" label="Key" placeholder="Key" class="form-control" required="true" />
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <x-form-input name="specifications[${specCount}][value]" label="Value" placeholder="Value" class="form-control" required="true" />
                                 </div>
-                                <div class="col-md-1">
+                                <div class="col-md-2">
                                     <button class="btn btn-danger delete-specification mt-4" data-spec-id="spec-${specCount}"><i class="fas fa-trash-alt"></i> </button>
                                 </div>
                             </div>
@@ -215,7 +205,7 @@
 
                 swal({
                     title: "Are you sure?",
-                    text: `You really want to  this?`,
+                    text: `You really want to this image?`,
                     type: "warning",
                     showCancelButton: true,
                     closeOnConfirm: false,
@@ -226,7 +216,6 @@
                             dataType: "json",
                             url: "{{ route('product.destroy.image', '') }}/" + imageId,
                             data: {
-
                                 '_token': '{{ csrf_token() }}'
                             },
                             success: function(response) {

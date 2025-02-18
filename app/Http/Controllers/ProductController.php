@@ -990,19 +990,9 @@ class ProductController extends Controller
         return response()->json(['exists' => $exists]);
     }
 
-
     public function editWebConfigration(Product $product)
     {
-
-        // Product   ProductWebSpecification ProductWebInfo ProductWebImage
-
-        $product = Product::with('webInfo', 'webSpecification', 'webImage')->where('id', $product->id)->first();
-        // dd($product->toArray());
-        $data['meta_title'] = $product->webInfo->meta_title ?? '';
-        $data['meta_description'] = $product->webInfo->meta_description ?? '';
-        $data['meta_keywords'] = $product->webInfo->meta_keywords ?? '';
-        $data['description'] = $product->webInfo->description ?? '';
-        return view('products.web-configuration.edit', compact('product'),  ['data' => $data]);
+        return view('products.web-configuration.edit', compact('product'));
     }
 
     protected function syncSpecifications($productId, $specifications)
@@ -1037,6 +1027,7 @@ class ProductController extends Controller
 
     public function updateWebConfigration(Request $request, Product $product)
     {
+        dd($request->all());
         $request->validate([
             'meta_title' => 'required',
             'meta_keywords' => 'required',
@@ -1058,39 +1049,27 @@ class ProductController extends Controller
             ]
         );
 
-        return redirect()->back()->with('success', 'Product web configuration successfully.');
+        return redirect()->back()->with('success', 'Product web configuration updated successfully.');
     }
 
     public function uploadImages(Request $request, Product $product)
     {
         $request->validate([
-            'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240'  // 10 MB max
+            'image' => 'required|image|max:10240' // 10 MB max
         ]);
 
-        $relativePath = "";
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $imageName = uniqid() . $file->getClientOriginalName();
+        if ($request->hasFile('image')) {
+            $imagePath = uploadFile($request->file('image'), 'uploads/products/');
 
-            $directoryPath = public_path("/uploads/products");
-
-            if (!file_exists($directoryPath)) {
-                mkdir($directoryPath, 0777, true);
-            }
-
-            $file->move($directoryPath, $imageName);
-
-            $relativePath = "uploads/products/{$imageName}";
-            // Log::info(['relativePath', $relativePath]);
-            ProductWebImage::create(
+            $webImage = ProductWebImage::create(
                 [
                     'product_id' => $product->id,
-                    'path' => $relativePath
+                    'path' => $imagePath
                 ]
             );
-            return response()->json(['message' => 'Image uploaded successfully!'], 200);
+            return response()->json(['id' => $webImage->id, 'message' => 'Image uploaded successfully!'], 200);
         } else {
-            return response()->json(['error' => 'No file uploaded'], 400);
+            return response()->json(['error' => 'No image being uploaded'], 400);
         }
     }
 
