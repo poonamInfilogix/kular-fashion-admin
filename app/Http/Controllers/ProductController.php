@@ -1044,6 +1044,7 @@ class ProductController extends Controller
                         'updated_at' => now()
                     ]
                 );
+              
                 return redirect()->route('products.index')->with('success', 'Product web configuration successfully.');
 
              
@@ -1054,27 +1055,25 @@ class ProductController extends Controller
         $request->validate([
             'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240'  // 10 MB max
         ]);
-
+        $relativePath = "";
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $imageName = uniqid(). $file->getClientOriginalName();
 
-            $directoryPath = public_path("/uploads/products/web-config");
+            $directoryPath = public_path("/uploads/products");
 
             if (!file_exists($directoryPath)) {
                 mkdir($directoryPath, 0777, true);
             }
-
+            
             $file->move($directoryPath, $imageName);
-            // $imageName = $directoryPath . $imageName;
-            $relativePath = "uploads/products/web-config/{$imageName}";
-
-                ProductWebImage::updateOrCreate(
-                    [  'product_id' => $product->id],
-                    [
-                
-                        'path' => $relativePath
-                    ]
+          
+            $relativePath = "uploads/products/{$imageName}";
+            // Log::info(['relativePath', $relativePath]);
+                ProductWebImage::create(
+                    [  'product_id' => $product->id,
+                    'path' => $relativePath
+                ]
                 );
             return response()->json(['message' => 'Image uploaded successfully!'], 200);
         } else {
@@ -1082,4 +1081,32 @@ class ProductController extends Controller
         }
 
     }
+
+  
+    public function destroyProductImage($imageId)
+    {
+        $image = ProductWebImage::find($imageId);
+
+        if (!$image) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Image not found!'
+            ], 404);
+        }
+
+        // Delete the image file from storage
+        $filePath = public_path($image->path);
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+
+        $image->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Product image deleted successfully!'
+        ]);
+    }
+
+
 }

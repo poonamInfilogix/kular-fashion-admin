@@ -47,7 +47,22 @@
                                         </div>
                                     </div>
                                 </div> 
+                                {{-- +++++++++++++++--}}
 
+                                <div class="container">
+                                    <div class="row">
+                                       @foreach($product->webImage as $image)
+                                            <div class="col-sm">
+                                                <img src="{{asset($image->path)}}" alt="Product Images" class="img-thumbnail" width="100px" height="100px">
+                                                <button class="btn btn-danger delete-image mt-4" data-id="{{ $image->id }}">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </div>
+                                           
+                                        @endforeach
+                                    </div>
+                                </div>
+                               {{-- +++++++++++++++ --}}
                            
                                 <!-- Product Description -->
                                 <div class="card">
@@ -184,6 +199,55 @@
                     $(`#${specId}`).remove(); 
                 });
             });
+
+
+            //Delete Product Image
+
+            $(document).on('click', '.delete-image', function() {
+                let imageId = $(this).data('id');
+                let imageContainer = $(this).closest('.image-container');
+
+                swal({
+                        title: "Are you sure?",
+                        text: `You really want to  this?`,
+                        type: "warning",
+                        showCancelButton: true,
+                        closeOnConfirm: false,
+                    }, function(isConfirm) {
+                        if (isConfirm) {
+                            $.ajax({
+                                type: "DELETE",
+                                dataType: "json",
+                                url: "{{ route('product.destroy.image', '') }}/" + imageId,
+                                data: {
+                                   
+                                    '_token': '{{ csrf_token() }}'
+                                },
+                                success: function(response) {
+                                    if (response.success) {
+                                        swal({
+                                            title: "Success!",
+                                            text: response.message,
+                                            type: "success",
+                                            showConfirmButton: false
+                                        })
+
+                                        setTimeout(() => {
+                                            location.reload();
+                                        }, 2000);
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('Error updating status:', error);
+                                }
+                            });
+                        } else {
+                            toggleButton.prop('checked', !toggleButton.prop('checked'));
+                        }
+                    });
+            
+            });
+
         </script>
     @endpush
 @endsection
