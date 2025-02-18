@@ -59,8 +59,6 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'purchase-orders' => PurchaseOrderController::class,
         'collections' => CollectionController::class,
     ]);
-    Route::get('collection-option-data/{type?}', [CollectionController::class, 'collectionOptionData'])->name('collection-option-data');
-
 
     Route::get('inventory-history', [InventoryTransferController::class, 'inventoryHistory'])->name('inventory-history');
     

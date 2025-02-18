@@ -1,7 +1,7 @@
 <div class="row mb-2">
     <div class="col-sm-6 col-md-4">
         <div class="mb-3">
-            <x-form-input name="tag_name" value="{{ old('tag_name', $tag->tag_name ?? '') }}" label="Tag Name" placeholder="Enter Tag Name" required="true" />
+            <x-form-input name="name" value="{{ $tag->name ?? '' }}" label="Tag Name" placeholder="Enter Tag Name" required="true" />
         </div>
     </div>
 

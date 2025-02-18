@@ -33,7 +33,13 @@ class CollectionController extends Controller
             abort(403);
         }
 
-        return view('collections.create');
+        $conditionDependencies = [
+            'tags' => Tag::select('id', 'name')->where('status', 'Active')->get(),
+            'ProductTypes' => ProductType::select('id', 'product_type_name')->where('status', 'Active')->whereNull('deleted_at')->get(),
+            'maxPrice' => Product::max('price') ?? 0,
+        ];
+
+        return view('collections.create', compact('conditionDependencies'));
     }
 
     /**
@@ -41,6 +47,7 @@ class CollectionController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         $key = $request->include_condition;
         Collection::create([
             'name' => $request->collection_name,
@@ -90,15 +97,5 @@ class CollectionController extends Controller
     public function destroy(Collection $collection)
     {
         //
-    }
-
-    public function collectionOptionData($type=null){
-        $tags = Tag::all();
-        $maxPrice = Product::max('price') ?? 0;
-        $productTypes = ProductType::all();
-
-        return response()->json([
-            'view' => view('collections.partials.collection-data', compact('type','tags','maxPrice','productTypes'))->render(),
-        ]);
     }
 }

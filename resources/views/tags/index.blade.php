@@ -32,7 +32,7 @@
                                     @foreach ($tags as $key => $tag)
                                         <tr>
                                             <td>{{ ++$key }}</td>
-                                            <td>{{ $tag->tag_name }}</td>
+                                            <td>{{ $tag->name }}</td>
                                             <td>
                                                 <input type="checkbox" id="{{ $tag->id }}" class="update-status"
                                                     data-id="{{ $tag->id }}" switch="success" data-on="Active"

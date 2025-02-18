@@ -19,7 +19,7 @@
                                 enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
-                                @include('collections.form')
+                                <collection-conditions></collection-conditions>
                             </form>
                         </div>
                     </div>

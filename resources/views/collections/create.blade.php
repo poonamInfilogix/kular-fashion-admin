@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app', ['isVueComponent' => true])
 
 @section('title', 'Create a new Collection')
 @section('header-button')
@@ -17,7 +17,7 @@
                         <div class="card-body">
                             <form action="{{ route('collections.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
-                                @include('collections.form')
+                                <collection-conditions :condition-dependencies='@json($conditionDependencies)'></collection-conditions>
                             </form>    
                         </div>    
                     </div>
