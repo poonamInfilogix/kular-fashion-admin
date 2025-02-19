@@ -121,6 +121,7 @@ class BrandController extends Controller
         if(!Gate::allows('delete brands')) {
             abort(403);
         }
+
         Brand::where('id', $id)->delete();
 
         return response()->json([

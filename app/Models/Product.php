@@ -2,16 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Department;
-use App\Models\Brand;
-use App\Models\ProductType;
-use Cviebrock\EloquentSluggable\Sluggable;
-use App\Models\Tag;
-use App\Models\ProductWebSpecification;
-use App\Models\ProductWebInfo;
-use App\Models\ProductWebImage;
 use Illuminate\Database\Eloquent\Model;
+use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {

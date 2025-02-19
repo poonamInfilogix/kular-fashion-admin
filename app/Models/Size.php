@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\SizeScale;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Size extends Model
 {
+    use SoftDeletes;
     protected $guarded = [];
 
     public function sizeScale()

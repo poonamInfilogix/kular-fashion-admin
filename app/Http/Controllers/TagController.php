@@ -31,6 +31,7 @@ class TagController extends Controller
         if(!Gate::allows('create tags')) {
             abort(403);
         }
+
         $request->validate([
             'name' => 'required|unique:tags,name',
         ]);
@@ -78,6 +79,7 @@ class TagController extends Controller
         if(!Gate::allows('delete tags')) {
             abort(403);
         }
+
         $tag->delete();
 
         return response()->json([
@@ -101,6 +103,4 @@ class TagController extends Controller
         }
         return response()->json(['error' => 'Tag not found.'], 404);
     }
-
-
 }
