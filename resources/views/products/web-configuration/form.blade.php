@@ -23,8 +23,6 @@
                         <div class="card-body">
                             <h4 class="card-title mb-3">Product Images</h4>
 
-                          
-
                             <div class="dropzone" id="product-dropzone" >
                                 <div class="fallback">
                                     <input name="file" type="file" multiple="multiple">
@@ -151,8 +149,6 @@
                     $(`#${specId}`).remove(); 
                 });
             });
-
-          
             </script>
         @endpush
 @endsection

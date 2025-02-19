@@ -165,8 +165,7 @@
             </div>
         </div>
     </div>
-    </div>
-    </div>
+
     <x-include-plugins :plugins="['contentEditor', 'dropzone']"></x-include-plugins>
     @push('scripts')
         <script>

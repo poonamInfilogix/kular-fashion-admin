@@ -107,7 +107,15 @@ class CollectionController extends Controller
      */
     public function destroy(Collection $collection)
     {
-        //
+        if(!Gate::allows('delete collections')) {
+            abort(403);
+        }
+        $collection->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Collection deleted successfully.'
+        ]);
     }
 
     public function checkCollectionName(Request $request)

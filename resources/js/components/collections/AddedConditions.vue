@@ -5,7 +5,7 @@
                 <div :class="addedCondition.subFields?.length > 0 ? 'col-md-5' : 'col-md-10'">
                     <div class="form-group">
                         <label class="mb-0" :for="`${conditionType}_${addedCondition.name}`">{{ addedCondition.label
-                            }}</label>
+                        }}</label>
 
                         <select class="form-control" :class="{ multiSelect: addedCondition.multiple }"
                             :id="`${conditionType}_${addedCondition.name}`" :multiple="addedCondition.multiple"
@@ -47,6 +47,8 @@
                             </div>
                         </div>
 
+                        <input type="text" v-else-if="addedCondition.type === 'date'">
+
                         <input v-else :id="addedCondition.name" :name="`${conditionType}[${addedCondition.name}]`"
                             :type="addedCondition.type || 'text'" class="form-control"
                             :placeholder="`Enter ${addedCondition.label}`"
@@ -61,8 +63,9 @@
                             v-if="subField.basedOn && subField.basedOn === selectedValues[conditionType][addedCondition.name]">
                             <label class="mb-0" :for="subField.number_of_days">{{ subField.label }}</label>
 
-                            <input :name="`${conditionType}[${subField.name}]`" :type="subField.type"
-                                :value="subField.value" class="form-control" :placeholder="`Enter ${subField.label}`">
+                            <input :name="`${conditionType}[${subField.name}]`" v-on="changeSubField(subField)"
+                                :type="subField.type === 'date' ? 'text' : subField.type" :value="subField.value"
+                                class="form-control" :class="{ 'date-range-picker': subField.type === 'date' }" :placeholder="`Enter ${subField.label}`">
                         </div>
                     </div>
                 </div>
@@ -87,6 +90,7 @@ export default {
             default: []
         }
     },
+    emits: ['removeCondition'],
     data() {
         return {
             selectedValues: {
@@ -144,6 +148,18 @@ export default {
                 conditionIndex: conditionIndex,
                 conditionType: this.conditionType
             });
+        },
+        changeSubField(subField) {
+            setTimeout(function () {
+                flatpickr('.date-range-picker', {
+                    mode: "range",  // Enable date range selection
+                    dateFormat: "d-m-y",  // Format dates as YYYY-MM-DD (adjust as needed)
+                    locale: {
+                        firstDayOfWeek: 1,  // Start the week on Monday
+                    },
+                });
+            }, 10)
+
         },
         updateSlider() {
             if (this.minPrice < 0) {

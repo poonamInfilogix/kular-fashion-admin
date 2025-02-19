@@ -27,5 +27,5 @@
         </div>
     </div>
 
-    <x-include-plugins :plugins="['chosen']"></x-include-plugins>
+    <x-include-plugins :plugins="['chosen', 'datePicker']"></x-include-plugins>
 @endsection

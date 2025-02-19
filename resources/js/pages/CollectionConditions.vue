@@ -121,7 +121,7 @@ export default {
             if (includeConditions) {
                 includeConditions = JSON.parse(includeConditions);
 
-                for (let [key, value] of Object.entries(includeConditions)) {
+                for (let [key, value] of Object.entries(includeConditions || {})) {
                     const conditionLabel = this.conditionMap[key];
 
                     if (conditionLabel) {
@@ -267,12 +267,14 @@ export default {
                         savedData = JSON.parse(savedData);
 
                         let subfieldKey = 'published_between_dates';
-                        if (savedData.published_within_number_of_days) {
+                        if (savedData?.published_within_number_of_days) {
                             subfieldKey = 'published_within_number_of_days';
                         }
 
-                        const specificSubField = condition.subFields.find(subField => subField.name === subfieldKey);
-                        specificSubField.value = savedData[subfieldKey];
+                        if (savedData) {
+                            const specificSubField = condition.subFields.find(subField => subField.name === subfieldKey);
+                            specificSubField.value = savedData[subfieldKey];
+                        }
                     }
 
                     break;

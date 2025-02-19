@@ -92,6 +92,7 @@ class ColorController extends Controller
         if(!Gate::allows('delete colors')) {
             abort(403);
         }
+        
         Color::where('id', $id)->delete();
 
         return response()->json([
