@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id')->index(); 
             $table->unsignedBigInteger('size_id')->index();
             $table->decimal('mrp', 8, 2)->default(0.00);
+            $table->decimal('web_price', 8, 2)->default(0.00);
+            $table->decimal('web_sale_price', 8, 2)->default(0.00);
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
