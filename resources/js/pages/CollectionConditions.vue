@@ -199,6 +199,23 @@ export default {
             $('#addConditionModal').modal('show');
         },
         removeCondition(payload) {
+            let selectedCondition = this.conditions[payload.conditionType][payload.conditionIndex];
+            if (selectedCondition.type === 'select' && selectedCondition.multiple) {
+                $(`#${payload.conditionType}_${selectedCondition.name}`).chosen('destroy');
+
+                setTimeout(() => {
+                    $('.multiSelect').each(function () {
+                        let defaultPlaceholder = $(this).find('option').first().html();
+
+                        $(this).chosen({
+                            width: '100%',
+                            placeholder_text_multiple: defaultPlaceholder,
+                        });
+                    });
+
+                }, 100);
+            }
+
             this.conditions[payload.conditionType].splice(payload.conditionIndex, 1);
         },
         addCondition(condition) {
@@ -246,14 +263,14 @@ export default {
                     }];
 
                     let savedData = this.savedCollection[`${this.conditionType}_conditions`];
-                    if(savedData){
+                    if (savedData) {
                         savedData = JSON.parse(savedData);
-                        
+
                         let subfieldKey = 'published_between_dates';
-                        if(savedData.published_within_number_of_days){
+                        if (savedData.published_within_number_of_days) {
                             subfieldKey = 'published_within_number_of_days';
                         }
-                        
+
                         const specificSubField = condition.subFields.find(subField => subField.name === subfieldKey);
                         specificSubField.value = savedData[subfieldKey];
                     }

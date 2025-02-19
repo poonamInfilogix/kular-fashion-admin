@@ -5,7 +5,7 @@
                 <div :class="addedCondition.subFields?.length > 0 ? 'col-md-5' : 'col-md-10'">
                     <div class="form-group">
                         <label class="mb-0" :for="`${conditionType}_${addedCondition.name}`">{{ addedCondition.label
-                        }}</label>
+                            }}</label>
 
                         <select class="form-control" :class="{ multiSelect: addedCondition.multiple }"
                             :id="`${conditionType}_${addedCondition.name}`" :multiple="addedCondition.multiple"
