@@ -59,7 +59,6 @@ class CollectionController extends Controller
         ]);
 
         return redirect()->route('collections.index')->with('success', 'Collection Added successfully.');
-       
     }
 
     /**
@@ -78,7 +77,7 @@ class CollectionController extends Controller
         if (!Gate::allows('edit collections')) {
             abort(403);
         }
-        
+
         $conditionDependencies = [
             'tags' => Tag::select('id', 'name as value')->where('status', 'Active')->get(),
             'ProductTypes' => ProductType::select('id', 'product_type_name as value')->where('status', 'Active')->whereNull('deleted_at')->get(),
@@ -93,7 +92,14 @@ class CollectionController extends Controller
      */
     public function update(Request $request, Collection $collection)
     {
-        //
+        $collection->update([
+            'name' => $request->collection_name,
+            'include_conditions' => json_encode($request->include),
+            'exclude_conditions' => json_encode($request->exclude),
+            'status' => $request->status,
+        ]);
+
+        return redirect()->back()->with("success","Collection Updated successfully");
     }
 
     /**
@@ -102,5 +108,22 @@ class CollectionController extends Controller
     public function destroy(Collection $collection)
     {
         //
+    }
+
+    public function checkCollectionName(Request $request)
+    {
+        $query = Collection::where('name', $request->name);
+
+        if ($request->has('id')) {
+            $query->where('id', '!=', $request->id);
+        }
+
+        $existingCollection = $query->first();
+
+        if ($existingCollection) {
+            return response()->json(['message' => 'Collection name already exists.'], 400);
+        }
+
+        return response()->json(['success' => 'Collection name is available.']);
     }
 }

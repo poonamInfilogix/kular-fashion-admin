@@ -36,6 +36,10 @@ export default {
             type: String,
             default: 'include'
         },
+        conditionMap: {
+            type: Object,
+            default: {}
+        },
         addedConditions: {
             type: Array,
             default: []
@@ -44,19 +48,11 @@ export default {
     data() {
         return {
             selectedCondition: '',
-            conditionMap: {
-                tags: "Have one of these tags",
-                categories: "Be in the category",
-                price_list: "Be in the price list",
-                price_range: "Be in the price range",
-                price_status: "Have the price status",
-                published_within: "Have been published within"
-            }
         }
     },
     computed: {
         availableConditions() {
-            const addedConditionNames = this.addedConditions.map(addedCondition => addedCondition.condition.name);
+            const addedConditionNames = this.addedConditions.map(addedCondition => addedCondition.name);
 
             return Object.keys(this.conditionMap).reduce((result, key) => {
                 if (!addedConditionNames.includes(key)) {

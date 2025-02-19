@@ -4,7 +4,10 @@
             <div class="form-group">
                 <div class="mb-3">
                     <label for="collection_name">Collection Name<span class="text-danger">*</span></label>
-                    <input class="form-control" v-model="collection.name" name="collection_name" placeholder="Enter Collection Name" />
+                    <input class="form-control" v-model="collection.name" name="collection_name"
+                        placeholder="Enter Collection Name" v-bind:class="{ 'is-invalid': errors.name }" />
+
+                    <span v-if="errors.name" class="invalid-feedback">{{ errors.name }}</span>
                 </div>
             </div>
         </div>
@@ -27,7 +30,8 @@
                 </div>
             </div>
 
-            <AddedConditions :conditionType="'include'" :conditions="conditions.include" @removeCondition="removeCondition"></AddedConditions>
+            <AddedConditions :conditionType="'include'" :conditions="conditions.include"
+                @removeCondition="removeCondition"></AddedConditions>
         </div>
 
         <div class="col-md-12">
@@ -38,7 +42,8 @@
                         condition</button>
                 </div>
             </div>
-            <AddedConditions :conditionType="'exclude'" :conditions="conditions.exclude" @removeCondition="removeCondition"></AddedConditions>
+            <AddedConditions :conditionType="'exclude'" :conditions="conditions.exclude"
+                @removeCondition="removeCondition"></AddedConditions>
         </div>
 
         <div class="col-sm-6 col-md-3">
@@ -62,12 +67,15 @@
     </div>
 
     <AddConditionModal :conditionType="conditionType" :addedConditions="conditions[conditionType]"
-        @addCondition="addCondition"></AddConditionModal>
+        @addCondition="addCondition" :conditionMap="conditionMap"></AddConditionModal>
 </template>
 
 <script>
+import axios from 'axios';
 import AddConditionModal from '../components/collections/AddConditionModal.vue';
 import AddedConditions from '../components/collections/AddedConditions.vue';
+
+let cancelTokenSource = null;
 
 export default {
     components: {
@@ -92,11 +100,59 @@ export default {
                 'exclude': []
             },
             collection: {
-                name: this.savedCollection.name
+                name: this.savedCollection.name || ''
+            },
+            errors: {
+                name: ''
+            },
+            conditionMap: {
+                tags: "Have one of these tags",
+                product_types: "Any of these product types",
+                price_list: "Be in the price list",
+                price_range: "Be in the price range",
+                price_status: "Have the price status",
+                published_within: "Have been published within"
             }
         }
     },
     mounted() {
+        if (this.savedCollection) {
+            let includeConditions = this.savedCollection.include_conditions;
+            if (includeConditions) {
+                includeConditions = JSON.parse(includeConditions);
+
+                for (let [key, value] of Object.entries(includeConditions)) {
+                    const conditionLabel = this.conditionMap[key];
+
+                    if (conditionLabel) {
+                        const conditionObject = {
+                            name: key,
+                            label: conditionLabel,
+                            defaulValue: value
+                        };
+
+                        this.addCondition(conditionObject);
+                    }
+                }
+            }
+
+            let excludeConditions = this.savedCollection.exclude_conditions;
+            if (excludeConditions) {
+                excludeConditions = JSON.parse(excludeConditions);
+
+                for (let [key, value] of Object.entries(excludeConditions || {})) {
+                    const conditionLabel = this.conditionMap[key];
+                    const conditionObject = {
+                        name: key,
+                        label: conditionLabel,
+                        defaulValue: value
+                    };
+
+                    this.addCondition(conditionObject, 'exclude');
+                }
+            }
+        }
+
         $('[name="collection_image"]').change(function (event) {
             var reader = new FileReader();
             reader.onload = function (e) {
@@ -105,12 +161,44 @@ export default {
             reader.readAsDataURL(this.files[0]);
         });
     },
+    watch: {
+        'collection.name': function (name) {
+            // If there's a pending request, cancel it
+            if (cancelTokenSource) {
+                cancelTokenSource.cancel('Request canceled due to changing the name');
+            }
+
+            // Create a new CancelToken for this request
+            cancelTokenSource = axios.CancelToken.source();
+
+            let paylad = {
+                name,
+                id: this.savedCollection.id || null
+            }
+
+            axios.post('/api/collections/check-name', paylad, {
+                cancelToken: cancelTokenSource.token
+            })
+                .then((response) => {
+                    this.errors.name = '';
+                })
+                .catch((error) => {
+                    if (axios.isCancel(error)) {
+                        console.log('Request canceled:', error.message);
+                    } else if (error.response && error.response.status === 400) {
+                        this.errors.name = error.response.data.message;
+                    } else {
+                        console.error('There was an error!', error);
+                    }
+                });
+        }
+    },
     methods: {
         addNewCondition(conditionType) {
             this.conditionType = conditionType;
             $('#addConditionModal').modal('show');
         },
-        removeCondition(payload){
+        removeCondition(payload) {
             this.conditions[payload.conditionType].splice(payload.conditionIndex, 1);
         },
         addCondition(condition) {
@@ -120,7 +208,7 @@ export default {
                     condition.multiple = true;
                     condition.values = this.conditionDependencies.tags;
                     break;
-                case 'categories':
+                case 'product_types':
                     condition.type = 'select';
                     condition.multiple = true;
                     condition.values = this.conditionDependencies.ProductTypes;
@@ -145,18 +233,30 @@ export default {
 
                     condition.subFields = [{
                         type: 'number',
-                        name: 'number_of_days',
+                        name: 'published_within_number_of_days',
                         label: 'Number Of Days',
                         value: 30,
                         basedOn: 'Days'
                     }, {
                         type: 'date',
-                        name: 'published_between',
+                        name: 'published_between_dates',
                         label: 'Published Between',
                         multiple: true,
                         basedOn: 'Range'
                     }];
 
+                    let savedData = this.savedCollection[`${this.conditionType}_conditions`];
+                    if(savedData){
+                        savedData = JSON.parse(savedData);
+                        
+                        let subfieldKey = 'published_between_dates';
+                        if(savedData.published_within_number_of_days){
+                            subfieldKey = 'published_within_number_of_days';
+                        }
+                        
+                        const specificSubField = condition.subFields.find(subField => subField.name === subfieldKey);
+                        specificSubField.value = savedData[subfieldKey];
+                    }
 
                     break;
                 case 'price_status':
@@ -174,7 +274,7 @@ export default {
                     break;
             }
 
-            this.conditions[this.conditionType].push({ condition: condition, value: '' });
+            this.conditions[this.conditionType].push(condition);
 
             setTimeout(function () {
                 if (condition.type === 'select' && condition.multiple) {
@@ -187,7 +287,7 @@ export default {
                         });
                     });
                 }
-            });
+            }, 10);
         }
     }
 };
