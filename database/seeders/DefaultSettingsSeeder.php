@@ -36,6 +36,11 @@ class DefaultSettingsSeeder extends Seeder
             [
                 'tax' => 5,
                 'status' => 1,
+                'is_default' => 0
+            ],
+            [
+                'tax' => 20,
+                'status' => 1,
                 'is_default' => 1
             ],
         ];

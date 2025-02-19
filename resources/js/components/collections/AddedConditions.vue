@@ -123,8 +123,8 @@ export default {
                     this.selectedValues[this.conditionType][condition.name] = condition.defaulValue || defaultValue;
 
                     if (condition.name === 'price_range') {
-                        this.minPrice = condition.defaulValue.min;
-                        this.maxPrice = condition.defaulValue.max;
+                        this.minPrice = condition.defaulValue?.min || 0;
+                        this.maxPrice = condition.defaulValue?.max || 10000;
                     }
                 });
             },

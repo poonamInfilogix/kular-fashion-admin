@@ -224,7 +224,7 @@
 <div class="row mb-2">
     <h5>Product Web Basic Info</h5>
     <div class="col-md-4">
-        <x-form-input name="product_name" value="{{ $product->product_name ?? '' }}"
+        <x-form-input name="product_name" value="{{ $product->name ?? '' }}"
             label="Product Name" placeholder="Enter Product Name" required="true" />
     </div>
     <div class="col-md-2">

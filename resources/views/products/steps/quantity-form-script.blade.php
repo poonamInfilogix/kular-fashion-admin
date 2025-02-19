@@ -51,7 +51,6 @@
 
                 $('.color-selector').removeClass('selected');
 
-
                 if (!isSelected) {
                     $(this).addClass('selected');
                     $('.copy-quantity-btn').removeClass('d-none');
@@ -126,6 +125,7 @@
                                 .get();
 
                             let $newRow = $('<tr></tr>');
+
                             let $newTh = $(
                                 '<th class="d-flex align-items-center justify-content-center flex-column text-center"></th>'
                                 ).html(
@@ -149,13 +149,18 @@
                                 $newRow.append('<td class="fs-5 text-center">0</td>');
                             @endisset
 
-                            // Add delete button as the last cell
+                            
+                            let copyButtonAdditionalClass = ``;
+                            if(!$('.color-selector').hasClass('selected')){
+                                copyButtonAdditionalClass = 'd-none';
+                            }
+
                             let $deleteTd = $('<td></td>');
                             $deleteTd.html(`
                             <a href="{{ route('products.remove-variant', '') }}/${response.data.color_id}" class="btn btn-danger btn-sm"> 
                                <i class="fas fa-trash-alt"></i>
                             </a>
-                            <button type="button" class="btn btn-secondary copy-quantity-btn btn-sm d-none" data-color-id="${response.data.color_id}">
+                            <button type="button" class="btn btn-secondary copy-quantity-btn btn-sm ${copyButtonAdditionalClass}" data-color-id="${response.data.color_id}">
                                 <i class="mdi mdi-content-copy fs-6"></i>
                             </button>`);
 

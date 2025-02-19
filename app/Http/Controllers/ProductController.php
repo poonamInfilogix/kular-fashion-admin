@@ -102,17 +102,18 @@ class ProductController extends Controller
         return redirect()->route('products.create.step-2');
     }
 
-    public function updateStep1(Request $request, $productId)
+    public function updateStep1(Request $request, Product $product)
     {
         $request->validate([
             /* 'manufacture_code' => [
                 'required',
-                Rule::unique('products')->ignore($productId)->whereNull('deleted_at'),
+                Rule::unique('products')->ignore($product->id)->whereNull('deleted_at'),
             ],
             'brand_id'          => 'required',
             'department_id'     => 'required',
             'product_type_id'   => 'required',
             'size_scale_id'     => 'required', */
+            'product_name' => 'required',
             'supplier_price' => 'required',
             'mrp' => 'required',
             'short_description' => 'required',
@@ -132,12 +133,9 @@ class ProductController extends Controller
         }
 
 
-        $product = Product::find($productId);
-
         if (!$imagePath) {
             $imagePath = $product->image;
         }
-
 
         if ($product) {
             $product->update([
@@ -145,7 +143,8 @@ class ProductController extends Controller
                 'department_id' => $request->department_id,
                 'brand_id' => $request->brand_id,
                 'product_type_id' => $request->product_type_id, */
-                'short_description' => $request->short_description,
+                'name' => $request->short_description,
+                'short_description' => $request->product_name,
                 'mrp' => $request->mrp,
                 'supplier_price' => $request->supplier_price,
                 'season' => $request->season,
@@ -163,18 +162,18 @@ class ProductController extends Controller
             foreach ($request->tag_id as $tags) {
                 ProductTag::updateOrCreate(
                     [
-                        'product_id' => $productId,
+                        'product_id' => $product->id,
                         'tag_id' => $tags
                     ],
                     [
-                        'product_id' => $productId,
+                        'product_id' => $product->id,
                         'tag_id' => $tags
                     ]
                 );
             }
         }
 
-        return redirect()->route('products.edit.step-2', $productId);
+        return redirect()->route('products.edit.step-2', $product->id);
     }
 
     public function editStep2(Product $product)

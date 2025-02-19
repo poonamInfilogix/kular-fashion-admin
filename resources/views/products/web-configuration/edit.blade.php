@@ -31,6 +31,19 @@
                             <div class="card-body">
                                 <!-- Product Images -->
                                 <h4 class="card-title mb-3">Product Images</h4>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <select name="color" id="color" class="form-control">
+                                            <option value="">Select Color</option>
+
+                                            @foreach ($product->colors as $color)
+                                                <option value="{{ $color->id }}"> {{ $color->colorDetail->color_name }} </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div class="dropzone" id="product-dropzone">
                                     <div class="fallback">
                                         <x-form-input name="images[]" id="productImages" type="file" multiple="multiple" />
