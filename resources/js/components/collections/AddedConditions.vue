@@ -168,16 +168,9 @@ export default {
             if (this.maxPrice > 10000) {
                 this.maxPrice = 10000;
             }
-            if (this.maxPrice < this.minPrice) {
+            if (Number(this.maxPrice) < Number(this.minPrice)) {
                 this.maxPrice = this.minPrice;
             }
-
-            const $rangeSlider = $(".slider-container .price-slider");
-            const $minRangeInput = $(".min-range");
-            const $maxRangeInput = $(".max-range");
-
-            $rangeSlider.css('left', `${(this.minPrice / ($maxRangeInput.prop('max') || 10000)) * 100}%`);
-            $rangeSlider.css('right', `${100 - (this.maxPrice / ($minRangeInput.prop('max') || 10000)) * 100}%`);
         }
     }
 }
