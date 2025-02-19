@@ -19,6 +19,10 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->decimal('margin', 5, 2)->default('50');
+            $table->string('heading')->nullable();
+            $table->string('meta_title')->nullable();
+            $table->string('meta_keywords')->nullable();
+            $table->string('meta_description')->nullable();
             $table->enum('status', ['Active', 'Inactive'])->default('Active')->index();
             $table->softDeletes();
             $table->timestamps();

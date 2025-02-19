@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->json('include_conditions')->nullable();
             $table->json('exclude_conditions')->nullable();
+            $table->string('heading')->nullable();
             $table->string('meta_title')->nullable();
             $table->string('meta_keywords')->nullable();
             $table->string('meta_description')->nullable();

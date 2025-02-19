@@ -16,10 +16,11 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id')->nullable()->index();
             $table->text('short_description')->nullable();
             $table->longText('description')->nullable();
+            $table->boolean('is_splitted_with_colors')->default(false)->index();
+            $table->string('heading')->nullable();
             $table->string('meta_title')->nullable();
             $table->string('meta_keywords')->nullable();
             $table->string('meta_description')->nullable();
-            $table->boolean('is_splitted_with_colors')->default(false)->index();
             $table->tinyInteger('status')->default(1)->index();
             $table->timestamps();
 

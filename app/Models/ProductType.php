@@ -10,16 +10,7 @@ use Cviebrock\EloquentSluggable\Sluggable;
 class ProductType extends Model
 {
     use SoftDeletes, Sluggable;
-    protected $guarded =[];
-
-    public function department()
-    {
-        return $this->belongsTo(Department::class);
-    }
-    public function productTypeDepartments()
-    {
-        return $this->hasMany(ProductTypeDepartment::class, 'product_type_id')->with('departments');
-    }
+    protected $guarded = [];
 
     public function sluggable(): array
     {
@@ -28,5 +19,15 @@ class ProductType extends Model
                 'source' => 'product_type_name'
             ]
         ];
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    public function productTypeDepartments()
+    {
+        return $this->hasMany(ProductTypeDepartment::class, 'product_type_id')->with('departments');
     }
 }

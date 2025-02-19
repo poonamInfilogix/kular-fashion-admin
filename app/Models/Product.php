@@ -24,12 +24,13 @@ class Product extends Model
         'last_date' => 'datetime',
     ];
 
-    protected static function boot() {
-        parent::boot(); 
-        static::creating(function ($product) { 
-            $lastProduct = self::orderBy('id', 'desc')->first(); 
-            $product->article_code = $lastProduct ? $lastProduct->article_code + 1 : 300001; 
-        }); 
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($product) {
+            $lastProduct = self::orderBy('id', 'desc')->first();
+            $product->article_code = $lastProduct ? $lastProduct->article_code + 1 : 300001;
+        });
     }
 
     public function sluggable(): array
@@ -55,7 +56,7 @@ class Product extends Model
     {
         return $this->belongsTo(Brand::class);
     }
-    
+
     public function tags()
     {
         return $this->belongsToMany(Tag::class);
@@ -71,19 +72,23 @@ class Product extends Model
         return $this->hasMany(ProductSize::class);
     }
 
-    public function quantities(){
+    public function quantities()
+    {
         return $this->hasMany(ProductQuantity::class);
     }
-   
-    public function webSpecification(){
+
+    public function webSpecification()
+    {
         return $this->hasMany(ProductWebSpecification::class);
     }
-    
-    public function webImage(){
+
+    public function webImage()
+    {
         return $this->hasMany(ProductWebImage::class);
     }
 
-    public function webInfo(){
+    public function webInfo()
+    {
         return $this->hasOne(ProductWebInfo::class);
     }
 
