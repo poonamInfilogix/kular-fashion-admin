@@ -199,8 +199,8 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <label for="status" class="form-label">Status</label>
-            <select name="status" id="status" class="form-control">
+            <label for="product-status" class="form-label">Status</label>
+            <select name="status" id="product-status" class="form-control">
                 <option value="Active" @selected(($product->status ?? '') === 'Active')>Active</option>
                 <option value="Inactive" @selected(($product->status ?? '') === 'Inactive')>Inactive</option>
             </select>
