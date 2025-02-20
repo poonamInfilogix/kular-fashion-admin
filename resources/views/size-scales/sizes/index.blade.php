@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Sizes for ' . optional($sizeScale)->size_scale)
+@section('title', 'Sizes for ' . optional($sizeScale)->name)
 @section('header-button')
     <a href="{{ route('size-scales.index') }}" class="btn btn-primary"> <i class="bx bx-arrow-back"></i> Back to size
         scales</a>
@@ -36,7 +36,7 @@
                                     @foreach ($sizes as $key => $size)
                                         <tr>
                                             <td>{{ ++$key }}</td>
-                                            <td>{{ optional($size->sizeScale)->size_scale }}</td>
+                                            <td>{{ optional($size->sizeScale)->name }}</td>
                                             <td>{{ ucwords($size->size) }}</td>
                                             <td>{{ $size->new_code }}</td>
                                             <td>

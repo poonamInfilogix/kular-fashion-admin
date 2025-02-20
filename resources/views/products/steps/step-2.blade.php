@@ -49,7 +49,7 @@
                         <div class="col-sm-6 col-md-6">
                             <div class="mb-2 d-flex gap-1">
                                 <h5 class="card-title">Size Scale: </h5>
-                                <p class="card-text">{{ $sizeScale->size_scale }}</p>
+                                <p class="card-text">{{ $sizeScale->name }}</p>
                             </div>    
                         </div>
                     </div>   

@@ -1,7 +1,7 @@
 <div class="row mb-2">
     <div class="col-sm-6 col-md-4">
         <div class="mb-3">
-            <x-form-input name="size_scale" value="{{ $sizeScale->size_scale ?? '' }}" label="Size Scale" placeholder="Enter Size Scale"  required="true"/>
+            <x-form-input name="name" value="{{ $sizeScale->name ?? '' }}" label="Size Scale" placeholder="Enter Size Scale"  required="true"/>
         </div>
     </div>
     <div class="col-sm-6 col-md-4">

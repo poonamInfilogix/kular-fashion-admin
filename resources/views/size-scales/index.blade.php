@@ -33,8 +33,8 @@
                                     @foreach ($sizeScales as $key => $sizeScale)
                                         <tr>
                                             <td>{{ ++$key }}</td>
-                                            <td>{{ ucwords($sizeScale->size_scale) }}
-                                                @if (isset($sizeScale->sizes))
+                                            <td>{{ ucwords($sizeScale->name) }}
+                                                @if (count($sizeScale->sizes) > 0)
                                                     ({{ $sizeScale->sizes->first()->size }} -
                                                     {{ $sizeScale->sizes->last()->size }})
                                                 @endif

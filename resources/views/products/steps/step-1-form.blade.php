@@ -120,10 +120,10 @@
             ])>
                 <option value="" disabled>Select size scale</option>
                 @foreach ($sizeScales as $sizeScale)
-                    <option value="{{ $sizeScale->id }}" @selected(old('size_scale_id', $product->size_scale_id ?? '') == $sizeScale->id)>
-                        {{ $sizeScale->size_scale }}
+                    <option value="{{ $sizeScale->id }}" @disabled(count($sizeScale->sizes)===0) @selected(old('size_scale_id', $product->size_scale_id ?? '') == $sizeScale->id)>
+                        {{ $sizeScale->name }}
 
-                        @if (isset($sizeScale->sizes))
+                        @if (count($sizeScale->sizes) > 0)
                             ({{ $sizeScale->sizes->first()->size }} - {{ $sizeScale->sizes->last()->size }})
                         @endif
                     </option>

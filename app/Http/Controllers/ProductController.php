@@ -914,7 +914,7 @@ class ProductController extends Controller
 
         foreach ($sizeScales as $key => $sizeScale) {
             $sheet->fromArray(
-                [$sizeScale->id, $sizeScale->size_scale, $sizeScale->status],
+                [$sizeScale->id, $sizeScale->name, $sizeScale->status],
                 NULL,
                 'A' . ($key + 2)
             );
