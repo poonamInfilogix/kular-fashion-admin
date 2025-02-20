@@ -3,7 +3,7 @@
 
 @section('title', 'Create a new Size Scale')
 @section('header-button')
-<a href="{{ route('size-scales.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to size scales</a>
+<a href="{{ route('size-scales.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Go Back</a>
 @endsection
 
 @section('content')

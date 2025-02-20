@@ -14,16 +14,16 @@ class BrandSeeder extends Seeder
     public function run(): void
     {
         $brands = [
-            ['name' => 'Nike'],
-            ['name' => 'Adidas'],
-            ['name' => 'Puma'],
-            ['name' => 'Reebok'],
-            ['name' => 'Under Armour'],
-            ['name' => 'New Balance'],
-            ['name' => 'Asics'],
-            ['name' => 'Converse'],
-            ['name' => 'Vans'],
-            ['name' => 'Fila'],
+            ['name' => 'Nike', 'short_name' => 'Nike'],
+            ['name' => 'Adidas', 'short_name' => 'Adidas'],
+            ['name' => 'Puma', 'short_name' => 'Puma'],
+            ['name' => 'Reebok', 'short_name' => 'Reebok'],
+            ['name' => 'Under Armour', 'short_name' => 'Under Armour'],
+            ['name' => 'New Balance', 'short_name' => 'New Balance'],
+            ['name' => 'Asics', 'short_name' => 'Asics'],
+            ['name' => 'Converse', 'short_name' => 'Converse'],
+            ['name' => 'Vans', 'short_name' => 'Vans'],
+            ['name' => 'Fila', 'short_name' => 'Fila'],
         ];
         
 

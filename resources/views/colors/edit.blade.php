@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Update Color')
+@section('title', 'Edit Color')
 @section('header-button')
     <a href="{{ route('colors.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to all colors</a>
 @endsection

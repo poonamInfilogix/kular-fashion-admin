@@ -88,13 +88,14 @@
         <button type="submit" class="btn btn-primary w-md">Submit</button>
     </div>
 </div>
+
 <x-include-plugins :plugins="['chosen', 'country']"></x-include-plugins>
 @push('scripts')
 <script>
     $(function(){
         $('#country_id').chosen({
             width: '100%',
-            placeholder_text_multiple: 'Include tests'
+            placeholder_text_multiple: 'Select Country'
         });
     })
 </script>
