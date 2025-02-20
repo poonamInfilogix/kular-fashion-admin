@@ -4,19 +4,19 @@
             let selectedFiles = [];
 
             $('#productImages').on('change', function(event) {
-                var files = event.target.files;
+                let files = event.target.files;
                 selectedFiles = Array.from(files); // Store selected files
                 $('#imagePreview').empty();
 
                 $.each(files, function(index, file) {
-                    var reader = new FileReader();
+                    let reader = new FileReader();
 
                     reader.onload = function(e) {
-                        var imageBox = $('<div class="col-6 col-sm-2"></div>');
-                        var imageContainer = $('<div class="preview-image-container"></div>');
-                        var img = $('<img src="' + e.target.result + '" class="img-fluid" />');
-                        var removeBtn = $(
-                        '<button type="button" class="btn btn-danger btn-sm remove-image-btn"><i class="fa fa-trash"></i></button>');
+                        let imageBox = $('<div class="col-6 col-sm-2 mb-2"></div>');
+                        let imageContainer = $('<div class="preview-image-container"></div>');
+                        let img = $('<img src="' + e.target.result + '" class="img-fluid" />');
+                        let removeBtn = $('<button type="button" class="btn btn-danger btn-sm remove-image-btn"><i class="fa fa-trash"></i></button>');
+                        let altDiv = $(`<div class="alt-container"><input type="text" name="image_alt[${index}]" class="form-control" placeholder="Alt text"></div>`);
 
                         // Remove image when remove button is clicked
                         removeBtn.on('click', function() {
@@ -25,7 +25,7 @@
                             imageBox.remove();
                         });
 
-                        imageContainer.append(img).append(removeBtn);
+                        imageContainer.append(img).append(removeBtn).append(altDiv);
                         imageBox.append(imageContainer);
 
                         $('#imagePreview').append(imageBox);
@@ -105,6 +105,11 @@
                 dateFormat: "d-m-Y",
                 allowInput: true,
                 minDate: "today"
+            });
+
+            $('#tags').chosen({
+                width: '100%',
+                placeholder_text_multiple: 'Select Tags',
             });
         });
     </script>

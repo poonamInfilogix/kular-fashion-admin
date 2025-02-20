@@ -53,10 +53,10 @@ class ProductController extends Controller
         $latestProduct = Product::orderBy('article_code', 'desc')->first();
 
         $latestNewCode = $latestProduct ? (int) $latestProduct->article_code : 300000;
-        $brands = Brand::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
-        $departments = Department::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
-        $taxes = Tax::where('status', '1')->latest()->get();
-        $tags = Tag::where('status', 'Active')->latest()->get();
+        $brands = Brand::where('status', 'Active')->latest()->get();
+        $departments = Department::where('status', 'Active')->get();
+        $taxes = Tax::where('status', '1')->get();
+        $tags = Tag::where('status', 'Active')->get();
         $sizeScales = SizeScale::select('id', 'name', 'is_default')->where('status', 'Active')->latest()->with('sizes')->get();
 
         return view('products.create', compact('latestNewCode', 'brands', 'departments', 'taxes', 'tags', 'sizeScales'));
@@ -998,7 +998,8 @@ class ProductController extends Controller
 
     public function editWebConfigration(Product $product)
     {
-        return view('products.web-configuration.edit', compact('product'));
+        $tags = Tag::where('status', 'Active')->get();
+        return view('products.web-configuration.edit', compact('product', 'tags'));
     }
 
     protected function syncSpecifications($productId, $specifications)
@@ -1011,7 +1012,6 @@ class ProductController extends Controller
                 ],
                 [
                     'value' => $specification['value'],
-                    'updated_at' => now(),
                 ]
             );
         }
@@ -1032,7 +1032,33 @@ class ProductController extends Controller
     }
 
     public function updateWebConfigration(Request $request, Product $product)
-    {
+    {        
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                if ($image->getSize() < 10240 * 1024) {
+                    $imagePath = uploadFile($image, 'uploads/products/');
+
+                    ProductWebImage::create(
+                        [
+                            'product_id' => $product->id,
+                            'path' => $imagePath,
+                            'alt' => $request->image_alt[$index]
+                        ]
+                    );
+                }
+            }
+        }
+
+        foreach($request->saved_image_alt as $imageId => $image_alt){
+            $image = ProductWebImage::find($imageId);
+
+            if ($image) {
+                $image->update([
+                    'alt' => $image_alt
+                ]);
+            }
+        }
+
         $request->validate([
             'name' => 'required',
             'price' => 'required|numeric',
@@ -1045,19 +1071,42 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'specifications.*.key' => 'required|string',
             'specifications.*.value' => 'required|string',
+            'images' => 'nullable|array',
+            'images.*' => 'nullable|image|max:10240',
         ]);
-
-        dd($request->all());
 
         $product->update([
             'name' => $request->name,
             'price' => $request->price,
             'sale_price' => $request->sale_price,
             'sale_start' => isset($request->sale_start) ? Carbon::parse($request->sale_start)->toDateString() : null,
-                'sale_end' => isset($request->sale_end) ? Carbon::parse($request->sale_end)->toDateString() : null,
+            'sale_end' => isset($request->sale_end) ? Carbon::parse($request->sale_end)->toDateString() : null,
         ]);
 
-        if($request->specifications){
+        
+        $currentTags = ProductTag::where('product_id', $product->id)->pluck('tag_id')->toArray();
+        $selectedTags = $request->tags;
+
+        foreach ($selectedTags as $tagId) {
+            ProductTag::updateOrCreate(
+                [
+                    'product_id' => $product->id,
+                    'tag_id' => $tagId
+                ],
+                [
+                    'product_id' => $product->id,
+                    'tag_id' => $tagId
+                ]
+            );
+        }
+        $removedTags = array_diff($currentTags, $selectedTags);
+        foreach ($removedTags as $tagId) {
+            ProductTag::where('product_id', $product->id)
+                      ->where('tag_id', $tagId)
+                      ->delete();
+        }
+
+        if ($request->specifications) {
             $this->syncSpecifications($product->id, $request->specifications);
         }
 

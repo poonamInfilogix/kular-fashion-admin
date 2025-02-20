@@ -248,7 +248,7 @@
 
 <div class="row mb-2">
     <div class="col-lg-6 mb-2">
-        <button type="submit" class="btn btn-primary w-md">Coninue</button>
+        <button type="submit" class="btn btn-primary w-md">Continue</button>
     </div>
 </div>
 
