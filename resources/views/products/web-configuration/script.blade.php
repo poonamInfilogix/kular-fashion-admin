@@ -100,6 +100,12 @@
                 const specId = $(this).data('spec-id');
                 $(`#${specId}`).remove();
             });
+
+            flatpickr('.sale-date-picker', {
+                dateFormat: "d-m-Y",
+                allowInput: true,
+                minDate: "today"
+            });
         });
     </script>
 @endpush

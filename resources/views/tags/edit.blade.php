@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Update Tags')
+@section('title', 'Edit Tag')
 @section('header-button')
 <a href="{{ route('tags.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to all tags</a>
 @endsection

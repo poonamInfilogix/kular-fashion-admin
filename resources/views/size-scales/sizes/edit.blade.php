@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Update Size')
+@section('title', 'Edit Size')
 @section('header-button')
 <a href="{{ route('sizes.index',  $sizeScaleId) }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to sizes</a>
 @endsection

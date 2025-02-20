@@ -1034,11 +1034,27 @@ class ProductController extends Controller
     public function updateWebConfigration(Request $request, Product $product)
     {
         $request->validate([
+            'name' => 'required',
+            'price' => 'required|numeric',
+            'sale_price' => 'nullable|numeric',
+            'sale_start' => 'nullable|date',
+            'sale_end' => 'nullable|date|after_or_equal:sale_start',
             'meta_title' => 'required',
             'meta_keywords' => 'required',
-            'product_desc' => 'nullable|string',
+            'summary' => 'nullable|string',
+            'description' => 'nullable|string',
             'specifications.*.key' => 'required|string',
             'specifications.*.value' => 'required|string',
+        ]);
+
+        dd($request->all());
+
+        $product->update([
+            'name' => $request->name,
+            'price' => $request->price,
+            'sale_price' => $request->sale_price,
+            'sale_start' => isset($request->sale_start) ? Carbon::parse($request->sale_start)->toDateString() : null,
+                'sale_end' => isset($request->sale_end) ? Carbon::parse($request->sale_end)->toDateString() : null,
         ]);
 
         if($request->specifications){
@@ -1048,8 +1064,8 @@ class ProductController extends Controller
         ProductWebInfo::updateOrCreate(
             ['product_id' => $product->id],
             [
-                'summary' => '',
-                'description' => $request->product_desc,
+                'summary' => $request->summary,
+                'description' => $request->description,
                 'meta_title' => $request->meta_title,
                 'meta_keywords' => $request->meta_keywords,
                 'meta_description' => $request->meta_description,
