@@ -91,8 +91,7 @@
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="tag_id">Tag</label>
-            <select name="tag_id[]" id="tag_id" @disabled($isEditing ?? false)
-                class="form-control{{ $errors->has('tag_id') ? ' is-invalid' : '' }}" multiple>
+            <select name="tag_id[]" id="tag_id" @class(["form-control", 'is-invalid' => $errors->has('tag_id')]) multiple>
                 <option value="" disabled>Select tag</option>
                 @foreach ($tags as $tag)
                     <option value="{{ $tag->id }}" @selected(old('tag_id') && in_array($tag->id, old('tag_id')))>
@@ -224,11 +223,11 @@
 <div class="row mb-2">
     <h5>Product Web Basic Info</h5>
     <div class="col-md-4">
-        <x-form-input name="product_name" value="{{ $product->name ?? '' }}"
+        <x-form-input name="name" value="{{ $product->name ?? '' }}"
             label="Product Name" placeholder="Enter Product Name" required="true" />
     </div>
     <div class="col-md-2">
-        <x-form-input name="web_price" type="number" step="0.01" value="{{ $product->web_price ?? '' }}" label="Web Price"
+        <x-form-input name="price" type="number" step="0.01" value="{{ $product->price ?? '' }}" label="Web Price"
             placeholder="Enter Web Price" required="true" />
     </div>
     <div class="col-md-2">
@@ -236,12 +235,12 @@
             placeholder="Enter Sale Price" />
     </div>
     <div class="col-md-2">
-        <x-form-input name="sale_start_at" class="sale-date-picker"
+        <x-form-input name="sale_start" class="sale-date-picker"
                 value="{{ isset($product->sale_start) && $product->sale_start ? \Carbon\Carbon::parse($product->sale_start)->format('d-m-Y') : '' }}"
                 label="Sale Start at" placeholder="Sale Start at" />
     </div>
     <div class="col-md-2">
-        <x-form-input name="sale_end_at" class="sale-date-picker"
+        <x-form-input name="sale_end" class="sale-date-picker"
                 value="{{ isset($product->sale_end) && $product->sale_end ? \Carbon\Carbon::parse($product->sale_end)->format('d-m-Y') : '' }}"
                 label="Sale End at" placeholder="Sale End at" />
     </div>
@@ -374,7 +373,7 @@
             });
 
             $('#mrp').on('input', function() {
-                $('[name="web_price"]').val($(this).val());
+                $('[name="price"]').val($(this).val());
                 updateSupplierPrice();
             });
 

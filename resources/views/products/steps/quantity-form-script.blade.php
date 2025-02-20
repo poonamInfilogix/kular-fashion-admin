@@ -43,7 +43,7 @@
 @push('scripts')
     <script>
         $(function() {
-            $('.color-selector').on('click', function() {
+            $(document).on('click', '.color-selector', function() {
                 let isSelected = false;
                 if ($(this).hasClass('selected')) {
                     isSelected = true;
@@ -64,16 +64,19 @@
                 $('#addVariantModal').modal('show');
             });
 
-            $('input[type="number"]').on('focus', function() {
+            $(document).on('focus', 'input[type="number"]', function() {
                 $(this).select();
             });
 
             $(document).on('click', '.copy-quantity-btn', function() {
                 const $selectedColor = $('.color-selector.selected').first();
-
+                
+                console.log('selectedColor', $selectedColor)
+                
                 if ($selectedColor.length > 0) {
                     const id = $selectedColor.closest('[data-id]').data('id');
-
+                    console.log('id',id);
+                    
                     if (id) {
                         const colorIdToBeCopied = id.split('-')[1];
                         const colorIdForCopy = $(this).data('color-id');
@@ -124,7 +127,8 @@
                                 })
                                 .get();
 
-                            let $newRow = $('<tr></tr>');
+                            let uniqueId = $('.quantities-table [data-id]').length + 1;
+                            let $newRow = $(`<tr data-id="rm-${response.data.color_id}"></tr>`);
 
                             let $newTh = $(
                                 '<th class="d-flex align-items-center justify-content-center flex-column text-center"></th>'

@@ -69,11 +69,7 @@ class ProductController extends Controller
                 'required',
                 Rule::unique('products')->whereNull('deleted_at'),
             ],
-            'product_name' => 'required',
-            'web_price' => 'required',
-            'sale_price' => 'nullable|numeric',
-            'sale_start_at' => 'nullable|date',
-            'sale_end_at' => 'nullable|date|after_or_equal:sale_start_at',
+            'name' => 'required',
             'manufacture_code' => 'required',
             'brand_id' => 'required',
             'department_id' => 'required',
@@ -82,7 +78,11 @@ class ProductController extends Controller
             'supplier_price' => 'required',
             'mrp' => 'required',
             'short_description' => 'required',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048'
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'price' => 'required|numeric',
+            'sale_price' => 'nullable|numeric',
+            'sale_start' => 'nullable|date',
+            'sale_end' => 'nullable|date|after_or_equal:sale_start',
         ]);
 
         $productData = $request->all();
@@ -113,13 +113,16 @@ class ProductController extends Controller
             'department_id'     => 'required',
             'product_type_id'   => 'required',
             'size_scale_id'     => 'required', */
-            'product_name' => 'required',
+            'name' => 'required',
             'supplier_price' => 'required',
             'mrp' => 'required',
             'short_description' => 'required',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048'
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'price' => 'required|numeric',
+            'sale_price' => 'nullable|numeric',
+            'sale_start' => 'nullable|date',
+            'sale_end' => 'nullable|date|after_or_equal:sale_start',
         ]);
-
 
         $imagePath = null;
         if ($request->hasFile('image')) {
@@ -143,8 +146,9 @@ class ProductController extends Controller
                 'department_id' => $request->department_id,
                 'brand_id' => $request->brand_id,
                 'product_type_id' => $request->product_type_id, */
-                'name' => $request->short_description,
-                'short_description' => $request->product_name,
+                'name' => $request->name,
+                'price' => $request->price,
+                'short_description' => $request->short_description,
                 'mrp' => $request->mrp,
                 'supplier_price' => $request->supplier_price,
                 'season' => $request->season,
@@ -155,7 +159,9 @@ class ProductController extends Controller
                 //'size_scale_id' => $request->size_scale_id,
                 'image' => $imagePath,
                 'status' => $request->status,
-                'updated_at' => now()
+                'sale_price' => $request->sale_price,
+                'sale_start' => isset($request->sale_start) ? Carbon::parse($request->sale_start)->toDateString() : null,
+                'sale_end' => isset($request->sale_end) ? Carbon::parse($request->sale_end)->toDateString() : null,
             ]);
         }
         if (isset($request->tag_id)) {
@@ -296,8 +302,8 @@ class ProductController extends Controller
                 'supplier_color_code' => $request->supplier_color_code,
                 'supplier_color_name' => $request->supplier_color_name,
                 'color_id' => $request->color_select,
-                'color_name' => $color->color_name,
-                'color_code' => $color->color_code,
+                'color_name' => $color->name,
+                'color_code' => $color->code,
                 'ui_color_code' => $color->ui_color_code,
             ],
             'message' => 'Variant added successfully!'
@@ -351,7 +357,7 @@ class ProductController extends Controller
         Session::put('savingProduct', $productData);
 
         $product = Product::create([
-            'name' => $productData['product_name'],
+            'name' => $productData['name'],
             'manufacture_code' => $productData['manufacture_code'] ?? NULL,
             'department_id' => $productData['department_id'] ?? NULL,
             'brand_id' => $productData['brand_id'] ?? NULL,
@@ -370,8 +376,8 @@ class ProductController extends Controller
             'max_size_id' => $productData['size_range_max'],
             'price' => $productData['price'] ?? $productData['mrp'],
             'sale_price' => $productData['sale_price'] ?? null,
-            'sale_start' => $productData['sale_start_at'] ?? null,
-            'sale_end' => $productData['sale_end_at'] ?? null,
+            'sale_start' => isset($productData['sale_start']) ? Carbon::parse($productData['sale_start'])->toDateString() : null,
+            'sale_end' => isset($productData['sale_end']) ? Carbon::parse($productData['sale_end'])->toDateString() : null,
             'status' => $productData['status']
         ]);
 

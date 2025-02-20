@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table quantities-table">
     <thead>
         <tr id="sizeHeader">
             <th>Size</th>

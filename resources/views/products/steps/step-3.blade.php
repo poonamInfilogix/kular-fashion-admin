@@ -2,7 +2,7 @@
 
 @section('title', 'Step 3')
 @section('header-button')
-    <a href="{{ route('products.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to products</a>
+    <a href="{{ route('products.create.step-2') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to previous step</a>
 @endsection
 
 @section('content')

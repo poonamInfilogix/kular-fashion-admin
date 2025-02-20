@@ -2,7 +2,7 @@
 
 @section('title', 'Edit variations for article '.$product->article_code)
 @section('header-button')
-    <a href="{{ route('products.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to products</a>
+    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to previous step</a>
 @endsection
 
 @section('content')
