@@ -797,7 +797,7 @@ class ProductController extends Controller
 
                     if ($productQuantity->total_quantity >= $updatedOriginalQuantity) {
                         $productQuantity->original_printed_barcodes = $updatedOriginalQuantity;
-                        $productQuantity->quantity = $updatedOriginalQuantity;
+                        $productQuantity->quantity = $productQuantity->quantity + $quantityDetail['orignalQty'];
                     }
 
                     if (!$productQuantity->first_barcode_printed_date) {
