@@ -1,59 +1,114 @@
 <template>
-    <div class="row mb-2">
-        <div class="col-sm-6 col-md-4">
-            <div class="form-group">
-                <div class="mb-3">
-                    <label for="collection_name">Collection Name<span class="text-danger">*</span></label>
-                    <input class="form-control" v-model="collection.name" name="collection_name"
-                        placeholder="Enter Collection Name" v-bind:class="{ 'is-invalid': errors.name }" />
-
-                    <span v-if="errors.name" class="invalid-feedback">{{ errors.name }}</span>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-md-3">
-            <div class="mb-3">
-                <label for="collection-status" class="form-label">Status</label>
-                <select name="status" id="collection-status" class="form-control">
-                    <option value="1">Active</option>
-                    <option value="0">Inactive</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="col-md-12 mb-3">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Basic Information</h4>
             <div class="row">
-                <div class="col-md-6 d-flex justify-content-between">
-                    <h6>Include Conditions</h6>
-                    <button type="button" class="btn btn-sm btn-secondary" @click="addNewCondition('include')">Add new
-                        condition</button>
+                <div class="col-sm-6 col-md-4">
+                    <div class="form-group">
+                        <label for="collection_name">Collection Name<span class="text-danger">*</span></label>
+                        <input class="form-control" v-model="collection.name" name="collection_name"
+                            placeholder="Enter Collection Name" v-bind:class="{ 'is-invalid': errors.name }" />
+
+                        <span v-if="errors.name" class="invalid-feedback">{{ errors.name }}</span>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <label for="collection-status" class="form-label">Status</label>
+                    <select name="status" id="collection-status" class="form-control">
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-6 col-md-3">
+                    <label for="status">Image</label>
+                    <input type="file" name="collection_image" class="form-control" accept="image/*">
+
+                    <div class="row d-block">
+                        <div class="col-md-8 mt-2">
+                            <img src="" id="preview-collection" class="img-fluid w-50" name="image" hidden>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <AddedConditions :conditionType="'include'" :conditions="conditions.include"
-                @removeCondition="removeCondition"></AddedConditions>
         </div>
+    </div>
 
-        <div class="col-md-12">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Conditions</h4>
+            <div class="col-md-12 mb-3">
+                <div class="row">
+                    <div class="col-md-6 d-flex justify-content-between">
+                        <h6>Include Conditions</h6>
+                        <button type="button" class="btn btn-sm btn-secondary" @click="addNewCondition('include')">Add
+                            new
+                            condition</button>
+                    </div>
+                </div>
+
+                <AddedConditions :conditionType="'include'" :conditions="conditions.include"
+                    @removeCondition="removeCondition"></AddedConditions>
+            </div>
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6 d-flex justify-content-between">
+                        <h6>Exclude Conditions</h6>
+                        <button type="button" class="btn btn-sm btn-secondary" @click="addNewCondition('exclude')">Add
+                            new
+                            condition</button>
+                    </div>
+                </div>
+                <AddedConditions :conditionType="'exclude'" :conditions="conditions.exclude"
+                    @removeCondition="removeCondition"></AddedConditions>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Listing Page Content</h4>
+            <div>
+                <h4 class="card-title">Summary</h4>
+                <textarea name="summary" id="summary" class="editor" rows="2">{{ savedCollection.summary }}</textarea>
+            </div>
+            <div class="mt-3">
+                <h4 class="card-title">Description</h4>
+                <textarea name="description" id="description" class="editor" rows="2">{{ savedCollection.description }}</textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">SEO</h4>
             <div class="row">
-                <div class="col-md-6 d-flex justify-content-between">
-                    <h6>Exclude Conditions</h6>
-                    <button type="button" class="btn btn-sm btn-secondary" @click="addNewCondition('exclude')">Add new
-                        condition</button>
+                <div class="col-12 mb-3">
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <label for="heading">Heading</label>
+                            <input name="heading" id="heading" class="form-control" :value="savedCollection.heading" placeholder="Meta title" />
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <AddedConditions :conditionType="'exclude'" :conditions="conditions.exclude"
-                @removeCondition="removeCondition"></AddedConditions>
-        </div>
-
-        <div class="col-sm-6 col-md-3">
-            <div class="mb-3">
-                <label for="status">Image</label>
-                <input type="file" name="collection_image" class="form-control" accept="image/*">
-
-                <div class="row d-block">
-                    <div class="col-md-8 mt-2">
-                        <img src="" id="preview-collection" class="img-fluid w-50" name="image" hidden>
+                <div class="col-sm-4">
+                    <div class="mb-3">
+                        <label for="meta_title">Meta title</label>
+                        <input name="meta_title" id="meta_title" class="form-control" :value="savedCollection.meta_title"
+                            placeholder="Meta title" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="meta_keywords">Meta Keywords</label>
+                        <input name="meta_keywords" id="meta_keywords" class="form-control" :value="savedCollection.meta_keywords"
+                            placeholder="Meta Keywords" />
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="mb-3">
+                        <label for="meta_description">Meta Description</label>
+                        <textarea name="meta_description" class="form-control" id="meta_description" rows="5"
+                            placeholder="Meta Description">{{ savedCollection.meta_description }}</textarea>
                     </div>
                 </div>
             </div>
