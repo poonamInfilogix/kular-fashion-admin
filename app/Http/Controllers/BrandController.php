@@ -36,6 +36,7 @@ class BrandController extends Controller
         if(!Gate::allows('create brands')) {
             abort(403);
         }
+
         $request->validate([
             'name' => [
                 'required',
@@ -66,17 +67,16 @@ class BrandController extends Controller
         //
     }
 
-    public function edit($id)
+    public function edit(Brand $brand)
     {
         if(!Gate::allows('edit brands')) {
             abort(403);
         }
-        $brand = Brand::where('id', $id)->first();
-
+        
         return view('brands.edit', compact('brand'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Brand $brand)
     {
         if(!Gate::allows('edit brands')) {
             abort(403);
@@ -84,15 +84,14 @@ class BrandController extends Controller
         $request->validate([
             'name' => [
                 'required',
-                Rule::unique('brands')->ignore($id)->whereNull('deleted_at'),
+                Rule::unique('brands')->ignore($brand->id)->whereNull('deleted_at'),
             ],
             'short_name' => [
                 'required',
-                Rule::unique('brands')->ignore($id)->whereNull('deleted_at'),
+                Rule::unique('brands')->ignore($brand->id)->whereNull('deleted_at'),
             ],
         ]);
 
-        $brand = Brand::where('id', $id)->first();
         $oldBrandImage = $brand ? $brand->image : NULL;
 
         if($request->brand_image) {
@@ -116,13 +115,13 @@ class BrandController extends Controller
         return redirect()->route('brands.index')->with('success', 'Brand updated successfully.');
     }
 
-    public function destroy(string $id)
+    public function destroy(Brand $brand)
     {
         if(!Gate::allows('delete brands')) {
             abort(403);
         }
 
-        Brand::where('id', $id)->delete();
+        $brand->delete();
 
         return response()->json([
             'success' => true,
