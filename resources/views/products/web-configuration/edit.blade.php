@@ -12,9 +12,6 @@
             <x-success-message :message="session('success')" />
 
             <div class="row">
-                <div class="col-md-5 mb-2 fs-5">
-                    <strong>Product Name:</strong> {{ $product->name }}
-                </div>
                 <div class="col-md-4 mb-2 fs-5">
                     <strong>Brand Name:</strong> {{ $product->brand->name }}
                 </div>

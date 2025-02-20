@@ -1049,13 +1049,15 @@ class ProductController extends Controller
             }
         }
 
-        foreach($request->saved_image_alt as $imageId => $image_alt){
-            $image = ProductWebImage::find($imageId);
-
-            if ($image) {
-                $image->update([
-                    'alt' => $image_alt
-                ]);
+        if($request->saved_image_alt){
+            foreach($request->saved_image_alt as $imageId => $image_alt){
+                $image = ProductWebImage::find($imageId);
+    
+                if ($image) {
+                    $image->update([
+                        'alt' => $image_alt
+                    ]);
+                }
             }
         }
 
