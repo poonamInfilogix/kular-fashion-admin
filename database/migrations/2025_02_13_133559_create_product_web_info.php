@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('product_web_info', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id')->nullable()->index();
-            $table->text('short_description')->nullable();
+            $table->text('summary')->nullable();
             $table->longText('description')->nullable();
             $table->boolean('is_splitted_with_colors')->default(false)->index();
             $table->string('heading')->nullable();

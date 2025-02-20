@@ -18,15 +18,18 @@ return new class extends Migration
             $table->decimal('value', 8, 2);
             $table->string('usage_limit')->nullable();
             $table->unsignedInteger('used_count')->default(0);
-            $table->dateTime('starts_at')->nullable();
-            $table->dateTime('expires_at')->nullable();
-            $table->decimal('min_purchase_amount', 8, 2)->nullable();
-            $table->unsignedInteger('min_items_count', 8, 2)->nullable();
-            $table->boolean('is_active')->default(true);
-            $table->boolean('is_one_time_use')->default(false);
-            $table->string('description')->nullable();
-            $table->string('banner_path')->nullable();
+            $table->dateTime('starts_at')->nullable()->index();
+            $table->dateTime('expires_at')->nullable()->index();
+            $table->decimal('min_amount', 8, 2)->nullable()->index();
+            $table->unsignedInteger('min_items_count')->nullable()->index();
+            $table->string('description', 255)->nullable();
+            $table->string('banner_path', 155)->nullable();
+            $table->boolean('is_active')->default(true)->index();
             $table->timestamps();
+
+            $table->index(['is_active', 'starts_at', 'expires_at']);
+            $table->index(['is_active', 'min_amount']);
+            $table->index(['is_active', 'min_items_count']);
         });
     }
 

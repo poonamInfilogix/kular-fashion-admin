@@ -15,9 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('slug')->unique();
             $table->string('name');
-            $table->string('image')->nullable();
             $table->json('include_conditions')->nullable();
             $table->json('exclude_conditions')->nullable();
+            $table->string('image')->nullable();
+            $table->string('small_image')->nullable();
+            $table->string('medium_image')->nullable();
+            $table->string('large_image')->nullable();
+            $table->text('summary')->nullable();
+            $table->longText('description')->nullable();
             $table->string('heading')->nullable();
             $table->string('meta_title')->nullable();
             $table->string('meta_keywords')->nullable();
