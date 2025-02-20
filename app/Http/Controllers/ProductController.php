@@ -1046,7 +1046,7 @@ class ProductController extends Controller
         ProductWebInfo::updateOrCreate(
             ['product_id' => $product->id],
             [
-                'short_description' => $request->product_desc,
+                'summary' => '',
                 'description' => $request->product_desc,
                 'meta_title' => $request->meta_title,
                 'meta_keywords' => $request->meta_keywords,
