@@ -33,17 +33,17 @@ class ColorController extends Controller
         }
         
         $request->validate([
-            'color_name' => 'required|unique:colors,color_name',
+            'name' => 'required|unique:colors,name',
             'short_name' => 'required|min:1|max:5',
-            'color_code' => 'required|min:1|max:3'
+            'code' => 'required|min:1|max:3'
         ]);
 
         Color::create([
-            'color_name'       => $request->color_name,
-            'short_name'       => $request->short_name,
-            'color_code'       => $request->color_code,
-            'ui_color_code'    => $request->color,
-            'status'           => $request->status,
+            'name'              => $request->name,
+            'short_name'        => $request->short_name,
+            'code'              => $request->code,
+            'ui_color_code'     => $request->color,
+            'status'            => $request->status,
         ]);
 
         return redirect()->route('colors.index')->with('success', 'Color created successfully.');
