@@ -164,6 +164,7 @@ class ProductController extends Controller
                 'sale_end' => isset($request->sale_end) ? Carbon::parse($request->sale_end)->toDateString() : null,
             ]);
         }
+
         if (isset($request->tag_id)) {
             foreach ($request->tag_id as $tags) {
                 ProductTag::updateOrCreate(
@@ -483,7 +484,7 @@ class ProductController extends Controller
                     );
 
                     if ($quantityRecord) {
-                        $quantityRecord->quantity += $newQuantity;
+                        //$quantityRecord->quantity += $newQuantity;
                         $quantityRecord->total_quantity += $newQuantity;
                         $quantityRecord->save();
                     }
