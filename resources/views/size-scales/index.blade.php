@@ -38,6 +38,10 @@
                                                     ({{ $sizeScale->sizes->first()->size }} -
                                                     {{ $sizeScale->sizes->last()->size }})
                                                 @endif
+
+                                                @if($sizeScale->is_default)
+                                                    <span class="badge rounded-pill bg-success">Default</span>
+                                                @endif
                                             </td>
                                             <td>{{ $sizeScale->sizes_count }}</td>
                                             <td>
