@@ -33,7 +33,7 @@
                                     @foreach ($colors as $key => $color)
                                         <tr>
                                             <td>{{ ++$key }}</td>
-                                            <td>{{ ucwords($color->color_name) }}</td>
+                                            <td>{{ ucwords($color->name) }}</td>
                                             <td>{{ $color->color_code }}</td>
                                             <td>
                                                 <input type="checkbox" id="{{ $color->id }}" class="update-status"

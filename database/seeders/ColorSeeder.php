@@ -15,33 +15,33 @@ class ColorSeeder extends Seeder
     {
         $colors = [
             [
-                'color_name' => 'Red',
-                'color_code' => '100',
+                'name' => 'Red',
+                'code' => '100',
                 'ui_color_code' => '#FF0000',
             ],
             [
-                'color_name' => 'Green',
-                'color_code' => '200',
+                'name' => 'Green',
+                'code' => '200',
                 'ui_color_code' => '#008000',
             ],
             [
-                'color_name' => 'Blue',
-                'color_code' => '300',
+                'name' => 'Blue',
+                'code' => '300',
                 'ui_color_code' => '#0000FF',
             ],
             [
-                'color_name' => 'Yellow',
-                'color_code' => '400',
+                'name' => 'Yellow',
+                'code' => '400',
                 'ui_color_code' => '#FFFF00',
             ],
             [
-                'color_name' => 'Black',
-                'color_code' => '500',
+                'name' => 'Black',
+                'code' => '500',
                 'ui_color_code' => '#000000',
             ],
             [
-                'color_name' => 'White',
-                'color_code' => '600',
+                'name' => 'White',
+                'code' => '600',
                 'ui_color_code' => '#FFFFFF',
             ],
         ];

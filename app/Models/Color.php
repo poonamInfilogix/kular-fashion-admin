@@ -15,7 +15,7 @@ class Color extends Model
     {
         return [
             'slug' => [
-                'source' => 'color_name'
+                'source' => 'name'
             ]
         ];
     }

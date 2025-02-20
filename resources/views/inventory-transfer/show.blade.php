@@ -52,7 +52,7 @@
                                                 <td>{{ $item->product->article_code ?? 'N/A' }}</td> 
                                                 <td>{{ $item->product->manufacture_code ?? 'N/A' }}</td> 
                                                 <td>{{ $item->brand->name ?? 'N/A' }}</td> 
-                                                <td>{{$item->productColor->color_name ?? 'N/A'}}</td>
+                                                <td>{{$item->productColor->name ?? 'N/A'}}</td>
                                                 <td>{{$item->productSize->size ?? 'N/A' }}</td>
                                             
                                             </tr>

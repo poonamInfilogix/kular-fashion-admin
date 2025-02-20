@@ -49,7 +49,6 @@
         const colorName = s(this).val().toLowerCase();
         if (colorMap[colorName]) {
             const colorHex = colorMap[colorName];
-            console.log(colorHex);
             s("#colorpicker-showinput-intial").spectrum("set", colorHex);
             s("#colorpicker-showinput-intial").val(colorHex);
         }

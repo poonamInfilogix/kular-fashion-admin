@@ -1,7 +1,7 @@
 <div class="row mb-2">
     <div class="col-sm-6 col-md-3">
         <div class="mb-3">
-            <x-form-input name="color_name" value="{{ $color->color_name ?? '' }}" label="Color Name" placeholder="Enter Color Name"  required="true"/>
+            <x-form-input name="name" value="{{ $color->name ?? '' }}" label="Color Name" placeholder="Enter Color Name"  required="true"/>
         </div>
     </div>
     <div class="col-sm-6 col-md-3">
@@ -11,7 +11,7 @@
     </div>
     <div class="col-sm-6 col-md-3">
         <div class="mb-3">
-            <x-form-input name="color_code" value="{{ $color->color_code ?? '' }}" label="Color Code" placeholder="Enter Color Code"  required="true" maxlength="3"/>
+            <x-form-input name="code" value="{{ $color->code ?? '' }}" label="Color Code" placeholder="Enter Color Code"  required="true" maxlength="3"/>
         </div>
     </div>
     <div class="Col-sm-6 col-md-3">

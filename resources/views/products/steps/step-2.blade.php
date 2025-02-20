@@ -79,7 +79,7 @@
                                                         <option value="" selected>Select Color</option> 
                                                         @foreach($colors as $color)
                                                             <option value="{{ $color->id }}" {{ old('colors[0]', isset($savingProduct->colors[0]) ? $savingProduct->colors[0] : null) == $color->id ? 'selected' : '' }}>
-                                                                {{ $color->color_name }} ({{ $color->color_code }})
+                                                                {{ $color->name }} ({{ $color->code }})
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -160,7 +160,7 @@
                                                                             @foreach($colors as $color)
                                                                                 <option value="{{ $color->id }}" @selected(old("colors[$index]", $savingProduct->colors[$index] ?? '') == $color->id)
                                                                                     {{ old("colors[$index]", $savingProduct->colors[$index] ?? '') }}>
-                                                                                    {{ $color->color_name }} ({{ $color->color_code }})
+                                                                                    {{ $color->name }} ({{ $color->code }})
                                                                                 </option>
                                                                             @endforeach
                                                                         </select>
