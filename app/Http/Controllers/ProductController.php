@@ -1041,7 +1041,9 @@ class ProductController extends Controller
             'specifications.*.value' => 'required|string',
         ]);
 
-        $this->syncSpecifications($product->id, $request->specifications);
+        if($request->specifications){
+            $this->syncSpecifications($product->id, $request->specifications);
+        }
 
         ProductWebInfo::updateOrCreate(
             ['product_id' => $product->id],
@@ -1078,7 +1080,6 @@ class ProductController extends Controller
             return response()->json(['error' => 'No image being uploaded'], 400);
         }
     }
-
 
     public function destroyProductImage($imageId)
     {
