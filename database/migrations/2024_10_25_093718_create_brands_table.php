@@ -16,8 +16,12 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('name');
             $table->string('short_name', 100)->unique()->nullable(); 
-            $table->text('description')->nullable();
             $table->string('image')->nullable();
+            $table->string('small_image')->nullable();
+            $table->string('medium_image')->nullable();
+            $table->string('large_image')->nullable();
+            $table->text('summary')->nullable();
+            $table->longText('description')->nullable();
             $table->decimal('margin', 5, 2)->default('50');
             $table->string('heading')->nullable();
             $table->string('meta_title')->nullable();

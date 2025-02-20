@@ -55,9 +55,9 @@ class ProductController extends Controller
         $latestNewCode = $latestProduct ? (int) $latestProduct->article_code : 300000;
         $brands = Brand::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
         $departments = Department::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
-        $taxes = Tax::where('status', 'Active')->latest()->get();
+        $taxes = Tax::where('status', '1')->latest()->get();
         $tags = Tag::where('status', 'Active')->latest()->get();
-        $sizeScales = SizeScale::select('id', 'name')->where('status', 'Active')->latest()->with('sizes')->get();
+        $sizeScales = SizeScale::select('id', 'name', 'is_default')->where('status', 'Active')->latest()->with('sizes')->get();
 
         return view('products.create', compact('latestNewCode', 'brands', 'departments', 'taxes', 'tags', 'sizeScales'));
     }
@@ -448,7 +448,7 @@ class ProductController extends Controller
         $brands = Brand::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
         $departments = Department::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
         $productTypes = ProductType::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
-        $taxes = Tax::where('status', 'Active')->latest()->get();
+        $taxes = Tax::where('status', '1')->latest()->get();
         $tags = Tag::where('status', 'Active')->latest()->get();
         $sizeScales = SizeScale::where('status', 'Active')->latest()->get();
         $sizes = Size::where('status', 'Active')->latest()->get();
@@ -592,9 +592,9 @@ class ProductController extends Controller
         $latestNewCode = $latestProduct ? (int) $latestProduct->article_code : 300000;
         $brands = Brand::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
         $departments = Department::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
-        $taxes = Tax::where('status', 'Active')->latest()->get();
+        $taxes = Tax::where('status', '1')->latest()->get();
         $tags = Tag::where('status', 'Active')->latest()->get();
-        $sizeScales = SizeScale::select('id', 'name')->where('status', 'Active')->latest()->with('sizes')->get();
+        $sizeScales = SizeScale::select('id', 'name', 'is_default')->where('status', 'Active')->latest()->with('sizes')->get();
 
         $product = (object) Session::get('savingProduct');
 

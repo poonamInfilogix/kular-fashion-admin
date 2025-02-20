@@ -1,10 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Update Size Scales')
+@section('title', 'Edit Size Scales')
 @section('header-button')
-    @if (Auth::user()->can('create size scales'))
-        <a href="{{ route('size-scales.create') }}" class="btn btn-primary">Add New Size Scale</a>
-    @endif
+<a href="{{ route('size-scales.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Go Back</a>
 @endsection
 
 @section('content')

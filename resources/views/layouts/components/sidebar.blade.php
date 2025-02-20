@@ -137,9 +137,9 @@
                                 <li><a href="{{ route('branches.index') }}">Branches</a></li>
                             @endcan
 
-                            @can('view customers')
+                            {{-- @can('view customers')
                                 <li><a href="#">Customers</a></li>
-                            @endcan
+                            @endcan --}}
 
                             @can('view users')
                                 <li><a href="{{ route('users.index') }}">Users</a></li>

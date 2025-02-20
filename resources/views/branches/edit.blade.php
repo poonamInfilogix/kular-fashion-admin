@@ -2,7 +2,7 @@
 
 @section('title', 'Edit Branch')
 @section('header-button')
-    <a href="{{ route('branches.index') }}" class="btn btn-primary">Go Back</a>
+    <a href="{{ route('branches.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Go Back</a>
 @endsection
 
 @section('content')

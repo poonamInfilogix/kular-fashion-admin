@@ -2,7 +2,8 @@
 
 @section('title', 'Step 3')
 @section('header-button')
-    <a href="{{ route('products.create.step-2') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to previous step</a>
+    <a href="{{ route('products.create.step-2') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to previous
+        step</a>
 @endsection
 
 @section('content')
@@ -11,17 +12,18 @@
             <div class="row">
                 <div class="col-12">
                     <x-error-message :message="$errors->first('message')" />
-                    <x-success-message :message="session('success')" />   
+                    <x-success-message :message="session('success')" />
                     <div class="card">
-                        <div class="card-body">  
+                        <div class="card-body">
                             <form action="{{ route('products.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @include('products.steps.quantity-form')
 
-                                <button type="button" class="btn btn-secondary" id="add-variant-btn">Add new variant</button>
+                                <button type="button" class="btn btn-secondary" id="add-variant-btn">Add new
+                                    variant</button>
                                 <button class="btn btn-primary">Submit</button>
-                            </form>    
-                        </div>    
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -29,16 +31,23 @@
     </div>
 
     @include('products.steps.quantity-form-script')
+    <x-include-plugins :plugins="['chosen']"></x-include-plugins>
 @endsection
+
 @push('scripts')
     <script>
-        $(document).ready(function () {
-            $('form').on('keypress', function (e) {
-                if (e.which === 13) { 
+        $(function() {
+            $('form').on('keypress', function(e) {
+                if (e.which === 13) {
                     e.preventDefault();
-                    return false; 
+                    return false;
                 }
             });
-        });
+
+            $('#color_select').chosen({
+                width: '100%',
+                placeholder_text_multiple: 'Choose Color'
+            });
+        })
     </script>
 @endpush

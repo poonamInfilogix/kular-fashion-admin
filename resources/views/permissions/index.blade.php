@@ -1,22 +1,10 @@
 @extends('layouts.app')
 
+@section('title', 'Manage Permissions')
+
 @section('content')
     <div class="page-content">
         <div class="container-fluid">
-
-            <!-- start page title -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                        <h4 class="mb-sm-0 font-size-18">Roles And Permission</h4>
-                        <div class="page-title-right">
-                            <a href="{{ route('roles-and-permissions.create') }}" class="btn btn-primary">Add New Role</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end page title -->
-
             <div class="row">
                 <div class="col-12">
                     <x-error-message :message="$errors->first('message')" />

@@ -2,7 +2,7 @@
 
 @section('title', 'Create a new Collection')
 @section('header-button')
-<a href="{{ route('collections.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to colors</a>
+<a href="{{ route('collections.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Go Back</a>
 @endsection
 
 @section('content')

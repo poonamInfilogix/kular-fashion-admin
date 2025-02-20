@@ -119,7 +119,7 @@
             ])>
                 <option value="" disabled>Select size scale</option>
                 @foreach ($sizeScales as $sizeScale)
-                    <option value="{{ $sizeScale->id }}" @disabled(count($sizeScale->sizes)===0) @selected(old('size_scale_id', $product->size_scale_id ?? '') == $sizeScale->id)>
+                    <option value="{{ $sizeScale->id }}" @disabled(count($sizeScale->sizes)===0) @selected(old('size_scale_id', $product->size_scale_id ?? $sizeScale->is_default ? $sizeScale->id : '') == $sizeScale->id)>
                         {{ $sizeScale->name }}
 
                         @if (count($sizeScale->sizes) > 0)
@@ -200,7 +200,7 @@
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
-            <select name="status" id="color-status" class="form-control">
+            <select name="status" id="status" class="form-control">
                 <option value="Active" @selected(($product->status ?? '') === 'Active')>Active</option>
                 <option value="Inactive" @selected(($product->status ?? '') === 'Inactive')>Inactive</option>
             </select>
