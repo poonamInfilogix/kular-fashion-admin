@@ -41,7 +41,7 @@ class DepartmentSeeder extends Seeder
 
         foreach ($productTypes as $productTypeName => $departmentsArray) {
             $productType = ProductType::create([
-                'product_type_name' => $productTypeName,
+                'name' => $productTypeName,
             ]);
 
             foreach ($departmentsArray as $departmentName) {

@@ -68,7 +68,7 @@
                     { title: "Manufacture Code", data: 'manufacture_code' },
                     { title: "Department", data: 'department.name' },
                     { title: "Brand", data: 'brand.name' },
-                    { title: "Product Type",data: 'product_type.product_type_name' },
+                    { title: "Product Type",data: 'product_type.name' },
                     { 
                         title: "Actions", 
                         data: null, 

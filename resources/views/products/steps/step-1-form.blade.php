@@ -43,7 +43,7 @@
                 @if (isset($productTypes))
                     @foreach ($productTypes as $productType)
                         <option value="{{ $productType->id }}" @selected(old('product_type_id', $product->product_type_id ?? '') == $productType->id)>
-                            {{ $productType->product_type_name }}
+                            {{ $productType->name }}
                         </option>
                     @endforeach
                 @endif
@@ -306,7 +306,7 @@
                         if (data && data.length > 0) {
                             data.forEach(function(item) {
                                 if (item.product_types) {
-                                    const option = new Option(item.product_types.product_type_name, item
+                                    const option = new Option(item.product_types.name, item
                                         .product_type_id);
                                     productTypeSelect.append(option);
                                 }

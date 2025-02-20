@@ -14,7 +14,7 @@
                             <select name="products[${index}][product_type]" class="form-control product-type-dropdown">
                                 <option value="" disabled selected>Select Product Type</option> 
                                 @foreach ($productTypes as $productType)
-                                    <option value="{{ $productType->id }}">{{ $productType->product_type_name }}</option>
+                                    <option value="{{ $productType->id }}">{{ $productType->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -328,8 +328,8 @@
                     <select id="color" name="color" class="form-control" required>
                         <option value="" disabled selected>Select Color</option>
                         @foreach ($colors as $color)
-                            <option value="{{ $color->id }}">{{ $color->color_name }}
-                                ({{ $color->color_code }})
+                            <option value="{{ $color->id }}">{{ $color->name }}
+                                ({{ $color->code }})
                             </option>
                         @endforeach
                     </select>

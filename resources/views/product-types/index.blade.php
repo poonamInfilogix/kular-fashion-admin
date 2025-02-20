@@ -34,7 +34,7 @@
                                     @foreach($productTypes as $key => $productType)
                                         <tr>
                                             <td>{{ ++$key }}</td>
-                                            <td>{{ $productType->product_type_name }}</td>
+                                            <td>{{ $productType->name }}</td>
                                             <td>
                                                 @foreach($productType->productTypeDepartments as $departments)
                                                     {{ $departments->departments->name }}

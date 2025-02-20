@@ -237,7 +237,7 @@
                                                 <option value="" disabled selected>Select Color</option>
                                                 @foreach($colors as $color)
                                                     <option value="{{ $color->id }}">
-                                                        {{ $color->color_name }} ({{ $color->color_code }})
+                                                        {{ $color->name }} ({{ $color->code }})
                                                     </option>
                                                 @endforeach
                                             </select>

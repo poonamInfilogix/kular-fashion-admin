@@ -16,7 +16,7 @@ class ProductType extends Model
     {
         return [
             'slug' => [
-                'source' => 'product_type_name'
+                'source' => 'name'
             ]
         ];
     }

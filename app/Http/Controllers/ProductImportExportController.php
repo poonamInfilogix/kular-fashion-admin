@@ -54,7 +54,7 @@ class ProductImportExportController extends Controller
                     $product->manufacture_code,
                     $product->brand->name ?? '',
                     $product->department->name ?? '',
-                    $product->productType->product_type_name ?? '',
+                    $product->productType->name ?? '',
                     $product->short_description,
                     $product->mrp,
                     $product->supplier_price,
@@ -132,7 +132,7 @@ class ProductImportExportController extends Controller
             // Create or fetch related records
             $brand = Brand::firstOrCreate(['name' => $data[2]]);
             $department = Department::firstOrCreate(['name' => $data[3]]);
-            $productType = ProductType::firstOrCreate(['product_type_name' => $data[4]]);
+            $productType = ProductType::firstOrCreate(['name' => $data[4]]);
     
             // Create the product
             Product::create([
@@ -252,7 +252,7 @@ class ProductImportExportController extends Controller
 
         foreach ($productTypeDepartments as $key => $productType) {
             $sheet->fromArray(
-                [$productType->id, $productType->department_id, $productType->departments->name, $productType->product_type_id, $productType->productTypes->product_type_name],
+                [$productType->id, $productType->department_id, $productType->departments->name, $productType->product_type_id, $productType->productTypes->name],
                 NULL,
                 'A' . ($key + 2)
             );

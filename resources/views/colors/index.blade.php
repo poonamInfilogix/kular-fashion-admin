@@ -34,7 +34,7 @@
                                         <tr>
                                             <td>{{ ++$key }}</td>
                                             <td>{{ ucwords($color->name) }}</td>
-                                            <td>{{ $color->color_code }}</td>
+                                            <td>{{ $color->code }}</td>
                                             <td>
                                                 <input type="checkbox" id="{{ $color->id }}" class="update-status"
                                                     data-id="{{ $color->id }}" switch="success" data-on="Active"

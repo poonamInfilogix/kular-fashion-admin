@@ -26,7 +26,7 @@
                     <select class="form-control multipleSelect" id="categories" multiple name="categories[]">
                         <option disabled>Select Category</option>
                         @foreach ($productTypes as $productType)
-                            <option value="{{ $productType->id }}">{{ $productType->product_type_name }}</option>
+                            <option value="{{ $productType->id }}">{{ $productType->name }}</option>
                         @endforeach
                     </select>
                 </div>

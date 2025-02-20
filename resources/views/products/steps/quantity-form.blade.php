@@ -29,7 +29,7 @@
                 <tr data-id="rm-{{ $color['id'] }}">
                     <th class="d-flex align-items-center justify-content-center flex-column text-center">
                         <div class="me-1 d-color-code color-selector" style="background: {{ $color['ui_color_code'] }}"></div>
-                        <label class="font-size-12 fw-bold" style="margin-bottom: 1.5rem">{{ $color['color_name'] }}({{ $color['color_code'] }})</label>
+                        <label class="font-size-12 fw-bold" style="margin-bottom: 1.5rem">{{ $color['name'] }}({{ $color['code'] }})</label>
                     </th>
                     @foreach ($sizes as $key => $size)
                         @php

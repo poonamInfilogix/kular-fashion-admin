@@ -32,7 +32,7 @@
                                                 <div>
                                                     <a href="javascript: void(0);"
                                                         class="text-primary">{{ $product->brand->name }}</a>
-                                                    > {{ $product->productType->product_type_name }}
+                                                    > {{ $product->productType->name }}
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
@@ -84,8 +84,8 @@
                                                         <div class="me-1 d-color-code"
                                                             style="background: {{ $color->colorDetail->ui_color_code }}">
                                                         </div>
-                                                        <h6 class="m-0">{{ $color->colorDetail->color_name }}
-                                                            ({{ $color->colorDetail->color_code }})</h6>
+                                                        <h6 class="m-0">{{ $color->colorDetail->name }}
+                                                            ({{ $color->colorDetail->code }})</h6>
                                                     </th>
                                                     @foreach ($product->sizes as $size)
                                                         <td class="p-1">
@@ -149,8 +149,8 @@
                                             <th class="d-flex p-1">
                                                 <div class="me-1 d-color-code"
                                                     style="background: {{ $color->colorDetail->ui_color_code }}"></div>
-                                                <h6 class="m-0">{{ $color->colorDetail->color_name }}
-                                                    ({{ $color->colorDetail->color_code }})</h6>
+                                                <h6 class="m-0">{{ $color->colorDetail->name }}
+                                                    ({{ $color->colorDetail->code }})</h6>
                                             </th>
                                             @foreach ($product->sizes as $size)
                                                 <td class="p-1"><strong>{{ $size->quantity($color->id) }}</strong> /

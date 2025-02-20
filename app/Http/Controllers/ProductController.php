@@ -534,7 +534,7 @@ class ProductController extends Controller
                         $q->where('name', 'like', "%{$search}%");
                     })
                     ->orWhereHas('productType', function ($q) use ($search) {
-                        $q->where('product_type_name', 'like', "%{$search}%");
+                        $q->where('name', 'like', "%{$search}%");
                     });
             });
         }
@@ -693,7 +693,7 @@ class ProductController extends Controller
 
                     foreach ($products as $productDetail) {
                         $article_code = $productDetail->product->article_code;
-                        $color_code = $productDetail->colors->colorDetail->color_code;
+                        $color_code = $productDetail->colors->colorDetail->code;
                         $new_code = $productDetail->sizes->sizeDetail->new_code;
                         $article_code = $article_code . $color_code . $new_code;
 
@@ -711,14 +711,14 @@ class ProductController extends Controller
                                 'product_code' => $article_code . $checkCode,
                                 'random_digits' => $randomDigit . $yearMonth,
                                 'department' => $productDetail->product->department->name,
-                                'type' => $productDetail->product->productType->product_type_name,
+                                'type' => $productDetail->product->productType->name,
                                 'product_type_short_name' => $productDetail->product->productType->short_name,
                                 'manufacture_code' => $productDetail->product->manufacture_code,
                                 'size' => $productDetail->sizes->sizeDetail->size,
                                 'mrp' => $productDetail->sizes->mrp,
                                 'article_code' => $productDetail->product->article_code,
                                 'short_description' => $productDetail->product->short_description,
-                                'color' => $productDetail->colors->colorDetail->color_name,
+                                'color' => $productDetail->colors->colorDetail->name,
                                 'color_short_name' => $productDetail->colors->colorDetail->short_name,
                                 'brand_short_name' => $productDetail->product->brand->short_name ?? $productDetail->product->brand->name,
                                 'brand_name' => $productDetail->product->brand->name,
@@ -870,7 +870,7 @@ class ProductController extends Controller
         $productTypeDepartments = ProductTypeDepartment::with('productTypes', 'departments')->get();
         foreach ($productTypeDepartments as $key => $productType) {
             $sheet->fromArray(
-                [$productType->id, $productType->department_id, $productType->departments->name, $productType->product_type_id, $productType->productTypes->product_type_name],
+                [$productType->id, $productType->department_id, $productType->departments->name, $productType->product_type_id, $productType->productTypes->name],
                 NULL,
                 'A' . ($key + 2)
             );
@@ -948,7 +948,7 @@ class ProductController extends Controller
 
         foreach ($products as $product) {
             $article_code = $product->product->article_code;
-            $color_code = $product->colors->colorDetail->color_code;
+            $color_code = $product->colors->colorDetail->code;
             $new_code = $product->sizes->sizeDetail->new_code;
             $article_code = $article_code . $color_code . $new_code;
             $checkCode = $this->generateCheckDigit($article_code);
@@ -960,7 +960,7 @@ class ProductController extends Controller
                     'code' => $product->product->article_code,
                     'description' => $product->product->short_description,
                     'product_quantity_id' => $product->id,
-                    'color' => $product->colors->colorDetail->color_name,
+                    'color' => $product->colors->colorDetail->name,
                     'color_id' => $product->colors->colorDetail->id,
                     'size' => $product->sizes->sizeDetail->size,
                     'size_id' => $product->sizes->sizeDetail->id,

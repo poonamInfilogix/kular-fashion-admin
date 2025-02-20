@@ -56,7 +56,7 @@ export default {
                 { title: "Article Code", data: 'article_code' },
                 { title: "Description", data: 'short_description' },
                 { title: "Brand", data: 'brand.name' },
-                { title: "Product Type", data: 'product_type.product_type_name' },
+                { title: "Product Type", data: 'product_type.name' },
                 { title: "Price", data: 'mrp' },
                 {
                     title: "Quantity", render: function (data, type, row) {

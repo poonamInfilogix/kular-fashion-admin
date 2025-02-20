@@ -42,7 +42,7 @@
                     <option value="" disabled selected>Select Product Type</option>
                     @foreach ($productTypes as $productType)
                         <option value="{{ $productType->id }}">
-                            {{ $productType->product_type_name }}</option>
+                            {{ $productType->name }}</option>
                     @endforeach
                 </select>
 

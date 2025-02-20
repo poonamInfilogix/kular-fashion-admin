@@ -35,7 +35,7 @@ class CollectionController extends Controller
 
         $conditionDependencies = [
             'tags' => Tag::select('id', 'name as value')->where('status', 'Active')->get(),
-            'ProductTypes' => ProductType::select('id', 'product_type_name as value')->where('status', 'Active')->whereNull('deleted_at')->get(),
+            'ProductTypes' => ProductType::select('id', 'name as value')->where('status', 'Active')->whereNull('deleted_at')->get(),
             'maxProductPrice' => Product::max('price') ?? 9999,
         ];
 
@@ -80,7 +80,7 @@ class CollectionController extends Controller
 
         $conditionDependencies = [
             'tags' => Tag::select('id', 'name as value')->where('status', 'Active')->get(),
-            'ProductTypes' => ProductType::select('id', 'product_type_name as value')->where('status', 'Active')->whereNull('deleted_at')->get(),
+            'ProductTypes' => ProductType::select('id', 'name as value')->where('status', 'Active')->whereNull('deleted_at')->get(),
             'maxProductPrice' => Product::max('price') ?? 9999,
         ];
 

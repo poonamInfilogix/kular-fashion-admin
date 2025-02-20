@@ -16,7 +16,7 @@
                     <strong>Brand Name:</strong> {{ $product->brand->name }}
                 </div>
                 <div class="col-md-3 mb-2 fs-5">
-                    <strong>Product Type:</strong> {{ $product->productType->product_type_name }}
+                    <strong>Product Type:</strong> {{ $product->productType->name }}
                 </div>
                 <div class="col-12">
                     <x-error-message :message="$errors->first('message')" />
@@ -38,7 +38,7 @@
                                             <option value="">Select Color</option>
 
                                             @foreach ($product->colors as $color)
-                                                <option value="{{ $color->id }}"> {{ $color->colorDetail->color_name }} </option>
+                                                <option value="{{ $color->id }}"> {{ $color->colorDetail->name }} </option>
                                             @endforeach
                                         </select>
                                     </div>
