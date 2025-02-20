@@ -145,7 +145,7 @@ class SizeScaleSeeder extends Seeder
         $totalSizesCount = 0;
         foreach ($sizeScales as $scale => $sizes) {
             // Create the size scale and get its ID
-            $sizeScale = SizeScale::create(['size_scale' => $scale]);
+            $sizeScale = SizeScale::create(['name' => $scale]);
 
             foreach ($sizes as $size) {
                 $totalSizesCount++; // Increment the counter

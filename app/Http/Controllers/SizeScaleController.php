@@ -32,12 +32,12 @@ class SizeScaleController extends Controller
             abort(403);
         }
         $request->validate([
-            'size_scale' => 'required|unique:size_scales,size_scale',
+            'name' => 'required|unique:size_scales,name',
         ]);
 
         SizeScale::create([
-            'size_scale'       => $request->size_scale,
-            'status'           => $request->status,
+            'name'              => $request->name,
+            'status'            => $request->status,
         ]);
 
         return redirect()->route('size-scales.index')->with('success', 'Size Scale created successfully.');
@@ -64,13 +64,13 @@ class SizeScaleController extends Controller
             abort(403);
         }
         $request->validate([
-            'size_scale' => 'required|unique:size_scales,size_scale,' . $id,
+            'name' => 'required|unique:size_scales,name,' . $id,
         ]);
 
         $sizeScale = SizeScale::where('id', $id)->first();
 
         $sizeScale->update([
-            'size_scale' => $request->size_scale,
+            'name'      => $request->name,
             'status'     => $request->status
         ]);
 

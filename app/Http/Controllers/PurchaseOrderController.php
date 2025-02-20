@@ -27,7 +27,7 @@ class PurchaseOrderController extends Controller
     {
         $suppliers = Supplier::latest()->where('status', 'Active')->get();
         $colors = Color::where('status', 'Active')->get();
-        $sizeScales = SizeScale::select('id', 'size_scale')->where('status', 'Active')->latest()->with('sizes')->get();
+        $sizeScales = SizeScale::select('id', 'name')->where('status', 'Active')->latest()->with('sizes')->get();
         $productTypes = ProductType::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
 
         return view('purchase-orders.create', compact('suppliers', 'colors', 'sizeScales', 'productTypes'));
@@ -50,7 +50,7 @@ class PurchaseOrderController extends Controller
             'products.*.product_code' => 'required|string|max:255',
             'products.*.short_description' => 'required|string|max:500',
             'products.*.product_type' => 'required|string|max:100',
-            'products.*.size_scale' => 'required|string|exists:size_scales,id',
+            'products.*.name' => 'required|string|exists:size_scales,id',
             'products.*.min_size' => 'required|string|exists:sizes,id',
             'products.*.max_size' => 'required|string|exists:sizes,id',
             'products.*.delivery_date' => 'required|date',

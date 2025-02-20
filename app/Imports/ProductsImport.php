@@ -10,6 +10,7 @@ use App\Models\ProductType;
 use App\Models\ProductColor;
 use App\Models\ProductSize;
 use App\Models\ProductQuantity;
+use Illuminate\Support\Facades\Request;
 use Maatwebsite\Excel\Concerns\ToModel;
 
 class ProductsImport implements ToModel

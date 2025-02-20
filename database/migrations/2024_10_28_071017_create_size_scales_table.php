@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('size_scales', function (Blueprint $table) {
             $table->id();
-            $table->string('size_scale');
+            $table->string('name',50);
             $table->boolean('is_default')->default(false);
             $table->enum('status', ['Active', 'Inactive'])->default('Active')->index();
             $table->softDeletes();

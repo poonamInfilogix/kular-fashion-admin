@@ -20,11 +20,11 @@
                         </div>
                         <div class="col-sm-6 col-md-2 mb-3">
                             <label for="size_scale-${index}">Size Scale<span class="text-danger">*</span></label>
-                            <select name="products[${index}][size_scale]" id="size_scale-${index}" class="form-control size-scale-dropdown">
+                            <select name="products[${index}][name]" id="size_scale-${index}" class="form-control size-scale-dropdown">
                                 <option value="" disabled selected>Select size scale</option>
                                 @foreach ($sizeScales as $sizeScale)
                                     <option value="{{ $sizeScale->id }}" @selected(old('size_scale_id', $product->size_scale_id ?? '') == $sizeScale->id)>
-                                        {{ $sizeScale->size_scale }}
+                                        {{ $sizeScale->name }}
                                         
                                         @if (isset($sizeScale->sizes))
                                             ({{ $sizeScale->sizes->first()->size }} - {{ $sizeScale->sizes->last()->size }})
@@ -118,7 +118,7 @@
                 placeholder_text_multiple: 'Select Max Size'
             });
 
-            $('[name="products[0][size_scale]"]').chosen({
+            $('[name="products[0][name]"]').chosen({
                 width: '100%',
                 placeholder_text_multiple: 'Select Size Scale'
             });

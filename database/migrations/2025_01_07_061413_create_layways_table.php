@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('layways', function (Blueprint $table) {
             $table->id();
-            $table->string('layway_code');
+            $table->string('code', 50);
             $table->unsignedBigInteger('customer_id')->index();
             $table->unsignedBigInteger('order_id')->nullable()->index();
             $table->string('status')->default('In progress');

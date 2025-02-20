@@ -296,7 +296,7 @@ class ProductImportExportController extends Controller
 
         foreach ($sizeScales as $key => $sizeScale) {
             $sheet->fromArray(
-                [$sizeScale->id, $sizeScale->size_scale],
+                [$sizeScale->id, $sizeScale->name],
                 NULL,
                 'A' . ($key + 2)
             );
