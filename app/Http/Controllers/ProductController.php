@@ -504,6 +504,7 @@ class ProductController extends Controller
         if (!Gate::allows('delete products')) {
             abort(403);
         }
+
         if ($product->are_barcodes_printed || $product->barcodes_printed_for_all) {
             return response()->json([
                 'success' => false,
@@ -673,12 +674,32 @@ class ProductController extends Controller
         $generator = new BarcodeGeneratorPNG();
 
         foreach ($barcodesQty->barcodesToBePrinted as $key => $data) {
+            $skip = false;
+            
             if (!isset($data['product'])) {
                 $defaultProductsToBePrinted = Product::where('are_barcodes_printed', 0)->orWhere('barcodes_printed_for_all', 0)->with('quantities')->get();
+
                 foreach ($defaultProductsToBePrinted as $product) {
-                    $filteredQuantities = $product->quantities->filter(function ($quantity) {
+                    $quantities = $product->quantities;
+
+                    $totalQuantitySum = $quantities->sum(function ($quantity) {
+                        return $quantity->total_quantity;
+                    });
+                
+                    // If the sum of total_quantity is 0, skip this product
+                    if ($totalQuantitySum == 0) {
+                        $skip = true;
+                        continue;
+                    }
+
+                    $filteredQuantities = $quantities->filter(function ($quantity) {
                         return ($quantity->total_quantity - $quantity->original_printed_barcodes) > 0;
                     });
+
+                    if(count($filteredQuantities) === 0){
+                        $skip = true;
+                        continue;
+                    }
 
                     foreach ($filteredQuantities as $filteredQuantity) {
                         $data['product'][] = [
@@ -689,12 +710,27 @@ class ProductController extends Controller
                     }
                 }
 
+
                 $barcodesQty->barcodesToBePrinted[$key] = $data;
                 Session::put('barcodesToBePrinted', (array) $barcodesQty);
             }
 
+            if($skip){
+                $tempProductId = $data['productId'];
+                $product = Product::find($tempProductId);
+
+                if ($product) {
+                    $product->update([
+                        'are_barcodes_printed' => 1,
+                        'barcodes_printed_for_all' => 1
+                    ]);
+                }
+                continue;
+            }
+
             if (isset($data['product'])) {
                 foreach ($data['product'] as $quantityDetail) {
+
                     $products = ProductQuantity::with('product.department', 'product.brand', 'sizes.sizeDetail', 'colors.colorDetail')->where('id', $quantityDetail['id'])->get();
 
                     foreach ($products as $productDetail) {
