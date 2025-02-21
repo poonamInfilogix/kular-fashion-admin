@@ -3,7 +3,7 @@
         <div class="mb-3">
             <label for="department_id">Department <span class="text-danger">*</span></label>
             <select name="department_id[]" id="department_id"
-                class="form-control{{ $errors->has('department_id') ? ' is-invalid' : '' }}" multiple >
+                class="form-control{{ $errors->has('department_id') ? ' is-invalid' : '' }}" multiple>
                 @foreach ($departments as $department)
                     <option value="{{ $department->id }}">
                         {{ $department->name }}
@@ -17,14 +17,14 @@
     </div>
     <div class="col-sm-6 col-md-3">
         <div class="mb-3">
-            <x-form-input name="name" value="{{ $productType->name ?? '' }}"
-                label="Product Type" placeholder="Enter Product Type" required="true" />
+            <x-form-input name="name" value="{{ $productType->name ?? '' }}" label="Product Type"
+                placeholder="Enter Product Type" required="true" />
         </div>
     </div>
     <div class="col-sm-6 col-md-3">
         <div class="mb-3">
-            <x-form-input name="short_name" value="{{ $productType->short_name ?? '' }}"
-                label="Short Name" placeholder="Enter Short Name" required="true" />
+            <x-form-input name="short_name" value="{{ $productType->short_name ?? '' }}" label="Short Name"
+                placeholder="Enter Short Name" required="true" />
         </div>
     </div>
     <div class="col-sm-6 col-md-3">
@@ -82,13 +82,17 @@
 <x-include-plugins :plugins="['chosen', 'image']"></x-include-plugins>
 <script>
     $(function() {
+        $('#add-productType-image').change(function() {
+            Image(this, '#preview-productType');
+            Image(this, '#preview-product-type');
+        });
+
         $('#department_id').chosen({
             width: '100%',
             placeholder_text_multiple: 'Select Department',
             max_selected_options: 10
         });
 
-        // Ensure scrollable input for selected items
         $('.chosen-container-multi .chosen-choices').css({
             'max-height': '100px',
             'overflow-y': 'auto'
