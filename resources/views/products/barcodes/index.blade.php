@@ -28,7 +28,9 @@
                 const nextRow = $(row).next('.expanded-row');
                 if (!rowData || nextRow.length) { return; }
                 
-                const expandedRow = $(`<tr class="expanded-row" data-product-barcode-quantity="${rowData.id}"><td colspan="7" class="py-0"></td></tr>`);
+                console.log('::::',rowData.colors)
+
+                const expandedRow = $(`<tr class="expanded-row" data-product-barcode-quantity="${rowData.id}"><td colspan="8" class="py-0"></td></tr>`);
                 const detailsHtml = `
                 <div class="row">
                     <table class="table mt-2">
@@ -54,7 +56,7 @@
                                 </th>
                                 ${rowData.sizes.map(size => {
                                     const quantity = rowData.quantities.find(q => 
-                                        parseInt(q.product_size_id) === parseInt(size.id) &&
+                                        parseInt(q.product_size_id) === parseInt(size.size_id) &&
                                         parseInt(q.product_color_id) === parseInt(color.id)
                                     );
 
