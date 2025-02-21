@@ -14,9 +14,22 @@
             </option>
         </select>
     </div>
-    <div class="col-md-2" id="add_type">
-        <x-form-input name="type_value" type="number" id="type_value" label="Value" placeholder="Enter Value"
+    {{-- <div class="col-md-2" id="add_type">
+        <x-form-input name="type_value" type="number" id="type_value" label="Percentage %" placeholder="Enter Value"
             value="{{ $coupon->value ?? '' }}" />
+    </div> --}}
+
+
+    <div class="col-md-1 mb-3" id="add_type">
+        <x-form-input name="type_value" type="number" id="type_value" 
+            label="percentage" placeholder="Amount"
+            value="{{ $coupon->value ?? '' }}" />
+    </div>
+
+    <div class="col-md-1 mb-2" id="extra_field_container" style="display: none;">
+        <x-form-input name="type_value2" type="number" id="type_value2" 
+            label="Y" placeholder="Y"
+            value="{{ $coupon->y_value ?? '' }}" />
     </div>
     <div class="col-md-4">
         <label form="limit" class="form-label">Limit Usage<span class="text-danger">*</span></label>
@@ -62,13 +75,20 @@
             class="date-picker" label="Start Date" placeholder="Selece Start Date" />
     </div>
     <div class="col-md-3 mb-2">
-        <x-form-input name="expire_at" value="{{ isset($coupon) ? date('d-m-Y', strtotime($coupon->expires_at)) : '' }}"
+        <x-form-input id="expires_at" name="expire_at" value="{{ isset($coupon) ? date('d-m-Y', strtotime($coupon->expires_at)) : '' }}"
             class="date-picker" label="Expire Date" placeholder="Selece Expire Date" />
     </div>
+    {{-- <div class="col-md-3 mb-2">
+        <x-form-input type="file" name="banner_path" id="banner_path" class="form-control" label="Image"
+            accept="image/*" onchange="previewImage(event, 'banner')" />
+    </div> --}}
+
     <div class="col-md-3 mb-2">
         <x-form-input type="file" name="banner_path" id="banner_path" class="form-control" label="Image"
             accept="image/*" onchange="previewImage(event, 'banner')" />
+        <img id="preview-banner" src="" style="display: none; max-width: 100%; margin-top: 10px;" />
     </div>
+    
     <div class="col-md-3 mb-2">
         <label for="coupon-status" class="form-label">Status</label>
         <select name="status" id="coupon-status" class="form-control">
@@ -118,23 +138,48 @@
         }
     });
 
-
-    $(document).ready(function() {
-        function enableElement(selector) {
-            let element = $(selector);
-            if (element.length) {
-                element.prop('disabled', false); // Enable the input
-            } else {
-                console.error(`Element with selector '${selector}' not found.`);
-            }
+    $(document).ready(function(){
+    $('#type').on('change', function(){
+        var selectedType = $(this).val();
+        var newLabel = '%';
+        var newPlaceholder = 'Percentage';
+        
+        // Hide extra field container by default
+        $('#extra_field_container').hide();
+        
+        // Conditions to update the primary field and extra field if needed
+        if(selectedType === 'Percentage'){
+            newLabel = 'Percentage';
+            newPlaceholder = 'Percentage';
+            $('#add_type').show();
+        } else if(selectedType === 'Fixed Price'){
+            newLabel = 'Amount';
+            newPlaceholder = 'Amount';
+            $('#add_type').show();
+        } else if(selectedType === 'Free Shipping'){
+            $('#add_type').hide();
+        } else if(selectedType === 'Buy X Get Y' || selectedType === 'Buy X for Y'){
+            newLabel = 'X';
+            newPlaceholder = 'X'; 
+            // $('#type_value')
+            // $('#type_value2')
+            $('#add_type').show();
+            $('#extra_field_container').show(); // Show the extra Y value field
+        } else {
+            $('#add_type').show();
         }
-
-        $('#type').change(function() {
-            enableElement('#type_value');
-        });
-
-        $('#limit').change(function() {
-            enableElement('#limit_val');
-        });
+        
+        // Update the label and placeholder of the primary field if it is visible
+        if ($('#add_type').is(':visible')) {
+            $('label[for="type_value"]').text(newLabel);
+            $('#type_value').attr('placeholder', newPlaceholder);
+        }
     });
+
+    // (Optional) Trigger change on page load to set the correct display if editing an existing coupon
+    $('#type').trigger('change');
+});
+
+
+
 </script>
