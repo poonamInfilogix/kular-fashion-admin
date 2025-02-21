@@ -92,7 +92,7 @@
         <tr>
             <th>Sale Price</th>
             @foreach ($sizes as $size)
-                <td><input type="number" name="sale_price[{{ $size->id }}]" min="0" step="any" value="{{ $savingProduct->sale_price ?? $size->sale_price }}" class="form-control"></td>
+                <td><input type="number" name="sale_price[{{ $size->id }}]" min="0" step="any" value="{{ $savingProduct->sale_price ?? $size->web_sale_price }}" class="form-control"></td>
             @endforeach
         </tr>
     </tbody>
