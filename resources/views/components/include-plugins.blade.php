@@ -165,7 +165,7 @@
 
 @if ($hasPlugin('imagePreview'))
     <script>
-        function previewImage(event, key) {
+        /* function previewImage(event, key) {
             const file = event.target.files[0];
             const reader = new FileReader();
 
@@ -174,6 +174,22 @@
                 preview.src = reader.result;
                 preview.hidden = false;
             }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        } */
+        function previewImage(event, key) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function() {
+                const preview = $(`#preview-${key}`);
+                //was not able to access src 
+                if (preview.length) {
+                    preview.attr("src", reader.result).show(); 
+                }
+            };
 
             if (file) {
                 reader.readAsDataURL(file);

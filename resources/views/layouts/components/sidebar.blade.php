@@ -77,7 +77,7 @@
                 </li>
 
                 <li>
-                    <a href="{{ route('coupons-discounts.index') }}" class="waves-effect">
+                    <a href="{{ route('coupons-discount.index') }}" class="waves-effect">
                         <i class="bx bxs-offer"></i>
                         <span>Coupon & Discounts</span>
                     </a>
