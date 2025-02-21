@@ -8,8 +8,4 @@ class ProductWebImage extends Model
 {
     protected $table = "product_web_images";
     protected $guarded = [];
-    
-
-  
-    
 }

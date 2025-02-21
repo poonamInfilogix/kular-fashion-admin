@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Tag;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 
 class TagController extends Controller
 {
@@ -33,7 +34,7 @@ class TagController extends Controller
         }
 
         $request->validate([
-            'name' => 'required|unique:tags,name',
+            'name' => 'required|unique:tags,name,NULL,id,deleted_at,NULL',
         ]);
 
         Tag::create([

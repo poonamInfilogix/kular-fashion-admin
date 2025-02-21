@@ -40,9 +40,8 @@ class ProductController extends Controller
         if (!Gate::allows('view products')) {
             abort(403);
         }
-        $products = Product::with('brand', 'department', 'productType')->latest()->get();
 
-        return view('products.index', compact('products'));
+        return view('products.index');
     }
 
     public function create()
@@ -53,11 +52,11 @@ class ProductController extends Controller
         $latestProduct = Product::orderBy('article_code', 'desc')->first();
 
         $latestNewCode = $latestProduct ? (int) $latestProduct->article_code : 300000;
-        $brands = Brand::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
-        $departments = Department::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
-        $taxes = Tax::where('status', '1')->latest()->get();
-        $tags = Tag::where('status', 'Active')->latest()->get();
-        $sizeScales = SizeScale::select('id', 'name', 'is_default')->where('status', 'Active')->latest()->with('sizes')->get();
+        $brands = Brand::where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
+        $departments = Department::where('status', 'Active')->orderBy('name', 'ASC')->get();
+        $taxes = Tax::where('status', '1')->orderBy('tax', 'ASC')->get();
+        $tags = Tag::where('status', 'Active')->orderBy('name', 'ASC')->get();
+        $sizeScales = SizeScale::select('id', 'name', 'is_default')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->with('sizes')->get();
 
         return view('products.create', compact('latestNewCode', 'brands', 'departments', 'taxes', 'tags', 'sizeScales'));
     }
@@ -165,16 +164,16 @@ class ProductController extends Controller
             ]);
         }
 
-        if (isset($request->tag_id)) {
-            foreach ($request->tag_id as $tags) {
+        if (isset($request->tags)) {
+            foreach ($request->tags as $tagId) {
                 ProductTag::updateOrCreate(
                     [
                         'product_id' => $product->id,
-                        'tag_id' => $tags
+                        'tag_id' => $tagId
                     ],
                     [
                         'product_id' => $product->id,
-                        'tag_id' => $tags
+                        'tag_id' => $tagId
                     ]
                 );
             }
@@ -382,11 +381,11 @@ class ProductController extends Controller
             'status' => $productData['status']
         ]);
 
-        if (isset($productData['tag_id'])) {
-            foreach ($productData['tag_id'] as $tags) {
+        if (isset($productData['tags'])) {
+            foreach ($productData['tags'] as $tagId) {
                 ProductTag::create([
                     "product_id" => $product->id,
-                    "tag_id" => $tags
+                    "tag_id" => $tagId
                 ]);
             }
         }
@@ -445,13 +444,13 @@ class ProductController extends Controller
             abort(403);
         }
 
-        $brands = Brand::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
-        $departments = Department::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
-        $productTypes = ProductType::where('status', 'Active')->whereNull('deleted_at')->latest()->get();
-        $taxes = Tax::where('status', '1')->latest()->get();
-        $tags = Tag::where('status', 'Active')->latest()->get();
-        $sizeScales = SizeScale::where('status', 'Active')->latest()->get();
-        $sizes = Size::where('status', 'Active')->latest()->get();
+        $brands = Brand::where('status', 'Active')->orderBy('name', 'ASC')->get();
+        $departments = Department::where('status', 'Active')->orderBy('name', 'ASC')->get();
+        $productTypes = ProductType::where('status', 'Active')->orderBy('name', 'ASC')->get();
+        $taxes = Tax::where('status', '1')->orderBy('tax', 'ASC')->get();
+        $tags = Tag::where('status', 'Active')->orderBy('name', 'ASC')->get();
+        $sizeScales = SizeScale::where('status', 'Active')->orderBy('name', 'ASC')->get();
+        $sizes = Size::where('status', 'Active')->orderBy('size', 'ASC')->get();
         $productTags = ProductTag::where('product_id', $product->id)->pluck('tag_id');
 
         return view('products.edit', compact('brands', 'productTypes', 'departments', 'product', 'taxes', 'tags', 'sizes', 'sizeScales', 'productTags'));
@@ -505,6 +504,7 @@ class ProductController extends Controller
         if (!Gate::allows('delete products')) {
             abort(403);
         }
+
         if ($product->are_barcodes_printed || $product->barcodes_printed_for_all) {
             return response()->json([
                 'success' => false,
@@ -609,7 +609,7 @@ class ProductController extends Controller
         }
         $brand = Brand::where('id', $savingProduct->brand_id)->first();
         $sizeScale = SizeScale::where('id', $savingProduct->size_scale_id)->first();
-        $colors = Color::where('status', 'Active')->get();
+        $colors = Color::where('status', 'Active')->orderBy('name', 'ASC')->get();
         $sizes = Size::where('status', 'Active')
             ->where('size_scale_id', $savingProduct->size_scale_id)
             ->orderBy('id', 'asc')
@@ -674,12 +674,32 @@ class ProductController extends Controller
         $generator = new BarcodeGeneratorPNG();
 
         foreach ($barcodesQty->barcodesToBePrinted as $key => $data) {
+            $skip = false;
+            
             if (!isset($data['product'])) {
                 $defaultProductsToBePrinted = Product::where('are_barcodes_printed', 0)->orWhere('barcodes_printed_for_all', 0)->with('quantities')->get();
+
                 foreach ($defaultProductsToBePrinted as $product) {
-                    $filteredQuantities = $product->quantities->filter(function ($quantity) {
+                    $quantities = $product->quantities;
+
+                    $totalQuantitySum = $quantities->sum(function ($quantity) {
+                        return $quantity->total_quantity;
+                    });
+                
+                    // If the sum of total_quantity is 0, skip this product
+                    if ($totalQuantitySum == 0) {
+                        $skip = true;
+                        continue;
+                    }
+
+                    $filteredQuantities = $quantities->filter(function ($quantity) {
                         return ($quantity->total_quantity - $quantity->original_printed_barcodes) > 0;
                     });
+
+                    if(count($filteredQuantities) === 0){
+                        $skip = true;
+                        continue;
+                    }
 
                     foreach ($filteredQuantities as $filteredQuantity) {
                         $data['product'][] = [
@@ -690,12 +710,27 @@ class ProductController extends Controller
                     }
                 }
 
+
                 $barcodesQty->barcodesToBePrinted[$key] = $data;
                 Session::put('barcodesToBePrinted', (array) $barcodesQty);
             }
 
+            if($skip){
+                $tempProductId = $data['productId'];
+                $product = Product::find($tempProductId);
+
+                if ($product) {
+                    $product->update([
+                        'are_barcodes_printed' => 1,
+                        'barcodes_printed_for_all' => 1
+                    ]);
+                }
+                continue;
+            }
+
             if (isset($data['product'])) {
                 foreach ($data['product'] as $quantityDetail) {
+
                     $products = ProductQuantity::with('product.department', 'product.brand', 'sizes.sizeDetail', 'colors.colorDetail')->where('id', $quantityDetail['id'])->get();
 
                     foreach ($products as $productDetail) {
@@ -797,7 +832,7 @@ class ProductController extends Controller
 
                     if ($productQuantity->total_quantity >= $updatedOriginalQuantity) {
                         $productQuantity->original_printed_barcodes = $updatedOriginalQuantity;
-                        $productQuantity->quantity = $updatedOriginalQuantity;
+                        $productQuantity->quantity = $productQuantity->quantity + $quantityDetail['orignalQty'];
                     }
 
                     if (!$productQuantity->first_barcode_printed_date) {
@@ -998,7 +1033,8 @@ class ProductController extends Controller
 
     public function editWebConfigration(Product $product)
     {
-        return view('products.web-configuration.edit', compact('product'));
+        $tags = Tag::where('status', 'Active')->orderBy('name', 'ASC')->get();
+        return view('products.web-configuration.edit', compact('product', 'tags'));
     }
 
     protected function syncSpecifications($productId, $specifications)
@@ -1011,7 +1047,6 @@ class ProductController extends Controller
                 ],
                 [
                     'value' => $specification['value'],
-                    'updated_at' => now(),
                 ]
             );
         }
@@ -1032,22 +1067,91 @@ class ProductController extends Controller
     }
 
     public function updateWebConfigration(Request $request, Product $product)
-    {
+    {        
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                if ($image->getSize() < 10240 * 1024) {
+                    $imagePath = uploadFile($image, 'uploads/products/');
+
+                    ProductWebImage::create(
+                        [
+                            'product_id' => $product->id,
+                            'path' => $imagePath,
+                            'alt' => $request->image_alt[$index]
+                        ]
+                    );
+                }
+            }
+        }
+
+        if($request->saved_image_alt){
+            foreach($request->saved_image_alt as $imageId => $image_alt){
+                $image = ProductWebImage::find($imageId);
+    
+                if ($image) {
+                    $image->update([
+                        'alt' => $image_alt
+                    ]);
+                }
+            }
+        }
+
         $request->validate([
+            'name' => 'required',
+            'price' => 'required|numeric',
+            'sale_price' => 'nullable|numeric',
+            'sale_start' => 'nullable|date',
+            'sale_end' => 'nullable|date|after_or_equal:sale_start',
             'meta_title' => 'required',
             'meta_keywords' => 'required',
-            'product_desc' => 'nullable|string',
+            'summary' => 'nullable|string',
+            'description' => 'nullable|string',
             'specifications.*.key' => 'required|string',
             'specifications.*.value' => 'required|string',
+            'images' => 'nullable|array',
+            'images.*' => 'nullable|image|max:10240',
         ]);
 
-        $this->syncSpecifications($product->id, $request->specifications);
+        $product->update([
+            'name' => $request->name,
+            'price' => $request->price,
+            'sale_price' => $request->sale_price,
+            'sale_start' => isset($request->sale_start) ? Carbon::parse($request->sale_start)->toDateString() : null,
+            'sale_end' => isset($request->sale_end) ? Carbon::parse($request->sale_end)->toDateString() : null,
+        ]);
+
+        
+        $currentTags = ProductTag::where('product_id', $product->id)->pluck('tag_id')->toArray();
+        $selectedTags = $request->tags;
+
+        foreach ($selectedTags as $tagId) {
+            ProductTag::updateOrCreate(
+                [
+                    'product_id' => $product->id,
+                    'tag_id' => $tagId
+                ],
+                [
+                    'product_id' => $product->id,
+                    'tag_id' => $tagId
+                ]
+            );
+        }
+        $removedTags = array_diff($currentTags, $selectedTags);
+        foreach ($removedTags as $tagId) {
+            ProductTag::where('product_id', $product->id)
+                      ->where('tag_id', $tagId)
+                      ->delete();
+        }
+
+        if ($request->specifications) {
+            $this->syncSpecifications($product->id, $request->specifications);
+        }
 
         ProductWebInfo::updateOrCreate(
             ['product_id' => $product->id],
             [
-                'summary' => '',
-                'description' => $request->product_desc,
+                'summary' => $request->summary,
+                'description' => $request->description,
                 'meta_title' => $request->meta_title,
                 'meta_keywords' => $request->meta_keywords,
                 'meta_description' => $request->meta_description,
@@ -1078,7 +1182,6 @@ class ProductController extends Controller
             return response()->json(['error' => 'No image being uploaded'], 400);
         }
     }
-
 
     public function destroyProductImage($imageId)
     {

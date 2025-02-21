@@ -10,7 +10,7 @@ class ColorController extends Controller
 {
     public function index()
     {
-        if(!Gate::allows('view colors')) {
+        if (!Gate::allows('view colors')) {
             abort(403);
         }
         $colors = Color::latest()->get();
@@ -20,7 +20,7 @@ class ColorController extends Controller
 
     public function create()
     {
-        if(!Gate::allows('create colors')) {
+        if (!Gate::allows('create colors')) {
             abort(403);
         }
         return view('colors.create');
@@ -28,13 +28,13 @@ class ColorController extends Controller
 
     public function store(Request $request)
     {
-        if(!Gate::allows('create colors')) {
+        if (!Gate::allows('create colors')) {
             abort(403);
         }
-        
+
         $request->validate([
             'name' => 'required|unique:colors,name',
-            'short_name' => 'required|min:1|max:5',
+            'short_name' => 'required|min:1|max:5|unique:colors,short_name',
             'code' => 'required|min:1|max:3'
         ]);
 
@@ -56,7 +56,7 @@ class ColorController extends Controller
 
     public function edit($id)
     {
-        if(!Gate::allows('edit colors')) {
+        if (!Gate::allows('edit colors')) {
             abort(403);
         }
         $color = Color::where('id', $id)->first();
@@ -64,18 +64,18 @@ class ColorController extends Controller
         return view('colors.edit', compact('color'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Color $color)
     {
-        if(!Gate::allows('edit colors')) {
+        if (!Gate::allows('edit colors')) {
             abort(403);
         }
+
         $request->validate([
-            'name' => 'required|unique:colors,name,' . $id,
-            'short_name' => 'required|min:1|max:5',
+            'name' => 'required|unique:colors,name,'.$color->id,
+            'short_name' => 'required|min:1|max:5|unique:colors,short_name,'.$color->id,
             'code' => 'required|min:1|max:3'
         ]);
 
-        $color = Color::where('id', $id)->first();
         $color->update([
             'name'              => $request->name,
             'short_name'        => $request->short_name,
@@ -89,10 +89,10 @@ class ColorController extends Controller
 
     public function destroy(string $id)
     {
-        if(!Gate::allows('delete colors')) {
+        if (!Gate::allows('delete colors')) {
             abort(403);
         }
-        
+
         Color::where('id', $id)->delete();
 
         return response()->json([

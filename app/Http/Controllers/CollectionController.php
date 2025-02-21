@@ -55,6 +55,12 @@ class CollectionController extends Controller
             'name' => $request->collection_name,
             'include_conditions' => json_encode($request->include),
             'exclude_conditions' => json_encode($request->exclude),
+            'summary' => $request->summary,
+            'description' => $request->description,
+            'heading' => $request->heading,
+            'meta_title' => $request->meta_title,
+            'meta_keywords' => $request->meta_keywords,
+            'meta_description' => $request->meta_description,
             'status' => $request->status,
         ]);
 
@@ -96,6 +102,12 @@ class CollectionController extends Controller
             'name' => $request->collection_name,
             'include_conditions' => json_encode($request->include),
             'exclude_conditions' => json_encode($request->exclude),
+            'summary' => $request->summary,
+            'description' => $request->description,
+            'heading' => $request->heading,
+            'meta_title' => $request->meta_title,
+            'meta_keywords' => $request->meta_keywords,
+            'meta_description' => $request->meta_description,
             'status' => $request->status,
         ]);
 

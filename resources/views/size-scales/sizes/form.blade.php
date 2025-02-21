@@ -18,8 +18,8 @@
         <div class="mb-3">
             <label for="size-status" class="form-label">Status</label>
             <select name="status" id="size-status" class="form-control">
-                <option value="Active" @selected($size->status ?? 'Active' === 'Active')>Active</option>
-                <option value="Inactive" @selected($size->status ?? '' === 'Inactive')>Inactive</option>
+                <option value="Active" @selected(($size->status ?? 'Active') === 'Active')>Active</option>
+                <option value="Inactive" @selected(($size->status ?? '') === 'Inactive')>Inactive</option>
             </select>
         </div>
     </div>

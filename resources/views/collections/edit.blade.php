@@ -2,7 +2,7 @@
 
 @section('title', 'Edit Collection')
 @section('header-button')
-<a href="{{ route('collections.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to Collections</a>
+    <a href="{{ route('collections.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to Collections</a>
 @endsection
 
 @section('content')
@@ -13,19 +13,17 @@
                     <x-error-message :message="$errors->first('message')" />
                     <x-success-message :message="session('success')" />
 
-                    <div class="card">
-                        <div class="card-body">
-                            <form action="{{ route('collections.update', $collection->id) }}" method="post" enctype="multipart/form-data">
-                                @csrf
-                                @method('PUT')
-                                <collection-conditions :saved-collection='@json($collection)' :condition-dependencies='@json($conditionDependencies)'></collection-conditions>
-                            </form>    
-                        </div>    
-                    </div>
+                    <form action="{{ route('collections.update', $collection->id) }}" method="post"
+                        enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <collection-conditions :saved-collection='@json($collection)'
+                            :condition-dependencies='@json($conditionDependencies)'></collection-conditions>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <x-include-plugins :plugins="['chosen', 'datePicker']"></x-include-plugins>
+    <x-include-plugins :plugins="['chosen', 'datePicker', 'contentEditor']"></x-include-plugins>
 @endsection

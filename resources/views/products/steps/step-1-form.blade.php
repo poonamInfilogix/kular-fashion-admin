@@ -90,11 +90,11 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <label for="tag_id">Tag</label>
-            <select name="tag_id[]" id="tag_id" @class(["form-control", 'is-invalid' => $errors->has('tag_id')]) multiple>
+            <label for="tags">Tag</label>
+            <select name="tags[]" id="tags" @class(['is-invalid' => $errors->has('tags')]) multiple>
                 <option value="" disabled>Select tag</option>
                 @foreach ($tags as $tag)
-                    <option value="{{ $tag->id }}" @selected(old('tag_id') && in_array($tag->id, old('tag_id')))>
+                    <option value="{{ $tag->id }}" @selected(old('tags') && in_array($tag->id, old('tags')))>
                         {{ $tag->name }}
                     </option>
                 @endforeach
@@ -119,7 +119,7 @@
             ])>
                 <option value="" disabled>Select size scale</option>
                 @foreach ($sizeScales as $sizeScale)
-                    <option value="{{ $sizeScale->id }}" @disabled(count($sizeScale->sizes)===0) @selected(old('size_scale_id', $product->size_scale_id ?? $sizeScale->is_default ? $sizeScale->id : '') == $sizeScale->id)>
+                    <option value="{{ $sizeScale->id }}" @disabled(count($sizeScale->sizes) === 0) @selected(old('size_scale_id', $product->size_scale_id ?? $sizeScale->is_default ? $sizeScale->id : '') == $sizeScale->id)>
                         {{ $sizeScale->name }}
 
                         @if (count($sizeScale->sizes) > 0)
@@ -199,8 +199,8 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <label for="status" class="form-label">Status</label>
-            <select name="status" id="status" class="form-control">
+            <label for="product-status" class="form-label">Status</label>
+            <select name="status" id="product-status" class="form-control">
                 <option value="Active" @selected(($product->status ?? '') === 'Active')>Active</option>
                 <option value="Inactive" @selected(($product->status ?? '') === 'Inactive')>Inactive</option>
             </select>
@@ -223,32 +223,32 @@
 <div class="row mb-2">
     <h5>Product Web Basic Info</h5>
     <div class="col-md-4">
-        <x-form-input name="name" value="{{ $product->name ?? '' }}"
-            label="Product Name" placeholder="Enter Product Name" required="true" />
+        <x-form-input name="name" value="{{ $product->name ?? '' }}" label="Product Name"
+            placeholder="Enter Product Name" required="true" />
     </div>
     <div class="col-md-2">
-        <x-form-input name="price" type="number" step="0.01" value="{{ $product->price ?? '' }}" label="Web Price"
-            placeholder="Enter Web Price" required="true" />
+        <x-form-input name="price" type="number" step="0.01" value="{{ $product->price ?? '' }}"
+            label="Web Price" placeholder="Enter Web Price" required="true" />
     </div>
     <div class="col-md-2">
-        <x-form-input name="sale_price" type="number" step="0.01" value="{{ $product->sale_price ?? '' }}" label="Sale Price"
-            placeholder="Enter Sale Price" />
+        <x-form-input name="sale_price" type="number" step="0.01" value="{{ $product->sale_price ?? '' }}"
+            label="Sale Price" placeholder="Enter Sale Price" />
     </div>
     <div class="col-md-2">
         <x-form-input name="sale_start" class="sale-date-picker"
-                value="{{ isset($product->sale_start) && $product->sale_start ? \Carbon\Carbon::parse($product->sale_start)->format('d-m-Y') : '' }}"
-                label="Sale Start at" placeholder="Sale Start at" />
+            value="{{ isset($product->sale_start) && $product->sale_start ? \Carbon\Carbon::parse($product->sale_start)->format('d-m-Y') : '' }}"
+            label="Sale Start at" placeholder="Sale Start at" />
     </div>
     <div class="col-md-2">
         <x-form-input name="sale_end" class="sale-date-picker"
-                value="{{ isset($product->sale_end) && $product->sale_end ? \Carbon\Carbon::parse($product->sale_end)->format('d-m-Y') : '' }}"
-                label="Sale End at" placeholder="Sale End at" />
+            value="{{ isset($product->sale_end) && $product->sale_end ? \Carbon\Carbon::parse($product->sale_end)->format('d-m-Y') : '' }}"
+            label="Sale End at" placeholder="Sale End at" />
     </div>
 </div>
 
 <div class="row mb-2">
     <div class="col-lg-6 mb-2">
-        <button type="submit" class="btn btn-primary w-md">Coninue</button>
+        <button type="submit" class="btn btn-primary w-md">Continue</button>
     </div>
 </div>
 
@@ -261,7 +261,6 @@
                 allowInput: true,
                 minDate: "today"
             });
-
 
             $('form').on('keypress', function(e) {
                 if (e.which === 13) {
@@ -312,7 +311,10 @@
                             });
                         }
 
-                        initializeAndSortChosen('#product_type', 'Select Product Type');
+                        $('#product_type').chosen({
+                            width: '100%',
+                            placeholder_text_multiple: 'Select Product Type',
+                        });
 
                         const selectedProductTypeId =
                             "{{ old('product_type_id', $product->product_type_id ?? '') }}";
@@ -335,11 +337,30 @@
         }
 
         $(document).ready(function() {
-            initializeAndSortChosen('#product_type', 'Select Product Type');
-            initializeAndSortChosen('#brand_id', 'Select Brand');
-            initializeAndSortChosen('#department_id');
-            initializeAndSortChosen('#tag_id', 'Select Tag');
-            initializeAndSortChosen('#size_scale_id', 'Select Tag');
+            $('#product_type').chosen({
+                width: '100%',
+                placeholder_text_multiple: 'Select Product Type',
+            });
+
+            $('#brand_id').chosen({
+                width: '100%',
+                placeholder_text_multiple: 'Select Brand',
+            });
+
+            $('#department_id').chosen({
+                width: '100%',
+                placeholder_text_multiple: 'Select Product Type',
+            });
+
+            $('#tags').chosen({
+                width: '100%',
+                placeholder_text_multiple: 'Select Tags',
+            });
+
+            $('#size_scale_id').chosen({
+                width: '100%',
+                placeholder_text_multiple: 'Select Tag',
+            });
 
             @if (empty($product->article_code))
                 let lastCode = parseInt("{{ $latestNewCode ?? '300000' }}");
@@ -382,7 +403,7 @@
             }
 
             $('#short_description').on('input', function() {
-                $('[name="product_name"]').val($(this).val());
+                $('[name="name"]').val($(this).val());
             });
 
             var departmentId = $('#department_id').val();

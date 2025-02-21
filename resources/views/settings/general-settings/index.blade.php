@@ -28,7 +28,7 @@
                                     </div>
                                     <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                         <div class="mb-3">
-                                            <x-form-input name="euro_to_pound" value="{{ setting('euro_to_pound') }}" label="1 Euro = *.** pound" placeholder="Enter currency conversion rate" required="true" />
+                                            <x-form-input type="number" name="euro_to_pound" value="{{ setting('euro_to_pound') }}" label="1 Euro = *.** pound" placeholder="Enter currency conversion rate" required="true" />
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">

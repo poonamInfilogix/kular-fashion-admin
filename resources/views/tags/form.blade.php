@@ -9,8 +9,8 @@
         <div class="mb-3">
             <label for="tag-status" class="form-label">Status</label>
             <select name="status" id="tag-status" class="form-control">
-                <option value="Active"  @selected($tag->status ?? 'Active' === 'Active')>Active</option>
-                <option value="Inactive"  @selected($tag->status ?? '' === 'Inactive')>Inactive</option>
+                <option value="Active"  @selected(($tag->status ?? 'Active') === 'Active')>Active</option>
+                <option value="Inactive"  @selected(($tag->status ?? '') === 'Inactive')>Inactive</option>
             </select>
         </div>
     </div>

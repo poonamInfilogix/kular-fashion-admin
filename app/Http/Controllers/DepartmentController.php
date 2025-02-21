@@ -67,7 +67,7 @@ class DepartmentController extends Controller
         return view('departments.edit', compact('department'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Department $department)
     {
         if(!Gate::allows('edit departments')) {
             abort(403);
@@ -75,11 +75,10 @@ class DepartmentController extends Controller
         $request->validate([
             'name' => [
                 'required',
-                Rule::unique('departments')->ignore($id)->whereNull('deleted_at'),
+                Rule::unique('departments')->ignore($department->id)->whereNull('deleted_at'),
             ],
         ]);
 
-        $department = Department::where('id', $id)->first();
         $oldDepartmentImage = $department ? $department->image : NULL;
 
         if($request->image) {
@@ -101,12 +100,13 @@ class DepartmentController extends Controller
         return redirect()->route('departments.index')->with('success', 'Department updated successfully.');
     }
 
-    public function destroy(string $id)
+    public function destroy(Department $department)
     {
         if(!Gate::allows('delete departments')) {
             abort(403);
         }
-        Department::where('id', $id)->delete();
+        
+        $department->delete();
 
         return response()->json([
             'success' => true,
