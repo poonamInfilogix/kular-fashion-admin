@@ -775,7 +775,7 @@ class ProductController extends Controller
             return redirect()->route('products.print-barcodes');
         }
 
-        return view('products.pdf.barcodes', ['barcodes' => $barcodes]);
+        return view('products.barcodes.preview', ['barcodes' => $barcodes]);
     }
 
     public function generateCheckDigit($code)

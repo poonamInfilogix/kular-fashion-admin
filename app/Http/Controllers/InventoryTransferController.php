@@ -85,7 +85,7 @@ class InventoryTransferController extends Controller
             'sent_to'   => $toStoreId,
             'sent_by'   => Auth::id()
         ]);
-    
+
         foreach ($items as $value) {
             $productQuantityId = $value['product_quantity_id'];
             $quantity = $value['quantity'];
@@ -98,10 +98,10 @@ class InventoryTransferController extends Controller
 
             $existingInventoryItem = InventoryItem::where([
                 'inventroy_transfer_id' => $inventoryTransfer->id,
-                'product_id'            => $value['product_id'],
+                'product_id'            => $productQuantity->product_id,
                 'product_quantity_id'   => $productQuantityId,
-                'product_color_id'      => $value['color_id'],
-                'product_size_id'       => $value['size_id'],
+                'product_color_id'      => $productQuantity->product_color_id,
+                'product_size_id'       => $productQuantity->product_size_id,
                 'brand_id'              => $value['brand_id'],
             ])->first();
 
@@ -111,10 +111,10 @@ class InventoryTransferController extends Controller
             } else {
                 InventoryItem::create([
                     'inventroy_transfer_id' => $inventoryTransfer->id,
-                    'product_id'            => $value['product_id'],
+                    'product_id'            => $productQuantity->product_id,
                     'product_quantity_id'   => $productQuantityId,
-                    'product_color_id'      => $value['color_id'],
-                    'product_size_id'       => $value['size_id'],
+                    'product_color_id'      => $productQuantity->product_color_id,
+                    'product_size_id'       => $productQuantity->product_size_id,
                     'brand_id'              => $value['brand_id'],
                     'quantity'              => $quantity,
                 ]);
@@ -133,10 +133,10 @@ class InventoryTransferController extends Controller
             } else {
                 StoreInventory::create([
                     'store_id'              => $toStoreId,
-                    'product_id'            => $value['product_id'],
+                    'product_id'            => $productQuantity->product_id,
                     'product_quantity_id'   => $productQuantityId,
-                    'product_color_id'      => $value['color_id'],
-                    'product_size_id'       => $value['size_id'],
+                    'product_color_id'      => $productQuantity->product_color_id,
+                    'product_size_id'       => $productQuantity->product_size_id,
                     'brand_id'              => $value['brand_id'],
                     'quantity'              => $quantity,
                     'total_quantity'        => $quantity
