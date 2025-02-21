@@ -38,8 +38,6 @@ class PurchaseOrderController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
-
         $request->validate([
             'supplier_order_no' => 'required|string|max:255',
             'supplier_order_date' => 'required|date',

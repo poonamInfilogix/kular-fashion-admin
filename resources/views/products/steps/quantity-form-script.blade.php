@@ -71,11 +71,8 @@
             $(document).on('click', '.copy-quantity-btn', function() {
                 const $selectedColor = $('.color-selector.selected').first();
                 
-                console.log('selectedColor', $selectedColor)
-                
                 if ($selectedColor.length > 0) {
                     const id = $selectedColor.closest('[data-id]').data('id');
-                    console.log('id',id);
                     
                     if (id) {
                         const colorIdToBeCopied = id.split('-')[1];

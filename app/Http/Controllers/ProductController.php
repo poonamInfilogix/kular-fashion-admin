@@ -355,6 +355,7 @@ class ProductController extends Controller
         $productData = Session::get('savingProduct');
         $productData['variantData'] = $request->all();
         Session::put('savingProduct', $productData);
+        echo '<pre>';
 
         $product = Product::create([
             'name' => $productData['name'],
@@ -394,7 +395,9 @@ class ProductController extends Controller
             ProductSize::create([
                 'product_id' => $product->id,
                 'size_id' => $sizeId,
-                'mrp' => $mrp
+                'mrp' => $mrp,
+                'web_price' => $productData['variantData']['web_price'][$sizeId] ?? 0,
+                'web_sale_price' => $productData['variantData']['sale_price'][$sizeId] ?? 0,
             ]);
         }
 
@@ -409,7 +412,7 @@ class ProductController extends Controller
             $color_id = $productData['colors'][$index];
 
             foreach ($productData['variantData']['quantity'][$color_id] as $sizeId => $quantity) {
-                $productSize = ProductSize::where('size_id', $sizeId)->first();
+                $productSize = ProductSize::where('product_id', $product->id)->where('size_id', $sizeId)->first();
 
                 ProductQuantity::create([
                     'product_id' => $product->id,
@@ -460,7 +463,9 @@ class ProductController extends Controller
     {
         foreach ($request->mrp as $product_size_id => $mrp) {
             ProductSize::find($product_size_id)->update([
-                'mrp' => $mrp
+                'mrp' => $mrp,
+                'web_price' => $request->web_price[$product_size_id] ?? 0,
+                'web_sale_price' => $request->sale_price[$product_size_id] ?? 0,
             ]);
         }
 

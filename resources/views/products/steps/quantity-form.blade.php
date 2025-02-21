@@ -1,4 +1,4 @@
-<table class="table quantities-table">
+<table class="table quantities-table table-sm">
     <thead>
         <tr id="sizeHeader">
             <th>Size</th>
@@ -83,6 +83,17 @@
                 <td><input type="number" name="mrp[{{ $size->id }}]" min="0" step="any" value="{{ $savingProduct->mrp ?? $size->mrp }}" class="form-control"></td>
             @endforeach
         </tr>
-
+        <tr>
+            <th>Web Price</th>
+            @foreach ($sizes as $size)
+                <td><input type="number" name="web_price[{{ $size->id }}]" min="0" step="any" value="{{ $savingProduct->price ?? $size->web_price }}" class="form-control"></td>
+            @endforeach
+        </tr>
+        <tr>
+            <th>Sale Price</th>
+            @foreach ($sizes as $size)
+                <td><input type="number" name="sale_price[{{ $size->id }}]" min="0" step="any" value="{{ $savingProduct->sale_price ?? $size->sale_price }}" class="form-control"></td>
+            @endforeach
+        </tr>
     </tbody>
 </table>
