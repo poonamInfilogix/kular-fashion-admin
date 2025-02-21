@@ -355,6 +355,7 @@ class ProductController extends Controller
         $productData = Session::get('savingProduct');
         $productData['variantData'] = $request->all();
         Session::put('savingProduct', $productData);
+        echo '<pre>';
 
         $product = Product::create([
             'name' => $productData['name'],
@@ -411,7 +412,7 @@ class ProductController extends Controller
             $color_id = $productData['colors'][$index];
 
             foreach ($productData['variantData']['quantity'][$color_id] as $sizeId => $quantity) {
-                $productSize = ProductSize::where('size_id', $sizeId)->first();
+                $productSize = ProductSize::where('product_id', $product->id)->where('size_id', $sizeId)->first();
 
                 ProductQuantity::create([
                     'product_id' => $product->id,
