@@ -150,7 +150,6 @@ class InventoryTransferController extends Controller
         ]);
     }
 
-
     public function inventoryHistory()
     {
         $inventoryTransfer = InventoryTransfer::with('sentFrom', 'sentTo', 'sentBy')->get();
@@ -164,8 +163,6 @@ class InventoryTransferController extends Controller
         return view('inventory-transfer.history', ['inventory_transfer' => $inventoryTransfer]);
     }
 
-
-   
     public function inventoryTransferShow($id)
     {
         
