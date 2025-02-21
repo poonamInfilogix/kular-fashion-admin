@@ -189,9 +189,9 @@
                                             </th>
                                             @foreach ($product->sizes as $size)
                                                 <td class="p-1">
-                                                    <strong>{{ $size->inventoryAvailableQuantity($color->id, $branch->id) }}</strong>
+                                                    <strong>{{ $size->inventoryAvailableQuantity($color->color_id, $branch->id) }}</strong>
                                                     /
-                                                    {{ $size->inventoryTotalQuantity($color->id, $branch->id) }}
+                                                    {{ $size->inventoryTotalQuantity($color->color_id, $branch->id) }}
                                                 </td>
                                             @endforeach
                                         </tr>
