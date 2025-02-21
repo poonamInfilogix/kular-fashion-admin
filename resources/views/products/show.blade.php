@@ -184,7 +184,7 @@
                                                 <div class="me-1 d-color-code"
                                                     style="background: {{ $color->colorDetail->ui_color_code }}"></div>
                                                 <h6 class="m-0">{{ $color->colorDetail->name }}
-                                                    ({{ $color->colorDetail->color_code }})
+                                                    ({{ $color->colorDetail->code }})
                                                 </h6>
                                             </th>
                                             @foreach ($product->sizes as $size)
