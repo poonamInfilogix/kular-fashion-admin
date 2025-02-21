@@ -31,4 +31,5 @@
     </div>
 
     @include('products.steps.quantity-form-script')
+    <x-include-plugins :plugins="['chosen']"></x-include-plugins>
 @endsection

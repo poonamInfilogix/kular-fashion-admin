@@ -195,7 +195,8 @@ class ProductController extends Controller
             return $savedColorsMapped[$colorId] ?? null;
         }, $reversedColorIds);
 
-        $colors = Color::where('status', 'Active')->get();
+        $excludedSavedColors = array_keys($savedColorsMapped);
+        $colors = Color::where('status', 'Active')->whereNotIn('id', $excludedSavedColors)->get();
 
         return view('products.steps.edit-step-2', compact('product', 'sizes', 'savedColors', 'colors'));
     }
@@ -640,7 +641,8 @@ class ProductController extends Controller
             return $savedColorsMapped[$colorId] ?? null;
         }, $reversedColors);
 
-        $colors = Color::where('status', 'Active')->get();
+        $excludedSavedColors = array_keys($savedColorsMapped);
+        $colors = Color::where('status', 'Active')->whereNotIn('id', $excludedSavedColors)->get();
 
         return view('products.steps.step-3', compact('savingProduct', 'sizes', 'savedColors', 'colors'));
     }

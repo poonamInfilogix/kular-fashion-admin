@@ -43,11 +43,6 @@
                     return false;
                 }
             });
-
-            $('#color_select').chosen({
-                width: '100%',
-                placeholder_text_multiple: 'Choose Color'
-            });
         })
     </script>
 @endpush
