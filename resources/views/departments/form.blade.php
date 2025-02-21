@@ -52,3 +52,14 @@
     </div>
 </div>
 <x-include-plugins :plugins="['image' ]"></x-include-plugins>
+
+@push('scripts')
+    <script>
+        $(function(){
+            $('#add-department-image').change(function() {
+                Image(this, '#preview-department');
+                Image(this, '#previewDepartment');
+            });
+        })
+    </script>
+@endpush

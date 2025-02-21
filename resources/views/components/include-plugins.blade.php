@@ -10,38 +10,17 @@
                     reader.readAsDataURL(input.files[0]);
                 }
             }
-
-            $('#add-department-image').change(function() {
-                Image(this, '#preview-department');
-                Image(this, '#previewDepartment');
-            });
-
-            $('#add-productType-image').change(function() {
-                Image(this, '#preview-productType');
-                Image(this, '#preview-product-type');
-            });
-
-            $('#add-brand-image').change(function() {
-                Image(this, '#preview-brand');
-                Image(this, '#previewBrand');
-            });
-
-            $('#add-product-image').change(function() {
-                // Image(this, '#preview-brand');
-                Image(this, '#preview-product');
-                Image(this, '#previewProduct');
-            })
         </script>
     @endpush
 @endif
 
 @if ($hasPlugin('datePicker'))
     @push('styles')
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        <link rel="stylesheet" href="{{ asset('assets/libs/flatpickr/flatpickr.min.css') }}">
     @endpush
 
     @push('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="{{ asset('assets/libs/flatpickr/flatpickr.min.js') }}"></script>
         <script>
             $(function() {
                 flatpickr('.date-picker', {
@@ -191,7 +170,7 @@
             const reader = new FileReader();
 
             reader.onload = function() {
-                const preview = document.getElementById(`preview-${key}`);
+                const preview = $(`#preview-${key}`);
                 preview.src = reader.result;
                 preview.hidden = false;
             }
@@ -206,11 +185,9 @@
 @if ($hasPlugin('colorPicker'))
     @push('styles')
         <link href="{{ asset('assets/libs/spectrum-colorpicker2/spectrum.min.css') }}" rel="stylesheet" type="text/css">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     @endpush
     @push('scripts')
         <script src="{{ asset('assets/libs/spectrum-colorpicker2/spectrum.min.js') }}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
         <script src="{{ asset('assets/js/pages/form-advanced.init.js') }}"></script>
     @endpush
 @endif

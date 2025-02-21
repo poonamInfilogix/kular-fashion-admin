@@ -64,19 +64,18 @@ class ColorController extends Controller
         return view('colors.edit', compact('color'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Color $color)
     {
         if (!Gate::allows('edit colors')) {
             abort(403);
         }
 
         $request->validate([
-            'name' => 'required|unique:colors,name,'.$id,
-            'short_name' => 'required|min:1|max:5|unique:colors,short_name,'.$id,
+            'name' => 'required|unique:colors,name,'.$color->id,
+            'short_name' => 'required|min:1|max:5|unique:colors,short_name,'.$color->id,
             'code' => 'required|min:1|max:3'
         ]);
 
-        $color = Color::where('id', $id)->first();
         $color->update([
             'name'              => $request->name,
             'short_name'        => $request->short_name,

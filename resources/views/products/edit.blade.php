@@ -31,12 +31,4 @@
             </div>
         </div> 
     </div>
-<script>
-    $(document).ready(function(){
-        var productTags = @json($productTags); 
-        setTimeout(() => {
-            $('#tag_id').val(productTags).trigger('chosen:updated');
-        }, 1000);
-    });
-</script>
 @endsection
