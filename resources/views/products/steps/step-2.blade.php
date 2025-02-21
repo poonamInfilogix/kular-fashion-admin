@@ -93,7 +93,7 @@
                                     
                                     <div class="col-sm-2 col-md-2">
                                         <div class="mb-3">
-                                            <label for="color">Size Range(Min) <span class="text-danger">*</span></label>
+                                            <label for="size_range_min">Size Range(Min) <span class="text-danger">*</span></label>
                                             <select name="size_range_min" id="size_range_min" class="form-control{{ $errors->has('color') ? ' is-invalid' : '' }}">
                                                 @foreach($sizes as $size)
                                                     <option value="{{ old('size_range_min', $size->id) }}">
