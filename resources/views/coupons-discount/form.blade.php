@@ -21,13 +21,13 @@
 
 
     <div class="col-md-1 mb-3" id="add_type">
-        <x-form-input name="type_value" type="number" id="type_value" 
+        <x-form-input name="type_value[0]" type="number" id="type_value" 
             label="percentage" placeholder="Amount"
             value="{{ $coupon->value ?? '' }}" />
     </div>
 
     <div class="col-md-1 mb-2" id="extra_field_container" style="display: none;">
-        <x-form-input name="type_value2" type="number" id="type_value2" 
+        <x-form-input name="type_value[1]" type="number" id="type_value2" 
             label="Y" placeholder="Y"
             value="{{ $coupon->y_value ?? '' }}" />
     </div>
@@ -147,7 +147,7 @@
         // Hide extra field container by default
         $('#extra_field_container').hide();
         
-        // Conditions to update the primary field and extra field if needed
+
         if(selectedType === 'Percentage'){
             newLabel = 'Percentage';
             newPlaceholder = 'Percentage';
@@ -159,10 +159,11 @@
         } else if(selectedType === 'Free Shipping'){
             $('#add_type').hide();
         } else if(selectedType === 'Buy X Get Y' || selectedType === 'Buy X for Y'){
+          
+
             newLabel = 'X';
-            newPlaceholder = 'X'; 
-            // $('#type_value')
-            // $('#type_value2')
+            newPlaceholder = 'Amount';
+        
             $('#add_type').show();
             $('#extra_field_container').show(); // Show the extra Y value field
         } else {

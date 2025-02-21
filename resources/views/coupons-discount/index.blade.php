@@ -41,7 +41,7 @@
                                         <td>{{ ++$key }}</td>
                                         <td>{{ $coupon->code }}</td>
                                         <td>{{ $coupon->type }}</td>
-                                        <td>{{ $coupon->value }}</td>
+                                        <td>{{ $coupon->non_numeric_value ?? $coupon->numeric_value }}</td>
                                         <td>{{ $coupon->min_amount }}</td>
                                         <td>{{ $coupon->min_items_count ?? '' }}</td>
                                         <td>{{ $coupon->usage_limit }}</td> 
