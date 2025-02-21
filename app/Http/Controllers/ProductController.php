@@ -187,13 +187,12 @@ class ProductController extends Controller
         $sizes = $product->sizes;
 
         $savedColorIds = $product->colors->pluck('color_id')->toArray();
-        $reversedColorIds = array_reverse($savedColorIds);
-        $savedColors = Color::whereIn('id', $reversedColorIds)->get();
+        $savedColors = Color::whereIn('id', $savedColorIds)->get();
         $savedColorsMapped = $savedColors->keyBy('id')->toArray();
 
         $savedColors = array_map(function ($colorId) use ($savedColorsMapped) {
             return $savedColorsMapped[$colorId] ?? null;
-        }, $reversedColorIds);
+        }, $savedColorIds);
 
         $excludedSavedColors = array_keys($savedColorsMapped);
         $colors = Color::where('status', 'Active')->whereNotIn('id', $excludedSavedColors)->get();
