@@ -183,8 +183,8 @@
                                             <th class="d-flex p-1">
                                                 <div class="me-1 d-color-code"
                                                     style="background: {{ $color->colorDetail->ui_color_code }}"></div>
-                                                <h6 class="m-0">{{ $color->colorDetail->color_name }}
-                                                    ({{ $color->colorDetail->color_code }})
+                                                <h6 class="m-0">{{ $color->colorDetail->name }}
+                                                    ({{ $color->colorDetail->code }})
                                                 </h6>
                                             </th>
                                             @foreach ($product->sizes as $size)
