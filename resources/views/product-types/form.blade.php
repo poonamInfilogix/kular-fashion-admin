@@ -84,6 +84,9 @@
     $(function() {
         $('#add-productType-image').change(function() {
             Image(this, '#preview-productType');
+        });
+
+        $('#preview-product-type').change(function() {
             Image(this, '#preview-product-type');
         });
 
