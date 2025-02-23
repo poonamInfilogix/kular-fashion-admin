@@ -37,7 +37,7 @@
                         <div class="col-sm-6 col-md-6">
                             <div class="mb-2 d-flex gap-1">
                                 <h5 class="card-title">MRP: </h5>
-                                <p class="card-text"> {{ $savingProduct->mrp }}</p>
+                                <p class="card-text">£{{ number_format($savingProduct->mrp, 2) }}</p>
                             </div>    
                         </div>
                         <div class="col-sm-6 col-md-6">
