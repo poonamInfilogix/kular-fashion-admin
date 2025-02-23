@@ -78,7 +78,7 @@
                                                     <select name="colors[0]" id="color" @class(["form-control", "is-invalid" =>  $errors->has('colors.0')])>
                                                         <option value="" selected>Select Color</option> 
                                                         @foreach($colors as $color)
-                                                            <option value="{{ $color->id }}" {{ old('colors[0]', isset($savingProduct->colors[0]) ? $savingProduct->colors[0] : null) == $color->id ? 'selected' : '' }}>
+                                                            <option value="{{ $color->id }}" @selected(old('colors[0]', $savingProduct->colors[0] ?? '') == $color->id)>
                                                                 {{ $color->name }} ({{ $color->code }})
                                                             </option>
                                                         @endforeach
@@ -94,9 +94,9 @@
                                     <div class="col-sm-2 col-md-2">
                                         <div class="mb-3">
                                             <label for="size_range_min">Size Range(Min) <span class="text-danger">*</span></label>
-                                            <select name="size_range_min" id="size_range_min" class="form-control{{ $errors->has('color') ? ' is-invalid' : '' }}">
+                                            <select name="size_range_min" id="size_range_min" @class(['form-control', 'is-invalid' => $errors->has('size_range_min')])>
                                                 @foreach($sizes as $size)
-                                                    <option value="{{ old('size_range_min', $size->id) }}">
+                                                    <option value="{{ $size->id }}" @selected(old('size_range_min', $savingProduct->size_range_min) == $size->id)>
                                                         {{ $size->size }}
                                                     </option>
                                                 @endforeach
@@ -109,9 +109,9 @@
                                     <div class="col-sm-2 col-md-2">
                                         <div class="mb-3">
                                             <label for="size_range_max">Size Range(Max) <span class="text-danger">*</span></label>
-                                            <select name="size_range_max" id="size_range_max" class="form-control{{ $errors->has('size_range_max') ? ' is-invalid' : '' }}">
+                                            <select name="size_range_max" id="size_range_max" @class(['form-control', 'is-invalid' => $errors->has('size_range_max')])>
                                                 @foreach($sizes as $index => $size)
-                                                    <option value="{{ old('size_range_max', $size->id) }}" {{ $loop->last ? 'selected' : '' }}>
+                                                    <option value="{{ $size->id }}" @selected(old('size_range_max', $savingProduct->size_range_max) == $size->id)>
                                                         {{ $size->size }}
                                                     </option>
                                                 @endforeach
@@ -155,11 +155,10 @@
                                                                 <div class="col-sm-6 col-md-4">
                                                                     <div class="mb-3">
                                                                         <label for="colors-{{ $index }}">Select Color <span class="text-danger">*</span></label>
-                                                                        <select name="colors[{{ $index }}]" id="colors-{{ $index }}" class="form-control{{ $errors->has("colors.$index") ? ' is-invalid' : '' }}">
+                                                                        <select name="colors[{{ $index }}]" id="colors-{{ $index }}" @class(['form-control', 'is-invalid' => $errors->has("colors.$index")])>
                                                                             <option value=""  {{ old("colors.$index") === null ? 'selected' : '' }}>Select Color</option>
                                                                             @foreach($colors as $color)
-                                                                                <option value="{{ $color->id }}" @selected(old("colors[$index]", $savingProduct->colors[$index] ?? '') == $color->id)
-                                                                                    {{ old("colors[$index]", $savingProduct->colors[$index] ?? '') }}>
+                                                                                <option value="{{ $color->id }}" @selected((old("colors[$index]", $savingProduct->colors[$index]) ?? '') == $color->id)>
                                                                                     {{ $color->name }} ({{ $color->code }})
                                                                                 </option>
                                                                             @endforeach
@@ -197,20 +196,68 @@
             </div>
         </div>
 
-    <x-include-plugins :plugins="['chosen']"></x-include-plugins>
+    <x-include-plugins :plugins="['select2']"></x-include-plugins>
     @push('scripts')
     <script>
-        $(document).ready(function () {
+        $(function(){
             $('form').on('keypress', function (e) {
                 if (e.which === 13) { 
                     e.preventDefault();
                     return false; 
                 }
             });
-        });
-        $(function(){
-            var colorIndex = {{ isset($savingProduct->supplier_color_codes) ? count($savingProduct->supplier_color_codes)-1 : 1 }};
 
+            $('#color').select2({
+                width: '100%',
+            });
+
+            $('select[id^="colors"]').select2({
+                width: '100%',
+            });
+            
+            $('#color, #size_range_min, #size_range_max').select2({
+                width: '100%',
+            });
+
+            function updateMaxSizeOptions(minSizeId) {
+                let $maxSizeOptions = $('#size_range_max option');
+                let sizes = @json($sizes);
+                let options = '';
+
+                $('#size_range_max option').remove();
+
+                sizes.forEach((size, index) => {
+                    let selected = '';
+
+                    if((sizes.length - 1) === index){
+                        selected = ` selected`;
+                    }
+
+                    if(size.id >= minSizeId){
+                        options += `<option value="${size.id}" ${selected}>${size.size}</option>`;
+                    }
+                });
+
+                $('#size_range_max').html(options);
+
+                
+                // Trigger the change event
+                $('#size_range_max').trigger('change')
+            }
+
+
+            $('#size_range_min').on('change', function() {
+                var minSizeId = parseInt($(this).val());
+
+                updateMaxSizeOptions(minSizeId);
+            });
+
+            var minSizeId = parseInt("{{ $savingProduct->size_range_min ?? '0' }}");
+            updateMaxSizeOptions(minSizeId);
+
+
+            
+            var colorIndex = {{ isset($savingProduct->supplier_color_codes) ? count($savingProduct->supplier_color_codes)-1 : 1 }};
 
             $('#add-color-btn').click(function() {
                 colorIndex++;
@@ -252,7 +299,7 @@
                     </div>`;
 
                 $('#color-fields').append(newColorField);
-                $('#colors-' + colorIndex).chosen({ width: '100%' });
+                $('#colors-' + colorIndex).select2({ width: '100%' });
             });
 
             $(document).on('click', '.remove-color-btn', function() {
@@ -260,73 +307,6 @@
                 $('#color-field-' + id).remove();
             });
 
-            $('#color').chosen({
-                width: '100%',
-                placeholder_text_multiple: 'Select Color'
-            });
-
-            $('select[id^="colors"]').chosen({
-                width: '100%',
-                placeholder_text_multiple: 'Select Color'
-            });
-            
-            $('#size_range_min').val($('#size_range_min option:first').val()).trigger('chosen:updated');
-
-            $('#size_range_min').on('change', function() {
-                var minSizeId = parseInt($(this).val());
-
-                $('#size_range_max').prop('disabled', false).trigger('chosen:updated');
-                $('#size_range_max option').show();
-
-                $('#size_range_max option').each(function() {
-                    var maxSizeId = parseInt($(this).val());
-
-                    if (maxSizeId < minSizeId) {
-                        $(this).hide();
-                    }
-                });
-
-                $('#size_range_max').trigger('chosen:updated');
-                var visibleOptions = $('#size_range_max option:visible');
-                
-                if (visibleOptions.length > 0) {
-                    var lastVisibleOptionValue = visibleOptions.last().val();
-                    $('#size_range_max').val(lastVisibleOptionValue).trigger('chosen:updated');
-                } else {
-                    var lastOptionValue = $('#size_range_max option:last').val();
-                    $('#size_range_max').val(lastOptionValue).trigger('chosen:updated');
-                }
-            });
-
-            var minimumSize = {{ isset($savingProduct->size_range_min) ? $savingProduct->size_range_min : '0' }};
-            var maximumSize = {{ isset($savingProduct->size_range_max) ? $savingProduct->size_range_max : '0' }};
-            var minSizeId = parseInt(minimumSize);
-           
-            setTimeout(() => {
-                $('#size_range_min option[value="'+minimumSize+'"]').prop("selected", true);
-                $('#size_range_max option[value="'+maximumSize+'"]').prop("selected", true);
-            }, 1000);
-
-            $('#size_range_max').prop('disabled', false).trigger('chosen:updated');
-            $('#size_range_max option').show();
-
-            $('#size_range_max option').each(function() {
-                var maxSizeId = parseInt($(this).val());
-                if (maxSizeId < minSizeId) {
-                    $(this).hide();
-                }
-            });
-
-            $('#size_range_max').trigger('chosen:updated');
-            var visibleOptions = $('#size_range_max option:visible');
-
-            if (visibleOptions.length > 0) {
-                var lastVisibleOptionValue = visibleOptions.last().val();
-                $('#size_range_max').val(lastVisibleOptionValue).trigger('chosen:updated');
-            } else {
-                var lastOptionValue = $('#size_range_max option:last').val();
-                $('#size_range_max').val(lastOptionValue).trigger('chosen:updated');
-            }
         });
         </script>
     @endpush

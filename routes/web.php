@@ -118,7 +118,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     });
 
     Route::get('download-product-sample', function () {
-        $file = public_path('assets/product-sample-file/products.csv');
+        $file = public_path('assets/samples/products.csv');
         return Response::download($file);
     });
 

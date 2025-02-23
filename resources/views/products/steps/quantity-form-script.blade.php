@@ -43,9 +43,9 @@
 @push('scripts')
     <script>
         $(function() {
-            $('#color_select').chosen({
+            $('#color_select').select2({
                 width: '100%',
-                placeholder_text_multiple: 'Choose Color'
+                dropdownParent: $('#addVariantModal')
             });
 
             $(document).on('click', '.color-selector', function() {
