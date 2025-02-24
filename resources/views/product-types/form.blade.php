@@ -69,7 +69,7 @@
         @if (isset($productType) && $productType->image)
             <img src="{{ asset($productType->image) }}" id="preview-product-type" class="img-preview img-fluid w-50">
         @else
-            <img src="" id="preview-product-type" class="img-fluid w-50;" name="image" hidden>
+            <img src="" id="preview-product-type" class="img-preview img-fluid w-50" name="image" hidden>
         @endif
     </div>
 </div>

@@ -209,16 +209,13 @@
         </div>
     </div>
     <div class="col-sm-6 col-md-2">
-        <div class="col-md-12 mt-2">
-            @if (isset($product->image_path) || isset($product->image))
-            <img src="{{ asset($product->image_path ?? $product->image) }}" id="preview-product"
-                class="img-preview img-fluid w-100"
-                onerror="this.onerror=null; this.src='{{ asset(setting('default_product_image')) }}';">
-            @else
-            <img src="{{ asset(setting('default_product_image')) }}" id="preview-product" class="img-fluid w-100;"
-                name="image">
-            @endif
-        </div>
+        @if (isset($product->image_path) || isset($product->image))
+        <img src="{{ asset($product->image_path ?? $product->image) }}" id="preview-product"
+            class="img-preview img-fluid w-100"
+            onerror="this.onerror=null; this.src='{{ asset(setting('default_product_image')) }}';">
+        @else
+        <img src="{{ asset(setting('default_product_image')) }}" id="preview-product" class="img-preview img-fluid w-100" name="image">
+        @endif
     </div>
 </div>
 
