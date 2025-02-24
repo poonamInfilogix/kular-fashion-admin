@@ -1150,10 +1150,22 @@ class ProductController extends Controller
             'sale_end' => isset($request->sale_end) ? Carbon::parse($request->sale_end)->toDateString() : null,
         ]);
 
+        $sizes = $request->sizes ?? [];
+
+        foreach ($sizes as $productSizeId => $size) {
+            $productSize = ProductSize::find($productSizeId);
+
+            if ($productSize) {
+                $productSize->update([
+                    'web_price' => $size['web_price'],
+                    'web_sale_price' => $size['web_sale_price'],
+                ]);
+            }
+        }
 
         $currentTags = ProductTag::where('product_id', $product->id)->pluck('tag_id')->toArray();
         $selectedTags = $request->tags ?? [];
-        
+
         foreach ($selectedTags as $tagId) {
             ProductTag::updateOrCreate(
                 [

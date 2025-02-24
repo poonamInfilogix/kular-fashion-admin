@@ -88,6 +88,36 @@
     </div>
 </div>
 
+<!-- Sizes & prices -->
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Sizes & Prices</h4>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-stripped table-sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Size</th>
+                            <th>Price</th>
+                            <th>Sale Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($product->sizes as $index => $size)
+                            <tr>
+                                <th>{{ $index+1 }}</th>
+                                <th>{{ $size->sizeDetail->size }}</th>
+                                <th><input type="text" name="sizes[{{$size->id}}][web_price]" class="form-control" value="{{ $size->web_price }}"></th>
+                                <th><input type="text" name="sizes[{{$size->id}}][web_sale_price]" class="form-control" value="{{ $size->web_sale_price }}"></th>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Status & Visibility -->
 <div class="card">
