@@ -119,7 +119,6 @@ class InventoryTransferController extends Controller
                     'quantity'              => $quantity,
                 ]);
             }
-            dd('heheh');
     
             $storeInventory = StoreInventory::where([
                 'store_id'             => $toStoreId,
@@ -155,12 +154,6 @@ class InventoryTransferController extends Controller
     {
         $inventoryTransfer = InventoryTransfer::with('sentFrom', 'sentTo', 'sentBy')->get();
        
-        foreach($inventoryTransfer as $transfer)
-        {       
-            $inventoryTransfer->total_quantity = InventoryItem::where('inventroy_transfer_id', $transfer->id)
-                ->sum('quantity');
-        }
-       
         return view('inventory-transfer.history', ['inventory_transfer' => $inventoryTransfer]);
     }
 
@@ -171,7 +164,7 @@ class InventoryTransferController extends Controller
             'sentFrom', 
             'sentTo', 
             'sentBy', 
-             'inventoryItems',
+            'inventoryItems',
             'inventoryItems.product', 
             'inventoryItems.productColor', 
             'inventoryItems.productSize', 
