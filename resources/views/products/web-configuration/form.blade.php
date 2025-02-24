@@ -161,12 +161,18 @@
     <div class="card-body">
         <h4 class="card-title">SEO</h4>
         <div class="row">
+            <div class="col-sm-10 mb-2">
+                <x-form-input name="meta_title" label="Heading" required="true"
+                value="{{ $product->webInfo->heading ?? '' }}" placeholder="Heading" />
+            </div>
+        </div>
+        <div class="row">
             <div class="col-sm-4">
-                <div class="mb-3">
+                <div class="mb-2">
                     <x-form-input name="meta_title" label="Meta title" required="true"
                         value="{{ $product->webInfo->meta_title ?? '' }}" placeholder="Meta title" />
                 </div>
-                <div class="mb-3">
+                <div class="mb-2">
                     <x-form-input name="meta_keywords" label="Meta Keywords"
                         value="{{ $product->webInfo->meta_keywords ?? '' }}" placeholder="Meta Keywords"
                         required="true" />

@@ -45,7 +45,10 @@ class BrandController extends Controller
             'short_name' => [
                 'required',
                     Rule::unique('brands')->whereNull('deleted_at'),
-            ]
+            ],
+            'meta_title'  => ['required'],
+            'meta_keywords' => ['required'],
+            'heading' => ['required'],
         ]);
 
         $imageName = uploadFile($request->file('brand_image'), 'uploads/brands/');
@@ -56,7 +59,12 @@ class BrandController extends Controller
             'status'        => $request->status,
             'description'   => $request->description,
             'image'         => $imageName,
-            'margin'        => $request->margin
+            'margin'        => $request->margin,
+            'summary'       => $request->summary,
+            'heading'       => $request->heading,
+            'meta_title'    => $request->meta_title,
+            'meta_keywords' => $request->meta_keywords,
+            'meta_description' => $request->description
         ]);
 
         return redirect()->route('brands.index')->with('success', 'Brand created successfully.');
@@ -90,6 +98,10 @@ class BrandController extends Controller
                 'required',
                 Rule::unique('brands')->ignore($brand->id)->whereNull('deleted_at'),
             ],
+            'heading'  => ['required'],
+            'meta_title'  => ['required'],
+            'meta_keywords' => ['required'],
+            'meta_description' => ['required'],
         ]);
 
         $oldBrandImage = $brand ? $brand->image : NULL;
@@ -109,7 +121,12 @@ class BrandController extends Controller
             'status'        => $request->status,
             'description'   => $request->description,
             'image'         => $imageName ?? $oldBrandImage,
-            'margin'        => $request->margin
+            'margin'        => $request->margin,
+            'summary'       => $request->summary,
+            'heading'       => $request->heading,
+            'meta_title'    => $request->meta_title,
+            'meta_keywords' => $request->meta_keywords,
+            'meta_description' => $request->description
         ]);
 
         return redirect()->route('brands.index')->with('success', 'Brand updated successfully.');

@@ -28,7 +28,6 @@ class CouponDiscountController extends Controller
      */
     public function store(Request $request)
     {
-
         $request->validate([ 
             'type' => 'required',
             'type_value' => 'required',
@@ -40,10 +39,26 @@ class CouponDiscountController extends Controller
         $imageName = uploadFile($request->file('banner_path'), 'uploads/coupons/');
         $starts_at = date('Y-m-d H:i:s', strtotime($request->starts_at)); 
         $expires_at = date('Y-m-d H:i:s', strtotime($request->expire_at)); 
+        $numeric_value = 0;
+        $non_numeric_value = [];
+
+        if(is_array($request->type_value))
+        {
+           $non_numeric_value =  json_encode([
+                'x' => $request->type_value['0'],
+                'y' => $request->type_value['1']
+            ]);
+        }
+        else {
+            $numeric_value = $request->type_value;
+        }
+
+
          Coupon::create(
             [
                 "type" => $request->type,
-                "value" => $request->type_value,
+                "numeric_value" => $numeric_value,
+                'non_numeric_value' => $non_numeric_value,
                 "code" => $request->coupon_code,
                 "usage_limit" => $request->usage_limit,
                 "used_count" => $request->limit_val,
@@ -53,7 +68,7 @@ class CouponDiscountController extends Controller
                 "description" => $request->coupon_desc,
                 "min_amount" => $request->min_purchase_amount,
                 "min_items_count" => $request->min_items_count,
-                "banner_path" => $imageName
+                "image_path" => $imageName
             ]
             );
             return redirect()->route('coupons-discount.index')->with('success', 'Coupon created successfully.');
