@@ -454,7 +454,7 @@ class ProductController extends Controller
         $tags = Tag::where('status', 'Active')->orderBy('name', 'ASC')->get();
         $sizeScales = SizeScale::where('status', 'Active')->orderBy('name', 'ASC')->get();
         $sizes = Size::where('status', 'Active')->orderBy('size', 'ASC')->get();
-        $productTags = ProductTag::where('product_id', $product->id)->pluck('tag_id');
+        $productTags = ProductTag::where('product_id', $product->id)->pluck('tag_id')->toArray(); 
 
         return view('products.edit', compact('brands', 'productTypes', 'departments', 'product', 'taxes', 'tags', 'sizes', 'sizeScales', 'productTags'));
     }
