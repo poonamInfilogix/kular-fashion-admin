@@ -39,17 +39,26 @@ class ProductTypeController extends Controller
         $request->validate([
            'department_id'       => 'required',
            'short_name'          => 'required',
-           'name'   => 'required|unique:product_types,name' 
+           'name'   => 'required|unique:product_types,name',
+           'heading' => 'required', 
+           'meta_title' => 'required',
+           'meta_keywords' => 'required',
+           'meta_description' => 'required'
         ]);
 
         $imageName = uploadFile($request->file('image'), 'uploads/product-types/');
-
+        
         $productType = ProductType::create([
             'name'              => $request->name,
             'short_name'        => $request->short_name,
             'status'             => $request->status,
             'description'        => $request->description,
-            'image'              => $imageName
+            'image'              => $imageName,
+            'summary'       => $request->summary,
+            'heading'       => $request->heading,
+            'meta_title'    => $request->meta_title,
+            'meta_keywords' => $request->meta_keywords,
+            'meta_description' => $request->description
         ]);
         
         foreach ($request->department_id as $departmentId) {
@@ -86,7 +95,11 @@ class ProductTypeController extends Controller
         $request->validate([
             'department_id'     => 'required',
             'short_name'        => 'required',
-            'name'              => 'required|unique:product_types,name,' . $id
+            'name'              => 'required|unique:product_types,name,' . $id,
+            'heading' => 'required', 
+            'meta_title' => 'required',
+            'meta_keywords' => 'required',
+            'meta_description' => 'required'
         ]);
 
         $productType = ProductType::where('id', $id)->first();
@@ -106,7 +119,13 @@ class ProductTypeController extends Controller
             'short_name'        => $request->short_name,
             'status'             => $request->status,
             'description'        => $request->description,
-            'image'              => $imageName ?? $oldProductTypeImage
+            'image'              => $imageName ?? $oldProductTypeImage,
+            'description'        =>$request->description,
+            'summary'            => $request->summary,
+            'heading'       => $request->heading,
+            'meta_title'    => $request->meta_title,
+            'meta_keywords' => $request->meta_keywords,
+            'meta_description' => $request->description
         ]);
         
         ProductTypeDepartment::where('product_type_id',$id)->delete();
