@@ -42,9 +42,10 @@ class ProductController extends Controller
         }
 
         $brands = Brand::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
+        $departments = Department::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
         $productTypes = ProductType::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
     
-        return view('products.index', compact('brands', 'productTypes'));
+        return view('products.index', compact('brands', 'productTypes','departments'));
     }
 
     public function create()
@@ -549,11 +550,18 @@ class ProductController extends Controller
                 $q->where('id', $request->product_type_id);
             });
         }
+
+        if ($request->has('department_id') && $request->department_id) {
+            $query->whereHas('department', function ($q) use ($request) {
+                $q->where('id', $request->department_id);
+            });
+        }
         // Apply search filter if there's any search value
         if ($request->has('search') && !empty($request->input('search.value'))) {
             $search = $request->input('search.value');
             $query->where(function ($q) use ($search) {
                 $q->where('article_code', 'like', "%{$search}%")
+                    ->orWhere('short_description', 'like', "%{$search}%")
                     ->orWhere('manufacture_code', 'like', "%{$search}%")
                     ->orWhereHas('brand', function ($q) use ($search) {
                         $q->where('name', 'like', "%{$search}%");

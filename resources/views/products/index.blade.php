@@ -33,7 +33,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="form-group col-3 mb-2">
-                                    <label for="brandFilter">Brand Name:</label>
+                                    <label for="brandFilter" class="mb-0">Brand Name:</label>
                                     <select id="brandFilter" class="form-control select2">
                                         <option value="">All Brands</option>
                                         @foreach ($brands as $brand)
@@ -43,12 +43,23 @@
                                 </div>
 
                                 <div class="form-group col-3 mb-2">
-                                    <label for="typeFilter">Product Type:</label>
+                                    <label for="typeFilter" class="mb-0">Product Type:</label>
                                     <select id="typeFilter" class="form-control select2">
-                                        <option value="">All Products Type</option>
+                                        <option value="">All Products Types</option>
                                         @foreach ($productTypes as $productType)
                            
                                             <option value="{{ $productType->id }}">{{ $productType->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-3 mb-2">
+                                    <label for="departmentFilter" class="mb-0">Department:</label>
+                                    <select id="departmentFilter" class="form-control select2">
+                                        <option value="">All Department</option>
+                                        @foreach ($departments as $department)
+                           
+                                            <option value="{{ $department->id }}">{{ $department->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -59,9 +70,10 @@
                                         <th>#</th>
                                         <th>Article Code</th>
                                         <th>Manufacture Code</th>
-                                        <th>Department</th>
                                         <th>Product Type</th>
                                         <th>Brand</th>
+                                        <th>Department</th>
+                                        <th>Description</th>
                                     </tr>
                                 </thead>
 
@@ -76,7 +88,7 @@
     <x-include-plugins :plugins="['dataTable', 'update-status', 'select2']"></x-include-plugins>
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#brandFilter, #typeFilter').select2({
+            $('#brandFilter, #typeFilter, #departmentFilter').select2({
                 width: '100%',
             });
 
@@ -89,7 +101,7 @@
                         d.page = Math.floor(d.start / d.length) + 1;
                         d.brand_id = $('#brandFilter').val();
                         d.product_type_id = $('#typeFilter').val();
-                        console.log(d.product_type_id);
+                        d.department_id = $('#departmentFilter').val();
                     }
                 },
                 columns: [{
@@ -101,16 +113,20 @@
                         data: 'manufacture_code'
                     },
                     {
-                        title: "Department",
-                        data: 'department.name'
-                    },
-                    {
                         title: "Brand",
                         data: 'brand.name'
                     },
                     {
                         title: "Product Type",
                         data: 'product_type.name'
+                    },
+                    {
+                        title: "Department",
+                        data: 'department.name'
+                    },
+                    {
+                        title: "Short Description",
+                        data: 'short_description'
                     },
                     {
                         title: "Actions",
@@ -162,7 +178,7 @@
                     }
                 }
             });
-            $('#brandFilter, #typeFilter').on('change', function() {
+            $('#brandFilter, #typeFilter, #departmentFilter').on('change', function() {
                 table.ajax.reload();
             });
 
