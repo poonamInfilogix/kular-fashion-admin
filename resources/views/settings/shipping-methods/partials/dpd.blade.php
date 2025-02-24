@@ -9,16 +9,12 @@
             <x-form-input name="dpd_api_endpoint" value="{{ setting('dpd_api_endpoint') }}" label="Api Base Endpoint"
                 placeholder="Enter DPD Api Endpoint" required="true" />
         </div>
-    </div>
 
-    <div class="row">
         <div class="col-md-6 mb-2">
             <x-form-input name="dpd_api_token" value="{{ decryptData(setting('dpd_api_token')) }}" label="Api Token"
                 placeholder="Enter DPD Api Token" required="true" />
         </div>
-    </div>
 
-    <div class="row">
         <div class="col-md-6 mb-2">
             <label for="is_dpd_active">Status</label>
             <select name="dpd_status" id="dpd_status" class="form-control">

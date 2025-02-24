@@ -7,16 +7,12 @@
             <x-form-input name="royal_mail_api_endpoint" value="{{ setting('royal_mail_api_endpoint') }}"
                 label="Api Base Endpoint" placeholder="Enter Royal Mail Api Endpoint" required="true" />
         </div>
-    </div>
 
-    <div class="row">
         <div class="col-md-6 mb-2">
             <x-form-input name="royal_mail_api_key" value="{{ decryptData(setting('royal_mail_api_key')) }}"
                 label="Api Key" placeholder="Enter Royal Mail Api Key" required="true" />
         </div>
-    </div>
 
-    <div class="row">
         <div class="col-md-6 mb-2">
             <label for="is_royal_mail_active">Status</label>
             <select name="royal_mail_status" id="royal_mail_status" class="form-control">
