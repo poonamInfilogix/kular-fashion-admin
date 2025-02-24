@@ -74,10 +74,16 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::post('/test-products', [ProductController::class, 'testing'])->name('test.products');
 
     Route::get('general-settings', [SettingController::class, 'generalSetting'])->name('general-settings.index');
-    Route::post('general-settings.store', [SettingController::class, 'generalSettingStore'])->name('general-settings.store');
+    Route::post('general-settings', [SettingController::class, 'generalSettingStore'])->name('general-settings.store');
 
     Route::get('web-settings', [SettingController::class, 'webSetting'])->name('web-settings.index');
-    Route::post('web-settings.store', [SettingController::class, 'webSettingStore'])->name('web-settings.store');
+    Route::post('web-settings', [SettingController::class, 'webSettingStore'])->name('web-settings.store');
+
+    Route::get('shipping-methods', [SettingController::class, 'shippingMethodSettings'])->name('shipping-methods.index');
+    Route::put('shipping-methods/{method}', [SettingController::class, 'shippingMethodUpdate'])->name('shipping-methods.update');
+
+    Route::get('payment-methods', [SettingController::class, 'paymentMethodSettings'])->name('payment-methods.index');
+    Route::put('payment-methods/{method}', [SettingController::class, 'paymentMethodUpdate'])->name('payment-methods.store');
 
     Route::get('size-scales/sizes/{sizeScaleId}', [SizeController::class, 'index'])->name('sizes.index');
     Route::get('size-scales/sizes/{sizeScaleId}/create', [SizeController::class, 'create'])->name('sizes.create');

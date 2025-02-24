@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Setting;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Crypt;
 
 class SettingController extends Controller
 {
@@ -120,5 +121,46 @@ class SettingController extends Controller
         }
 
         return redirect()->route('web-settings.index')->with('success', 'Web Setting updated successfully');
+    }
+
+    public function paymentMethodSettings(){
+        return view('settings.paymemt-methods.index');
+    }
+
+    public function paymentMethodUpdate(Request $request){
+        dd($request->all());
+    }
+
+    public function shippingMethodSettings(){
+        return view('settings.shipping-methods.index');
+    }
+
+    public function shippingMethodUpdate(Request $request, $method){
+        $rules = [
+            $method . '_api_endpoint' => 'required|url', 
+            $method . '_status' => 'required|boolean'
+        ];
+
+        if ($method === 'royal_mail') {
+            $rules[$method . '_api_key'] = 'required|string';
+        }
+
+        if ($method === 'dpd') {
+            $rules[$method . '_api_token'] = 'required|string';
+        }
+
+        $request->validate($rules);
+
+        $skippedArray = array_slice($request->all(), 1, null, true);
+
+        foreach ($skippedArray as $key => $value) {
+            if($key === 'royal_mail_api_key' || $key === 'dpd_api_token'){
+                $value = encryptData($value);
+            }
+
+            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
+        
+        return redirect()->back()->with('success', 'Shipping method settings updated successfully')->with('method', $method);
     }
 }

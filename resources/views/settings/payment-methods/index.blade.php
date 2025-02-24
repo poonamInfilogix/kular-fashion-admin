@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Web General Settings')
+@section('title', 'Payment Method Settings')
 
 @section('content')
     <div class="page-content">
@@ -12,7 +12,7 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <form class="form-horizontal" action="{{ route('web-settings.store') }}" method="POST"
+                            <form class="form-horizontal" action="{{ route('payment-settings.store') }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
@@ -57,7 +57,7 @@
                                     <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                         <div class="mb-3">
                                             <x-form-input name="website_title" value="{{ setting('website_title') }}"
-                                                label="Website title" placeholder="Enter website title" required="true" />
+                                                label="Website title" placeholder="Enter websitE title" required="true" />
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">

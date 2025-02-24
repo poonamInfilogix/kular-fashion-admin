@@ -188,6 +188,12 @@
                             @can('view settings')
                                 <li><a href="{{ route('web-settings.index') }}">General</a></li>
                             @endcan
+                            @can('view settings')
+                                <li><a href="{{ route('shipping-methods.index') }}">Shipping Methods</a></li>
+                            @endcan
+                            @can('view settings')
+                                <li><a href="{{ route('payment-methods.index') }}">Payment Methods</a></li>
+                            @endcan
                         </ul>
                     </li>
                 @endcanany
