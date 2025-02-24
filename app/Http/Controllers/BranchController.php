@@ -82,13 +82,16 @@ class BranchController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Branch $branch)
     {
         if(!Gate::allows('edit branches')) {
             abort(403);
         }
-        $branch = Branch::find($id);
-        return view('branches.edit',compact('branch'));
+
+        $defaultFooter = setting('order_receipt_footer');
+        $defaultHeader = setting('order_receipt_header');
+
+        return view('branches.edit',compact('branch', 'defaultHeader', 'defaultFooter'));
     }
 
     /**

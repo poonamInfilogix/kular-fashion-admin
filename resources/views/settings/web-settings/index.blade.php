@@ -57,7 +57,7 @@
                                     <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                         <div class="mb-3">
                                             <x-form-input name="website_title" value="{{ setting('website_title') }}"
-                                                label="Website title" placeholder="Enter websitE title" required="true" />
+                                                label="Website title" placeholder="Enter website title" required="true" />
                                         </div>
                                     </div>
                                     <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
@@ -70,7 +70,7 @@
                                     <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                         <div class="mb-3">
                                             <x-form-input name="web_contact_email"
-                                                value="{{ setting('web_contact_email') }}" label="web contact email"
+                                                value="{{ setting('web_contact_email') }}" label="Web contact email"
                                                 placeholder="Enter web contact email" required="true" />
                                         </div>
                                     </div>

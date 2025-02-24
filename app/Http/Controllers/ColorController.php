@@ -35,7 +35,7 @@ class ColorController extends Controller
         $request->validate([
             'name' => 'required|unique:colors,name',
             'short_name' => 'required|min:1|max:5|unique:colors,short_name',
-            'code' => 'required|min:1|max:3'
+            'code' => 'required|min:1|max:3|unique:colors,code',
         ]);
 
         Color::create([
@@ -73,7 +73,7 @@ class ColorController extends Controller
         $request->validate([
             'name' => 'required|unique:colors,name,'.$color->id,
             'short_name' => 'required|min:1|max:5|unique:colors,short_name,'.$color->id,
-            'code' => 'required|min:1|max:3'
+            'code' => 'required|min:1|max:3|unique:colors,code,'.$color->id, 
         ]);
 
         $color->update([
