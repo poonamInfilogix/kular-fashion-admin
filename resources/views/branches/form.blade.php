@@ -41,13 +41,13 @@
     <div class="col-md-4">
         <label>Order Receipt Header</label>
         <textarea name="order_receipt_header" id="order_receipt_header" class="form-control"
-            placeholder="Enter order receipt header">{{ isset($branch) ? $branch->order_receipt_header : $defaultHeader }}</textarea>
+            placeholder="Enter order receipt header">{{ old('order_receipt_header', $branch->order_receipt_header ?? $defaultHeader) }}</textarea>
     </div>
 
     <div class="col-md-4">
         <label>Order Receipt Footer</label>
         <textarea name="order_receipt_footer" id="order_receipt_footer" class="form-control"
-            placeholder="Enter order receipt Footer">{{ isset($branch) ? $branch->order_receipt_footer : $defaultFooter }}</textarea>
+            placeholder="Enter order receipt Footer">{{ old('order_receipt_header', $branch->order_receipt_footer ?? $defaultFooter) }}</textarea>
     </div>
 </div>
 <div class="row mb-2">
