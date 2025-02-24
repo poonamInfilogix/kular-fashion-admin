@@ -1,5 +1,7 @@
 <div class="card">
     <div class="card-body">
+        <h4 class="card-title">Basic Details</h4>
+
         <div class="row mb-2">
             <div class="col-sm-6 col-md-3">
                 <div class="mb-3">
@@ -35,12 +37,12 @@
 
             <div class="col-sm-6 col-md-2">
                 <div class="mb-3 position-relative">
-                    <label for="validationTooltipUsername" class="form-label">Margin</label>
+                    <label for="margin" class="form-label">Margin</label>
                     <div class="input-group">
                         <input type="text" class="form-control" name="margin" value="{{ $brand->margin ?? '' }}"
                             label="Margin" placeholder="Enter Margin" min="0" max="100" />
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
+                            <span class="input-group-text">%</span>
                         </div>
                     </div>
                 </div>
@@ -58,13 +60,14 @@
                     </select>
                 </div>
             </div>
-            <div class="col-sm-6 col-md-3">
+            {{-- ///tTo remove --}}
+            {{-- <div class="col-sm-6 col-md-3">
                 <div class="mb-3">
                     <label form="description" class="form-label">Description</label>
                     <textarea name="description" class="form-control" placeholder="Enter Description" rows=3>{{ old('description', $brand->description ?? '') }}</textarea>
                 </div>
-            </div>
-
+            </div> --}}
+            {{-- ///tTo remove --}}
             <div class="col-md-4 d-none d-md-block">
                 @if (isset($brand) && $brand->image)
                     <img src="{{ asset($brand->image) }}" id="previewBrand" class="img-preview img-fluid w-50">
@@ -76,9 +79,59 @@
     </div>
 </div>
 
+{{-- =======End Summary===========--}}
+
+<div class="card">
+    <div class="card-body">
+        <div>
+            <h4 class="card-title">Summary</h4>
+            <textarea name="summary" id="summary" class="editor" rows="2">{{ $brand->summary ?? '' }}</textarea>
+        </div>
+        <div class="mt-3">
+            <h4 class="card-title">Description</h4>
+            <textarea name="description" id="description" class="editor" rows="2">{{ $brand->description ?? '' }}</textarea>
+        </div>
+    </div>
+</div>
+{{--=======End Summary=========== --}}
+
+{{-- ============SEO --}}
+<!-- SEO -->
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">SEO</h4>
+        <div class="row">
+            <div class="col-sm-10 mb-2">
+                <x-form-input name="heading" label="Heading" required="true"
+                value="{{ $brand->heading ?? '' }}" placeholder="Heading" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="mb-2">
+                    <x-form-input name="meta_title" label="Meta title" required="true"
+                        value="{{ $brand->meta_title ?? '' }}" placeholder="Meta title" />
+                </div>
+                <div class="mb-2">
+                    <x-form-input name="meta_keywords" label="Meta Keywords"
+                        value="{{ $brand->meta_keywords ?? '' }}" placeholder="Meta Keywords"
+                        required="true" />
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="mb-3">
+                    <label for="meta_description">Meta Description</label>
+                    <textarea name="meta_description" class="form-control" id="meta_description" rows="5"
+                        placeholder="Meta Description">{{ $brand->meta_description ?? '' }}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- =============END SEO --}}
 <button type="submit" class="btn btn-primary w-md">Submit</button>
 
-<x-include-plugins :plugins="['image']"></x-include-plugins>
+<x-include-plugins :plugins="['image', 'contentEditor']"></x-include-plugins>
 <script>
     $(function() {
         $('#add-brand-image').change(function() {
