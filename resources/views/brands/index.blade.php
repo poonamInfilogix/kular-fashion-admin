@@ -104,7 +104,7 @@
                 ],
                 drawCallback: function(settings) {
                     $('#datatable th, #datatable td').addClass('p-1');
-                }
+                },
             });
 
             $('#importButton').on('click', function() {
