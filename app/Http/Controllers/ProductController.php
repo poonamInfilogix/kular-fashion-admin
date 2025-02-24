@@ -1098,6 +1098,7 @@ class ProductController extends Controller
 
     public function updateWebConfigration(Request $request, Product $product)
     {
+
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $image) {
                 if ($image->getSize() < 10240 * 1024) {
@@ -1127,6 +1128,7 @@ class ProductController extends Controller
         }
 
         $request->validate([
+            'heading' => 'required',
             'name' => 'required',
             'price' => 'required|numeric',
             'sale_price' => 'nullable|numeric',
@@ -1194,6 +1196,7 @@ class ProductController extends Controller
             ['product_id' => $product->id],
             [
                 'is_splitted_with_colors' => $request->has('split_with_colors') ? 1 : 0,
+                'heading' => $request->heading,
                 'summary' => $request->summary,
                 'description' => $request->description,
                 'meta_title' => $request->meta_title,

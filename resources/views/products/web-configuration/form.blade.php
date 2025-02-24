@@ -91,10 +91,11 @@
 <!-- Sizes & prices -->
 <div class="card">
     <div class="card-body">
-        <h4 class="card-title">Sizes & Prices</h4>
         <div class="row">
-            <div class="col-md-12">
-                <table class="table table-stripped table-sm">
+            <div class="col-md-6">
+                <h4 class="card-title">Sizes & Prices</h4>
+
+                <table class="table table-striped table-sm">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -104,12 +105,43 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($product->sizes as $index => $size)
+                        @foreach ($product->sizes as $index => $size)
                             <tr>
-                                <th>{{ $index+1 }}</th>
-                                <th>{{ $size->sizeDetail->size }}</th>
-                                <th><input type="text" name="sizes[{{$size->id}}][web_price]" class="form-control" value="{{ $size->web_price }}"></th>
-                                <th><input type="text" name="sizes[{{$size->id}}][web_sale_price]" class="form-control" value="{{ $size->web_sale_price }}"></th>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $size->sizeDetail->size }}</td>
+                                <td><input type="text" name="sizes[{{ $size->id }}][web_price]"
+                                        class="form-control" value="{{ $size->web_price }}"></td>
+                                <td><input type="text" name="sizes[{{ $size->id }}][web_sale_price]"
+                                        class="form-control" value="{{ $size->web_sale_price }}"></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-6">
+                <h4 class="card-title">Colors</h4>
+
+                <table class="table table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Color Name</th>
+                            <th>Swatch</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($product->colors as $index => $color)
+                            <tr>
+                                <th>{{ $index + 1 }}</th>
+                                <th>{{ $color->colorDetail->name }}</th>
+                                <th>
+                                    <div class="swatch-color">
+                                        <div class="me-1 color-swatch large"
+                                            style="background: {{ $color->colorDetail->ui_color_code }};">
+                                        </div>
+                                    </div>
+                                </th>
                             </tr>
                         @endforeach
                     </tbody>
@@ -133,8 +165,8 @@
             </div>
             <div class="col-md-4 d-flex gap-2 align-items-center">
                 <div class="small-toggle-button">
-                    <input type="checkbox" name="split_with_colors" id="splitWithColors" switch="success" data-on="On" data-off="Off"
-                        @checked($product->is_splitted_with_colors === '1') />
+                    <input type="checkbox" name="split_with_colors" id="splitWithColors" switch="success"
+                        data-on="On" data-off="Off" @checked($product->is_splitted_with_colors === '1') />
                     <label class="mb-0" for="splitWithColors" data-on-label="On" data-off-label="Off"></label>
                 </div>
                 <label for="splitWithColors">Split With Colors</label>
@@ -195,7 +227,7 @@
         <h4 class="card-title">SEO</h4>
         <div class="row">
             <div class="col-sm-10 mb-2">
-                <x-form-input name="meta_title" label="Heading" required="true"
+                <x-form-input name="heading" label="Heading" required="true"
                     value="{{ $product->webInfo->heading ?? '' }}" placeholder="Heading" />
             </div>
         </div>

@@ -20,12 +20,17 @@ input[switch=danger]:label {
     background-color: red;
 }
 
-.d-color-code{
+.d-color-code, .color-swatch{
     border: 1px solid; 
     border-radius: 4px; 
     height: 1.0rem; 
     width: 1.0rem; 
     cursor: pointer;
+}
+
+.d-color-code, .color-swatch.large{
+    height: 2.0rem; 
+    width: 2.0rem; 
 }
 
 .d-size-box{
