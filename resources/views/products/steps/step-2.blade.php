@@ -96,7 +96,7 @@
                                             <label for="size_range_min">Size Range(Min) <span class="text-danger">*</span></label>
                                             <select name="size_range_min" id="size_range_min" @class(['form-control', 'is-invalid' => $errors->has('size_range_min')])>
                                                 @foreach($sizes as $size)
-                                                    <option value="{{ $size->id }}" @selected(old('size_range_min', $savingProduct->size_range_min) == $size->id)>
+                                                    <option value="{{ $size->id }}" @selected(old('size_range_min', $savingProduct->size_range_min ?? '') == $size->id)>
                                                         {{ $size->size }}
                                                     </option>
                                                 @endforeach
@@ -111,7 +111,7 @@
                                             <label for="size_range_max">Size Range(Max) <span class="text-danger">*</span></label>
                                             <select name="size_range_max" id="size_range_max" @class(['form-control', 'is-invalid' => $errors->has('size_range_max')])>
                                                 @foreach($sizes as $index => $size)
-                                                    <option value="{{ $size->id }}" @selected(old('size_range_max', $savingProduct->size_range_max) == $size->id)>
+                                                    <option value="{{ $size->id }}" @selected(old('size_range_max', $savingProduct->size_range_max ?? '') == $size->id)>
                                                         {{ $size->size }}
                                                     </option>
                                                 @endforeach

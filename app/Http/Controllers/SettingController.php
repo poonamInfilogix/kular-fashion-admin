@@ -86,7 +86,7 @@ class SettingController extends Controller
 
     public function webSettingStore(Request $request){
         $request->validate([
-            'web_site_title' => 'required',
+            'website_title' => 'required',
             "web_contact_email" => 'required',
             "web_contact_no" => 'required',
         ]);
@@ -94,7 +94,7 @@ class SettingController extends Controller
         $skippedArray = array_slice($request->all(), 1, null, true);
 
         $web_settings = [
-            'web_icon'  => 'web_icon',
+            'site_logo'  => 'site_logo',
             'web_favicon' => 'web_favicon',
         ];
 
