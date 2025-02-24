@@ -20,10 +20,10 @@
                         </h6>
                     </div>
                     <div class="col-sm-3">
-                        <h6 class="mb-2">Sent By: <strong>{{$inventoryTransfer->sentBy->name }}</strong></h6>
+                        <h6 class="mt-1 mb-2">Sent By: <strong>{{$inventoryTransfer->sentBy->name }}</strong></h6>
                     </div>
                     <div class="col-sm-3">
-                        <h6 class="mb-2">Transfer Date: <strong><td>{{ date('m-d-Y', strtotime($inventoryTransfer->created_at))}}</td></strong></h6>
+                        <h6 class="mt-1 mb-2">Transfer Date: <strong><td>{{ date('d-m-Y', strtotime($inventoryTransfer->created_at))}}</td></strong></h6>
                     </div>
                 </div>
                 <!-- ==============  -->
