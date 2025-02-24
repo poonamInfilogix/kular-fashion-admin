@@ -60,14 +60,7 @@
                     </select>
                 </div>
             </div>
-            {{-- ///tTo remove --}}
-            {{-- <div class="col-sm-6 col-md-3">
-                <div class="mb-3">
-                    <label form="description" class="form-label">Description</label>
-                    <textarea name="description" class="form-control" placeholder="Enter Description" rows=3>{{ old('description', $brand->description ?? '') }}</textarea>
-                </div>
-            </div> --}}
-            {{-- ///tTo remove --}}
+
             <div class="col-md-4 d-none d-md-block">
                 @if (isset($brand) && $brand->image)
                     <img src="{{ asset($brand->image) }}" id="previewBrand" class="img-preview img-fluid w-50">
@@ -78,8 +71,6 @@
         </div>
     </div>
 </div>
-
-{{-- =======End Summary===========--}}
 
 <div class="card">
     <div class="card-body">
@@ -93,10 +84,7 @@
         </div>
     </div>
 </div>
-{{--=======End Summary=========== --}}
 
-{{-- ============SEO --}}
-<!-- SEO -->
 <div class="card">
     <div class="card-body">
         <h4 class="card-title">SEO</h4>
@@ -128,7 +116,7 @@
         </div>
     </div>
 </div>
-{{-- =============END SEO --}}
+
 <button type="submit" class="btn btn-primary w-md">Submit</button>
 
 <x-include-plugins :plugins="['image', 'contentEditor']"></x-include-plugins>
