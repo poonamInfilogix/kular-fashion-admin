@@ -218,7 +218,7 @@
                                                     @if($branch->id===1)
                                                         {{ $size->quantity($color->id) }}
                                                     @else
-                                                        {{ $size->inventoryAvailableQuantity($color->color_id, $branch->id) }}
+                                                        {{ $size->inventoryAvailableQuantity($color->id, $branch->id) }}
                                                     @endif
                                                 </td>
                                             @endforeach
