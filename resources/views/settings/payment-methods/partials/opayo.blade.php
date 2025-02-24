@@ -2,20 +2,22 @@
     @csrf
     @method('PUT')
 
+    <input type="hidden" name="method" value="opayo">
+
     <div class="row">
         <div class="col-md-6 mb-2">
             <x-form-input name="opayo_vendor_name" value="{{ setting('opayo_vendor_name') }}"
-                label="Vendor Name" placeholder="Enter Royal Mail Api Endpoint" required="true" />
+                label="Vendor Name" placeholder="Vendor Name" required="true" />
         </div>
 
         <div class="col-md-6 mb-2">
             <x-form-input name="opayo_api_key" value="{{ decryptData(setting('opayo_api_key')) }}"
-                label="Api Key" placeholder="Enter Royal Mail Api Key" required="true" />
+                label="Api Key" placeholder="Api Key" required="true" />
         </div>
 
         <div class="col-md-6 mb-2">
             <x-form-input name="opayo_encryption_key" value="{{ decryptData(setting('opayo_encryption_key')) }}"
-                label="Encryption Key" placeholder="Enter Royal Mail Api Key" required="true" />
+                label="Encryption Key" placeholder="Encryption Key" required="true" />
         </div>
     
         <div class="col-md-6 mb-2">

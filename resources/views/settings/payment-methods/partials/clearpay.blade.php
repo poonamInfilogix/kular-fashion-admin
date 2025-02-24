@@ -1,10 +1,12 @@
 <form action="{{ route('payment-methods.update', 'clearpay') }}" method="POST">
     @csrf
     @method('PUT')
+    
+    <input type="hidden" name="method" value="clearpay">
 
     <div class="row">
         <div class="col-md-6 mb-2">
-            <x-form-input name="clearpay_merchant_id" value="{{ setting('clearpay_merchant_id') }}"
+            <x-form-input name="clearpay_merchant_id" value="{{ decryptData(setting('clearpay_merchant_id')) }}"
                 label="Merchant ID" placeholder="Merchant ID" required="true" />
         </div>
 
@@ -14,7 +16,7 @@
         </div>
 
         <div class="col-md-6 mb-2">
-            <x-form-input name="clearpay_secret_key" value="{{ decryptData(setting('clearpay_api_key')) }}"
+            <x-form-input name="clearpay_secret_key" value="{{ decryptData(setting('clearpay_secret_key')) }}"
                 label="Secret Key" placeholder="Api Key" required="true" />
         </div>
 

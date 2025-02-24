@@ -41,6 +41,10 @@ if(!function_exists('encryptData')) {
 
 if(!function_exists('decryptData')) {
     function decryptData($encryptedData) {
+        if(!$encryptedData){
+            return '';
+        }
+
         $key = 'KULAR_FASHION';
         $decodedData = base64_decode($encryptedData);
         

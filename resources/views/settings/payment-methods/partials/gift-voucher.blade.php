@@ -1,6 +1,9 @@
 <form action="{{ route('payment-methods.update', 'gift_voucher') }}" method="POST">
     @csrf
     @method('PUT')
+
+    <input type="hidden" name="method" value="gift_voucher">
+
     <div class="row">
         <div class="col-md-6 mb-2">
             <label for="gift_voucher_status">Status</label>

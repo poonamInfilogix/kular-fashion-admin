@@ -100,8 +100,7 @@ class SettingController extends Controller
         ];
 
         foreach ($web_settings as $settingKey) {
-            $setting = Setting::where('key', $settingKey)->first();
-            $oldImagePath = $setting ? $setting->value : null;
+            $oldImagePath = setting($settingKey);
            
             if ($request->hasFile($settingKey)) {
                 $newImageName = uploadFile($request->file($settingKey), 'uploads/default-images/');
@@ -127,8 +126,79 @@ class SettingController extends Controller
         return view('settings.payment-methods.index');
     }
 
-    public function paymentMethodUpdate(Request $request){
-        dd($request->all());
+    public function paymentMethodUpdate(Request $request, $method){
+        $rules = [
+            $method . '_status' => 'required|boolean'
+        ];
+        
+        if ($method === 'apple_pay') {
+            $rules[$method . '_merchant_identifier'] = 'required|string';
+            $rules[$method . '_merchant_name'] = 'required|string';
+            $rules[$method . '_merchant_id'] = 'required|string';
+            $rules[$method . '_certificate_password'] = 'required|string';
+            $rules[$method . '_environment'] = 'required|string';
+
+            if(!setting('apple_pay_merchant_certificate')){
+                $rules[$method . '_merchant_certificate'] = 'required|file';
+            }
+
+            if(!setting('apple_pay_merchant_private_key')){
+                $rules[$method . '_merchant_private_key'] = 'required|file';
+            }
+        }
+
+        if ($method === 'clearpay') {
+            $rules[$method . '_merchant_id'] = 'required|string';
+            $rules[$method . '_api_key'] = 'required|string';
+            $rules[$method . '_secret_key'] = 'required|string';
+            $rules[$method . '_environment'] = 'required|string';
+        }
+
+        if ($method === 'opayo') {
+            $rules[$method . '_vendor_name'] = 'required|string';
+            $rules[$method . '_api_key'] = 'required|string';
+            $rules[$method . '_encryption_key'] = 'required|string';
+            $rules[$method . '_environment'] = 'required|string';
+        }
+
+        if ($method === 'klarna') {
+            $rules[$method . '_merchant_id'] = 'required|string';
+            $rules[$method . '_api_username'] = 'required|string';
+            $rules[$method . '_api_password'] = 'required|string';
+            $rules[$method . '_client_id'] = 'required|string';
+            $rules[$method . '_api_key'] = 'required|string';
+            $rules[$method . '_environment'] = 'required|string';
+        }
+
+        if ($method === 'credit_card') {
+            $rules[$method . '_publishable_key'] = 'required|string';
+            $rules[$method . '_secret_key'] = 'required|string';
+            $rules[$method . '_environment'] = 'required|string';
+        }
+
+        $request->validate($rules);
+
+        $skippedArray = array_slice($request->all(), 1, null, true);
+
+        foreach ($skippedArray as $key => $value) {
+            if($key === 'apple_pay_merchant_certificate' || $key === 'apple_pay_merchant_private_key'){
+                $filePath = uploadFile($request->file($key), 'credentials/');
+
+                if (setting($key) && File::exists(public_path(setting($key)))) {
+                    File::delete(public_path(setting($key)));
+                }
+                
+                Setting::updateOrCreate(['key' => $key], ['value' => $filePath]);
+            } else {
+                if (strpos($key, '_merchant') !== false || strpos($key, '_password') !== false || strpos($key, '_id') !== false || strpos($key, '_key') !== false || strpos($key, '_secret') !== false) {
+                    $value = encryptData($value);
+                }
+                
+                Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'Payment method settings updated successfully')->with('method', $method);
     }
 
     public function shippingMethodSettings(){
