@@ -2,8 +2,7 @@
 
 @section('title', 'View Inventory')
 @section('header-button')
-    <a href="{{ route('inventory-history') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to Inventory
-        History</a>
+    <a href="{{ route('inventory-history') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Go Back</a>
 @endsection
 @section('content')
     <div class="page-content">

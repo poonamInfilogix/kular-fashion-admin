@@ -25,9 +25,9 @@ return new class extends Migration
             $table->foreign('inventroy_transfer_id')->references('id')->on('inventory_transfers')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->foreign('product_quantity_id')->references('id')->on('product_quantities')->onDelete('cascade');
-            $table->foreign('product_color_id')->references('id')->on('colors')->onDelete('cascade');
-            $table->foreign('product_size_id')->references('id')->on('sizes')->onDelete('cascade');
-            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('set null');
+            $table->foreign('product_color_id')->references('id')->on('product_colors')->onDelete('cascade');
+            $table->foreign('product_size_id')->references('id')->on('product_sizes')->onDelete('cascade');
+            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
         });
     }
 
