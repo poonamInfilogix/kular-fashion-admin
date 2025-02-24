@@ -43,6 +43,11 @@
 @push('scripts')
     <script>
         $(function() {
+            $('#color_select').chosen({
+                width: '100%',
+                placeholder_text_multiple: 'Choose Color'
+            });
+
             $(document).on('click', '.color-selector', function() {
                 let isSelected = false;
                 if ($(this).hasClass('selected')) {
@@ -71,11 +76,8 @@
             $(document).on('click', '.copy-quantity-btn', function() {
                 const $selectedColor = $('.color-selector.selected').first();
                 
-                console.log('selectedColor', $selectedColor)
-                
                 if ($selectedColor.length > 0) {
                     const id = $selectedColor.closest('[data-id]').data('id');
-                    console.log('id',id);
                     
                     if (id) {
                         const colorIdToBeCopied = id.split('-')[1];
@@ -97,7 +99,7 @@
             });
         })
 
-        $(document).ready(function() {
+        $(function() {
             $('#saveVariantBtn').on('click', function() {
                 $('#supplier_color_code').removeClass('is-invalid');
                 $('#supplier_color_name').removeClass('is-invalid');
@@ -107,7 +109,7 @@
                     supplier_color_code: $('#supplier_color_code').val(),
                     supplier_color_name: $('#supplier_color_name').val(),
                     color_select: $('#color_select').val(),
-                    product_id: '{{ isset($product) ? $product->id : 0 }}',
+                    product_id: '{{ $product->id ?? 0 }}',
                     _token: '{{ csrf_token() }}'
                 };
 
@@ -126,6 +128,9 @@
                                     return $(this).attr('data-size-id');
                                 })
                                 .get();
+
+                            $(`#color_select [value="${response.data.color_id}"]`).remove();
+                            $('#color_select').trigger('chosen:updated');
 
                             let uniqueId = $('.quantities-table [data-id]').length + 1;
                             let $newRow = $(`<tr data-id="rm-${response.data.color_id}"></tr>`);

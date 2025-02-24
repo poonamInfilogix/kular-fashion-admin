@@ -187,15 +187,15 @@ class ProductController extends Controller
         $sizes = $product->sizes;
 
         $savedColorIds = $product->colors->pluck('color_id')->toArray();
-        $reversedColorIds = array_reverse($savedColorIds);
-        $savedColors = Color::whereIn('id', $reversedColorIds)->get();
+        $savedColors = Color::whereIn('id', $savedColorIds)->get();
         $savedColorsMapped = $savedColors->keyBy('id')->toArray();
 
         $savedColors = array_map(function ($colorId) use ($savedColorsMapped) {
             return $savedColorsMapped[$colorId] ?? null;
-        }, $reversedColorIds);
+        }, $savedColorIds);
 
-        $colors = Color::where('status', 'Active')->get();
+        $excludedSavedColors = array_keys($savedColorsMapped);
+        $colors = Color::where('status', 'Active')->whereNotIn('id', $excludedSavedColors)->get();
 
         return view('products.steps.edit-step-2', compact('product', 'sizes', 'savedColors', 'colors'));
     }
@@ -355,6 +355,7 @@ class ProductController extends Controller
         $productData = Session::get('savingProduct');
         $productData['variantData'] = $request->all();
         Session::put('savingProduct', $productData);
+        echo '<pre>';
 
         $product = Product::create([
             'name' => $productData['name'],
@@ -394,7 +395,9 @@ class ProductController extends Controller
             ProductSize::create([
                 'product_id' => $product->id,
                 'size_id' => $sizeId,
-                'mrp' => $mrp
+                'mrp' => $mrp,
+                'web_price' => $productData['variantData']['web_price'][$sizeId] ?? 0,
+                'web_sale_price' => $productData['variantData']['sale_price'][$sizeId] ?? 0,
             ]);
         }
 
@@ -409,7 +412,7 @@ class ProductController extends Controller
             $color_id = $productData['colors'][$index];
 
             foreach ($productData['variantData']['quantity'][$color_id] as $sizeId => $quantity) {
-                $productSize = ProductSize::where('size_id', $sizeId)->first();
+                $productSize = ProductSize::where('product_id', $product->id)->where('size_id', $sizeId)->first();
 
                 ProductQuantity::create([
                     'product_id' => $product->id,
@@ -460,7 +463,9 @@ class ProductController extends Controller
     {
         foreach ($request->mrp as $product_size_id => $mrp) {
             ProductSize::find($product_size_id)->update([
-                'mrp' => $mrp
+                'mrp' => $mrp,
+                'web_price' => $request->web_price[$product_size_id] ?? 0,
+                'web_sale_price' => $request->sale_price[$product_size_id] ?? 0,
             ]);
         }
 
@@ -635,7 +640,8 @@ class ProductController extends Controller
             return $savedColorsMapped[$colorId] ?? null;
         }, $reversedColors);
 
-        $colors = Color::where('status', 'Active')->get();
+        $excludedSavedColors = array_keys($savedColorsMapped);
+        $colors = Color::where('status', 'Active')->whereNotIn('id', $excludedSavedColors)->get();
 
         return view('products.steps.step-3', compact('savingProduct', 'sizes', 'savedColors', 'colors'));
     }

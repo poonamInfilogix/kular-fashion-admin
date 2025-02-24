@@ -255,11 +255,15 @@
 <x-include-plugins :plugins="['chosen', 'image', 'datePicker']"></x-include-plugins>
 @push('scripts')
     <script>
-        $(document).ready(function() {
+        $(function() {
             flatpickr('.sale-date-picker', {
                 dateFormat: "d-m-Y",
                 allowInput: true,
                 minDate: "today"
+            });
+
+            $('#add-product-image').change(function() {
+                Image(this, '#preview-product');
             });
 
             $('form').on('keypress', function(e) {
