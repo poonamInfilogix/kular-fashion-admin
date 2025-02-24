@@ -101,10 +101,13 @@
                     <option value="2" @selected(($product->webInfo->status ?? '') === '2')>Hide When Out Of Stock</option>
                 </select>
             </div>
-            <div class="col-md-4">
-                <input type="checkbox" id="switch1" switch="none" checked="">
-                <label for="switch1" data-on-label="On" data-off-label="Off"></label>
-                <label for="mm">Split With Colors</label>
+            <div class="col-md-4 d-flex gap-2 align-items-center">
+                <div class="small-toggle-button">
+                    <input type="checkbox" name="split_with_colors" id="splitWithColors" switch="success" data-on="On" data-off="Off"
+                        @checked($product->is_splitted_with_colors === '1') />
+                    <label class="mb-0" for="splitWithColors" data-on-label="On" data-off-label="Off"></label>
+                </div>
+                <label for="splitWithColors">Split With Colors</label>
             </div>
         </div>
     </div>
@@ -113,7 +116,7 @@
 <!-- Product Images -->
 <div class="card">
     <div class="card-body">
-        <h4 class="card-title mb-3">Product Images</h4>
+        <h4 class="card-title mb-3">Images</h4>
 
         <div class="row">
             <div class="col-md-4">
@@ -163,7 +166,7 @@
         <div class="row">
             <div class="col-sm-10 mb-2">
                 <x-form-input name="meta_title" label="Heading" required="true"
-                value="{{ $product->webInfo->heading ?? '' }}" placeholder="Heading" />
+                    value="{{ $product->webInfo->heading ?? '' }}" placeholder="Heading" />
             </div>
         </div>
         <div class="row">

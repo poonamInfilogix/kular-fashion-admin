@@ -107,7 +107,9 @@
                 minDate: "today"
             });
 
-            $('#tags').select2();
+            $('#tags').select2({
+                width: '100%'
+            });
         });
     </script>
 @endpush

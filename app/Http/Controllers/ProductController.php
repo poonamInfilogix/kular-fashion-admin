@@ -44,8 +44,8 @@ class ProductController extends Controller
         $brands = Brand::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
         $departments = Department::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
         $productTypes = ProductType::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
-    
-        return view('products.index', compact('brands', 'productTypes','departments'));
+
+        return view('products.index', compact('brands', 'productTypes', 'departments'));
     }
 
     public function create()
@@ -458,7 +458,7 @@ class ProductController extends Controller
         $tags = Tag::where('status', 'Active')->orderBy('name', 'ASC')->get();
         $sizeScales = SizeScale::where('status', 'Active')->orderBy('name', 'ASC')->get();
         $sizes = Size::where('status', 'Active')->orderBy('size', 'ASC')->get();
-        $productTags = ProductTag::where('product_id', $product->id)->pluck('tag_id')->toArray(); 
+        $productTags = ProductTag::where('product_id', $product->id)->pluck('tag_id')->toArray();
 
         return view('products.edit', compact('brands', 'productTypes', 'departments', 'product', 'taxes', 'tags', 'sizes', 'sizeScales', 'productTags'));
     }
@@ -544,7 +544,7 @@ class ProductController extends Controller
                 $q->where('id', $request->brand_id);
             });
         }
-       
+
         if ($request->has('product_type_id') && $request->product_type_id) {
             $query->whereHas('productType', function ($q) use ($request) {
                 $q->where('id', $request->product_type_id);
@@ -574,18 +574,18 @@ class ProductController extends Controller
                     });
             });
         }
-       
+
         // Order by id in descending order by default
         $products = $query->orderBy('updated_at', 'desc') // Changed to 'desc' for descending order
             ->paginate($request->input('length', 10));
-            
+
         $data = [
             'draw' => $request->input('draw'),
             'recordsTotal' => $products->total(),
             'recordsFiltered' => $products->total(),
             'data' => $products->items(),
         ];
-        
+
         return response()->json($data);
     }
 
@@ -705,7 +705,7 @@ class ProductController extends Controller
 
         foreach ($barcodesQty->barcodesToBePrinted as $key => $data) {
             $skip = false;
-            
+
             if (!isset($data['product'])) {
                 $defaultProductsToBePrinted = Product::where('are_barcodes_printed', 0)->orWhere('barcodes_printed_for_all', 0)->with('quantities')->get();
 
@@ -715,7 +715,7 @@ class ProductController extends Controller
                     $totalQuantitySum = $quantities->sum(function ($quantity) {
                         return $quantity->total_quantity;
                     });
-                
+
                     // If the sum of total_quantity is 0, skip this product
                     if ($totalQuantitySum == 0) {
                         $skip = true;
@@ -726,7 +726,7 @@ class ProductController extends Controller
                         return ($quantity->total_quantity - $quantity->original_printed_barcodes) > 0;
                     });
 
-                    if(count($filteredQuantities) === 0){
+                    if (count($filteredQuantities) === 0) {
                         $skip = true;
                         continue;
                     }
@@ -745,7 +745,7 @@ class ProductController extends Controller
                 Session::put('barcodesToBePrinted', (array) $barcodesQty);
             }
 
-            if($skip){
+            if ($skip) {
                 $tempProductId = $data['productId'];
                 $product = Product::find($tempProductId);
 
@@ -1097,7 +1097,7 @@ class ProductController extends Controller
     }
 
     public function updateWebConfigration(Request $request, Product $product)
-    {        
+    {
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $image) {
                 if ($image->getSize() < 10240 * 1024) {
@@ -1114,10 +1114,10 @@ class ProductController extends Controller
             }
         }
 
-        if($request->saved_image_alt){
-            foreach($request->saved_image_alt as $imageId => $image_alt){
+        if ($request->saved_image_alt) {
+            foreach ($request->saved_image_alt as $imageId => $image_alt) {
                 $image = ProductWebImage::find($imageId);
-    
+
                 if ($image) {
                     $image->update([
                         'alt' => $image_alt
@@ -1150,10 +1150,10 @@ class ProductController extends Controller
             'sale_end' => isset($request->sale_end) ? Carbon::parse($request->sale_end)->toDateString() : null,
         ]);
 
-        
-        $currentTags = ProductTag::where('product_id', $product->id)->pluck('tag_id')->toArray();
-        $selectedTags = $request->tags;
 
+        $currentTags = ProductTag::where('product_id', $product->id)->pluck('tag_id')->toArray();
+        $selectedTags = $request->tags ?? [];
+        
         foreach ($selectedTags as $tagId) {
             ProductTag::updateOrCreate(
                 [
@@ -1166,11 +1166,12 @@ class ProductController extends Controller
                 ]
             );
         }
+
         $removedTags = array_diff($currentTags, $selectedTags);
         foreach ($removedTags as $tagId) {
             ProductTag::where('product_id', $product->id)
-                      ->where('tag_id', $tagId)
-                      ->delete();
+                ->where('tag_id', $tagId)
+                ->delete();
         }
 
         if ($request->specifications) {
@@ -1180,6 +1181,7 @@ class ProductController extends Controller
         ProductWebInfo::updateOrCreate(
             ['product_id' => $product->id],
             [
+                'is_splitted_with_colors' => $request->has('split_with_colors') ? 1 : 0,
                 'summary' => $request->summary,
                 'description' => $request->description,
                 'meta_title' => $request->meta_title,
