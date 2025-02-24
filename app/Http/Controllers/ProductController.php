@@ -41,7 +41,10 @@ class ProductController extends Controller
             abort(403);
         }
 
-        return view('products.index');
+        $brands = Brand::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
+        $productTypes = ProductType::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
+    
+        return view('products.index', compact('brands', 'productTypes'));
     }
 
     public function create()
@@ -534,6 +537,18 @@ class ProductController extends Controller
             $query->where('are_barcodes_printed', 0)->orWhere('barcodes_printed_for_all', 0);
         }
 
+
+        if ($request->has('brand_id') && $request->brand_id) {
+            $query->whereHas('brand', function ($q) use ($request) {
+                $q->where('id', $request->brand_id);
+            });
+        }
+       
+        if ($request->has('product_type_id') && $request->product_type_id) {
+            $query->whereHas('productType', function ($q) use ($request) {
+                $q->where('id', $request->product_type_id);
+            });
+        }
         // Apply search filter if there's any search value
         if ($request->has('search') && !empty($request->input('search.value'))) {
             $search = $request->input('search.value');
@@ -551,18 +566,18 @@ class ProductController extends Controller
                     });
             });
         }
-
+       
         // Order by id in descending order by default
         $products = $query->orderBy('updated_at', 'desc') // Changed to 'desc' for descending order
             ->paginate($request->input('length', 10));
-
+            
         $data = [
             'draw' => $request->input('draw'),
             'recordsTotal' => $products->total(),
             'recordsFiltered' => $products->total(),
             'data' => $products->items(),
         ];
-
+        
         return response()->json($data);
     }
 
