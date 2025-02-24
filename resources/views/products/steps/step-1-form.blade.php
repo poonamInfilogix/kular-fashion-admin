@@ -16,18 +16,17 @@
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="department_id">Department<span class="text-danger">*</span></label>
-            <select name="department_id" id="department_id" @disabled($isEditing ?? false) @class([
-                'form-control',
-                'is-invalid' => $errors->has('department_id'),
-            ])>
+            <select name="department_id" id="department_id" @disabled($isEditing ?? false) @class([ 'form-control'
+                , 'is-invalid'=> $errors->has('department_id'),
+                ])>
                 @foreach ($departments as $department)
-                    <option value="{{ $department->id }}" @selected(($product->department_id ?? '') == $department->id)>
-                        {{ $department->name }}
-                    </option>
+                <option value="{{ $department->id }}" @selected(($product->department_id ?? '') == $department->id)>
+                    {{ $department->name }}
+                </option>
                 @endforeach
             </select>
             @error('department_id')
-                <span class="invalid-feedback">{{ $message }}</span>
+            <span class="invalid-feedback">{{ $message }}</span>
             @enderror
         </div>
     </div>
@@ -35,21 +34,21 @@
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="productType">Product Type <span class="text-danger">*</span></label>
-            <select name="product_type_id" id="product_type" @disabled($isEditing ?? false) @class([
-                'productType form-control',
-                'is-invalid' => $errors->has('product_type_id'),
-            ])>
+            <select name="product_type_id" id="product_type" @disabled($isEditing ?? false)
+                @class([ 'productType form-control' , 'is-invalid'=> $errors->has('product_type_id'),
+                ])>
                 <option value="" disabled>Select Product Type</option>
                 @if (isset($productTypes))
-                    @foreach ($productTypes as $productType)
-                        <option value="{{ $productType->id }}" @selected(old('product_type_id', $product->product_type_id ?? '') == $productType->id)>
-                            {{ $productType->name }}
-                        </option>
-                    @endforeach
+                @foreach ($productTypes as $productType)
+                <option value="{{ $productType->id }}" @selected(old('product_type_id', $product->product_type_id ?? '')
+                    == $productType->id)>
+                    {{ $productType->name }}
+                </option>
+                @endforeach
                 @endif
             </select>
             @error('product_type_id')
-                <span class="invalid-feedback">{{ $message }}</span>
+            <span class="invalid-feedback">{{ $message }}</span>
             @enderror
         </div>
     </div>
@@ -61,14 +60,14 @@
                 class="form-control{{ $errors->has('brand_id') ? ' is-invalid' : '' }}">
                 <option value="" disabled>Select brand</option>
                 @foreach ($brands as $brand)
-                    <option value="{{ $brand->id }}" data-margin="{{ $brand->margin }}"
-                        @selected(old('brand_id', $product->brand_id ?? '') == $brand->id)>
-                        {{ $brand->name }}
-                    </option>
+                <option value="{{ $brand->id }}" data-margin="{{ $brand->margin }}" @selected(old('brand_id', $product->
+                    brand_id ?? '') == $brand->id)>
+                    {{ $brand->name }}
+                </option>
                 @endforeach
             </select>
             @error('brand_id')
-                <span class="invalid-feedback">{{ $message }}</span>
+            <span class="invalid-feedback">{{ $message }}</span>
             @enderror
         </div>
         <input type="hidden" id="brand_margin" value="{{ $product->brand->margin ?? 50 }}">
@@ -90,47 +89,48 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <label for="tags">Tag</label>
-            <select name="tags[]" id="tags" @class(['is-invalid' => $errors->has('tags')]) multiple>
-                <option value="" disabled>Select tag</option>
-                @foreach ($tags as $tag)
-                    <option value="{{ $tag->id }}" @selected(old('tags') && in_array($tag->id, old('tags')))>
-                        {{ $tag->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-    </div>
-
-    <div class="col-sm-6 col-md-2">
-        <div class="mb-3">
-            <x-form-input name="supplier_price" type="number" step="0.01"
-                value="{{ $product->supplier_price ?? '' }}" label="Supplier Price" placeholder="Enter Supplier Price"
-                required="true" />
+            <x-form-input name="supplier_price" type="number" step="0.01" value="{{ $product->supplier_price ?? '' }}"
+                label="Supplier Price" placeholder="Enter Supplier Price" required="true" />
         </div>
     </div>
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="size_scale_id">Size Scale<span class="text-danger">*</span></label>
-            <select name="size_scale_id" @disabled($isEditing ?? false) id="size_scale_id" @class([
-                'form-control',
-                'is-invalid' => $errors->has('size_scale_id'),
-            ])>
+            <select name="size_scale_id" @disabled($isEditing ?? false) id="size_scale_id" @class([ 'form-control'
+                , 'is-invalid'=> $errors->has('size_scale_id'),
+                ])>
                 <option value="" disabled>Select size scale</option>
                 @foreach ($sizeScales as $sizeScale)
-                    <option value="{{ $sizeScale->id }}" @disabled(count($sizeScale->sizes) === 0) @selected(old('size_scale_id', $product->size_scale_id ?? $sizeScale->is_default ? $sizeScale->id : '') == $sizeScale->id)>
-                        {{ $sizeScale->name }}
+                <option value="{{ $sizeScale->id }}" @disabled(count($sizeScale->sizes) === 0)
+                    @selected(old('size_scale_id', $product->size_scale_id ?? $sizeScale->is_default ? $sizeScale->id :
+                    '') == $sizeScale->id)>
+                    {{ $sizeScale->name }}
 
-                        @if (count($sizeScale->sizes) > 0)
-                            ({{ $sizeScale->sizes->first()->size }} - {{ $sizeScale->sizes->last()->size }})
-                        @endif
-                    </option>
+                    @if (count($sizeScale->sizes) > 0)
+                    ({{ $sizeScale->sizes->first()->size }} - {{ $sizeScale->sizes->last()->size }})
+                    @endif
+                </option>
                 @endforeach
             </select>
             @error('size_scale_id')
-                <span class="invalid-feedback">{{ $message }}</span>
+            <span class="invalid-feedback">{{ $message }}</span>
             @enderror
+        </div>
+    </div>
+
+
+    <div class="col-sm-6 col-md-2">
+        <div class="mb-3">
+            <label for="tags">Tags</label>
+            <select name="tags[]" id="tags" @class(['is-invalid'=> $errors->has('tags')]) multiple>
+                <option value="" disabled>Select tag</option>
+                @foreach ($tags as $tag)
+                <option value="{{ $tag->id }}" @selected(old('tags') && in_array($tag->id, old('tags')))>
+                    {{ $tag->name }}
+                </option>
+                @endforeach
+            </select>
         </div>
     </div>
 
@@ -149,7 +149,8 @@
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="status" class="form-label">Season</label>
-            <select name="season" id="season" @disabled($isEditing ?? false) @class(['form-control', 'is-invalid' => $errors->has('season')])>
+            <select name="season" id="season" @disabled($isEditing ?? false) @class(['form-control', 'is-invalid'=>
+                $errors->has('season')])>
                 <option value="Summer" @selected(($product->season ?? setting('default_season')) === 'Summer')>Summer
                 </option>
                 <option value="Winter" @selected(($product->season ?? setting('default_season')) === 'Winter')>Winter
@@ -160,7 +161,7 @@
                 </option>
             </select>
             @error('season')
-                <span class="invalid-feedback">{{ $message }}</span>
+            <span class="invalid-feedback">{{ $message }}</span>
             @enderror
         </div>
     </div>
@@ -168,16 +169,17 @@
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="tax_id">Tax</label>
-            <select name="tax_id" id="tax_id" @class(['form-control', 'is-invalid' => $errors->has('tax_id')])>
+            <select name="tax_id" id="tax_id" @class(['form-control', 'is-invalid'=> $errors->has('tax_id')])>
                 <option value="" disabled>Select Tax</option>
                 @foreach ($taxes as $tax)
-                    <option value="{{ $tax->id }}" @selected(isset($product->tax_id) && $product->tax_id == $tax->id) @selected(!isset($product->tax_id) && $tax->is_default == 1)>
-                        {{ $tax->tax }}%
-                    </option>
+                <option value="{{ $tax->id }}" @selected(isset($product->tax_id) && $product->tax_id == $tax->id)
+                    @selected(!isset($product->tax_id) && $tax->is_default == 1)>
+                    {{ $tax->tax }}%
+                </option>
                 @endforeach
             </select>
             @error('tax_id')
-                <span class="invalid-feedback">{{ $message }}</span>
+            <span class="invalid-feedback">{{ $message }}</span>
             @enderror
         </div>
     </div>
@@ -209,12 +211,12 @@
     <div class="col-sm-6 col-md-2">
         <div class="col-md-12 mt-2">
             @if (isset($product->image_path) || isset($product->image))
-                <img src="{{ asset($product->image_path ?? $product->image) }}" id="preview-product"
-                    class="img-preview img-fluid w-100"
-                    onerror="this.onerror=null; this.src='{{ asset(setting('default_product_image')) }}';">
+            <img src="{{ asset($product->image_path ?? $product->image) }}" id="preview-product"
+                class="img-preview img-fluid w-100"
+                onerror="this.onerror=null; this.src='{{ asset(setting('default_product_image')) }}';">
             @else
-                <img src="{{ asset(setting('default_product_image')) }}" id="preview-product"
-                    class="img-fluid w-100;" name="image">
+            <img src="{{ asset(setting('default_product_image')) }}" id="preview-product" class="img-fluid w-100;"
+                name="image">
             @endif
         </div>
     </div>
@@ -227,8 +229,8 @@
             placeholder="Enter Product Name" required="true" />
     </div>
     <div class="col-md-2">
-        <x-form-input name="price" type="number" step="0.01" value="{{ $product->price ?? '' }}"
-            label="Web Price" placeholder="Enter Web Price" required="true" />
+        <x-form-input name="price" type="number" step="0.01" value="{{ $product->price ?? '' }}" label="Web Price"
+            placeholder="Enter Web Price" required="true" />
     </div>
     <div class="col-md-2">
         <x-form-input name="sale_price" type="number" step="0.01" value="{{ $product->sale_price ?? '' }}"
@@ -252,10 +254,10 @@
     </div>
 </div>
 
-<x-include-plugins :plugins="['chosen', 'image', 'datePicker']"></x-include-plugins>
+<x-include-plugins :plugins="['select2', 'image', 'datePicker']"></x-include-plugins>
 @push('scripts')
-    <script>
-        $(function() {
+<script>
+    $(function() {
             flatpickr('.sale-date-picker', {
                 dateFormat: "d-m-Y",
                 allowInput: true,
@@ -274,30 +276,10 @@
             });
         });
 
-        function initializeAndSortChosen(selector, placeholder = null) {
-            const $select = $(selector);
-
-            const placeholderOption = $select.find('option[disabled][selected]').detach();
-
-            const options = $select.find('option').sort((a, b) => {
-                return $(a).text().localeCompare($(b).text());
-            });
-
-            $select.empty();
-            if (placeholderOption.length) $select.append(placeholderOption);
-            $select.append(options);
-
-            $select.chosen({
-                width: '100%',
-                placeholder_text_multiple: placeholder || '',
-            }).trigger('chosen:updated');
-        }
-
         function refreshProductTypeDropdown(departmentId) {
             const productTypeSelect = $('#product_type');
 
             productTypeSelect.html('<option value="" disabled selected>Select Product Type</option>');
-            productTypeSelect.chosen("destroy");
 
             if (departmentId) {
                 $.ajax({
@@ -315,55 +297,49 @@
                             });
                         }
 
-                        $('#product_type').chosen({
-                            width: '100%',
-                            placeholder_text_multiple: 'Select Product Type',
-                        });
-
                         const selectedProductTypeId =
                             "{{ old('product_type_id', $product->product_type_id ?? '') }}";
                         if (selectedProductTypeId) {
-                            productTypeSelect.val(selectedProductTypeId);
+                            productTypeSelect.val(selectedProductTypeId).trigger('change');
                         }
-
-                        productTypeSelect.trigger('chosen:updated');
                     },
                     error: function(xhr, status, error) {
                         console.error('Error fetching product types:', error);
                     }
                 });
             } else {
-                productTypeSelect.chosen("destroy").html('<option value="" disabled selected>Select Product Type</option>');
-                productTypeSelect.chosen({
+                productTypeSelect.select2("destroy").html('<option value="" disabled selected>Select Product Type</option>');
+                productTypeSelect.select2({
                     width: '100%',
+                    placeholder: 'Select Product Type',
+                    allowClear: true
                 });
             }
         }
 
         $(document).ready(function() {
-            $('#product_type').chosen({
+            $('#product_type').select2({
                 width: '100%',
-                placeholder_text_multiple: 'Select Product Type',
             });
 
-            $('#brand_id').chosen({
+            $('#season').select2({
                 width: '100%',
-                placeholder_text_multiple: 'Select Brand',
             });
 
-            $('#department_id').chosen({
+            $('#brand_id').select2({
                 width: '100%',
-                placeholder_text_multiple: 'Select Product Type',
             });
 
-            $('#tags').chosen({
+            $('#department_id').select2({
                 width: '100%',
-                placeholder_text_multiple: 'Select Tags',
             });
 
-            $('#size_scale_id').chosen({
+            $('#tags').select2({
                 width: '100%',
-                placeholder_text_multiple: 'Select Tag',
+            });
+
+            $('#size_scale_id').select2({
+                width: '100%',
             });
 
             @if (empty($product->article_code))
@@ -413,5 +389,5 @@
             var departmentId = $('#department_id').val();
             refreshProductTypeDropdown(departmentId);
         });
-    </script>
+</script>
 @endpush

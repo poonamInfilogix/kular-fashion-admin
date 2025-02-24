@@ -74,22 +74,6 @@
     </div>
 </div>
 
-<!-- Status & Visibility -->
-<div class="card">
-    <div class="card-body">
-        <h4 class="card-title">Status & Visibility</h4>
-        <div class="row">
-            <div class="col-sm-4">
-                <select name="visibilty" id="visibilty" class="form-control">
-                    <option value="0" @selected(($product->webInfo->status ?? '') === '0')>Inactive</option>
-                    <option value="1" @selected(($product->webInfo->status ?? '') === '1')>Active</option>
-                    <option value="2" @selected(($product->webInfo->status ?? '') === '2')>Hide When Out Of Stock</option>
-                </select>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Product Description & Summary -->
 <div class="card">
     <div class="card-body">
@@ -100,6 +84,28 @@
         <div class="mt-3">
             <h4 class="card-title">Description</h4>
             <textarea name="description" id="description" class="editor" rows="2">{{ $product->webInfo->description ?? '' }}</textarea>
+        </div>
+    </div>
+</div>
+
+
+<!-- Status & Visibility -->
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Status & Visibility</h4>
+        <div class="row">
+            <div class="col-md-4">
+                <select name="visibilty" id="visibilty" class="form-control">
+                    <option value="0" @selected(($product->webInfo->status ?? '') === '0')>Inactive</option>
+                    <option value="1" @selected(($product->webInfo->status ?? '') === '1')>Active</option>
+                    <option value="2" @selected(($product->webInfo->status ?? '') === '2')>Hide When Out Of Stock</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <input type="checkbox" id="switch1" switch="none" checked="">
+                <label for="switch1" data-on-label="On" data-off-label="Off"></label>
+                <label for="mm">Split With Colors</label>
+            </div>
         </div>
     </div>
 </div>

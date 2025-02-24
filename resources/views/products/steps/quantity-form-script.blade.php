@@ -43,9 +43,9 @@
 @push('scripts')
     <script>
         $(function() {
-            $('#color_select').chosen({
+            $('#color_select').select2({
                 width: '100%',
-                placeholder_text_multiple: 'Choose Color'
+                dropdownParent: $('#addVariantModal')
             });
 
             $(document).on('click', '.color-selector', function() {
@@ -138,7 +138,8 @@
                             let $newTh = $(
                                 '<th class="d-flex align-items-center justify-content-center flex-column text-center"></th>'
                                 ).html(
-                                `<div class="me-1 d-color-code color-selector" style="background: ${response.data.ui_color_code}"></div>${response.data.color_name} (${response.data.color_code})`
+                                    `<div class="me-1 d-color-code color-selector" style="background: ${response.data.ui_color_code}"></div>
+                                    <label class="font-size-12 fw-bold">${response.data.color_name}(${response.data.color_code})</label>`
                                 );
                             $newRow.append($newTh);
 

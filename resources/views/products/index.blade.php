@@ -93,7 +93,7 @@
                         } 
                     }
                 ],
-                order: [[1, 'asc']],
+                order: [[0, 'desc']],
                 drawCallback: function(settings) {
                     let api = this.api();
                     $('#product-table th, #product-table td').addClass('p-1');
