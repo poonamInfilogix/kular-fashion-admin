@@ -73,7 +73,7 @@ class InventoryTransferController extends Controller
         //
     }
 
-    public function InventoryTransferItems(Request $request)
+    public function inventoryTransferItems(Request $request)
     {
         $transferData = $request->all();
         $fromStoreId = $transferData['from_store_id'];
@@ -119,6 +119,7 @@ class InventoryTransferController extends Controller
                     'quantity'              => $quantity,
                 ]);
             }
+            dd('heheh');
     
             $storeInventory = StoreInventory::where([
                 'store_id'             => $toStoreId,
