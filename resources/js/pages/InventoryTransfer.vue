@@ -166,10 +166,10 @@ export default {
             if (totalQuantity + 1 > item.available_quantity && !forceAdd) {
                 Swal.fire({
                     title: 'Warning!',
-                    text: 'Product is out of stock. Do you still want to add this project?',
+                    text: 'Product is out of stock. Do you still want to add this product?',
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: 'Yes, Add Project',
+                    confirmButtonText: 'Yes, Add Product',
                     cancelButtonText: 'No, Cancel'
                 }).then((result) => {
                     if (result.isConfirmed) {
