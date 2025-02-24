@@ -75,10 +75,10 @@
 
             $(document).on('click', '.copy-quantity-btn', function() {
                 const $selectedColor = $('.color-selector.selected').first();
-                
+
                 if ($selectedColor.length > 0) {
                     const id = $selectedColor.closest('[data-id]').data('id');
-                    
+
                     if (id) {
                         const colorIdToBeCopied = id.split('-')[1];
                         const colorIdForCopy = $(this).data('color-id');
@@ -137,10 +137,10 @@
 
                             let $newTh = $(
                                 '<th class="d-flex align-items-center justify-content-center flex-column text-center"></th>'
-                                ).html(
-                                    `<div class="me-1 d-color-code color-selector" style="background: ${response.data.ui_color_code}"></div>
+                            ).html(
+                                `<div class="me-1 d-color-code color-selector" style="background: ${response.data.ui_color_code}"></div>
                                     <label class="font-size-12 fw-bold">${response.data.color_name}(${response.data.color_code})</label>`
-                                );
+                            );
                             $newRow.append($newTh);
 
                             $.each(sizes, function(index, size) {
@@ -159,26 +159,28 @@
                                 $newRow.append('<td class="fs-5 text-center">0</td>');
                             @endisset
 
-                            
+
                             let copyButtonAdditionalClass = ``;
-                            if(!$('.color-selector').hasClass('selected')){
+                            if (!$('.color-selector').hasClass('selected')) {
                                 copyButtonAdditionalClass = 'd-none';
                             }
 
-                            let $deleteTd = $('<td></td>');
-                            $deleteTd.html(`
-                            <a href="{{ route('products.remove-variant', '') }}/${response.data.color_id}" class="btn btn-danger btn-sm"> 
-                               <i class="fas fa-trash-alt"></i>
-                            </a>
-                            <button type="button" class="btn btn-secondary copy-quantity-btn btn-sm ${copyButtonAdditionalClass}" data-color-id="${response.data.color_id}">
-                                <i class="mdi mdi-content-copy fs-6"></i>
-                            </button>`);
+                            let $actionColumn = $('<td class="actionColumn"></td>');
+                            $actionColumn.html(`
+                            <div class="d-flex gap-2">
+                                <a href="{{ route('products.remove-variant', '') }}/${response.data.color_id}" class="btn btn-danger btn-sm"> 
+                                <i class="fas fa-trash-alt"></i>
+                                </a>
+                                <button type="button" class="btn btn-secondary copy-quantity-btn btn-sm ${copyButtonAdditionalClass}" data-color-id="${response.data.color_id}">
+                                    <i class="mdi mdi-content-copy fs-6"></i>
+                                </button>
+                            </div>`);
 
                             $('#copy_quantity_for_color').append(
                                 `<option value="${response.data.color_id}">${response.data.color_name} (${response.data.color_code})</option>`
-                                );
+                            );
 
-                            $newRow.append($deleteTd);
+                            $newRow.append($actionColumn);
                             $tbody.prepend($newRow);
                         }
                     })
