@@ -76,8 +76,7 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <label class="form-label">Image</label>
-            <input type="file" name="image" id="add-product-image" class="form-control" accept="image/*">
+            <x-form-input type="file" name="image" label="Image" accept="image/*" />
         </div>
     </div>
 
@@ -279,7 +278,7 @@
                 minDate: "today"
             });
 
-            $('#add-product-image').change(function() {
+            $('#image').change(function() {
                 Image(this, '#preview-product');
             });
 

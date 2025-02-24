@@ -81,7 +81,7 @@ class ProductController extends Controller
             'supplier_price' => 'required',
             'mrp' => 'required',
             'short_description' => 'required',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'image' => 'nullable|image|max:2048',
             'price' => 'required|numeric',
             'sale_price' => 'nullable|numeric',
             'sale_start' => 'nullable|date',
