@@ -61,26 +61,24 @@
                             </div>
 
                             <div class="mt-4">
-
-                            
-                                <div class="d-flex justify-content-between">
-                                    <h5>{{ $branches->first()->name }} Inventory</h5>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="text-success fw-bold mb-0">Goods In</h5>
                                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#inventoryModal">View inventory in all stores</button>
                                 </div>
-                                <div class="table-responsive mt-2">
-                                    <table class="table mb-0 table-bordered">
+                                <div class="table-responsive mt-1">
+                                    <table class="table mb-0 table-bordered table-sm">
                                         <tbody>
                                             <tr>
-                                                <th scope="row" class="p-1">Size</th>
+                                                <th scope="row">Size</th>
                                                 @foreach ($product->sizes as $size)
-                                                    <th class="p-1">{{ $size->sizeDetail->size }}</th>
+                                                    <th>{{ $size->sizeDetail->size }}</th>
                                                 @endforeach
                                             </tr>
 
                                             @foreach ($product->colors as $color)
                                                 <tr>
-                                                    <th class="d-flex p-1">
+                                                    <th class="d-flex">
                                                         <div class="me-1 d-color-code"
                                                             style="background: {{ $color->colorDetail->ui_color_code }}">
                                                         </div>
@@ -88,10 +86,7 @@
                                                             ({{ $color->colorDetail->code }})</h6>
                                                     </th>
                                                     @foreach ($product->sizes as $size)
-                                                        <td class="p-1">
-                                                            <strong>{{ $size->quantity($color->id) }}</strong> /
-                                                            {{ $size->totalQuantity($color->id) }}
-                                                        </td>
+                                                        <td>{{ $size->totalQuantity($color->id) }}</td>
                                                     @endforeach
                                                 </tr>
                                             @endforeach
@@ -103,12 +98,45 @@
 
                                             @if ($isDifferent)
                                                 <tr>
-                                                    <th scope="row" class="p-1">MRP</th>
+                                                    <th scope="row">MRP</th>
                                                     @foreach ($product->sizes as $size)
-                                                        <td class="p-1">£{{ $size->mrp }}</td>
+                                                        <td>£{{ $size->mrp }}</td>
                                                     @endforeach
                                                 </tr>
                                             @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="mt-2">
+                                <div class="d-flex justify-content-between">
+                                    <h5>{{ $branches->first()->name }} Inventory</h5>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table mb-0 table-bordered table-sm">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">Size</th>
+                                                @foreach ($product->sizes as $size)
+                                                    <th>{{ $size->sizeDetail->size }}</th>
+                                                @endforeach
+                                            </tr>
+
+                                            @foreach ($product->colors as $color)
+                                                <tr>
+                                                    <th class="d-flex">
+                                                        <div class="me-1 d-color-code"
+                                                            style="background: {{ $color->colorDetail->ui_color_code }}">
+                                                        </div>
+                                                        <h6 class="m-0">{{ $color->colorDetail->name }}
+                                                            ({{ $color->colorDetail->code }})</h6>
+                                                    </th>
+                                                    @foreach ($product->sizes as $size)
+                                                        <td>{{ $size->quantity($color->id) }}</td>
+                                                    @endforeach
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -132,30 +160,28 @@
                 <div class="modal-body">
                     <div class="mt-0">
                         <div class="d-flex justify-content-between">
-                            <h6><strong>{{ $branches->first()->name }}</strong></h6>
+                            <h5 class="text-success fw-bold">Goods In</h5>
                         </div>
                         <div class="table-responsive">
-                            <table class="table mb-0 table-bordered">
+                            <table class="table mb-0 table-bordered table-sm">
                                 <tbody>
                                     <tr>
-                                        <th scope="row" class="p-1">Size</th>
+                                        <th scope="row">Size</th>
                                         @foreach ($product->sizes as $size)
-                                            <th class="p-1">{{ $size->sizeDetail->size }}</th>
+                                            <th>{{ $size->sizeDetail->size }}</th>
                                         @endforeach
                                     </tr>
 
                                     @foreach ($product->colors as $color)
                                         <tr>
-                                            <th class="d-flex p-1">
+                                            <th class="d-flex">
                                                 <div class="me-1 d-color-code"
                                                     style="background: {{ $color->colorDetail->ui_color_code }}"></div>
                                                 <h6 class="m-0">{{ $color->colorDetail->name }}
                                                     ({{ $color->colorDetail->code }})</h6>
                                             </th>
                                             @foreach ($product->sizes as $size)
-                                                <td class="p-1"><strong>{{ $size->quantity($color->id) }}</strong> /
-                                                    {{ $size->totalQuantity($color->id) }}
-                                                </td>
+                                                <td>{{ $size->totalQuantity($color->id) }}</td>
                                             @endforeach
                                         </tr>
                                     @endforeach
@@ -164,23 +190,23 @@
                         </div>
                     </div>
 
-                    @foreach ($branches->skip(1) as $branch)
-                        <div class="d-flex justify-content-between mt-3">
-                            <h6><strong>{{ $branch->name }}</strong></h6>
+                    @foreach ($branches as $branch)
+                        <div class="d-flex justify-content-between mt-2">
+                            <h5>{{ $branch->name }} Inventory</h5>
                         </div>
                         <div class="table-responsive">
-                            <table class="table mb-0 table-bordered">
+                            <table class="table mb-0 table-bordered table-sm">
                                 <tbody>
                                     <tr>
-                                        <th scope="row" class="p-1">Size</th>
+                                        <th scope="row">Size</th>
                                         @foreach ($product->sizes as $size)
-                                            <th class="p-1">{{ $size->sizeDetail->size }}</th>
+                                            <th>{{ $size->sizeDetail->size }}</th>
                                         @endforeach
                                     </tr>
 
                                     @foreach ($product->colors as $color)
                                         <tr>
-                                            <th class="d-flex p-1">
+                                            <th class="d-flex">
                                                 <div class="me-1 d-color-code"
                                                     style="background: {{ $color->colorDetail->ui_color_code }}"></div>
                                                 <h6 class="m-0">{{ $color->colorDetail->name }}
@@ -188,10 +214,12 @@
                                                 </h6>
                                             </th>
                                             @foreach ($product->sizes as $size)
-                                                <td class="p-1">
-                                                    <strong>{{ $size->inventoryAvailableQuantity($color->color_id, $branch->id) }}</strong>
-                                                    /
-                                                    {{ $size->inventoryTotalQuantity($color->color_id, $branch->id) }}
+                                                <td>
+                                                    @if($branch->id===1)
+                                                        {{ $size->quantity($color->id) }}
+                                                    @else
+                                                        {{ $size->inventoryAvailableQuantity($color->color_id, $branch->id) }}
+                                                    @endif
                                                 </td>
                                             @endforeach
                                         </tr>

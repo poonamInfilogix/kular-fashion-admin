@@ -488,6 +488,7 @@ class ProductController extends Controller
                     );
 
                     if ($quantityRecord) {
+                        // Quantity should added only when barcodes being printed
                         //$quantityRecord->quantity += $newQuantity;
                         $quantityRecord->total_quantity += $newQuantity;
                         $quantityRecord->save();
