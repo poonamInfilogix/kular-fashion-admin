@@ -121,7 +121,7 @@
 
     @php
         $selectedTags = old('tags', $productTags ?? []);
-    @endphp
+    @endphp 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="tags">Tags</label>
