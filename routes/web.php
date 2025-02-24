@@ -83,7 +83,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::put('shipping-methods/{method}', [SettingController::class, 'shippingMethodUpdate'])->name('shipping-methods.update');
 
     Route::get('payment-methods', [SettingController::class, 'paymentMethodSettings'])->name('payment-methods.index');
-    Route::put('payment-methods/{method}', [SettingController::class, 'paymentMethodUpdate'])->name('payment-methods.store');
+    Route::put('payment-methods/{method}', [SettingController::class, 'paymentMethodUpdate'])->name('payment-methods.update');
 
     Route::get('size-scales/sizes/{sizeScaleId}', [SizeController::class, 'index'])->name('sizes.index');
     Route::get('size-scales/sizes/{sizeScaleId}/create', [SizeController::class, 'create'])->name('sizes.create');

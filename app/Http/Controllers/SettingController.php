@@ -124,7 +124,7 @@ class SettingController extends Controller
     }
 
     public function paymentMethodSettings(){
-        return view('settings.paymemt-methods.index');
+        return view('settings.payment-methods.index');
     }
 
     public function paymentMethodUpdate(Request $request){
