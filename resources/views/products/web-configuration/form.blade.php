@@ -177,7 +177,7 @@
             <div class="col-md-4 d-flex gap-2 align-items-center">
                 <div class="small-toggle-button">
                     <input type="checkbox" name="split_with_colors" id="splitWithColors" switch="success"
-                        data-on="On" data-off="Off" @checked($product->is_splitted_with_colors === '1') />
+                        data-on="On" data-off="Off" @checked(($product->webInfo->is_splitted_with_colors ?? 0) === 1) />
                     <label class="mb-0" for="splitWithColors" data-on-label="On" data-off-label="Off"></label>
                 </div>
                 <label for="splitWithColors">Split With Colors</label>
@@ -194,8 +194,8 @@
         <div class="row">
             <div class="col-md-4">
                 <label for="colorForImages">Select Color</label>
-                <select name="color" id="colorForImages" class="form-control">
-                    <option value="">Select Color</option>
+                <select id="colorForImages" class="form-control">
+                    <option value="0">Select Color</option>
 
                     @foreach ($product->colors as $color)
                         <option value="{{ $color->id }}"> {{ $color->colorDetail->name }} </option>
@@ -205,7 +205,14 @@
 
             <div class="col-md-4">
                 <label for="colorForImages">Choose Images</label>
-                <input type="file" class="form-control" id="productImages" name="images[]" accept="image/*"
+
+                <input type="file" name="images[0][]" id="productImages0" class="d-none" multiple>
+                @foreach ($product->colors as $color)
+                    <input type="file" name="images[{{ $color->id }}][]" class="d-none"
+                        id="productImages{{ $color->id }}" multiple>
+                @endforeach
+
+                <input type="file" class="form-control" id="productImages" accept="image/*"
                     multiple="multiple" />
             </div>
         </div>
@@ -213,7 +220,7 @@
 
         <div class="row image-preview">
             @foreach ($product->webImage as $index => $image)
-                <div class="col-6 col-sm-2 mb-2">
+                <div data-color-id="{{ $image->product_color_id ?? 0 }}" @class(['col-6 col-sm-2 mb-2', 'd-none' => $image->product_color_id ?? 0 !== 0])>
                     <div class="preview-image-container">
                         <img src="{{ asset($image->path) }}" alt="{{ $image->alt }}" class="img-fluid">
 

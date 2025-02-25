@@ -26,7 +26,7 @@
                 $parentRow = $targetedElement.closest('td');
                 $parentRow.find('.avatar-sm').css('background-image', '');
                 $parentRow.find('.remove-image').addClass('d-none');
-            } else if(input === 'removed_product_images'){
+            } else if (input === 'removed_product_images') {
                 $parentContainer = $targetedElement.closest('.preview-image-container');
                 $parentContainer.parent().remove();
             } else {
@@ -64,13 +64,39 @@
             });
         });
 
-        let selectedFiles = [];
+        $('#colorForImages').change(function(){
+            let selected_color_id = $(this).val();
+            $(`.image-preview [data-color-id]`).addClass('d-none');
+            $(`.image-preview [data-color-id="${selected_color_id}"]`).removeClass('d-none');
+        })
+
+        let filesByColor = {}; // Object to map colorId to an array of files
 
         $('#productImages').on('change', function(event) {
             let files = event.target.files;
-            selectedFiles = Array.from(files); // Store selected files
-            $('#imagePreview').empty();
+            let colorId = $('#colorForImages').val();
 
+            // Initialize the colorId array if it doesn't exist yet
+            if (!filesByColor[colorId]) {
+                filesByColor[colorId] = [];
+            }
+
+            // Add the new files to the corresponding colorId
+            filesByColor[colorId] = filesByColor[colorId].concat(Array.from(files));
+
+            var dataTransfer = new DataTransfer();
+
+            // Add the previously selected files for the current colorId
+            if (filesByColor[colorId]) {
+                filesByColor[colorId].forEach(file => {
+                    dataTransfer.items.add(file);
+                });
+            }
+
+            // Update the file input field with the new files
+            $(`#productImages${colorId}`)[0].files = dataTransfer.files;
+
+            // Image preview logic
             $.each(files, function(index, file) {
                 let reader = new FileReader();
 
@@ -82,13 +108,14 @@
                         '<button type="button" class="btn btn-danger btn-sm remove-image-btn"><i class="fa fa-trash"></i></button>'
                     );
                     let altDiv = $(
-                        `<div class="alt-container"><input type="text" name="image_alt[${index}]" class="form-control" placeholder="Alt text"></div>`
+                        `<div class="alt-container"><input type="text" name="image_alt[${colorId}][${index}]" class="form-control" placeholder="Alt text"></div>`
                     );
 
                     // Remove image when remove button is clicked
                     removeBtn.on('click', function() {
-                        selectedFiles = selectedFiles.filter(f => f !== file);
-                        updateImagesInput();
+                        filesByColor[colorId] = filesByColor[colorId].filter(f =>
+                            f !== file);
+                        updateImagesInput(colorId);
                         imageBox.remove();
                     });
 
@@ -100,13 +127,22 @@
 
                 reader.readAsDataURL(file);
             });
+
+            $(this).empty();
+            $(this).val('');
         });
 
-        function updateImagesInput() {
+        function updateImagesInput(colorId) {
             var dataTransfer = new DataTransfer();
-            selectedFiles.forEach(file => dataTransfer.items.add(file));
-            $('#productImages')[0].files = dataTransfer.files;
+
+            // Add the files for the specific colorId
+            if (filesByColor[colorId]) {
+                filesByColor[colorId].forEach(file => dataTransfer.items.add(file));
+            }
+
+            $(`#productImages${colorId}`)[0].files = dataTransfer.files;
         }
+
 
         // Add Specification
         let specCount = $('.specification-item').length;
