@@ -26,9 +26,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 use Picqer\Barcode\BarcodeGeneratorPNG;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Support\Facades\Gate;
@@ -44,8 +42,8 @@ class ProductController extends Controller
         $brands = Brand::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
         $departments = Department::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
         $productTypes = ProductType::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
-    
-        return view('products.index', compact('brands', 'productTypes','departments'));
+
+        return view('products.index', compact('brands', 'productTypes', 'departments'));
     }
 
     public function create()
@@ -81,7 +79,7 @@ class ProductController extends Controller
             'supplier_price' => 'required',
             'mrp' => 'required',
             'short_description' => 'required',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            'image' => 'nullable|image|max:2048',
             'price' => 'required|numeric',
             'sale_price' => 'nullable|numeric',
             'sale_start' => 'nullable|date',
@@ -458,7 +456,7 @@ class ProductController extends Controller
         $tags = Tag::where('status', 'Active')->orderBy('name', 'ASC')->get();
         $sizeScales = SizeScale::where('status', 'Active')->orderBy('name', 'ASC')->get();
         $sizes = Size::where('status', 'Active')->orderBy('size', 'ASC')->get();
-        $productTags = ProductTag::where('product_id', $product->id)->pluck('tag_id')->toArray(); 
+        $productTags = ProductTag::where('product_id', $product->id)->pluck('tag_id')->toArray();
 
         return view('products.edit', compact('brands', 'productTypes', 'departments', 'product', 'taxes', 'tags', 'sizes', 'sizeScales', 'productTags'));
     }
@@ -544,7 +542,7 @@ class ProductController extends Controller
                 $q->where('id', $request->brand_id);
             });
         }
-       
+
         if ($request->has('product_type_id') && $request->product_type_id) {
             $query->whereHas('productType', function ($q) use ($request) {
                 $q->where('id', $request->product_type_id);
@@ -574,18 +572,18 @@ class ProductController extends Controller
                     });
             });
         }
-       
+
         // Order by id in descending order by default
         $products = $query->orderBy('updated_at', 'desc') // Changed to 'desc' for descending order
             ->paginate($request->input('length', 10));
-            
+
         $data = [
             'draw' => $request->input('draw'),
             'recordsTotal' => $products->total(),
             'recordsFiltered' => $products->total(),
             'data' => $products->items(),
         ];
-        
+
         return response()->json($data);
     }
 
@@ -705,7 +703,7 @@ class ProductController extends Controller
 
         foreach ($barcodesQty->barcodesToBePrinted as $key => $data) {
             $skip = false;
-            
+
             if (!isset($data['product'])) {
                 $defaultProductsToBePrinted = Product::where('are_barcodes_printed', 0)->orWhere('barcodes_printed_for_all', 0)->with('quantities')->get();
 
@@ -715,7 +713,7 @@ class ProductController extends Controller
                     $totalQuantitySum = $quantities->sum(function ($quantity) {
                         return $quantity->total_quantity;
                     });
-                
+
                     // If the sum of total_quantity is 0, skip this product
                     if ($totalQuantitySum == 0) {
                         $skip = true;
@@ -726,7 +724,7 @@ class ProductController extends Controller
                         return ($quantity->total_quantity - $quantity->original_printed_barcodes) > 0;
                     });
 
-                    if(count($filteredQuantities) === 0){
+                    if (count($filteredQuantities) === 0) {
                         $skip = true;
                         continue;
                     }
@@ -745,7 +743,7 @@ class ProductController extends Controller
                 Session::put('barcodesToBePrinted', (array) $barcodesQty);
             }
 
-            if($skip){
+            if ($skip) {
                 $tempProductId = $data['productId'];
                 $product = Product::find($tempProductId);
 
@@ -1014,6 +1012,7 @@ class ProductController extends Controller
             );
         }
     }
+
     public function productValidate($barcode)
     {
         $products = ProductQuantity::with('product.brand', 'product.department', 'sizes.sizeDetail', 'colors.colorDetail')->get();
@@ -1097,27 +1096,85 @@ class ProductController extends Controller
     }
 
     public function updateWebConfigration(Request $request, Product $product)
-    {        
+    {
+        if($request->removed_color_images){
+            $productColorIds = explode(',', $request->removed_color_images);
+
+            foreach($productColorIds as $productColorId){
+                $productColor = ProductColor::find($productColorId);
+
+                if ($productColor) {
+                    $filePath = public_path($productColor->swatch_image_path);
+                    if (file_exists($filePath)) {
+                        unlink($filePath);
+                    }
+
+                    $productColor->update([
+                        'swatch_image_path' => ''
+                    ]);
+                }
+
+            }
+        }
+
+        if ($request->hasFile('color_images')) {
+            foreach ($request->file('color_images') as $colorId => $image) {
+                $imagePath = uploadFile($image, 'uploads/colors/swatches/');
+                $productColor = ProductColor::find($colorId);
+
+                if ($productColor->swatch_image_path) {
+                    $filePath = public_path($productColor->swatch_image_path);
+                    if (file_exists($filePath)) {
+                        unlink($filePath);
+                    }
+                }
+
+                if ($productColor) {
+                    $productColor->update([
+                        'swatch_image_path' => $imagePath
+                    ]);
+                }
+            }
+        }
+
+        if($request->removed_product_images){
+            $productImageIds = explode(',', $request->removed_product_images);
+
+            foreach($productImageIds as $imageId){
+                $productImage = ProductWebImage::find($imageId);
+
+                if ($productImage) {
+                    $filePath = public_path($productImage->path);
+                    if (file_exists($filePath)) {
+                        unlink($filePath);
+                    }
+
+                    $productImage->delete();
+                }
+
+            }
+        }
+
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $image) {
                 if ($image->getSize() < 10240 * 1024) {
-                    $imagePath = uploadFile($image, 'uploads/products/');
+                    $imagePath = uploadFile($image, 'uploads/products/images/');
 
                     ProductWebImage::create(
                         [
                             'product_id' => $product->id,
                             'path' => $imagePath,
-                            'alt' => $request->image_alt[$index]
+                            'alt' => $request->image_alt[$index] ?? ''
                         ]
                     );
                 }
             }
         }
 
-        if($request->saved_image_alt){
-            foreach($request->saved_image_alt as $imageId => $image_alt){
+        if ($request->saved_image_alt) {
+            foreach ($request->saved_image_alt as $imageId => $image_alt) {
                 $image = ProductWebImage::find($imageId);
-    
+
                 if ($image) {
                     $image->update([
                         'alt' => $image_alt
@@ -1127,6 +1184,7 @@ class ProductController extends Controller
         }
 
         $request->validate([
+            'heading' => 'required',
             'name' => 'required',
             'price' => 'required|numeric',
             'sale_price' => 'nullable|numeric',
@@ -1150,9 +1208,21 @@ class ProductController extends Controller
             'sale_end' => isset($request->sale_end) ? Carbon::parse($request->sale_end)->toDateString() : null,
         ]);
 
-        
+        $sizes = $request->sizes ?? [];
+
+        foreach ($sizes as $productSizeId => $size) {
+            $productSize = ProductSize::find($productSizeId);
+
+            if ($productSize) {
+                $productSize->update([
+                    'web_price' => $size['web_price'],
+                    'web_sale_price' => $size['web_sale_price'],
+                ]);
+            }
+        }
+
         $currentTags = ProductTag::where('product_id', $product->id)->pluck('tag_id')->toArray();
-        $selectedTags = $request->tags;
+        $selectedTags = $request->tags ?? [];
 
         foreach ($selectedTags as $tagId) {
             ProductTag::updateOrCreate(
@@ -1166,11 +1236,12 @@ class ProductController extends Controller
                 ]
             );
         }
+
         $removedTags = array_diff($currentTags, $selectedTags);
         foreach ($removedTags as $tagId) {
             ProductTag::where('product_id', $product->id)
-                      ->where('tag_id', $tagId)
-                      ->delete();
+                ->where('tag_id', $tagId)
+                ->delete();
         }
 
         if ($request->specifications) {
@@ -1180,6 +1251,8 @@ class ProductController extends Controller
         ProductWebInfo::updateOrCreate(
             ['product_id' => $product->id],
             [
+                'is_splitted_with_colors' => $request->has('split_with_colors') ? 1 : 0,
+                'heading' => $request->heading,
                 'summary' => $request->summary,
                 'description' => $request->description,
                 'meta_title' => $request->meta_title,
@@ -1190,51 +1263,5 @@ class ProductController extends Controller
         );
 
         return redirect()->back()->with('success', 'Product web configuration updated successfully.');
-    }
-
-    public function uploadImages(Request $request, Product $product)
-    {
-        $request->validate([
-            'image' => 'required|image|max:10240' // 10 MB max
-        ]);
-
-        if ($request->hasFile('image')) {
-            $imagePath = uploadFile($request->file('image'), 'uploads/products/');
-
-            $webImage = ProductWebImage::create(
-                [
-                    'product_id' => $product->id,
-                    'path' => $imagePath
-                ]
-            );
-            return response()->json(['id' => $webImage->id, 'message' => 'Image uploaded successfully!'], 200);
-        } else {
-            return response()->json(['error' => 'No image being uploaded'], 400);
-        }
-    }
-
-    public function destroyProductImage($imageId)
-    {
-        $image = ProductWebImage::find($imageId);
-
-        if (!$image) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Image not found!'
-            ], 404);
-        }
-
-        // Delete the image file from storage
-        $filePath = public_path($image->path);
-        if (file_exists($filePath)) {
-            unlink($filePath);
-        }
-
-        $image->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Product image deleted successfully!'
-        ]);
     }
 }

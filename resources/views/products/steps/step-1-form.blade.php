@@ -76,8 +76,7 @@
 
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
-            <label class="form-label">Image</label>
-            <input type="file" name="image" id="add-product-image" class="form-control" accept="image/*">
+            <x-form-input type="file" name="image" label="Image" accept="image/*" />
         </div>
     </div>
 
@@ -105,7 +104,21 @@
             ])>
                 <option value="" disabled>Select size scale</option>
                 @foreach ($sizeScales as $sizeScale)
-                    <option value="{{ $sizeScale->id }}" @disabled(count($sizeScale->sizes) === 0) @selected(old('size_scale_id', $product->size_scale_id ?? '') == $sizeScale->id)>
+                    @php
+                        $isSelected = false;
+                    @endphp
+
+                    @if (!old('size_scale_id', $product->size_scale_id ?? '') && $sizeScale->is_default)
+                        @php
+                            $isSelected = true;
+                        @endphp
+                    @elseif(old('size_scale_id', $product->size_scale_id ?? '') == $sizeScale->id)
+                        @php
+                            $isSelected = true;
+                        @endphp
+                    @endif
+
+                    <option value="{{ $sizeScale->id }}" @disabled(count($sizeScale->sizes) === 0) @selected($isSelected)>
                         {{ $sizeScale->name }}
                         @if (count($sizeScale->sizes) > 0)
                             ({{ $sizeScale->sizes->first()->size }} - {{ $sizeScale->sizes->last()->size }})
@@ -121,7 +134,7 @@
 
     @php
         $selectedTags = old('tags', $productTags ?? []);
-    @endphp 
+    @endphp
     <div class="col-sm-6 col-md-2">
         <div class="mb-3">
             <label for="tags">Tags</label>
@@ -265,7 +278,7 @@
                 minDate: "today"
             });
 
-            $('#add-product-image').change(function() {
+            $('#image').change(function() {
                 Image(this, '#preview-product');
             });
 

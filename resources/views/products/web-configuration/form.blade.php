@@ -88,6 +88,79 @@
     </div>
 </div>
 
+<!-- Sizes & prices -->
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h4 class="card-title">Sizes & Prices</h4>
+
+                <table class="table table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Size</th>
+                            <th>Price</th>
+                            <th>Sale Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($product->sizes as $index => $size)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $size->sizeDetail->size }}</td>
+                                <td><input type="text" name="sizes[{{ $size->id }}][web_price]"
+                                        class="form-control" value="{{ $size->web_price }}"></td>
+                                <td><input type="text" name="sizes[{{ $size->id }}][web_sale_price]"
+                                        class="form-control" value="{{ $size->web_sale_price }}"></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-6">
+                <h4 class="card-title">Colors</h4>
+                <table class="table table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Color Name</th>
+                            <th>Swatch</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($product->colors as $index => $color)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $color->colorDetail->name }}</td>
+                                <td class="d-flex align-items-center gap-2">
+                                    <div class="color-swatch-container">
+                                        <div class="avatar-sm" @style(['background: ' . $color->colorDetail->ui_color_code, 'background-image: url(' . asset($color->swatch_image_path) . ')'])>
+                                            <div class="overlay">
+                                                <i class="mdi mdi-camera-outline"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <input type="file" name="color_images[{{ $color->id }}]" accept="image/*"
+                                        class="color_image_picker d-none">
+
+                                    <button type="button" data-input="removed_color_images"
+                                        data-id="{{ $color->id }}" @class([
+                                            'btn btn-text remove-image',
+                                            'd-none' => !$color->swatch_image_path,
+                                        ])>Remove
+                                        Image</button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Status & Visibility -->
 <div class="card">
@@ -101,10 +174,13 @@
                     <option value="2" @selected(($product->webInfo->status ?? '') === '2')>Hide When Out Of Stock</option>
                 </select>
             </div>
-            <div class="col-md-4">
-                <input type="checkbox" id="switch1" switch="none" checked="">
-                <label for="switch1" data-on-label="On" data-off-label="Off"></label>
-                <label for="mm">Split With Colors</label>
+            <div class="col-md-4 d-flex gap-2 align-items-center">
+                <div class="small-toggle-button">
+                    <input type="checkbox" name="split_with_colors" id="splitWithColors" switch="success"
+                        data-on="On" data-off="Off" @checked($product->is_splitted_with_colors === '1') />
+                    <label class="mb-0" for="splitWithColors" data-on-label="On" data-off-label="Off"></label>
+                </div>
+                <label for="splitWithColors">Split With Colors</label>
             </div>
         </div>
     </div>
@@ -113,7 +189,7 @@
 <!-- Product Images -->
 <div class="card">
     <div class="card-body">
-        <h4 class="card-title mb-3">Product Images</h4>
+        <h4 class="card-title mb-3">Images</h4>
 
         <div class="row">
             <div class="col-md-4">
@@ -135,23 +211,24 @@
         </div>
         <div id="imagePreview" class="row mt-2 image-preview"></div>
 
-        <div class="container">
-            <div class="row image-preview">
-                @foreach ($product->webImage as $index => $image)
-                    <div class="col-6 col-sm-2 mb-2">
-                        <div class="preview-image-container">
-                            <img src="{{ asset($image->path) }}" alt="Product Images" class="img-fluid">
-                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-source="image"
-                                data-endpoint="{{ route('product.destroy.image', $image->id) }}"><i
-                                    class="fa fa-trash"></i></button>
+        <div class="row image-preview">
+            @foreach ($product->webImage as $index => $image)
+                <div class="col-6 col-sm-2 mb-2">
+                    <div class="preview-image-container">
+                        <img src="{{ asset($image->path) }}" alt="{{ $image->alt }}" class="img-fluid">
 
-                            <div class="alt-container"><input type="text" value="{{ $image->alt }}"
-                                    name="saved_image_alt[{{ $image->id }}]" class="form-control"
-                                    placeholder="Alt text"></div>
+                        <button type="button" class="btn btn-danger btn-sm remove-image"
+                            data-input="removed_product_images" data-id="{{ $image->id }}">
+                            <i class="fa fa-trash"></i>
+                        </button>
+
+                        <div class="alt-container">
+                            <x-form-input value="{{ $image->alt }}" name="saved_image_alt[{{ $image->id }}]"
+                                placeholder="Alt text" />
                         </div>
                     </div>
-                @endforeach
-            </div>
+                </div>
+            @endforeach
         </div>
     </div>
 </div>
@@ -162,8 +239,8 @@
         <h4 class="card-title">SEO</h4>
         <div class="row">
             <div class="col-sm-10 mb-2">
-                <x-form-input name="meta_title" label="Heading" required="true"
-                value="{{ $product->webInfo->heading ?? '' }}" placeholder="Heading" />
+                <x-form-input name="heading" label="Heading" required="true"
+                    value="{{ $product->webInfo->heading ?? '' }}" placeholder="Heading" />
             </div>
         </div>
         <div class="row">
@@ -188,5 +265,8 @@
         </div>
     </div>
 </div>
+
+<input type="hidden" name="removed_color_images">
+<input type="hidden" name="removed_product_images">
 
 <button type="submit" class="btn btn-primary waves-effect waves-light">Save Changes</button>

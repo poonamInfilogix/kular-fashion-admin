@@ -11,11 +11,12 @@
     <link href="{{ asset('assets/css/sweetalert.css') }}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/icons.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/app.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <script src="{{ asset('assets/libs/jquery/jquery.min.js') }}"></script>
 
     @stack('styles')
+    <link rel="stylesheet" href="{{ asset('assets/css/app.min.css') }}">
+
     @vite('resources/js/app.js')
 </head>
 
