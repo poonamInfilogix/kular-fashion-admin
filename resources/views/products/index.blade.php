@@ -14,6 +14,11 @@
         <i class="bx bx-download"></i> Download Product Configuration File
     </a> --}}
 
+
+    <button id="bulk-edit-button" class="btn btn-warning d-none" data-bs-toggle="modal" data-bs-target="#bulkEditModal">
+        <i class="fas fa-edit"></i> Bulk Edit
+    </button>
+
     @if (Auth::user()->can('create products'))
         <a href="{{ route('products.create') }}" id="add-product-link" class="btn btn-primary">
             <i class="bx bx-plus fs-16"></i> Add New Product
@@ -47,7 +52,6 @@
                                     <select id="typeFilter" class="form-control select2">
                                         <option value="">All Products Types</option>
                                         @foreach ($productTypes as $productType)
-                           
                                             <option value="{{ $productType->id }}">{{ $productType->name }}</option>
                                         @endforeach
                                     </select>
@@ -58,15 +62,18 @@
                                     <select id="departmentFilter" class="form-control select2">
                                         <option value="">All Department</option>
                                         @foreach ($departments as $department)
-                           
                                             <option value="{{ $department->id }}">{{ $department->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                            <table id="product-table" class="table table-bordered dt-responsive nowrap w-100 table-striped">
+                            <table id="product-table" data-selected-products="" data-unselected-products=""
+                                class="table table-bordered dt-responsive nowrap w-100 table-striped">
                                 <thead>
                                     <tr>
+                                        <th>
+                                            <input type="checkbox" id="select-all-checkbox" class="form-check-input">
+                                        </th>
                                         <th>#</th>
                                         <th>Article Code</th>
                                         <th>Manufacture Code</th>
@@ -92,6 +99,9 @@
                 width: '100%',
             });
 
+            var selectedProducts = [];
+            var unselectedProducts = [];
+
             var table = $('#product-table').DataTable({
                 processing: true,
                 serverSide: true,
@@ -105,6 +115,29 @@
                     }
                 },
                 columns: [{
+                        title: '<input type="checkbox" class="form-check-input" id="select-all-checkbox">',
+                        data: null,
+                        render: function(data, type, row) {
+                            let selectedProducts = $('[data-selected-products]').attr('data-selected-products');
+                            selectedProducts = selectedProducts.split(',');
+                            
+                            let checked = selectedProducts.includes(String(row.id)) ? 'checked' :
+                            '';
+
+                            if(selectedProducts.includes('-1')){
+                                checked = 'checked';
+                                selectedProducts.push(row.id);
+                            }
+
+                            if(unselectedProducts.includes(String(row.id))){
+                                checked = '';
+                            }
+
+                            return `<input type="checkbox" class="product-checkbox form-check-input" value="${row.id}" ${checked}>`;
+                        },
+                        orderable: false
+                    },
+                    {
                         title: "Article Code",
                         data: 'article_code'
                     },
@@ -159,7 +192,7 @@
                     }
                 ],
                 order: [
-                    [0, 'desc']
+                    [1, 'desc']
                 ],
                 drawCallback: function(settings) {
                     let api = this.api();
@@ -178,19 +211,90 @@
                     }
                 }
             });
+
             $('#brandFilter, #typeFilter, #departmentFilter').on('change', function() {
                 table.ajax.reload();
             });
 
             $('#product-table_filter').prepend(
                 `<input type="text" id="custom-search-input" class="form-control" placeholder="Search Products">`
-                );
-
+            );
+            
             $('#custom-search-input').on('keyup', function() {
                 table.search(this.value).draw();
             });
+
+            function updateSelectedProducts() {
+                $('#product-table').attr('data-selected-products', selectedProducts.join(','));
+                $('#product-table').attr('data-unselected-products', unselectedProducts.join(','));
+
+                if (!$('.product-checkbox:checked').length) {
+                    $('#bulk-edit-button').addClass('d-none');
+                } else {
+                    $('#bulk-edit-button').removeClass('d-none');
+                }
+            }
+
+            // Select all checkboxes
+            $('#select-all-checkbox').on('change', function() {    
+                if($(this).is(':checked')){
+                    selectedProducts = ['-1'];
+                } else {
+                    selectedProducts = [];
+                }
+
+                var checked = this.checked;
+                $('.product-checkbox').each(function() {
+                    if(!unselectedProducts.includes($(this).val())){
+                        this.checked = checked;
+                    }
+                });
+
+                updateSelectedProducts();
+            });
+
+            // Individual checkbox selection
+            $('#product-table').on('change', '.product-checkbox', function() {
+                if($(this).is(':checked')){
+                    selectedProducts.push($(this).val());
+                } else {
+                    let selectedProductIndex = selectedProducts.indexOf($(this).val());
+                    if (selectedProductIndex !== -1) {
+                        selectedProducts.splice(selectedProductIndex, 1);
+                    }
+                }
+
+                if(!$(this).is(':checked') && $('#select-all-checkbox:checked').length){
+                    unselectedProducts.push($(this).val());
+                } else {
+                    let unselectedProductIndex = unselectedProducts.indexOf($(this).val());
+                    if (unselectedProductIndex !== -1) {
+                        unselectedProducts.splice(unselectedProductIndex, 1);
+                    }
+                }
+                updateSelectedProducts();
+            });
+
+            $('.apply-bulk-edit-action').on('click', function() {
+                $.ajax({
+                    url: "{{ route('products.bulk-edit') }}",
+                    method: 'POST',
+                    data: {
+                        selected_products: selectedProducts,
+                        unselected_products: unselectedProducts,
+                        '_token': '{{ csrf_token() }}',
+                        action: $('#bulkEditAction').val(),
+                        tags: $('#bulkEditTags').val()
+                    },
+                    success:function(response){
+                        console.log('response', response)
+                    }
+                })
+            });
         });
     </script>
+
+    @include('products.partials.bulk-edit')
 
     @push('styles')
         <style>

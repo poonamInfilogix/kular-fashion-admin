@@ -42,8 +42,9 @@ class ProductController extends Controller
         $brands = Brand::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
         $departments = Department::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
         $productTypes = ProductType::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
+        $tags = Tag::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
 
-        return view('products.index', compact('brands', 'productTypes', 'departments'));
+        return view('products.index', compact('brands', 'productTypes', 'departments', 'tags'));
     }
 
     public function create()
@@ -1265,5 +1266,17 @@ class ProductController extends Controller
         );
 
         return redirect()->back()->with('success', 'Product web configuration updated successfully.');
+    }
+
+    public function bulkUpdate(Request $request){
+        if($request->action!=='Assign Tags' && $request->action!=='Unassign Tags'){
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid performed action'
+            ]);
+        }
+
+        
+        dd($request->all());
     }
 }

@@ -19,6 +19,9 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::get('products/edit/step-2/{product}', [ProductController::class, 'editStep2'])->name('products.edit.step-2');
     Route::put('products/update/step-2/{product}', [ProductController::class, 'updateStep2'])->name('products.update-step-2');
 
+    // Bulk Edit Product
+    Route::post('products/bulk-edit', [ProductController::class, 'bulkUpdate'])->name('products.bulk-edit');
+
     Route::get('products/edit/web-configuration/{product}', [ProductController::class, 'editWebConfigration'])->name('products.edit.web-configuration');
     Route::put('products/update/web-configuration/{product}', [ProductController::class, 'updateWebConfigration'])->name('products.update.web-configuration');
 
