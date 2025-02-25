@@ -33,5 +33,7 @@
 
     <x-include-plugins :plugins="['contentEditor', 'dropzone', 'datePicker', 'select2']"></x-include-plugins>
 
-    @include('products.web-configuration.script')
+    @push('scripts')
+        @include('products.web-configuration.script')
+    @endpush
 @endsection

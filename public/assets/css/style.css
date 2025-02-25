@@ -20,21 +20,53 @@ input[switch=danger]:label {
     background-color: red;
 }
 
-.d-color-code, .color-swatch{
-    border: 1px solid; 
-    border-radius: 4px; 
-    height: 1.0rem; 
-    width: 1.0rem; 
+.d-color-code {
+    border: 1px solid;
+    border-radius: 4px;
+    height: 1.0rem;
+    width: 1.0rem;
     cursor: pointer;
 }
 
-.d-color-code, .color-swatch.large{
-    height: 2.0rem; 
-    width: 2.0rem; 
+.d-color-code {
+    height: 2.0rem;
+    width: 2.0rem;
 }
 
-.d-size-box{
-    border: 1px solid; 
+.color-swatch-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent overlay */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.avatar-sm:hover .overlay {
+    opacity: 1;
+    /* Show the overlay on hover */
+}
+
+.overlay i {
+    color: white;
+    font-size: 24px;
+    /* Adjust the icon size as needed */
+}
+
+.d-size-box {
+    border: 1px solid;
     color: #000;
     padding: 2px 12px;
     display: flex;
@@ -43,17 +75,18 @@ input[switch=danger]:label {
     cursor: pointer;
 }
 
-.d-color-code.selected, .d-size-box.selected {
+.d-color-code.selected,
+.d-size-box.selected {
     border: 2px solid #000;
     background-color: #c3cbe4;
 }
 
-.d-color-code.selected{
+.d-color-code.selected {
     border: 3px solid #000;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.product-preview-image{
+.product-preview-image {
     max-height: 150px;
     max-width: fit-content;
 }
@@ -61,6 +94,7 @@ input[switch=danger]:label {
 div.dataTables_wrapper {
     position: relative;
 }
+
 @media (max-width: 1050px) {
     div.dataTables_wrapper {
         overflow-x: auto;
@@ -68,7 +102,7 @@ div.dataTables_wrapper {
     }
 }
 
-.color-selector.selected{
+.color-selector.selected {
     border: 2px solid #000;
     box-shadow: 2px 2px 2px;
 }
@@ -78,22 +112,24 @@ div.dataTables_wrapper {
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 /* Firefox */
 input[type=number] {
-  -moz-appearance: textfield;
+    -moz-appearance: textfield;
 }
 
 table tbody tr.odd {
-    background-color: #f2f2f2; /* Light gray */
+    background-color: #f2f2f2;
+    /* Light gray */
 }
 
 /* For even rows */
 table tbody tr.even {
-    background-color: #ffffff; /* White */
+    background-color: #ffffff;
+    /* White */
 }
 
 .page-title-right .btn {
@@ -135,24 +171,25 @@ table tbody tr.even {
     object-position: center;
 }
 
-.image-preview .remove-image-btn, .image-preview .delete-btn{
+.image-preview .remove-image-btn,
+.image-preview .delete-btn {
     position: absolute;
     right: 0;
     top: 0;
 }
 
-.img-preview{
+.img-preview {
     max-height: 160px;
 }
 
-.small-toggle-button input[switch]+label{
+.small-toggle-button input[switch]+label {
     width: 54px;
 }
 
-.small-toggle-button input[switch]:checked+label:before{
+.small-toggle-button input[switch]:checked+label:before {
     left: 2px;
 }
 
-.small-toggle-button input[switch]:checked+label:after{
+.small-toggle-button input[switch]:checked+label:after {
     left: 33px;
 }

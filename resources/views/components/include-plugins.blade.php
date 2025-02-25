@@ -127,6 +127,7 @@
                     var id = $(this).data('id');
                     let statusUpdateApiEndpoint = $(this).data('endpoint');
                     const toggleButton = $(this);
+                    
                     swal({
                         title: "Are you sure?",
                         text: `You really want to ${status} this?`,

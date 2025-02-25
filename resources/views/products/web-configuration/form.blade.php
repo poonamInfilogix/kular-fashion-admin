@@ -122,6 +122,8 @@
             <div class="col-md-6">
                 <h4 class="card-title">Colors</h4>
 
+                <input type="hidden" name="removed_color_images">
+
                 <table class="table table-striped table-sm">
                     <thead>
                         <tr>
@@ -133,15 +135,21 @@
                     <tbody>
                         @foreach ($product->colors as $index => $color)
                             <tr>
-                                <th>{{ $index + 1 }}</th>
-                                <th>{{ $color->colorDetail->name }}</th>
-                                <th>
-                                    <div class="swatch-color">
-                                        <div class="me-1 color-swatch large"
-                                            style="background: {{ $color->colorDetail->ui_color_code }};">
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $color->colorDetail->name }}</td>
+                                <td class="d-flex align-items-center gap-2">
+                                    <div class="color-swatch-container">
+                                        <div class="avatar-sm" @style(['background: '.$color->colorDetail->ui_color_code, 'background-image: url('.asset($color->swatch_image_path).')'])>
+                                            <div class="overlay">
+                                                <i class="mdi mdi-camera-outline"></i>
+                                            </div>
                                         </div>
                                     </div>
-                                </th>
+
+                                    <input type="file" name="color_images[{{ $color->id }}]" accept="image/*" class="color_image_picker d-none">
+
+                                    <button type="button" data-input="removed_color_images" data-id="{{ $color->id }}" @class(['btn btn-text remove-image', 'd-none'=> !$color->swatch_image_path])>Remove Image</button>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

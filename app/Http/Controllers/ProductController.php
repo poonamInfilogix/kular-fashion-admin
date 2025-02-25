@@ -1014,6 +1014,7 @@ class ProductController extends Controller
             );
         }
     }
+
     public function productValidate($barcode)
     {
         $products = ProductQuantity::with('product.brand', 'product.department', 'sizes.sizeDetail', 'colors.colorDetail')->get();
@@ -1098,6 +1099,45 @@ class ProductController extends Controller
 
     public function updateWebConfigration(Request $request, Product $product)
     {
+        if($request->removed_color_images){
+            $productColorIds = explode(',', $request->removed_color_images);
+
+            foreach($productColorIds as $productColorId){
+                $productColor = ProductColor::find($productColorId);
+
+                if ($productColor) {
+                    $filePath = public_path($productColor->swatch_image_path);
+                    if (file_exists($filePath)) {
+                        unlink($filePath);
+                    }
+
+                    $productColor->update([
+                        'swatch_image_path' => ''
+                    ]);
+                }
+
+            }
+        }
+
+        if ($request->hasFile('color_images')) {
+            foreach ($request->file('color_images') as $colorId => $image) {
+                $imagePath = uploadFile($image, 'uploads/colors/swatches/');
+                $productColor = ProductColor::find($colorId);
+
+                if ($productColor->swatch_image_path) {
+                    $filePath = public_path($productColor->swatch_image_path);
+                    if (file_exists($filePath)) {
+                        unlink($filePath);
+                    }
+                }
+
+                if ($productColor) {
+                    $productColor->update([
+                        'swatch_image_path' => $imagePath
+                    ]);
+                }
+            }
+        }
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $image) {
