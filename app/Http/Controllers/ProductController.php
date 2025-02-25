@@ -1137,16 +1137,34 @@ class ProductController extends Controller
             }
         }
 
+        if($request->removed_product_images){
+            $productImageIds = explode(',', $request->removed_product_images);
+
+            foreach($productImageIds as $imageId){
+                $productImage = ProductWebImage::find($imageId);
+
+                if ($productImage) {
+                    $filePath = public_path($productImage->path);
+                    if (file_exists($filePath)) {
+                        unlink($filePath);
+                    }
+
+                    $productImage->delete();
+                }
+
+            }
+        }
+
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $image) {
                 if ($image->getSize() < 10240 * 1024) {
-                    $imagePath = uploadFile($image, 'uploads/products/');
+                    $imagePath = uploadFile($image, 'uploads/products/images/');
 
                     ProductWebImage::create(
                         [
                             'product_id' => $product->id,
                             'path' => $imagePath,
-                            'alt' => $request->image_alt[$index]
+                            'alt' => $request->image_alt[$index] ?? ''
                         ]
                     );
                 }

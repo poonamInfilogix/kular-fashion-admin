@@ -26,6 +26,9 @@
                 $parentRow = $targetedElement.closest('td');
                 $parentRow.find('.avatar-sm').css('background-image', '');
                 $parentRow.find('.remove-image').addClass('d-none');
+            } else if(input === 'removed_product_images'){
+                $parentContainer = $targetedElement.closest('.preview-image-container');
+                $parentContainer.parent().remove();
             } else {
                 console.warn('Add condition to remove temp image')
             }

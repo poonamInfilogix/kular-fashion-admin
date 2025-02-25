@@ -136,16 +136,22 @@
                                 <td>{{ $color->colorDetail->name }}</td>
                                 <td class="d-flex align-items-center gap-2">
                                     <div class="color-swatch-container">
-                                        <div class="avatar-sm" @style(['background: '.$color->colorDetail->ui_color_code, 'background-image: url('.asset($color->swatch_image_path).')'])>
+                                        <div class="avatar-sm" @style(['background: ' . $color->colorDetail->ui_color_code, 'background-image: url(' . asset($color->swatch_image_path) . ')'])>
                                             <div class="overlay">
                                                 <i class="mdi mdi-camera-outline"></i>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <input type="file" name="color_images[{{ $color->id }}]" accept="image/*" class="color_image_picker d-none">
+                                    <input type="file" name="color_images[{{ $color->id }}]" accept="image/*"
+                                        class="color_image_picker d-none">
 
-                                    <button type="button" data-input="removed_color_images" data-id="{{ $color->id }}" @class(['btn btn-text remove-image', 'd-none'=> !$color->swatch_image_path])>Remove Image</button>
+                                    <button type="button" data-input="removed_color_images"
+                                        data-id="{{ $color->id }}" @class([
+                                            'btn btn-text remove-image',
+                                            'd-none' => !$color->swatch_image_path,
+                                        ])>Remove
+                                        Image</button>
                                 </td>
                             </tr>
                         @endforeach
@@ -205,24 +211,24 @@
         </div>
         <div id="imagePreview" class="row mt-2 image-preview"></div>
 
-        <div class="container">
-            <div class="row image-preview">
-                @foreach ($product->webImage as $index => $image)
-                    <div class="col-6 col-sm-2 mb-2">
-                        <div class="preview-image-container">
-                            <img src="{{ asset($image->path) }}" alt="{{ $image->alt }}" class="img-fluid">
+        <div class="row image-preview">
+            @foreach ($product->webImage as $index => $image)
+                <div class="col-6 col-sm-2 mb-2">
+                    <div class="preview-image-container">
+                        <img src="{{ asset($image->path) }}" alt="{{ $image->alt }}" class="img-fluid">
 
-                            <button type="button" class="btn btn-danger btn-sm remove-image" data-input="removed_product_images" data-id="{{ $image->id }}">
-                                <i class="fa fa-trash"></i>
-                            </button>
+                        <button type="button" class="btn btn-danger btn-sm remove-image"
+                            data-input="removed_product_images" data-id="{{ $image->id }}">
+                            <i class="fa fa-trash"></i>
+                        </button>
 
-                            <div class="alt-container">
-                                <x-form-input value="{{ $image->alt }}" name="saved_image_alt[{{ $image->id }}]" placeholder="Alt text" />
-                            </div>
+                        <div class="alt-container">
+                            <x-form-input value="{{ $image->alt }}" name="saved_image_alt[{{ $image->id }}]"
+                                placeholder="Alt text" />
                         </div>
                     </div>
-                @endforeach
-            </div>
+                </div>
+            @endforeach
         </div>
     </div>
 </div>
