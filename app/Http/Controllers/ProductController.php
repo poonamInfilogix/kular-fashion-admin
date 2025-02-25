@@ -26,9 +26,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 use Picqer\Barcode\BarcodeGeneratorPNG;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Support\Facades\Gate;
@@ -1247,51 +1245,5 @@ class ProductController extends Controller
         );
 
         return redirect()->back()->with('success', 'Product web configuration updated successfully.');
-    }
-
-    public function uploadImages(Request $request, Product $product)
-    {
-        $request->validate([
-            'image' => 'required|image|max:10240' // 10 MB max
-        ]);
-
-        if ($request->hasFile('image')) {
-            $imagePath = uploadFile($request->file('image'), 'uploads/products/');
-
-            $webImage = ProductWebImage::create(
-                [
-                    'product_id' => $product->id,
-                    'path' => $imagePath
-                ]
-            );
-            return response()->json(['id' => $webImage->id, 'message' => 'Image uploaded successfully!'], 200);
-        } else {
-            return response()->json(['error' => 'No image being uploaded'], 400);
-        }
-    }
-
-    public function destroyProductImage($imageId)
-    {
-        $image = ProductWebImage::find($imageId);
-
-        if (!$image) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Image not found!'
-            ], 404);
-        }
-
-        // Delete the image file from storage
-        $filePath = public_path($image->path);
-        if (file_exists($filePath)) {
-            unlink($filePath);
-        }
-
-        $image->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Product image deleted successfully!'
-        ]);
     }
 }

@@ -21,8 +21,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
 
     Route::get('products/edit/web-configuration/{product}', [ProductController::class, 'editWebConfigration'])->name('products.edit.web-configuration');
     Route::put('products/update/web-configuration/{product}', [ProductController::class, 'updateWebConfigration'])->name('products.update.web-configuration');
-    Route::post('product/{product}/upload-images', [ProductController::class, 'uploadImages'])->name('product.uploadImages');
-    Route::delete('product-image/{image}', [ProductController::class, 'destroyProductImage'])->name('product.destroy.image');
+
     // Generate product barcodes
     Route::get('/products/print-barcodes', [ProductBarcodeController::class, 'index'])->name('products.print-barcodes');
     Route::get('/export/csv', [ProductController::class, 'downloadExcel'])->name('export.csv');

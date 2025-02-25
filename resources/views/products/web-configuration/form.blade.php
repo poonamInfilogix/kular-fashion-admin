@@ -121,9 +121,6 @@
 
             <div class="col-md-6">
                 <h4 class="card-title">Colors</h4>
-
-                <input type="hidden" name="removed_color_images">
-
                 <table class="table table-striped table-sm">
                     <thead>
                         <tr>
@@ -213,14 +210,15 @@
                 @foreach ($product->webImage as $index => $image)
                     <div class="col-6 col-sm-2 mb-2">
                         <div class="preview-image-container">
-                            <img src="{{ asset($image->path) }}" alt="Product Images" class="img-fluid">
-                            <button type="button" class="btn btn-danger btn-sm delete-btn" data-source="image"
-                                data-endpoint="{{ route('product.destroy.image', $image->id) }}"><i
-                                    class="fa fa-trash"></i></button>
+                            <img src="{{ asset($image->path) }}" alt="{{ $image->alt }}" class="img-fluid">
 
-                            <div class="alt-container"><input type="text" value="{{ $image->alt }}"
-                                    name="saved_image_alt[{{ $image->id }}]" class="form-control"
-                                    placeholder="Alt text"></div>
+                            <button type="button" class="btn btn-danger btn-sm remove-image" data-input="removed_product_images" data-id="{{ $image->id }}">
+                                <i class="fa fa-trash"></i>
+                            </button>
+
+                            <div class="alt-container">
+                                <x-form-input value="{{ $image->alt }}" name="saved_image_alt[{{ $image->id }}]" placeholder="Alt text" />
+                            </div>
                         </div>
                     </div>
                 @endforeach
@@ -261,5 +259,8 @@
         </div>
     </div>
 </div>
+
+<input type="hidden" name="removed_color_images">
+<input type="hidden" name="removed_product_images">
 
 <button type="submit" class="btn btn-primary waves-effect waves-light">Save Changes</button>

@@ -172,7 +172,7 @@ table tbody tr.even {
 }
 
 .image-preview .remove-image-btn,
-.image-preview .delete-btn {
+.image-preview .btn {
     position: absolute;
     right: 0;
     top: 0;
