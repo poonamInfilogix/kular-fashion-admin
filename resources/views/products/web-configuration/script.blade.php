@@ -101,7 +101,7 @@
                 let reader = new FileReader();
 
                 reader.onload = function(e) {
-                    let imageBox = $('<div class="col-6 col-sm-2 mb-2"></div>');
+                    let imageBox = $(`<div class="col-6 col-sm-2 mb-2" data-color-id="${colorId}"></div>`);
                     let imageContainer = $('<div class="preview-image-container"></div>');
                     let img = $('<img src="' + e.target.result + '" class="img-fluid" />');
                     let removeBtn = $(

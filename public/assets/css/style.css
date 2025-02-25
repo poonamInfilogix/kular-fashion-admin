@@ -28,15 +28,15 @@ input[switch=danger]:label {
     cursor: pointer;
 }
 
-.d-color-code {
-    height: 2.0rem;
-    width: 2.0rem;
-}
-
 .color-swatch-container {
     position: relative;
     display: inline-block;
     cursor: pointer;
+}
+
+.color-swatch-container .avatar-sm{
+    background-size: cover!important;
+    background-repeat: no-repeat!important;
 }
 
 .overlay {
