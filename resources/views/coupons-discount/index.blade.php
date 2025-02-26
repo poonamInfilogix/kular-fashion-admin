@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
-
-@section('title', 'Coupons and Discounts')
+@section('title', 'Coupon and Discounts')
 @section('header-button')
     <a href="{{ route('coupons-discount.create') }}" class="btn btn-primary">Add New Coupon</a>
 @endsection
