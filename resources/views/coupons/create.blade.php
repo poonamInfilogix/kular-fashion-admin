@@ -2,7 +2,7 @@
 
 @section('title', 'Create a Coupon and Discounts')
 @section('header-button')
-    <a href="{{ route('coupon-discounts.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Go Back</a>
+    <a href="{{ route('coupons.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Go Back</a>
 @endsection
 
 @section('content')
@@ -13,9 +13,9 @@
                     <x-error-message :message="$errors->first('message')" />
                     <x-success-message :message="session('success')" />
 
-                    <form action="{{ route('coupon-discounts.store') }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ route('coupons.store') }}" method="post" enctype="multipart/form-data">
                         @csrf
-                        @include('coupon-discounts.form')
+                        @include('coupons.form')
                     </form>
                 </div>
             </div>

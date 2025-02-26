@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique()->index();
+            $table->string('code', 50)->unique()->index();
             $table->enum('type', ['percentage', 'fixed', 'free_shipping', 'buy_x_get_y', 'buy_x_for_y']);
             $table->decimal('value', 10, 2)->nullable();
             $table->decimal('min_spend', 10, 2)->nullable();
@@ -37,6 +37,7 @@ return new class extends Migration
             $table->tinyInteger('status')->default(1);
             $table->string('image')->nullable();
             $table->string('description')->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->index(['status']);

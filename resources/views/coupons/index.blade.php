@@ -2,7 +2,7 @@
 
 @section('title', 'Coupon and Discounts')
 @section('header-button')
-    <a href="{{ route('coupon-discounts.create') }}" class="btn btn-primary">Add New Coupon</a>
+    <a href="{{ route('coupons.create') }}" class="btn btn-primary">Add New Coupon</a>
 @endsection
 
 @section('content')
@@ -12,7 +12,7 @@
                 <div class="col-12">
                     <x-error-message :message="$errors->first('message')" />
                     <x-success-message :message="session('success')" />
-
+                        
                     <div class="card">
                         <div class="card-body">
                             <table id="datatable" class="table table-bordered table-striped dt-responsive nowrap w-100">
@@ -29,7 +29,7 @@
                                         <th>Start Date</th>
                                         <th>Expire Date</th>
                                       
-                                        @canany(['edit departments', 'delete departments'])
+                                        @canany(['edit coupons', 'delete coupons'])
                                             <th>Action</th>
                                         @endcanany
                                     </tr>
@@ -47,16 +47,16 @@
                                         <td>{{ $coupon->used_count }}</td>
                                         <td>{{  isset($coupon->starts_at) ? date('d-m-Y', strtotime($coupon->starts_at )) : ''}}</td>
                                         <td>{{  isset($coupon->expires_at) ?date('d-m-Y', strtotime($coupon->expires_at  )) : ''}}</td>
-                                        @canany(['edit brands', 'delete brands'])
+                                        @canany(['edit coupons', 'delete coupons'])
                                             <td>
-                                                @if (Auth::user()->can('edit brands'))
-                                                    <a href="{{ route('coupon-discounts.edit', $coupon->id) }}"
+                                                @if (Auth::user()->can('edit coupons'))
+                                                    <a href="{{ route('coupons.edit', $coupon->id) }}"
                                                         class="btn btn-primary btn-sm edit py-0 px-1"><i
                                                             class="fas fa-pencil-alt"></i></a>
                                                 @endif
-                                                @if (Auth::user()->can('delete brands'))
+                                                @if (Auth::user()->can('delete coupons'))
                                                     <button data-source="Brand"
-                                                        data-endpoint="{{ route('coupon-discounts.destroy', $coupon->id) }}"
+                                                        data-endpoint="{{ route('coupons.destroy', $coupon->id) }}"
                                                         class="delete-btn btn btn-danger btn-sm py-0 px-1">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button>

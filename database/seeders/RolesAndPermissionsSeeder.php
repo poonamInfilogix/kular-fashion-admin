@@ -27,7 +27,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'view size scales', 'create size scales', 'edit size scales', 'delete size scales',
             'view products', 'create products', 'edit products', 'delete products',
             'view collections', 'create collections', 'edit collections', 'delete collections',
-            'view coupons & discounts', 'create coupons & discounts', 'edit coupons & discounts', 'delete coupons & discounts',
+            'view coupons', 'create coupons', 'edit coupons', 'delete coupons',
             'view print barcodes', 'create print barcodes', 'edit print barcodes', 'delete print barcodes',
             'view tags', 'create tags', 'edit tags', 'delete tags',
             'view branches', 'create branches', 'edit branches', 'delete branches',
