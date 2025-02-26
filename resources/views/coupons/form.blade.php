@@ -33,7 +33,8 @@
         <div class="coupon-type-values d-none">
             <div class="row values-container">
                 <div class="col-md-2 value-container percentage fixed">
-                    <x-form-input name='value' type='number' label='Value' required="true" value="{{ $coupon->value ?? '' }}" />
+                    <x-form-input name='value' type='number' label='Value' required="true"
+                        value="{{ $coupon->value ?? '' }}" />
                 </div>
                 <div class="col-md-4 value-container free_shipping">
                     <label for="shipping_methods">Shipping Methods<span class="text-danger">*</span></label>
@@ -42,9 +43,9 @@
                         'is-invalid' => $errors->has('shipping_methods'),
                     ]) multiple>
                         <option value="" disabled>Select Shipping Methods</option>
-                        <option value="royal_mail" @selected(in_array('royal_mail', old('shipping_methods', [])))>Royal Mail</option>
-                        <option value="dpd" @selected(in_array('dpd', old('shipping_methods', [])))>DPD</option>
-                        <option value="click_collect" @selected(in_array('click_collect', old('shipping_methods', [])))>Click & Collect</option>
+                        <option value="royal_mail" @selected(in_array('royal_mail', old('shipping_methods', isset($coupon) && is_string($coupon->shipping_methods) ? json_decode($coupon->shipping_methods, true) : $coupon->shipping_methods ?? [])))>Royal Mail</option>
+                        <option value="dpd" @selected(in_array('dpd', old('shipping_methods', isset($coupon) && is_string($coupon->shipping_methods) ? json_decode($coupon->shipping_methods, true) : $coupon->shipping_methods ?? [])))>DPD</option>
+                        <option value="click_collect" @selected(in_array('click_collect', old('shipping_methods', isset($coupon) && is_string($coupon->shipping_methods) ? json_decode($coupon->shipping_methods, true) : $coupon->shipping_methods ?? [])))>Click & Collect</option>
                     </select>
                     @error('shipping_methods')
                         <span class="invalid-feedback">{{ $message }}</span>
@@ -72,7 +73,8 @@
                             ]) multiple>
                                 <option value="" disabled>Select Products</option>
                                 @foreach ($products as $product)
-                                    <option value="{{ $product->id }}" @selected(in_array($product->id, old('buy_x_products', isset($coupon) ? json_decode($coupon->buy_x_product_ids, true) : [])))>{{ $product->article_code }}
+                                    <option value="{{ $product->id }}" @selected(in_array($product->id, old('buy_x_products', isset($coupon) ? json_decode($coupon->buy_x_product_ids) ?? [] : [])))>
+                                        {{ $product->article_code }}
                                         {{ $product->name }}
                                     </option>
                                 @endforeach
@@ -82,8 +84,8 @@
                             @enderror
                         </div>
                         <div class="col-md-3">
-                            <x-form-input name='buy_x_discount' value="{{ $coupon->buy_x_discount ?? '' }}" type='number' label='For'
-                                required="true" />
+                            <x-form-input name='buy_x_discount' value="{{ $coupon->buy_x_discount ?? '' }}"
+                                type='number' label='For' required="true" />
                         </div>
                         <div class="col-md-3">
                             <label for="buy_x_discount_type">Discount Type<span class="text-danger">*</span></label>
@@ -107,16 +109,20 @@
         <h4 class="card-title">Minimum Requirements</h4>
         <div class="row">
             <div class="col-md-2">
-                <x-form-input name='min_spend' type='number' label='Minimum Spend' value="{{ $coupon->min_spend ?? '' }}" />
+                <x-form-input name='min_spend' type='number' label='Minimum Spend'
+                    value="{{ $coupon->min_spend ?? '' }}" />
             </div>
             <div class="col-md-2">
-                <x-form-input name='max_spend' type='number' label='Maximum Spend' value="{{ $coupon->max_spend ?? '' }}" />
+                <x-form-input name='max_spend' type='number' label='Maximum Spend'
+                    value="{{ $coupon->max_spend ?? '' }}" />
             </div>
             <div class="col-md-2">
-                <x-form-input name='start_date' class="coupon-date-picker" label='Start Date' value="{{ isset($coupon->start_date) && $coupon->start_date ? \Carbon\Carbon::parse($coupon->start_date)->format('d-m-Y') : '' }}" />
+                <x-form-input name='start_date' class="coupon-date-picker" label='Start Date'
+                    value="{{ isset($coupon->start_date) && $coupon->start_date ? \Carbon\Carbon::parse($coupon->start_date)->format('d-m-Y') : '' }}" />
             </div>
             <div class="col-md-2">
-                <x-form-input name='expire_date' class="coupon-date-picker" label='Expire Date' value="{{ isset($coupon->expire_date) && $coupon->expire_date ? \Carbon\Carbon::parse($coupon->expire_date)->format('d-m-Y') : '' }}" />
+                <x-form-input name='expire_date' class="coupon-date-picker" label='Expire Date'
+                    value="{{ isset($coupon->expire_date) && $coupon->expire_date ? \Carbon\Carbon::parse($coupon->expire_date)->format('d-m-Y') : '' }}" />
             </div>
         </div>
     </div>
@@ -134,13 +140,18 @@
                         Limit number of times this discount can be used in total
                     </label>
                 </div>
-                <div @class(['row mb-2', 'd-none' => old('usage_limit_total', $coupon->usage_limit_total ?? '') != '1']) id="limitOrdersValueContainer">
+                <div @class([
+                    'row mb-2',
+                    'd-none' =>
+                        old('usage_limit_total', $coupon->usage_limit_total ?? '') != '1',
+                ]) id="limitOrdersValueContainer">
                     <div class="col-md-2">
                         <input type="number" name="usage_limit_total_value" @class([
                             'form-control',
                             'is-invalid' => $errors->has('usage_limit_total_value'),
                         ])
-                            value="{{ old('usage_limit_total_value', $coupon->usage_limit_total_value) }}" placeholder="No. of orders" />
+                            value="{{ old('usage_limit_total_value', $coupon->usage_limit_total_value ?? '') }}"
+                            placeholder="No. of orders" />
 
                         @error('usage_limit_total_value')
                             <span class="invalid-feedback">{{ $message }}</span>
@@ -158,14 +169,18 @@
                 </div>
                 <div @class([
                     'row mb-2',
-                    'd-none' => old('usage_limit_per_customer', $coupon->usage_limit_per_customer ?? '') != '1',
+                    'd-none' =>
+                        old(
+                            'usage_limit_per_customer',
+                            $coupon->usage_limit_per_customer ?? '') != '1',
                 ]) id="limitCustomersValueContainer">
                     <div class="col-md-2">
                         <input type="number" name="usage_limit_per_customer_value" @class([
                             'form-control',
                             'is-invalid' => $errors->has('usage_limit_per_customer_value'),
                         ])
-                            value="{{ old('usage_limit_per_customer_value', $coupon->usage_limit_per_customer_value) }}" placeholder="No. of customers" />
+                            value="{{ old('usage_limit_per_customer_value', $coupon->usage_limit_per_customer_value ?? '') }}"
+                            placeholder="No. of customers" />
 
                         @error('usage_limit_per_customer_value')
                             <span class="invalid-feedback">{{ $message }}</span>
@@ -189,7 +204,7 @@
                 <select name="allowed_tags[]" id="allowed_tags" class="form-control" multiple>
                     <option value="" disabled>Select Allowed Tags</option>
                     @foreach ($tags as $tag)
-                        <option value="{{ $tag->id }}" @selected(in_array($tag->id, old('allowed_tags', isset($coupon) ? json_decode($coupon->allowed_tags) : [])))>{{ $tag->name }}
+                        <option value="{{ $tag->id }}" @selected(in_array($tag->id, old('allowed_tags', isset($coupon) ? json_decode($coupon->allowed_tags) ?? [] : [])))>{{ $tag->name }}
                         </option>
                     @endforeach
                 </select>
@@ -199,7 +214,7 @@
                 <select name="disallowed_tags[]" id="disallowed_tags" class="form-control" multiple>
                     <option value="" disabled>Select Disallowed Tags</option>
                     @foreach ($tags as $tag)
-                        <option value="{{ $tag->id }}" @selected(in_array($tag->id, old('disallowed_tags', isset($coupon) ? json_decode($coupon->disallowed_tags) : [])))>{{ $tag->name }}
+                        <option value="{{ $tag->id }}" @selected(in_array($tag->id, old('disallowed_tags', isset($coupon) ? json_decode($coupon->disallowed_tags) ?? [] : [])))>{{ $tag->name }}
                         </option>
                     @endforeach
                 </select>
@@ -223,8 +238,12 @@
             <div class="col-md-3 mb-2">
                 <x-form-input name="image" type="file" label="Image" accept="image/*" />
 
-                <img src="" id="preview-image"
-                    class="img-preview img-fluid mt-2">
+                @if ($coupon->image ?? session('uploaded_image', null))
+                    <img src="{{ asset($coupon->image ?? session('uploaded_image')) }}" id="preview-image"
+                        class="img-preview img-fluid mt-2">
+                @else
+                    <img src="" id="preview-image" class="img-fluid mt-2 w-150">
+                @endif
             </div>
             <div class="col-md-6 mb-2">
                 <label for="description">Description</label>
@@ -261,7 +280,7 @@
             minDate: "today"
         });
 
-        $('#image').change(function(event){
+        $('#image').change(function(event) {
             previewImage(event, 'image')
         })
 
@@ -338,7 +357,6 @@
                 couponCode += characters.charAt(randomIndex);
             }
 
-            console.log('couponCode', couponCode)
             $('#code').val(couponCode);
         });
     });

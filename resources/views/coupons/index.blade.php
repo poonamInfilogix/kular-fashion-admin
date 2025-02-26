@@ -21,11 +21,7 @@
                                         <th>#</th>
                                         <th>Code</th>
                                         <th>Type</th>
-                                        <th>Type Value</th>
-                                        <th>Minimum Amount</th>
-                                        <th>Minimum Item </th>
-                                        <th>Usage Limit</th>
-                                        <th>Limit</th>
+                                        <th>Status</th>
                                         <th>Start Date</th>
                                         <th>Expire Date</th>
                                       
@@ -40,13 +36,17 @@
                                         <td>{{ ++$key }}</td>
                                         <td>{{ $coupon->code }}</td>
                                         <td>{{ $coupon->type }}</td>
-                                        <td>{{ $coupon->non_numeric_value ?? $coupon->numeric_value }}</td>
-                                        <td>{{ $coupon->min_amount }}</td>
-                                        <td>{{ $coupon->min_items_count ?? '' }}</td>
-                                        <td>{{ $coupon->usage_limit }}</td> 
-                                        <td>{{ $coupon->used_count }}</td>
-                                        <td>{{  isset($coupon->starts_at) ? date('d-m-Y', strtotime($coupon->starts_at )) : ''}}</td>
-                                        <td>{{  isset($coupon->expires_at) ?date('d-m-Y', strtotime($coupon->expires_at  )) : ''}}</td>
+                                        <td>
+                                            @if($coupon->status == 1)
+                                            <span class="badge bg-success">Active</span>
+                                        @elseif($coupon->status == 0)
+                                            <span class="badge bg-danger">Inactive</span>
+                                        @else
+                                            <span class="badge bg-secondary">Expired</span>
+                                        @endif
+                                        </td>
+                                        <td>{{  isset($coupon->start_date) ? date('d-m-Y', strtotime($coupon->start_date)) : ''}}</td>
+                                        <td>{{  isset($coupon->expire_date) ? date('d-m-Y', strtotime($coupon->expire_date)) : ''}}</td>
                                         @canany(['edit coupons', 'delete coupons'])
                                             <td>
                                                 @if (Auth::user()->can('edit coupons'))

@@ -17,7 +17,7 @@ class CouponController extends Controller
      */
     public function index()
     {
-        $coupons = Coupon::orderBy('id', 'asc')->get();
+        $coupons = Coupon::orderBy('id', 'desc')->get();
         return view('coupons.index', compact('coupons'));
     }
 
@@ -36,6 +36,21 @@ class CouponController extends Controller
      */
     public function store(Request $request)
     {
+        $imagePath = session()->get('uploaded_image', null);
+
+        if ($request->file('image')) {
+            if ($imagePath) {
+                $uploadedImagePath = public_path($imagePath);
+
+                if (file_exists($uploadedImagePath)) {
+                    unlink($uploadedImagePath);
+                }
+            }
+
+            $imagePath = uploadFile($request->file('image'), 'uploads/coupons/');
+            session()->put('uploaded_image', $imagePath);
+        }
+
         $rules = [
             'code' => 'required|string|max:50|unique:coupons,code',
             'type' => 'required|in:percentage,fixed,free_shipping,buy_x_get_y,buy_x_for_y',
@@ -83,18 +98,12 @@ class CouponController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-
-        $imagePath = '';
-        if ($request->file('image')) {
-            $imagePath = uploadFile($request->file('image'), 'uploads/coupons/');
-        }
-
         Coupon::create(
             [
                 "code" => $request->code,
                 "type" => $request->type,
                 'value' => $request->status,
-                "shipping_methods" => $request->limit_val,
+                "shipping_methods" => json_encode($request->shipping_methods),
                 "buy_x_product_ids" => json_encode($request->buy_x_products),
                 "get_y_product_ids" => json_encode($request->buy_y_products),
                 "buy_x_quantity" => $request->buy_x_quantity,
@@ -117,6 +126,9 @@ class CouponController extends Controller
                 "description" => $request->description
             ]
         );
+
+        session()->forget('uploaded_image');
+
         return redirect()->route('coupons.index')->with('success', 'Coupon created successfully.');
     }
 
@@ -195,10 +207,12 @@ class CouponController extends Controller
 
         $imagePath = $coupon->image;
         if ($request->file('image')) {
-            $uploadedImagePath = public_path($imagePath);
+            if ($imagePath) {
+                $uploadedImagePath = public_path($imagePath);
 
-            if (file_exists($uploadedImagePath)) {
-                unlink($uploadedImagePath);
+                if (file_exists($uploadedImagePath)) {
+                    unlink($uploadedImagePath);
+                }
             }
 
             $imagePath = uploadFile($request->file('image'), 'uploads/coupons/');
@@ -209,7 +223,7 @@ class CouponController extends Controller
                 "code" => $request->code,
                 "type" => $request->type,
                 'value' => $request->status,
-                "shipping_methods" => $request->limit_val,
+                "shipping_methods" => json_encode($request->shipping_methods),
                 "buy_x_product_ids" => json_encode($request->buy_x_products),
                 "get_y_product_ids" => json_encode($request->buy_y_products),
                 "buy_x_quantity" => $request->buy_x_quantity,
@@ -241,6 +255,11 @@ class CouponController extends Controller
      */
     public function destroy(Coupon $coupon)
     {
-        //
+        $coupon->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Coupon deleted successfully.',
+        ]);
     }
 }
