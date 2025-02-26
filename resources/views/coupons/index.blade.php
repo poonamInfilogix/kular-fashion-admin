@@ -55,7 +55,7 @@
                                                             class="fas fa-pencil-alt"></i></a>
                                                 @endif
                                                 @if (Auth::user()->can('delete coupons'))
-                                                    <button data-source="Brand"
+                                                    <button data-source="Coupon"
                                                         data-endpoint="{{ route('coupons.destroy', $coupon->id) }}"
                                                         class="delete-btn btn btn-danger btn-sm py-0 px-1">
                                                         <i class="fas fa-trash-alt"></i>

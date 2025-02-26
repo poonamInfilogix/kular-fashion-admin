@@ -255,6 +255,14 @@ class CouponController extends Controller
      */
     public function destroy(Coupon $coupon)
     {
+        if ($coupon->image) {
+            $uploadedImagePath = public_path($coupon->image);
+
+            if (file_exists($uploadedImagePath)) {
+                unlink($uploadedImagePath);
+            }
+        }
+
         $coupon->delete();
 
         return response()->json([
