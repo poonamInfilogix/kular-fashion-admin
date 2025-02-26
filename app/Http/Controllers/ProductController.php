@@ -42,8 +42,9 @@ class ProductController extends Controller
         $brands = Brand::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
         $departments = Department::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
         $productTypes = ProductType::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
+        $tags = Tag::select('id', 'name')->where('status', 'Active')->orderBy('name', 'ASC')->latest()->get();
 
-        return view('products.index', compact('brands', 'productTypes', 'departments'));
+        return view('products.index', compact('brands', 'productTypes', 'departments', 'tags'));
     }
 
     public function create()
@@ -1097,10 +1098,10 @@ class ProductController extends Controller
 
     public function updateWebConfigration(Request $request, Product $product)
     {
-        if($request->removed_color_images){
+        if ($request->removed_color_images) {
             $productColorIds = explode(',', $request->removed_color_images);
 
-            foreach($productColorIds as $productColorId){
+            foreach ($productColorIds as $productColorId) {
                 $productColor = ProductColor::find($productColorId);
 
                 if ($productColor) {
@@ -1113,7 +1114,6 @@ class ProductController extends Controller
                         'swatch_image_path' => ''
                     ]);
                 }
-
             }
         }
 
@@ -1137,10 +1137,10 @@ class ProductController extends Controller
             }
         }
 
-        if($request->removed_product_images){
+        if ($request->removed_product_images) {
             $productImageIds = explode(',', $request->removed_product_images);
 
-            foreach($productImageIds as $imageId){
+            foreach ($productImageIds as $imageId) {
                 $productImage = ProductWebImage::find($imageId);
 
                 if ($productImage) {
@@ -1151,22 +1151,25 @@ class ProductController extends Controller
 
                     $productImage->delete();
                 }
-
             }
         }
 
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $index => $image) {
-                if ($image->getSize() < 10240 * 1024) {
-                    $imagePath = uploadFile($image, 'uploads/products/images/');
 
-                    ProductWebImage::create(
-                        [
-                            'product_id' => $product->id,
-                            'path' => $imagePath,
-                            'alt' => $request->image_alt[$index] ?? ''
-                        ]
-                    );
+        if ($request->images) {
+            foreach ($request->images as $colorId => $images) {
+                foreach ($images as $index => $image) {
+                    if ($image->getSize() < 10240 * 1024) {
+                        $imagePath = uploadFile($image, 'uploads/products/images/');
+    
+                        ProductWebImage::create(
+                            [
+                                'product_id' => $product->id,
+                                'product_color_id' => $colorId > 0 ? $colorId : null,
+                                'path' => $imagePath,
+                                'alt' => $request->image_alt[$colorId][$index] ?? ''
+                            ]
+                        );
+                    }
                 }
             }
         }
@@ -1263,5 +1266,17 @@ class ProductController extends Controller
         );
 
         return redirect()->back()->with('success', 'Product web configuration updated successfully.');
+    }
+
+    public function bulkUpdate(Request $request){
+        if($request->action!=='Assign Tags' && $request->action!=='Unassign Tags'){
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid performed action'
+            ]);
+        }
+
+        
+        dd($request->all());
     }
 }
