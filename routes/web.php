@@ -59,7 +59,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'inventory-transfer' => InventoryTransferController::class,
         'purchase-orders' => PurchaseOrderController::class,
         'collections' => CollectionController::class,
-        'coupons-discount' => CouponDiscountController::class,
+        'coupon-discounts' => CouponDiscountController::class,
     ]);
 
     Route::get('inventory-history', [InventoryTransferController::class, 'inventoryHistory'])->name('inventory-history');

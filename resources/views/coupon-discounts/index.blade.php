@@ -2,7 +2,7 @@
 
 @section('title', 'Coupon and Discounts')
 @section('header-button')
-    <a href="{{ route('coupons-discount.create') }}" class="btn btn-primary">Add New Coupon</a>
+    <a href="{{ route('coupon-discounts.create') }}" class="btn btn-primary">Add New Coupon</a>
 @endsection
 
 @section('content')
@@ -50,13 +50,13 @@
                                         @canany(['edit brands', 'delete brands'])
                                             <td>
                                                 @if (Auth::user()->can('edit brands'))
-                                                    <a href="{{ route('coupons-discount.edit', $coupon->id) }}"
+                                                    <a href="{{ route('coupon-discounts.edit', $coupon->id) }}"
                                                         class="btn btn-primary btn-sm edit py-0 px-1"><i
                                                             class="fas fa-pencil-alt"></i></a>
                                                 @endif
                                                 @if (Auth::user()->can('delete brands'))
                                                     <button data-source="Brand"
-                                                        data-endpoint="{{ route('coupons-discount.destroy', $coupon->id) }}"
+                                                        data-endpoint="{{ route('coupon-discounts.destroy', $coupon->id) }}"
                                                         class="delete-btn btn btn-danger btn-sm py-0 px-1">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button>

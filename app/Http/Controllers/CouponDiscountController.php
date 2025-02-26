@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Coupon;
+use App\Models\Product;
+use App\Models\Tag;
 use Illuminate\Support\Facades\File;
 class CouponDiscountController extends Controller
 {
@@ -13,14 +15,15 @@ class CouponDiscountController extends Controller
     public function index()
     {
         $coupons = Coupon::orderBy('id', 'asc')->get();
-        return view('coupons-discount.index', compact('coupons'));
+        return view('coupon-discounts.index', compact('coupons'));
     }
 
   
     public function create()
     {
-        
-        return view('coupons-discount.create');
+        $products = Product::select('id', 'article_code', 'name')->where('status', 'Active')->get();
+        $tags = Tag::select('id', 'name')->where('status', 'Active')->get();
+        return view('coupon-discounts.create', compact('products', 'tags'));
     }
 
     /**
@@ -28,14 +31,27 @@ class CouponDiscountController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([ 
-            'type' => 'required',
-            'type_value' => 'required',
-            'limit_val' => 'required',
-            'coupon_code' => 'required',
-            'usage_limit' => 'required',
+        $request->validate([
+            'code' => 'required|string|unique:coupons,code|max:255',
+            'type' => 'required|in:percentage,fixed,free_shipping,buy_x_get_y,buy_x_for_y',
+            'value' => 'required|numeric|min:0',
+            'min_spend' => 'nullable|numeric|min:0',
+            'max_spend' => 'nullable|numeric|min:0',
+            'shipping_methods' => 'nullable|array',
+            'buy_x_product_ids' => 'nullable|array',
+            'get_y_product_ids' => 'nullable|array',
+            'buy_x_quantity' => 'nullable|integer|min:1',
+            'get_y_quantity' => 'nullable|integer|min:1',
+            'buy_x_discount' => 'nullable|numeric|min:0',
+            'usage_limit_total_value' => 'nullable|integer|min:1',
+            'usage_limit_per_customer_value' => 'nullable|integer|min:1',
+            'start_date' => 'nullable|date|after_or_equal:today',
+            'expire_date' => 'nullable|date|after:start_date',
+            'status' => 'required|in:0,1,2',
+            'description' => 'nullable|string',
         ]);
         
+        dd();
         $imageName = uploadFile($request->file('banner_path'), 'uploads/coupons/');
         $starts_at = date('Y-m-d H:i:s', strtotime($request->starts_at)); 
         $expires_at = date('Y-m-d H:i:s', strtotime($request->expire_at)); 
@@ -71,7 +87,7 @@ class CouponDiscountController extends Controller
                 "image_path" => $imageName
             ]
             );
-            return redirect()->route('coupons-discount.index')->with('success', 'Coupon created successfully.');
+            return redirect()->route('coupon-discounts.index')->with('success', 'Coupon created successfully.');
 
     }
 
@@ -89,7 +105,7 @@ class CouponDiscountController extends Controller
     public function edit(string $id)
     {
        $coupon =  Coupon::find($id);
-       return view('coupons-discount.edit', compact('coupon'));
+       return view('coupon-discounts.edit', compact('coupon'));
     }
 
     /**
@@ -132,7 +148,7 @@ class CouponDiscountController extends Controller
             "banner_path" => $imageName
         ]);
 
-        return redirect()->route('coupons-discount.index')->with('success', 'Coupon updated successfully.');
+        return redirect()->route('coupon-discounts.index')->with('success', 'Coupon updated successfully.');
     }
 
     /**
