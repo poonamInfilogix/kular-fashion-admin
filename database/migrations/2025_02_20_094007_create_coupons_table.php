@@ -35,7 +35,7 @@ return new class extends Migration
             $table->timestamp('expire_date')->nullable();
             $table->enum('status', ['active', 'inactive', 'expired'])->default('active');
             $table->string('image')->nullable();
-            $table->text('description')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
 
             $table->index(['status']);
