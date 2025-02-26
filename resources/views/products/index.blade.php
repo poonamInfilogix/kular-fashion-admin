@@ -118,18 +118,19 @@
                         title: '<input type="checkbox" class="form-check-input" id="select-all-checkbox">',
                         data: null,
                         render: function(data, type, row) {
-                            let selectedProducts = $('[data-selected-products]').attr('data-selected-products');
+                            let selectedProducts = $('[data-selected-products]').attr(
+                                'data-selected-products');
                             selectedProducts = selectedProducts.split(',');
-                            
-                            let checked = selectedProducts.includes(String(row.id)) ? 'checked' :
-                            '';
 
-                            if(selectedProducts.includes('-1')){
+                            let checked = selectedProducts.includes(String(row.id)) ? 'checked' :
+                                '';
+
+                            if (selectedProducts.includes('-1')) {
                                 checked = 'checked';
                                 selectedProducts.push(row.id);
                             }
 
-                            if(unselectedProducts.includes(String(row.id))){
+                            if (unselectedProducts.includes(String(row.id))) {
                                 checked = '';
                             }
 
@@ -219,7 +220,7 @@
             $('#product-table_filter').prepend(
                 `<input type="text" id="custom-search-input" class="form-control" placeholder="Search Products">`
             );
-            
+
             $('#custom-search-input').on('keyup', function() {
                 table.search(this.value).draw();
             });
@@ -236,8 +237,8 @@
             }
 
             // Select all checkboxes
-            $('#select-all-checkbox').on('change', function() {    
-                if($(this).is(':checked')){
+            $('#select-all-checkbox').on('change', function() {
+                if ($(this).is(':checked')) {
                     selectedProducts = ['-1'];
                 } else {
                     selectedProducts = [];
@@ -245,7 +246,7 @@
 
                 var checked = this.checked;
                 $('.product-checkbox').each(function() {
-                    if(!unselectedProducts.includes($(this).val())){
+                    if (!unselectedProducts.includes($(this).val())) {
                         this.checked = checked;
                     }
                 });
@@ -255,7 +256,7 @@
 
             // Individual checkbox selection
             $('#product-table').on('change', '.product-checkbox', function() {
-                if($(this).is(':checked')){
+                if ($(this).is(':checked')) {
                     selectedProducts.push($(this).val());
                 } else {
                     let selectedProductIndex = selectedProducts.indexOf($(this).val());
@@ -264,7 +265,7 @@
                     }
                 }
 
-                if(!$(this).is(':checked') && $('#select-all-checkbox:checked').length){
+                if (!$(this).is(':checked') && $('#select-all-checkbox:checked').length) {
                     unselectedProducts.push($(this).val());
                 } else {
                     let unselectedProductIndex = unselectedProducts.indexOf($(this).val());
@@ -286,8 +287,28 @@
                         action: $('#bulkEditAction').val(),
                         tags: $('#bulkEditTags').val()
                     },
-                    success:function(response){
-                        console.log('response', response)
+                    success: function(response) {
+                        if (response.success) {
+                            $('#bulkEditTags').val(null).trigger('change');
+                            $('#bulkEditTagsModal').modal('hide');
+
+                            swal({
+                                title: "Success!",
+                                text: response.message,
+                                type: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            })
+                        } else {
+                            let message = response.message || `Something went wrong!`;
+
+                            swal({
+                                title: "Oops!",
+                                text: message,
+                                type: "error",
+                                confirmButtonText: 'Okay'
+                            })
+                        }
                     }
                 })
             });

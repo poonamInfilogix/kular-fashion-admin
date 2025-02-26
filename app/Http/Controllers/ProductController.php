@@ -1160,7 +1160,7 @@ class ProductController extends Controller
                 foreach ($images as $index => $image) {
                     if ($image->getSize() < 10240 * 1024) {
                         $imagePath = uploadFile($image, 'uploads/products/images/');
-    
+
                         ProductWebImage::create(
                             [
                                 'product_id' => $product->id,
@@ -1268,15 +1268,61 @@ class ProductController extends Controller
         return redirect()->back()->with('success', 'Product web configuration updated successfully.');
     }
 
-    public function bulkUpdate(Request $request){
-        if($request->action!=='Assign Tags' && $request->action!=='Unassign Tags'){
+    public function bulkUpdate(Request $request)
+    {
+        if ($request->action !== 'Assign Tags' && $request->action !== 'Unassign Tags') {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid performed action'
             ]);
         }
 
-        
-        dd($request->all());
+        $selectedProducts = $request->selected_products ?? [];
+        $unselectedProducts = $request->unselected_products ?? [];
+
+        if (empty($selectedProducts) || (count($selectedProducts) == 1 && $selectedProducts[0] == -1)) {
+            $products = Product::whereNotIn('id', $unselectedProducts)->get();
+        } else {
+            $products = Product::whereIn('id', $selectedProducts)->whereNotIn('id', $unselectedProducts)->get();
+        }
+
+        if ($products->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No products found to update'
+            ]);
+        }
+
+        if ($request->action === 'Assign Tags') {
+            $tags = Tag::whereIn('id', $request->tags)->get();
+
+            foreach ($products as $product) {
+                foreach ($tags as $tag) {
+                    if (!$product->tags()->where('tag_id', $tag->id)->exists()) {
+                        $product->tags()->create([
+                            'tag_id' => $tag->id
+                        ]);
+                    }
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Tags assigned successfully'
+            ]);
+        } elseif ($request->action === 'Unassign Tags') {
+            $tags = Tag::whereIn('id', $request->tags)->get();
+
+            foreach ($products as $product) {
+                foreach ($tags as $tag) {
+                    $product->tags()->where('tag_id', $tag->id)->delete();
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Tags unassigned successfully'
+            ]);
+        }
     }
 }
