@@ -2,7 +2,8 @@
 
 @section('title', 'View Article')
 @section('header-button')
-    <a href="{{ route('products.edit.web-configuration', $product->id) }}" class="btn btn-primary"><i class="bx bx-landscape"></i> Product Web Configuration</a>
+    <a href="{{ route('products.edit.web-configuration', $product->id) }}" class="btn btn-primary"><i
+            class="bx bx-landscape"></i> Product Web Configuration</a>
     <a href="{{ route('products.index') }}" class="btn btn-primary"><i class="bx bx-arrow-back"></i> Back to products</a>
 @endsection
 
@@ -64,7 +65,7 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h5>{{ $branches->first()->name }} Inventory</h5>
                                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#inventoryModal">View inventory in all stores</button>
+                                        data-bs-target="#inventoryModal">View inventory in all stores</button>
                                 </div>
                                 <div class="table-responsive mt-1">
                                     <table class="table mb-0 table-bordered table-sm">
@@ -155,80 +156,128 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="inventoryModalLabel">All Stores Inventory</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div>
+                        <button type="button" class="btn btn-primary btn-sm inventory-change">Color wise Inventory</button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
                 </div>
                 <div class="modal-body">
-                    @foreach ($branches as $branch)
-                        <div class="text-center mt-2">
-                            <h5 class="mb-0">{{ $branch->name }} Inventory</h5>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table mb-0 table-bordered table-sm">
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">Size</th>
-                                        @foreach ($product->sizes as $size)
-                                            <th>{{ $size->sizeDetail->size }}</th>
-                                        @endforeach
-                                    </tr>
-
-                                    @foreach ($product->colors as $color)
+                    <div class="color-wise d-none">
+                        @foreach ($product->colors as $color)
+                            <div class="d-flex justify-content-center align-items-center mt-2">
+                                <div class="me-1 d-color-code" style="background: {{ $color->colorDetail->ui_color_code }}"></div>
+                                <h5 class="m-0">{{ $color->colorDetail->name }}
+                                    ({{ $color->colorDetail->code }})
+                                </h5>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table mb-0 table-bordered table-sm">
+                                    <tbody>
                                         <tr>
-                                            <th class="d-flex">
-                                                <div class="me-1 d-color-code"
-                                                    style="background: {{ $color->colorDetail->ui_color_code }}"></div>
-                                                <h6 class="m-0">{{ $color->colorDetail->name }}
-                                                    ({{ $color->colorDetail->code }})
-                                                </h6>
-                                            </th>
+                                            <th scope="row">Size</th>
                                             @foreach ($product->sizes as $size)
-                                                <td>
-                                                    @if($branch->id===1)
-                                                        {{ $size->quantity($color->id) }}
-                                                    @else
-                                                        {{ $size->inventoryAvailableQuantity($color->id, $branch->id) }}
-                                                    @endif
-                                                </td>
+                                                <th>{{ $size->sizeDetail->size }}</th>
                                             @endforeach
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @endforeach
 
-                    <div class="mt-2">
-                        <div class="text-center">
-                            <h5 class="text-success fw-bold mb-0">Goods In</h5>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table mb-0 table-bordered table-sm">
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">Size</th>
-                                        @foreach ($product->sizes as $size)
-                                            <th>{{ $size->sizeDetail->size }}</th>
+                                        @foreach ($branches as $branch)
+                                            <tr>
+                                                <th class="d-flex">{{ $branch->name }}</th>
+                                                @foreach ($product->sizes as $size)
+                                                    <td>
+                                                        @if ($branch->id === 1)
+                                                            {{ $size->quantity($color->id) }}
+                                                        @else
+                                                            {{ $size->inventoryAvailableQuantity($color->id, $branch->id) }}
+                                                        @endif
+                                                    </td>
+                                                @endforeach
+                                            </tr>
                                         @endforeach
-                                    </tr>
-
-                                    @foreach ($product->colors as $color)
                                         <tr>
-                                            <th class="d-flex">
-                                                <div class="me-1 d-color-code"
-                                                    style="background: {{ $color->colorDetail->ui_color_code }}"></div>
-                                                <h6 class="m-0">{{ $color->colorDetail->name }}
-                                                    ({{ $color->colorDetail->code }})</h6>
-                                            </th>
+                                            <th class="text-success">Goods In</th>
                                             @foreach ($product->sizes as $size)
                                                 <td>{{ $size->totalQuantity($color->id) }}</td>
                                             @endforeach
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="store-wise">
+                        @foreach ($branches as $branch)
+                            <div class="text-center mt-2">
+                                <h5 class="mb-0">{{ $branch->name }} Inventory</h5>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table mb-0 table-bordered table-sm">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Size</th>
+                                            @foreach ($product->sizes as $size)
+                                                <th>{{ $size->sizeDetail->size }}</th>
+                                            @endforeach
+                                        </tr>
+
+                                        @foreach ($product->colors as $color)
+                                            <tr>
+                                                <th class="d-flex">
+                                                    <div class="me-1 d-color-code"
+                                                        style="background: {{ $color->colorDetail->ui_color_code }}"></div>
+                                                    <h6 class="m-0">{{ $color->colorDetail->name }}
+                                                        ({{ $color->colorDetail->code }})
+                                                    </h6>
+                                                </th>
+                                                @foreach ($product->sizes as $size)
+                                                    <td>
+                                                        @if ($branch->id === 1)
+                                                            {{ $size->quantity($color->id) }}
+                                                        @else
+                                                            {{ $size->inventoryAvailableQuantity($color->id, $branch->id) }}
+                                                        @endif
+                                                    </td>
+                                                @endforeach
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endforeach
+
+                        <div class="mt-2">
+                            <div class="text-center">
+                                <h5 class="text-success fw-bold mb-0">Goods In</h5>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table mb-0 table-bordered table-sm">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">Size</th>
+                                            @foreach ($product->sizes as $size)
+                                                <th>{{ $size->sizeDetail->size }}</th>
+                                            @endforeach
+                                        </tr>
+
+                                        @foreach ($product->colors as $color)
+                                            <tr>
+                                                <th class="d-flex">
+                                                    <div class="me-1 d-color-code"
+                                                        style="background: {{ $color->colorDetail->ui_color_code }}">
+                                                    </div>
+                                                    <h6 class="m-0">{{ $color->colorDetail->name }}
+                                                        ({{ $color->colorDetail->code }})</h6>
+                                                </th>
+                                                @foreach ($product->sizes as $size)
+                                                    <td>{{ $size->totalQuantity($color->id) }}</td>
+                                                @endforeach
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -236,4 +285,20 @@
             </div>
         </div>
     </div>
+
+@push('scripts')
+    <script>
+        $(function(){
+            $('.inventory-change').click(function(){
+                if($('.store-wise').hasClass('d-none')){
+                    $(this).html('Color Wise Inventory');
+                } else {
+                    $(this).html('Store Wise Inventory');
+                }
+                $('.store-wise').toggleClass('d-none');
+                $('.color-wise').toggleClass('d-none');
+            })
+        })
+    </script>
+@endpush
 @endsection
