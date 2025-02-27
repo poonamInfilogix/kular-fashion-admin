@@ -159,8 +159,8 @@
                 </div>
                 <div class="modal-body">
                     @foreach ($branches as $branch)
-                        <div class="d-flex justify-content-between mt-2">
-                            <h5>{{ $branch->name }} Inventory</h5>
+                        <div class="text-center mt-2">
+                            <h5 class="mb-0">{{ $branch->name }} Inventory</h5>
                         </div>
                         <div class="table-responsive">
                             <table class="table mb-0 table-bordered table-sm">
@@ -198,8 +198,8 @@
                     @endforeach
 
                     <div class="mt-2">
-                        <div class="d-flex justify-content-between">
-                            <h5 class="text-success fw-bold">Goods In</h5>
+                        <div class="text-center">
+                            <h5 class="text-success fw-bold mb-0">Goods In</h5>
                         </div>
                         <div class="table-responsive">
                             <table class="table mb-0 table-bordered table-sm">

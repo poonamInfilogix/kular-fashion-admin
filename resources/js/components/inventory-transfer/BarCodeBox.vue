@@ -22,6 +22,10 @@ export default {
         itemToBeAdd: {
             type: Object,
             default: {}
+        },
+        fromStore: {
+            type: Number,
+            required: true
         }
     },
     methods: {
@@ -29,7 +33,7 @@ export default {
             if (this.query.toString().length === 13) {
                 const barcode = this.query;
                 this.query = '';
-                const response = await axios.get(`/product-validate/${barcode}`);
+                const response = await axios.get(`/product-validate/${barcode}?from=${this.fromStore}`);
                 const { product } = response.data;
                 if (product) {
                     this.$emit('transfer-item', product);

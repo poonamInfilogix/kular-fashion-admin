@@ -19,6 +19,7 @@ use App\Models\ProductWebSpecification;
 use App\Models\ProductTypeDepartment;
 use App\Models\Size;
 use App\Models\SizeScale;
+use App\Models\StoreInventory;
 use App\Models\Tax;
 use App\Models\Tag;
 use Illuminate\Validation\Rule;
@@ -1014,8 +1015,9 @@ class ProductController extends Controller
         }
     }
 
-    public function productValidate($barcode)
+    public function productValidate(Request $request, $barcode)
     {
+        $fromStoreId = (int) ($request->from ?? 1);
         $products = ProductQuantity::with('product.brand', 'product.department', 'sizes.sizeDetail', 'colors.colorDetail')->get();
 
         foreach ($products as $product) {
@@ -1025,7 +1027,21 @@ class ProductController extends Controller
             $article_code = $article_code . $color_code . $new_code;
             $checkCode = $this->generateCheckDigit($article_code);
             $generated_code = $article_code . $checkCode;
+
+
             if ($generated_code == $barcode) {
+                $availableQuantity = $product->quantity;
+
+                if($fromStoreId > 1){
+                    $fromStoreInventory = StoreInventory::where('store_id', $fromStoreId)->where('product_quantity_id', $product->id)->first();
+
+                    if($fromStoreInventory){
+                        $availableQuantity = $fromStoreInventory->quantity;
+                    } else {
+                        $availableQuantity = 0;
+                    }
+                }
+
                 $item = [
                     'id' => $product->id,
                     'product_id' => $product->product->id,
@@ -1039,7 +1055,7 @@ class ProductController extends Controller
                     'brand' => $product->product->brand->name,
                     'brand_id' => $product->product->brand->id,
                     'price' => (float) $product->sizes->mrp,
-                    'available_quantity' => $product->quantity,
+                    'available_quantity' => $availableQuantity,
                     'manufacture_barcode' => $product->manufacture_barcode,
                     'barcode' => $barcode,
                 ];

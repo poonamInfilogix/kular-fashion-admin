@@ -89,61 +89,79 @@ class InventoryTransferController extends Controller
         foreach ($items as $value) {
             $productQuantityId = $value['product_quantity_id'];
             $quantity = $value['quantity'];
-    
-            $productQuantity = ProductQuantity::find($productQuantityId);
-            if ($productQuantity) {
-                $productQuantity->quantity = $productQuantity->quantity - $quantity;
-                $productQuantity->save();
-            } 
 
-            $existingInventoryItem = InventoryItem::where([
+            $productQuantity = ProductQuantity::find($productQuantityId);
+
+            InventoryItem::create([
                 'inventroy_transfer_id' => $inventoryTransfer->id,
                 'product_id'            => $productQuantity->product_id,
                 'product_quantity_id'   => $productQuantityId,
                 'product_color_id'      => $productQuantity->product_color_id,
                 'product_size_id'       => $productQuantity->product_size_id,
                 'brand_id'              => $value['brand_id'],
-            ])->first();
-
-            if ($existingInventoryItem) {
-                $existingInventoryItem->quantity += $quantity;
-                $existingInventoryItem->save();
-            } else {
-                InventoryItem::create([
-                    'inventroy_transfer_id' => $inventoryTransfer->id,
-                    'product_id'            => $productQuantity->product_id,
-                    'product_quantity_id'   => $productQuantityId,
-                    'product_color_id'      => $productQuantity->product_color_id,
-                    'product_size_id'       => $productQuantity->product_size_id,
-                    'brand_id'              => $value['brand_id'],
-                    'quantity'              => $quantity,
+                'quantity'              => $quantity,
+            ]);
+            
+            // If any store expecting default is transfering the item, need to add quantity 0 or get existing quantity
+            if($fromStoreId > 1){
+                $fromStoreInventory = StoreInventory::firstOrCreate(
+                    [
+                        'store_id' => $fromStoreId,
+                        'product_quantity_id' => $productQuantityId,
+                    ],
+                    [
+                        'product_id' => $productQuantity->product_id,
+                        'product_color_id' => $productQuantity->product_color_id,
+                        'product_size_id' => $productQuantity->product_size_id,
+                        'brand_id' => $value['brand_id'],
+                        'quantity' => 0,
+                        'total_quantity' => 0,
+                    ]
+                );
+    
+                $fromStoreInventory->update([
+                    'quantity' => $fromStoreInventory->quantity - $quantity,
                 ]);
             }
-    
-            $storeInventory = StoreInventory::where([
-                'store_id'             => $toStoreId,
-                'product_quantity_id'  => $productQuantityId,
-            ])->first();
-    
-            if ($storeInventory) {
-                $storeInventory->update([
-                    'quantity'       => $storeInventory->quantity + $quantity,
-                    'total_quantity' => $storeInventory->total_quantity + $quantity,
+
+            // Update stock in default store is tranfered to/from default store
+            if ($toStoreId > 1 && $fromStoreId === 1) {
+                $productQuantity->update([
+                    'quantity' => $productQuantity->quantity - $quantity,
                 ]);
-            } else {
-                StoreInventory::create([
-                    'store_id'              => $toStoreId,
-                    'product_id'            => $productQuantity->product_id,
-                    'product_quantity_id'   => $productQuantityId,
-                    'product_color_id'      => $productQuantity->product_color_id,
-                    'product_size_id'       => $productQuantity->product_size_id,
-                    'brand_id'              => $value['brand_id'],
-                    'quantity'              => $quantity,
-                    'total_quantity'        => $quantity
+            } else if ($toStoreId === 1) {
+                $productQuantity->update([
+                    'quantity' => $productQuantity->quantity + $quantity,
+                    'total_quantity' => $productQuantity->total_quantity + $quantity,
                 ]);
+            }
+
+            if ($toStoreId > 1) {
+                $inventory = StoreInventory::where([
+                    'store_id'             => $toStoreId,
+                    'product_quantity_id'  => $productQuantityId,
+                ])->first();
+
+                if ($inventory) {
+                    $inventory->update([
+                        'quantity'       => $inventory->quantity + $quantity,
+                        'total_quantity' => $inventory->total_quantity + $quantity,
+                    ]);
+                } else {
+                    StoreInventory::create([
+                        'store_id'              => $toStoreId,
+                        'product_id'            => $productQuantity->product_id,
+                        'product_quantity_id'   => $productQuantityId,
+                        'product_color_id'      => $productQuantity->product_color_id,
+                        'product_size_id'       => $productQuantity->product_size_id,
+                        'brand_id'              => $value['brand_id'],
+                        'quantity'              => $quantity,
+                        'total_quantity'        => $quantity
+                    ]);
+                }
             }
         }
-    
+        
         return response()->json([
             'success' => true,
             'message' => 'Items transferred successfully.'

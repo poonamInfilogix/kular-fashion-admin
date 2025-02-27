@@ -20,7 +20,7 @@
             </select>
         </div>
         <div class="col-4">
-            <BarCodeBox :item-to-be-add="itemToBeAdd" @transfer-item="transferItem" />
+            <BarCodeBox :item-to-be-add="itemToBeAdd" :from-store="fromStore" @transfer-item="transferItem" />
         </div>
     </div>
     <div class="row mt-2">
