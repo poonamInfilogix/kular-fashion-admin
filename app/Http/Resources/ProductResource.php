@@ -81,7 +81,36 @@ class ProductResource extends JsonResource
                 // "meta_description"=> optional($this->productType)->meta_description,
                 // "status"=> optional($this->productType)->status,
             ],
-       
+            'webInfo' =>  [
+                            "id"=> optional($this->webInfo)->id,
+                            "product_id"=> optional($this->webInfo)->product_id,
+                            "summary"=> optional($this->webInfo)->summary,
+                            "description"=> optional($this->webInfo)->description,
+                            "is_splitted_with_colors"=> optional($this->webInfo)->is_splitted_with_colors,
+                            "heading"=> optional($this->webInfo)->heading,
+                            "meta_title"=> optional($this->webInfo)->meta_title,
+                            "meta_keywords"=> optional($this->webInfo)->meta_keywords,
+                            "meta_description"=> optional($this->webInfo)->meta_description,
+                            "status"=> optional($this->webInfo)->status,  
+                        ],
+            'images' => $this->webImage->map(function($image){
+                        return [
+                            "id" => $image->id,
+                            "product_id"=> $image->product_id,
+                            "product_color_id"=> $image->product_color_id,
+                            "path"=> $image->path,
+                            "alt"=> $image->alt,
+                            "is_default"=> $image->is_default,
+                        ];
+            }),
+            'specifications' => $this->specifications->map(function($specification){
+                return [
+                    "id" => $specification->id,
+                    "product_id"=> $specification->product_id,
+                    "key"=> $specification->key,
+                    "value"=> $specification->value,
+                ];
+                }),
             'sizes' => $this->sizes->map(function ($size) {
                     return [
                         'id' => $size->id,

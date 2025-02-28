@@ -25,7 +25,7 @@ class ProductController extends Controller
           
     public function index(Request $request){
         
-        $query = Product::with(['brand', 'department', 'productType', 'quantities', 'colors.colorDetail', 'sizes.sizeDetail', 'webInfo'])
+        $query = Product::with(['brand', 'department', 'productType', 'webImage', 'specifications','quantities', 'colors.colorDetail', 'sizes.sizeDetail', 'webInfo'])
 
                     ->whereHas('webInfo', function ($q) {
                             $q->where('is_splitted_with_colors', 1)
@@ -86,7 +86,7 @@ class ProductController extends Controller
             {
               return response()->json(['success' => false, 'data' => $product]);
             }
-            $product = Product::with('brand', 'department', 'webInfo',  'productType', 'colors.colorDetail', 'sizes.sizeDetail')
+            $product = Product::with('brand', 'department', 'webInfo', 'webImage', 'specifications','productType', 'colors.colorDetail', 'sizes.sizeDetail')
                         ->where('id', $product)->firstOrFail();
            
             $sizes = $product->sizes()->with('sizeDetail')->paginate($request->input('sizes_length', 10));

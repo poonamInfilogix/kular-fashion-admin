@@ -56,7 +56,24 @@ class ProductListCollection extends ResourceCollection
                         'name' => optional($product->productType)->name,
                         'slug' => optional($product->productType)->slug,
                     ],
-                    
+                    'images' => $product->webImage->map(function ($image) {
+                        return [
+                            "id"=> $image->id,
+                            "product_id"=> $image->product_id,
+                            "product_color_id"=> $image->product_color_id,
+                            "path"=> $image->path,
+                            "alt"=> $image->alt,
+                            "is_default"=> $image->is_default,
+                        ];
+                    }),
+                    'specifications' => $product->specifications->map(function($specification){
+                        return [
+                            "id" => $specification->id,
+                            "product_id"=> $specification->product_id,
+                            "key"=> $specification->key,
+                            "value"=> $specification->value,
+                        ];
+                    }),
                     'colors' => $product->colors->map(function ($color) {
                         return [
                             'id' => $color->id,
