@@ -17,7 +17,10 @@ Route::post('products/add-manufacture-barcode', [ProductBarcodeController::class
 Route::post('/collections/check-name', [CollectionController::class, 'checkCollectionName']);
 
 Route::post('/login', [LoginController::class, 'login']);
+Route::get('/brands', [ProductController::class, 'brandList'])->name('brand.index');
+Route::get('/departments', [ProductController::class, 'departmentList'])->name('department.index');
+Route::get('/product-types', [ProductController::class, 'producTypesList'])->name('productType.index');
 Route::middleware('auth:sanctum')->group( function () {
-
+    Route::post('products/{product}', [ProductController::class, 'productDetail'])->name('products.show');
    
 });
