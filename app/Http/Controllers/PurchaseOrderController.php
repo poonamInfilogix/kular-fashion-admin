@@ -52,8 +52,8 @@ class PurchaseOrderController extends Controller
             'products.*.min_size' => 'required|string|exists:sizes,id',
             'products.*.max_size' => 'required|string|exists:sizes,id',
             'products.*.delivery_date' => 'required|date',
-            'products.*.price' => 'required|string|numeric|between:0,999999.99',
-            'products.*.short_description' => 'required|string|max:22',
+            'products.*.price' => 'required',
+            // 'products.*.short_description' => 'required|string|max:22',
         ], [
             'supplier_order_no.required' => 'The supplier order number is mandatory',
             'supplier_order_no.max' => 'The supplier order number must not exceed 255 characters',
@@ -96,9 +96,10 @@ class PurchaseOrderController extends Controller
             'products.*.price.numeric' => 'The price must be a valid number',
             'products.*.price.between' => 'The price must be between 0 and 999,999.99',
         ]);
+        echo"<pre>"; print_r($request->all()); die();
+        
     
     
-        print_r($request->all());
     }
 
     /**
