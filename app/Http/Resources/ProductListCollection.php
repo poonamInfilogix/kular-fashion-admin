@@ -81,15 +81,13 @@ class ProductListCollection extends ResourceCollection
                             'supplier_color_code' => $color->supplier_color_code,
                             'supplier_color_name' => $color->supplier_color_name,
                             'swatch_image_path'=> $color->swatch_image_path,
-
-                            'color_detail' => [
+                            'detail' => [
                                 'id' => optional($color->colorDetail)->id,
                                 'name' => optional($color->colorDetail)->name,
                                 'slug' => optional($color->colorDetail)->slug,
                                 'code' => optional($color->colorDetail)->code,
                                 'ui_color_code' => optional($color->colorDetail)->ui_color_code,
                             ]
-                           
                         ];
                     }),
                     'sizes' => $product->sizes->map(function ($size) {
@@ -98,7 +96,7 @@ class ProductListCollection extends ResourceCollection
                             'size_id' => $size->size_id,
                             'web_price' => $size->web_price,
                             'web_sale_price' => $size->web_sale_price,
-                            'size_detail' => [
+                            'detail' => [
                                 'id' => optional($size->sizeDetail)->id,
                                 'size' => optional($size->sizeDetail)->size,
                             ]

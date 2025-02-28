@@ -169,9 +169,9 @@
         <div class="row">
             <div class="col-md-4">
                 <select name="visibilty" id="visibilty" class="form-control">
-                    <option value="0" @selected(($product->webInfo->status ?? '') === '0')>Inactive</option>
-                    <option value="1" @selected(($product->webInfo->status ?? '') === '1')>Active</option>
-                    <option value="2" @selected(($product->webInfo->status ?? '') === '2')>Hide When Out Of Stock</option>
+                    <option value="0" @selected(($product->webInfo->status ?? '') === 0)>Inactive</option>
+                    <option value="1" @selected(($product->webInfo->status ?? '') === 1)>Active</option>
+                    <option value="2" @selected(($product->webInfo->status ?? '') === 2)>Hide When Out Of Stock</option>
                 </select>
             </div>
             <div class="col-md-4 d-flex gap-2 align-items-center">
