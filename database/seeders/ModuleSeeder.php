@@ -32,7 +32,7 @@ class ModuleSeeder extends Seeder
             ['name' => 'Customers', 'slug' => 'customers'],
             ['name' => 'Suppliers', 'slug' => 'suppliers'],
             ['name' => 'Users', 'slug' => 'users'],
-            ['name' => 'Coupons & Discounts', 'slug' => 'coupons & discounts'],
+            ['name' => 'Coupons', 'slug' => 'coupons'],
             ['name' => 'Roles & Permissions', 'slug' => 'roles & permissions'],
             ['name' => 'Price Reasons', 'slug' => 'price reasons'],
             ['name' => 'Settings', 'slug' => 'settings'],

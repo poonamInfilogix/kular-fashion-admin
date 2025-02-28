@@ -19,6 +19,7 @@ use App\Models\ProductWebSpecification;
 use App\Models\ProductTypeDepartment;
 use App\Models\Size;
 use App\Models\SizeScale;
+use App\Models\StoreInventory;
 use App\Models\Tax;
 use App\Models\Tag;
 use Illuminate\Validation\Rule;
@@ -1014,8 +1015,9 @@ class ProductController extends Controller
         }
     }
 
-    public function productValidate($barcode)
+    public function productValidate(Request $request, $barcode)
     {
+        $fromStoreId = (int) ($request->from ?? 1);
         $products = ProductQuantity::with('product.brand', 'product.department', 'sizes.sizeDetail', 'colors.colorDetail')->get();
 
         foreach ($products as $product) {
@@ -1025,7 +1027,21 @@ class ProductController extends Controller
             $article_code = $article_code . $color_code . $new_code;
             $checkCode = $this->generateCheckDigit($article_code);
             $generated_code = $article_code . $checkCode;
+
+
             if ($generated_code == $barcode) {
+                $availableQuantity = $product->quantity;
+
+                if($fromStoreId > 1){
+                    $fromStoreInventory = StoreInventory::where('store_id', $fromStoreId)->where('product_quantity_id', $product->id)->first();
+
+                    if($fromStoreInventory){
+                        $availableQuantity = $fromStoreInventory->quantity;
+                    } else {
+                        $availableQuantity = 0;
+                    }
+                }
+
                 $item = [
                     'id' => $product->id,
                     'product_id' => $product->product->id,
@@ -1039,7 +1055,7 @@ class ProductController extends Controller
                     'brand' => $product->product->brand->name,
                     'brand_id' => $product->product->brand->id,
                     'price' => (float) $product->sizes->mrp,
-                    'available_quantity' => $product->quantity,
+                    'available_quantity' => $availableQuantity,
                     'manufacture_barcode' => $product->manufacture_barcode,
                     'barcode' => $barcode,
                 ];
@@ -1160,7 +1176,7 @@ class ProductController extends Controller
                 foreach ($images as $index => $image) {
                     if ($image->getSize() < 10240 * 1024) {
                         $imagePath = uploadFile($image, 'uploads/products/images/');
-    
+
                         ProductWebImage::create(
                             [
                                 'product_id' => $product->id,
@@ -1268,15 +1284,61 @@ class ProductController extends Controller
         return redirect()->back()->with('success', 'Product web configuration updated successfully.');
     }
 
-    public function bulkUpdate(Request $request){
-        if($request->action!=='Assign Tags' && $request->action!=='Unassign Tags'){
+    public function bulkUpdate(Request $request)
+    {
+        if ($request->action !== 'Assign Tags' && $request->action !== 'Unassign Tags') {
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid performed action'
             ]);
         }
 
-        
-        dd($request->all());
+        $selectedProducts = $request->selected_products ?? [];
+        $unselectedProducts = $request->unselected_products ?? [];
+
+        if (empty($selectedProducts) || (count($selectedProducts) == 1 && $selectedProducts[0] == -1)) {
+            $products = Product::whereNotIn('id', $unselectedProducts)->get();
+        } else {
+            $products = Product::whereIn('id', $selectedProducts)->whereNotIn('id', $unselectedProducts)->get();
+        }
+
+        if ($products->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No products found to update'
+            ]);
+        }
+
+        if ($request->action === 'Assign Tags') {
+            $tags = Tag::whereIn('id', $request->tags)->get();
+
+            foreach ($products as $product) {
+                foreach ($tags as $tag) {
+                    if (!$product->tags()->where('tag_id', $tag->id)->exists()) {
+                        $product->tags()->create([
+                            'tag_id' => $tag->id
+                        ]);
+                    }
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Tags assigned successfully'
+            ]);
+        } elseif ($request->action === 'Unassign Tags') {
+            $tags = Tag::whereIn('id', $request->tags)->get();
+
+            foreach ($products as $product) {
+                foreach ($tags as $tag) {
+                    $product->tags()->where('tag_id', $tag->id)->delete();
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Tags unassigned successfully'
+            ]);
+        }
     }
 }

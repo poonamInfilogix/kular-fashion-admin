@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Coupon extends Model
 {
-    protected $table = "coupons";
-
+    use SoftDeletes;
     protected $guarded=[];
- 
 }

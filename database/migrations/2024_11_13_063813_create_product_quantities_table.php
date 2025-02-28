@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('product_size_id')->index(); 
             $table->integer('quantity')->default(0);
             $table->integer('total_quantity')->default(0);
+            $table->string('barcode', 25)->nullable();
             $table->date('first_barcode_printed_date')->nullable();
             $table->string('manufacture_barcode', 25)->nullable();
             $table->integer('original_printed_barcodes')->default(0);

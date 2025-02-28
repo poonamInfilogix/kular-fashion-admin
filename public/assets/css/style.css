@@ -39,6 +39,10 @@ input[switch=danger]:label {
     background-repeat: no-repeat!important;
 }
 
+.is-invalid .select2-selection--single, .is-invalid .select2-selection--multiple{
+    border-color: var(--bs-form-invalid-border-color)!important;
+}
+
 .overlay {
     position: absolute;
     top: 0;

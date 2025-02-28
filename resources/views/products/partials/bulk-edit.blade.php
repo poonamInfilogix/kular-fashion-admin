@@ -67,6 +67,7 @@
         $('.choose-bulk-edit-action').click(function() {
             $('#bulkEditModal').modal('hide');
             $('#bulkEditTagsModal').modal('show');
+            $('#bulkEditTags').val(null).trigger('change');
 
             let selectedAction = $('#bulkEditAction').val();
             $('#bulkEditTagsModalLabel').html(selectedAction);

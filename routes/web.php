@@ -21,6 +21,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ChangePriceReasonController;
 use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\InventoryTransferController;
 use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\ProductImportExportController;
@@ -59,7 +60,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         'inventory-transfer' => InventoryTransferController::class,
         'purchase-orders' => PurchaseOrderController::class,
         'collections' => CollectionController::class,
-        'coupons-discount' => CouponDiscountController::class,
+        'coupons' => CouponController::class,
     ]);
 
     Route::get('inventory-history', [InventoryTransferController::class, 'inventoryHistory'])->name('inventory-history');
