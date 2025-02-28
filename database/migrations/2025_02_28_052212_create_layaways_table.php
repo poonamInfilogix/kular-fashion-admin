@@ -16,6 +16,10 @@ return new class extends Migration
             $table->string('code', 50);
             $table->unsignedBigInteger('customer_id')->index();
             $table->unsignedBigInteger('order_id')->nullable()->index();
+            $table->decimal('total_amount', 10, 2)->nullable(); 
+            $table->decimal('amount_paid', 10, 2)->default(0);
+            $table->decimal('balance', 10, 2)->nullable();
+            $table->date('due_date');
             $table->tinyInteger('status')->default(0);
             $table->softDeletes();
             $table->timestamps();
