@@ -22,5 +22,5 @@ Route::get('/departments', [ProductController::class, 'departmentList'])->name('
 Route::get('/product-types', [ProductController::class, 'producTypesList'])->name('productType.index');
 Route::middleware('auth:sanctum')->group( function () {
     Route::post('products/{product}', [ProductController::class, 'productDetail'])->name('products.show');
-   
+    Route::post('/apply-coupon', [ProductController::class, 'applyCoupon']);
 });
