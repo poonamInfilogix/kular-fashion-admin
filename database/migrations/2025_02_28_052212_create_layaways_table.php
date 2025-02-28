@@ -11,12 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('layways', function (Blueprint $table) {
+        Schema::create('layaways', function (Blueprint $table) {
             $table->id();
             $table->string('code', 50);
             $table->unsignedBigInteger('customer_id')->index();
             $table->unsignedBigInteger('order_id')->nullable()->index();
-            $table->string('status')->default('In progress');
+            $table->decimal('total_amount', 10, 2)->nullable(); 
+            $table->decimal('amount_paid', 10, 2)->default(0);
+            $table->decimal('balance', 10, 2)->nullable();
+            $table->date('due_date');
+            $table->tinyInteger('status')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -27,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('layways');
+        Schema::dropIfExists('layaways');
     }
 };
