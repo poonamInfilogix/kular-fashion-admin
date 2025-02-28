@@ -81,15 +81,17 @@ class ProductController extends Controller
     public function productDetail(Request $request, $product){
         try{
             
+
             if(!$product)
             {
               return response()->json(['success' => false, 'data' => $product]);
             }
             $product = Product::with('brand', 'department', 'webInfo',  'productType', 'colors.colorDetail', 'sizes.sizeDetail')
                         ->where('id', $product)->firstOrFail();
-
-            $sizes = $product->sizes()->paginate($request->input('sizes_length', 10));
-            $colors = $product->colors()->paginate($request->input('colors_length', 10));
+           
+            $sizes = $product->sizes()->with('sizeDetail')->paginate($request->input('sizes_length', 10));
+            
+            $colors = $product->colors()->with('colorDetail')->paginate($request->input('colors_length', 10));
 
            return new ProductResource($product, $sizes, $colors);
          
@@ -102,7 +104,7 @@ class ProductController extends Controller
 
     public function brandList(Request $request){
 
-        $brands = Brand::paginate($request->input('length', 10));
+        $brands = Brand::where('status','Active')->paginate($request->input('length', 10));
         
         if($brands)
         {
@@ -113,7 +115,7 @@ class ProductController extends Controller
 
     public function departmentList(Request $request)
     {
-        $departments = Department::paginate($request->input('length', 10));
+        $departments = Department::where('status','Active')->paginate($request->input('length', 10));
         if($departments)
         {
             return new DepartmentCollection($departments); 
@@ -122,10 +124,10 @@ class ProductController extends Controller
 
     public function producTypesList(Request $request){
         
-        $productType = ProductType::paginate($request->input('length', 10));
-        if($productType)
+        $productTypes = ProductType::where('status','Active')->paginate($request->input('length', 10));
+        if($productTypes)
         {
-            return new ProductTypeCollection($productType);
+            return new ProductTypeCollection($productTypes);
         }
     }
     

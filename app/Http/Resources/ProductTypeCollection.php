@@ -8,30 +8,31 @@ use App\Http\Resources\BaseResource;
 
 class ProductTypeCollection extends BaseResource
 {
-    private $pagination;
 
-    public function __construct($resource)
-    {
-        $this->pagination = [
-            'current_page' => $resource->currentPage(),
-            'from' => $resource->firstItem(),
-            'last_page' => $resource->lastPage(),
-            'per_page' => $resource->perPage(),
-            'to' => $resource->lastItem(),
-            'total' => $resource->total(),
-        ];
-
-        $resource = $resource->getCollection(); // Necessary to remove meta and links
-
-        parent::__construct($resource);
-    }
     public function toArray(Request $request): array
     {
-     
         return [
             'success' => true,
-            'data' => parent::toArray($request),
-            'pagination' => $this->pagination,
+            'data' => $this->resource->map(function ($product_type) {
+                return [
+                    "id"=>$product_type->id,
+                    "slug" => $product_type->slug ,
+                    "name" => $product_type->name ,
+                    "short_name" => $product_type->short_name ,
+                    "image" => $product_type->image ?? '',
+                    "small_image" => $product_type->small_image ?? '',
+                    "medium_image" => $product_type->medium_image  ?? '',
+                    "large_image" => $product_type->large_image ?? '',
+                ];
+            }),
+            'pagination' => [
+                'total' => $this->resource->total(),
+                'per_page' => $this->resource->perPage(),
+                'current_page' => $this->resource->currentPage(),
+                'last_page' => $this->resource->lastPage(),
+                'next_page_url' => $this->resource->nextPageUrl(),
+                'prev_page_url' => $this->resource->previousPageUrl(),
+            ],
         ];
     }
 }

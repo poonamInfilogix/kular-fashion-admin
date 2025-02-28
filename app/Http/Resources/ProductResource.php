@@ -37,24 +37,70 @@ class ProductResource extends JsonResource
             'min_size_id' => $this->min_size_id,
             'max_size_id' => $this->max_size_id,
  
-            'brand' => [
-                'id' => optional($this->brand)->id,
-                'name' => optional($this->brand)->name ?? '',
-                'slug' => optional($this->brand)->slug,
-            ],
+            'brand' =>  [
+                            'id' => optional($this->brand)->id,
+                            'name' => optional($this->brand)->name ?? '',
+                            'slug' => optional($this->brand)->slug,
+                            "short_name" => optional($this->brand)->short_name,
+                            "image"=> optional($this->brand)->image,
+                            "small_image"=> optional($this->brand)->small_image,
+                            "medium_image"=> optional($this->brand)->medium_image,
+                            "large_image"=> optional($this->brand)->large_image,
+                            // "summary"=> optional($this->brand)->summary,
+                            // "description"=> optional($this->brand)->description,
+                            // "margin"=> optional($this->brand)->margin,
+                            // "heading"=> optional($this->brand)->heading,
+                            // "meta_title"=> optional($this->brand)->meta_title,
+                            // "meta_keywords"=> optional($this->brand)->meta_keywords,
+                            // "meta_description"=> optional($this->brand)->meta_description,
+                            // "status"=> optional($this->brand)->status,
+                        ],
             'department' => [
                 'id' => optional($this->department)->id,
                 'name' => optional($this->department)->name,
                 'slug' => optional($this->department)->slug ?? '',
                 'image' => optional($this->department)->image ?? '',
+                "description"=> optional($this->department)->description ?? '',
+                "image"=> optional($this->department)->image ?? '',
+                "status"=> optional($this->department)->status ?? '',
             ],
-            'productType' => [
+            'productType' =>  [
                 'id' => optional($this->productType)->id,
                 'name' => optional($this->productType)->name,
                 'slug' => optional($this->productType)->slug,
+                "short_name"=> optional($this->productType)->short_name,
+                "image" => optional($this->productType)->image,
+                "small_image"=> optional($this->productType)->small_image,
+                "medium_image"=> optional($this->productType)->medium_image,
+                "large_image"=> optional($this->productType)->large_image,
+                // "summary"=> optional($this->productType)->summary,
+                // "description"=> optional($this->productType)->description,
+                // "heading"=> optional($this->productType)->heading,
+                // "meta_title"=> optional($this->productType)->meta_title,
+                // "meta_keywords"=> optional($this->productType)->meta_keywords,
+                // "meta_description"=> optional($this->productType)->meta_description,
+                // "status"=> optional($this->productType)->status,
             ],
-            'size' => [
-                'size' => $this->sizes->items(),
+       
+            'sizes' => $this->sizes->map(function ($size) {
+                    return [
+                        'id' => $size->id,
+                        'product_id' => $size->product_id,
+                        'size_id' => $size->size_id,
+                        'mrp' => $size->mrp,
+                        'web_price' => $size->web_price,
+                        'web_sale_price' => $size->web_sale_price,
+                        'sizeDetail' => $size->sizeDetail ? [
+                            "id" => $size->sizeDetail->id,
+                            "size_scale_id" => $size->sizeDetail->size_scale_id,
+                            "size" => $size->sizeDetail->size,
+                            "new_code" => $size->sizeDetail->new_code,
+                            "old_code" => $size->sizeDetail->old_code,
+                            "length" => $size->sizeDetail->length,
+                            "status" => $size->sizeDetail->status,
+                        ] : null, 
+                    ];
+                }),
                 'pagination' => [
                     'total' => $this->sizes->total(),
                     'per_page' => $this->sizes->perPage(),
@@ -64,9 +110,28 @@ class ProductResource extends JsonResource
                     'prev_page_url' => $this->sizes->previousPageUrl(),
                     'links' => $this->colors->linkCollection()->toArray(),
                 ],
-            ],
-            'color' => [
-                'color' => $this->colors->items(),
+       
+     
+                'colors' => $this->colors->map(function($color){
+                    return [
+                        'id' => $color->id,
+                        'product_id' => $color->product_id,
+                        'color_id' => $color->color_id,
+                        'supplier_color_code' => $color->supplier_color_code,
+                        'supplier_color_name' => $color->supplier_color_name,
+                        'swatch_image_path' => $color->swatch_image_path,
+                       
+                        'colorDetail' => $color->colorDetail ? [
+                            "id" => $color->colorDetail->id,
+                            "name" => $color->colorDetail->name,
+                            "slug" => $color->colorDetail->slug,
+                            "short_name" => $color->colorDetail->short_name,
+                            "code" => $color->colorDetail->code,
+                            "ui_color_code" => $color->colorDetail->ui_color_code,
+                            "status" => $color->colorDetail->status,
+                        ] : null, 
+                    ];
+                }),
                 'pagination' => [
                     'total' => $this->colors->total(),
                     'per_page' => $this->colors->perPage(),
@@ -76,7 +141,7 @@ class ProductResource extends JsonResource
                     'prev_page_url' => $this->colors->previousPageUrl(),
                     'links' => $this->colors->linkCollection()->toArray(),
                 ],
-            ],
+           
         ];
     }
 }

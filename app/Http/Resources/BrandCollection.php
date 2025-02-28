@@ -8,30 +8,31 @@ use App\Http\Resources\BaseResource;
 
 class BrandCollection extends BaseResource
 {
-    private $pagination;
 
-    public function __construct($resource)
-    {
-        $this->pagination = [
-            'current_page' => $resource->currentPage(),
-            'from' => $resource->firstItem(),
-            'last_page' => $resource->lastPage(),
-            'per_page' => $resource->perPage(),
-            'to' => $resource->lastItem(),
-            'total' => $resource->total(),
-        ];
-
-        $resource = $resource->getCollection(); // Necessary to remove meta and links
-
-        parent::__construct($resource);
-    }
     public function toArray(Request $request): array
     {
-        // return parent::toArray($request);
         return [
             'success' => true,
-            'data' => parent::toArray($request),
-            'pagination' => $this->pagination,
+            'data' => $this->resource->map(function ($brand) {
+                return [
+                    'id' => $brand->id,
+                    'slug' => $brand->slug,   
+                    'name' => $brand->name,
+                    "short_name" => $brand->short_name,
+                    "image" => $brand->image ?? '',
+                    "small_image" => $brand->small_image ?? '',
+                    "medium_image" => $brand->medium_image ?? '',
+                    "large_image" => $brand->large_image ?? '',
+                ];
+            }),
+            'pagination' => [
+                'total' => $this->resource->total(),
+                'per_page' => $this->resource->perPage(),
+                'current_page' => $this->resource->currentPage(),
+                'last_page' => $this->resource->lastPage(),
+                'next_page_url' => $this->resource->nextPageUrl(),
+                'prev_page_url' => $this->resource->previousPageUrl(),
+            ],
         ];
     }
 }
