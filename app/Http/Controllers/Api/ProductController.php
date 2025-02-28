@@ -26,17 +26,25 @@ class ProductController extends Controller
     public function index(Request $request){
         
         $query = Product::with(['brand', 'department', 'productType', 'webImage', 'specifications','quantities', 'colors.colorDetail', 'sizes.sizeDetail', 'webInfo'])
-
                     ->whereHas('webInfo', function ($q) {
-                            $q->where('is_splitted_with_colors', 1)
-                            ->where('status', '!=', 0);
-                        })
-                        
-                        ->whereHas('quantities', function ($q) {
-                            $q->select(DB::raw('SUM(product_quantities.quantity) as total_quantity'))
-                              ->havingRaw('SUM(quantity) > ?', [1]);
+                        $q->where('is_splitted_with_colors', 1)
+                        ->where(function ($subQuery) {
+                            $subQuery->where('status', 1) 
+                                    ->orWhere('status', 2); 
                         });
+                    })
 
+                    ->where(function ($query) {
+                        $query->whereHas('quantities', function ($q) {
+                            $q->select(DB::raw('SUM(product_quantities.quantity) as total_quantity'))
+                            ->havingRaw('SUM(quantity) > ?', [1]);
+                        })
+                        ->orWhereHas('webInfo', function ($q) {
+                            $q->where('status', 1); 
+                        });
+                    });
+                  
+                    
             $filterable = [
                 'brand_id' => 'brand',
                 'department_id' => 'department',
@@ -69,7 +77,9 @@ class ProductController extends Controller
                         'products.sale_start','products.sale_end', 'products.season', 'products.size_scale_id', 
                         'products.min_size_id', 'products.max_size_id', 'product_colors.color_id'
                     )
-                     ->orderBy('products.updated_at', 'desc')   
+                  
+                     ->orderBy('products.updated_at', 'desc')  
+
                     ->paginate($request->input('length', 10));
 
         $products->load(['brand', 'department', 'productType', 'colors.colorDetail', 'sizes.sizeDetail', 'webInfo']);
