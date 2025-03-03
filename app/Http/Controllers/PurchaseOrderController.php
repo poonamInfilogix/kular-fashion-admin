@@ -8,6 +8,8 @@ use App\Models\Color;
 use App\Models\SizeScale;
 use App\Models\Size;
 use App\Models\productType;
+use App\Models\ProductDetail;
+use App\Models\ProductVariantDetail;
 use Illuminate\Http\Request;
 
 class PurchaseOrderController extends Controller
@@ -17,7 +19,9 @@ class PurchaseOrderController extends Controller
      */
     public function index()
     {
-        return view('purchase-orders.index');
+        $purchaseOrders = PurchaseOrder::with('supplier','productDetails', 'productDetails.variants')->get();
+
+        return view('purchase-orders.index', compact('purchaseOrders'));
     }
 
     /**
@@ -52,8 +56,8 @@ class PurchaseOrderController extends Controller
             'products.*.min_size' => 'required|string|exists:sizes,id',
             'products.*.max_size' => 'required|string|exists:sizes,id',
             'products.*.delivery_date' => 'required|date',
-            'products.*.price' => 'required|string|numeric|between:0,999999.99',
-            'products.*.short_description' => 'required|string|max:22',
+            'products.*.price' => 'required',
+            // 'products.*.short_description' => 'required|string|max:22',
         ], [
             'supplier_order_no.required' => 'The supplier order number is mandatory',
             'supplier_order_no.max' => 'The supplier order number must not exceed 255 characters',
@@ -96,9 +100,41 @@ class PurchaseOrderController extends Controller
             'products.*.price.numeric' => 'The price must be a valid number',
             'products.*.price.between' => 'The price must be between 0 and 999,999.99',
         ]);
+       
+        $purchaseOrder = PurchaseOrder::create([
+            'order_no' => $request->supplier_order_no,
+            'supplier_order_date' => \Carbon\Carbon::createFromFormat('d-m-Y', $request->supplier_order_date),
+            'delivery_date' => \Carbon\Carbon::createFromFormat('d-m-Y', $request->delivery_date),
+            'supplier_id'   => $request->supplier,
+        ]);
+
+        if($purchaseOrder) {
+            foreach ($request->products as $productData) {
+                $productDetail = ProductDetail::create([
+                    'product_code' => $productData['product_code'],
+                    'product_type_id' => $productData['product_type'],
+                    'size_scale_id' => $productData['name'],
+                    'min_size_id' => $productData['min_size'],
+                    'max_size_id' => $productData['max_size'],
+                    'delivery_date' => \Carbon\Carbon::createFromFormat('d-m-Y', $productData['delivery_date']),
+                    'price' => $productData['price'],
+                    'short_description' => $productData['short_description'],
+                    'purchase_order_id' => $purchaseOrder->id,
+                ]);
     
-    
-        print_r($request->all());
+                foreach ($productData['variants'] as $variantData) {
+                    ProductVariantDetail::create([
+                        'supplier_color_code' => $variantData['supplier_color_code'],
+                        'supplier_color_name' => $variantData['supplier_color_name'],
+                        'color_id' => $variantData['color_id'],
+                        'size' => json_encode($variantData['size']),
+                        'product_detail_id' => $productDetail->id,
+                        'purchase_order_id' => $purchaseOrder->id,
+                    ]);
+                }
+            }
+        }
+        return redirect()->route('purchase-orders.index')->with('success', 'Purchase order created successfully.');
     }
 
     /**

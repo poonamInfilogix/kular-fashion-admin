@@ -27,7 +27,6 @@
                                 @csrf
                                 
                                 @include('purchase-orders.form')
-                                
                                 <div class="mt-4">
                                     <button type="submit" class="btn btn-success">Submit</button>
                                 </div>
@@ -38,7 +37,6 @@
             </div>
         </div>
     </div>
-    <x-include-plugins :plugins="['chosen', 'datePicker', 'jQueryValidate']"></x-include-plugins>
-
+    <x-include-plugins :plugins="['select2', 'datePicker', 'jQueryValidate']"></x-include-plugins>
     @include('purchase-orders.create-order-script')
 @endsection

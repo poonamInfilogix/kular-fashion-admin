@@ -1,26 +1,29 @@
 @push('scripts')
     <script>
         function addNewProduct(index, productInfo = null, errors = []) {
+            const getErrorMessage = (field) => errors[field] ? `${errors[field].join(', ')}` : '';
             let productCodeValue = productInfo?.product_code || '';
 
             var newField = `
                 <div class="product-field-group mb-3 border p-3" data-product-index="${index}">
                     <div class="row">
                         <div class="col-sm-6 col-md-2 mb-3">
-                            <x-form-input name="products[${index}][product_code]" value="${productCodeValue}" label="Product Code" placeholder="Enter Product Code" required />
+                            <x-form-input name="products[${index}][product_code]" value="${productCodeValue}" label="Product Code" placeholder="Enter Product Code" required="true"  class="${getErrorMessage(`products.${index}.product_code`) ? 'is-invalid' : ''}"/>
+                            ${getErrorMessage(`products.${index}.product_code`) ? `<span class="invalid-feedback" style="display: block;">${getErrorMessage(`products.${index}.product_code`)}</span>` : ''}
                         </div>
                         <div class="col-sm-6 col-md-2 mb-3">
                             <label for="product_type_${index}">Product Type<span class="text-danger">*</span></label>
-                            <select name="products[${index}][product_type]" class="form-control product-type-dropdown">
+                            <select name="products[${index}][product_type]" class="form-control product-type-dropdown ${getErrorMessage(`products.${index}.product_type`) ? 'is-invalid' : ''}">
                                 <option value="" disabled selected>Select Product Type</option> 
                                 @foreach ($productTypes as $productType)
                                     <option value="{{ $productType->id }}">{{ $productType->name }}</option>
                                 @endforeach
                             </select>
+                            ${getErrorMessage(`products.${index}.product_type`) ? `<span class="invalid-feedback" style="display: block;">${getErrorMessage(`products.${index}.product_type`)}</span>` : ''}
                         </div>
                         <div class="col-sm-6 col-md-2 mb-3">
                             <label for="size_scale-${index}">Size Scale<span class="text-danger">*</span></label>
-                            <select name="products[${index}][name]" id="size_scale-${index}" class="form-control size-scale-dropdown">
+                            <select name="products[${index}][name]" id="size_scale-${index}" class="form-control size-scale-dropdown ${getErrorMessage(`products.${index}.name`) ? 'is-invalid' : ''}">
                                 <option value="" disabled selected>Select size scale</option>
                                 @foreach ($sizeScales as $sizeScale)
                                     <option value="{{ $sizeScale->id }}" @selected(old('size_scale_id', $product->size_scale_id ?? '') == $sizeScale->id)>
@@ -32,28 +35,34 @@
                                     </option>
                                 @endforeach
                             </select>
+                            ${getErrorMessage(`products.${index}.name`) ? `<span class="invalid-feedback" style="display: block;">${getErrorMessage(`products.${index}.name`)}</span>` : ''}
                         </div>
 
                         <div class="col-sm-6 col-md-2 mb-3">
                             <label for="min_size_id">Min Size<span class="text-danger">*</span></label>
-                            <select name="products[${index}][min_size]" class="form-control min-size-dropdown">
+                            <select name="products[${index}][min_size]" class="form-control min-size-dropdown ${getErrorMessage(`products.${index}.min_size`) ? 'is-invalid' : ''}">
                                 <option value="" disabled selected>Select Min Size</option>
                             </select>
+                            ${getErrorMessage(`products.${index}.min_size`) ? `<span class="invalid-feedback" style="display: block;">${getErrorMessage(`products.${index}.min_size`)}</span>` : ''}
                         </div>
                         <div class="col-sm-6 col-md-2 mb-3">
                             <label for="max_size_id">Max Size<span class="text-danger">*</span></label>
-                            <select name="products[${index}][max_size]" class="form-control max-size-dropdown">
+                            <select name="products[${index}][max_size]" class="form-control max-size-dropdown ${getErrorMessage(`products.${index}.max_size`) ? 'is-invalid' : ''}">
                                 <option value="" disabled selected>Select Max Size</option>
                             </select>
+                            ${getErrorMessage(`products.${index}.max_size`) ? `<span class="invalid-feedback" style="display: block;">${getErrorMessage(`products.${index}.max_size`)}</span>` : ''}
                         </div>
                         <div class="col-sm-6 col-md-2 mb-3">
-                            <x-form-input name="products[${index}][delivery_date]" label="Delivery Date" class="date-picker" placeholder="Enter Delivery Date" required />
+                            <x-form-input name="products[${index}][delivery_date]" label="Delivery Date" class="date-picker  ${getErrorMessage(`products.${index}.delivery_date`) ? 'is-invalid' : ''}" placeholder="Enter Delivery Date"  required="true" />
+                            ${getErrorMessage(`products.${index}.delivery_date`) ? `<span class="invalid-feedback" style="display: block;">${getErrorMessage(`products.${index}.delivery_date`)}</span>` : ''}
                         </div>
                         <div class="col-sm-6 col-md-2 mb-3">
-                            <x-form-input name="products[${index}][supplier_color_code]" label="Price" placeholder="Enter Price" required />
+                            <x-form-input name="products[${index}][price]" label="Price" placeholder="Enter Price"  required="true" class="${getErrorMessage(`products.${index}.price`) ? 'is-invalid' : ''}" />
+                            ${getErrorMessage(`products.${index}.price`) ? `<span class="invalid-feedback" style="display: block;">${getErrorMessage(`products.${index}.price`)}</span>` : ''}
                         </div>
                         <div class="col-sm-6 col-md-3 mb-3">
-                            <x-form-input name="products[${index}][short_description]" label="Short Description" placeholder="Enter Short Description" required />
+                            <x-form-input name="products[${index}][short_description]" label="Short Description" placeholder="Enter Short Description" required="true" class="${getErrorMessage(`products.${index}.short_description`) ? 'is-invalid' : ''}"  />
+                            ${getErrorMessage(`products.${index}.short_description`) ? `<span class="invalid-feedback" style="display: block;">${getErrorMessage(`products.${index}.short_description`)}</span>` : ''}
                         </div>
                         <div class="col-sm-6 col-md-3 mt-4">
                             <button type="button" class="btn btn-primary add-product-variant" disabled data-toggle="modal" data-target="#variantModal"><i class="fas fa-plus"></i> Variant</button>
@@ -61,66 +70,44 @@
                             <button type="button" class="btn btn-danger remove-product-field"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     </div>
+                    <div class="variants-container"></div>
                     <button type="button" class="btn btn-danger remove-product-field">Remove</button>
                 </div>
             `;
             $('#product-fields-container').append(newField);
 
-            $('.product-type-dropdown').chosen({
-                width: '100%',
-                placeholder_text_multiple: 'Select Product Type'
+            $('.product-type-dropdown, .size-scale-dropdown, .size-scale-dropdown, .min-size-dropdown, .max-size-dropdown')
+            .each(function() {
+                var $this = $(this);
+
+                $this.select2({
+                    width: '100%',
+                });
+
+                if ($this.hasClass('is-invalid')) {
+                    $this.next('.select2').addClass('is-invalid');
+                }
             });
 
-            $('.size-scale-dropdown').chosen({
-                width: '100%',
-                placeholder_text_multiple: 'Select Size Scale'
-            });
-
-            $('.size-scale-dropdown').chosen({
-                width: '100%',
-                placeholder_text_multiple: 'Select Size Scale'
-            });
-
-            $('.min-size-dropdown').chosen({
-                width: '100%',
-                placeholder_text_multiple: 'Select Min Size'
-            });
-
-            $('.max-size-dropdown').chosen({
-                width: '100%',
-                placeholder_text_multiple: 'Select Max Size'
-            });
+            flatpickr('.date-picker', {
+                    dateFormat: "d-m-Y",
+                    allowInput: true,
+                    maxDate: "today"
+                });
         }
 
         $(function() {
-            $('#supplier').chosen({
-                width: '100%',
-                placeholder_text_multiple: 'Select Supplier'
-            });
+            $('#supplier, #color, #buy_x_products, [name="products[0][product_type]"], [name="products[0][min_size]"], [name="products[0][max_size]"], [name="products[0][name]')
+            .each(function() {
+                var $this = $(this);
 
-            $('#color').chosen({
-                width: '100%',
-                placeholder_text_multiple: 'Select Color'
-            });
+                $this.select2({
+                    width: '100%',
+                });
 
-            $('[name="products[0][product_type]"]').chosen({
-                width: '100%',
-                placeholder_text_multiple: 'Select Product Type'
-            });
-
-            $('[name="products[0][min_size]"]').chosen({
-                width: '100%',
-                placeholder_text_multiple: 'Select Min Size'
-            });
-
-            $('[name="products[0][max_size]"]').chosen({
-                width: '100%',
-                placeholder_text_multiple: 'Select Max Size'
-            });
-
-            $('[name="products[0][name]"]').chosen({
-                width: '100%',
-                placeholder_text_multiple: 'Select Size Scale'
+                if ($this.hasClass('is-invalid')) {
+                    $this.next('.select2').addClass('is-invalid');
+                }
             });
         });
 
@@ -279,26 +266,99 @@
                     'data-product-index'));
             });
 
+            // $(document).on('click', '.save-variant', function() {
+            //     let productIndex = $('#selected_product_index').val();
+            //     let supplierColorCode = $('#supplier_color_code').val();
+            //     let supplierColorName = $('#supplier_color_name').val();
+            //     let color = $('#color-name').val();
+
+            //     let minSize = $(`[name="products[${productIndex}][min_size]"]`).val();
+            //     let maxSize = $(`[name="products[${productIndex}][max_size]"]`).val();
+
+            //     let quantityInputCell = ``;
+            //     let variantIndex = $(`[data-product-index="${productIndex}"] .variants-container tbody tr`).length;
+
+            //     getSizes(productIndex).forEach(function(sizeObj) {
+            //         quantityInputCell += `<td><input type="text" name="products[${productIndex}][variants][${variantIndex}][size][${sizeObj.id}]"></td>`;
+            //     });
+
+            //     $(`[data-product-index="${productIndex}"] .variants-container tbody`).append(`<tr>
+            //         <td>Red</td>
+            //         ${quantityInputCell}
+            //     </tr>`);
+            //     $('#variantModal').modal('hide');
+            // });
+
             $(document).on('click', '.save-variant', function() {
                 let productIndex = $('#selected_product_index').val();
                 let supplierColorCode = $('#supplier_color_code').val();
                 let supplierColorName = $('#supplier_color_name').val();
-                let color = $('#color').val();
+                let color = $('#color-name').val();
+                let colorName = $('#color-name option:selected').data('name'); 
+                if (!supplierColorCode || !supplierColorName || !color) {
+                    if (!supplierColorCode) {
+                        $('#supplier_color_code').after('<span class="invalid-feedback" style="display: block;">Supplier Color Code is required.</span>');
+                    }
+                    if (!supplierColorName) {
+                        $('#supplier_color_name').after('<span class="invalid-feedback" style="display: block;">Supplier Color Name is required.</span>');
+                    }
+                    if (!color) {
+                        $('#color-name').after('<span class="invalid-feedback" style="display: block;">Color is required.</span>');
+                    }
+                    return;
+                }
 
-                let minSize = $(`[name="products[${productIndex}][min_size]"]`).val();
-                let maxSize = $(`[name="products[${productIndex}][max_size]"]`).val();
+                let isUnique = true;
+                $(`[data-product-index="${productIndex}"] .variants-container tbody tr`).each(function() {
+                    let existingColorCode = $(this).find('.color-code').text();
+                    let existingColorName = $(this).find('.color-name').text();
+                    let existingColor = $(this).find('.color').text();
 
-                let quantityInputCell = ``;
-                let variantIndex = $(`[data-product-index="${productIndex}"] .variants-container tbody tr`).length;
-
-                getSizes(productIndex).forEach(function(sizeObj) {
-                    quantityInputCell += `<td><input type="text" name="products[${productIndex}][variants][${variantIndex}][size][${sizeObj.id}]"></td>`;
+                    if (existingColorCode === supplierColorCode || existingColorName === supplierColorName || existingColor === color) {
+                        isUnique = false;
+                        alert("This variant already exists.");
+                        return false;  // Stop the loop
+                    }
                 });
 
-                $(`[data-product-index="${productIndex}"] .variants-container tbody`).append(`<tr>
-                    <td>Red</td>
-                    ${quantityInputCell}
-                </tr>`);
+                // If the variant is unique, proceed to append it
+                if (isUnique) {
+                    let minSize = $(`[name="products[${productIndex}][min_size]"]`).val();
+                    let maxSize = $(`[name="products[${productIndex}][max_size]"]`).val();
+
+                    let quantityInputCell = ``;
+                    let variantIndex = $(`[data-product-index="${productIndex}"] .variants-container tbody tr`).length;
+
+                    // Generate the size input cells
+                    getSizes(productIndex).forEach(function(sizeObj) {
+                        quantityInputCell += `<td><input type="text" name="products[${productIndex}][variants][${variantIndex}][size][${sizeObj.id}]"></td>`;
+                    });
+
+                    $(`[data-product-index="${productIndex}"] .variants-container tbody`).append(`<tr>
+                           <td class="color">${colorName}</td>
+                            <td class="color-code" hidden>
+                            <input type="hidden" name="products[${productIndex}][variants][${variantIndex}][supplier_color_code]" value="${supplierColorCode}" />
+                            ${supplierColorCode}
+                        </td>
+                        <td class="color-name" hidden>
+                            <input type="hidden" name="products[${productIndex}][variants][${variantIndex}][supplier_color_name]" value="${supplierColorName}" />
+                            ${supplierColorName}
+                        </td>
+                        <td class="color-id" hidden>
+                            <input type="hidden" name="products[${productIndex}][variants][${variantIndex}][color_id]" value="${color}" />
+                            ${color}
+                        </td>
+                        ${quantityInputCell}
+                    </tr>`);
+
+
+                    const variantModal = new bootstrap.Modal(document.getElementById('variantModal'));
+                    variantModal.hide();
+
+                    $('#supplier_color_code').val('');
+                    $('#supplier_color_name').val('');
+                    $('#color-name').val('');
+                }
             });
         })
     </script>
@@ -325,10 +385,10 @@
                 </div>
                 <div class="mb-3">
                     <label for="color" class="form-label">Select Color <span class="text-danger">*</span></label>
-                    <select id="color" name="color" class="form-control" required>
+                    <select id="color-name" name="color" class="form-control" required>
                         <option value="" disabled selected>Select Color</option>
                         @foreach ($colors as $color)
-                            <option value="{{ $color->id }}">{{ $color->name }}
+                            <option value="{{ $color->id }}" data-name="{{ $color->name }}">{{ $color->name }}
                                 ({{ $color->code }})
                             </option>
                         @endforeach
