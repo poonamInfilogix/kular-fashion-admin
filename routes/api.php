@@ -17,10 +17,12 @@ Route::post('products/add-manufacture-barcode', [ProductBarcodeController::class
 Route::post('/collections/check-name', [CollectionController::class, 'checkCollectionName']);
 
 Route::post('/login', [LoginController::class, 'login']);
-Route::get('/brands', [ProductController::class, 'brandList'])->name('brand.index');
-Route::get('/departments', [ProductController::class, 'departmentList'])->name('department.index');
-Route::get('/product-types', [ProductController::class, 'producTypesList'])->name('productType.index');
+Route::get('/brands', [ProductController::class, 'brands'])->name('brand.index');
+Route::get('/departments', [ProductController::class, 'departments'])->name('department.index');
+Route::get('/product-types', [ProductController::class, 'producTypes'])->name('productType.index');
+Route::get('/collections', [ProductController::class, 'collections']);
+Route::get('/collection/{id}', [ProductController::class, 'showCollection']);
 Route::middleware('auth:sanctum')->group( function () {
-    Route::post('products/{product}', [ProductController::class, 'productDetail'])->name('products.show');
+    Route::post('products/{product}', [ProductController::class, 'showProduct'])->name('products.show');
     Route::post('/apply-coupon', [ProductController::class, 'applyCoupon']);
 });

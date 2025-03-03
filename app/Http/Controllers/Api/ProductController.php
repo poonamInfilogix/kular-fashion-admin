@@ -8,6 +8,8 @@ use App\Http\Resources\ProductResource;
 use App\Http\Resources\ProductTypeCollection;
 use App\Http\Resources\DepartmentCollection;
 use App\Http\Resources\BrandCollection;
+use App\Http\Resources\CollectionList;
+// use App\Http\Resources\CollectionResource;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\ProductColor;
@@ -19,6 +21,7 @@ use App\Models\Brand;
 use App\Models\Color;
 use App\Models\Department;
 use App\Models\Coupon;
+use App\Models\Collection;
 use Illuminate\Support\Carbon;
 use App\Models\ProductType;
 use Exception;
@@ -91,31 +94,29 @@ class ProductController extends Controller
 
     }
 
-    public function productDetail(Request $request, $product){
+    public function showProduct(Request $request, $product){
         try{
-            
 
+            $product = Product::with('brand', 'department', 'webInfo', 'webImage', 'specifications','productType', 'colors.colorDetail', 'sizes.sizeDetail')
+                        ->where('id', $product)->first();
             if(!$product)
             {
-              return response()->json(['success' => false, 'data' => $product]);
+              return response()->json(['success' => false, 'data' => (object)[]]);
             }
-            $product = Product::with('brand', 'department', 'webInfo', 'webImage', 'specifications','productType', 'colors.colorDetail', 'sizes.sizeDetail')
-                        ->where('id', $product)->firstOrFail();
-           
-            $sizes = $product->sizes()->with('sizeDetail')->paginate($request->input('sizes_length', 10));
             
-            $colors = $product->colors()->with('colorDetail')->paginate($request->input('colors_length', 10));
+            $sizes = $product->sizes()->with('sizeDetail')->paginate($request->input('sizes_length', 10)) ?? collect([]);
+            
+            $colors = $product->colors()->with('colorDetail')->paginate($request->input('colors_length', 10)) ?? collect([]);
 
            return new ProductResource($product, $sizes, $colors);
-         
 
         }catch(Exception  $e){
-            return response()->json(['success' => false, 'message'=> $e->getMessage(), 'data' => []]);
+            return response()->json(['success' => false, 'message'=> $e->getMessage(), 'data' => (object)[]]);
         }
          
     }
 
-    public function brandList(Request $request){
+    public function brands(Request $request){
 
         $brands = Brand::where('status','Active')->paginate($request->input('length', 10));
         
@@ -126,7 +127,7 @@ class ProductController extends Controller
     }
 
 
-    public function departmentList(Request $request)
+    public function departments(Request $request)
     {
         $departments = Department::where('status','Active')->paginate($request->input('length', 10));
         if($departments)
@@ -135,9 +136,10 @@ class ProductController extends Controller
         }
     }
 
-    public function producTypesList(Request $request){
+    public function producTypes(Request $request){
         
         $productTypes = ProductType::where('status','Active')->paginate($request->input('length', 10));
+
         if($productTypes)
         {
             return new ProductTypeCollection($productTypes);
@@ -173,5 +175,30 @@ class ProductController extends Controller
         } 
    
         return response()->json(['success' => false,  'data' => $coupon ], 200);
+    }
+
+    public function collections(Request $request)
+    {
+        $collections = Collection::where('status', 1)->paginate($request->input('length', 10));
+   
+        return new CollectionList($collections);
+    }
+
+ 
+    public function showCollection(Request $request, $id){
+        $collection = Collection::find($id);
+
+        if(!$collection)
+        {
+            return response()->json([
+                'success' => false,
+                'data' => (object)[]
+            ]);     
+        }
+        return response()->json([
+            'success' => true,
+            'data' => $collection
+        ]);
+
     }
 }
