@@ -5,11 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductListCollection;
 use App\Http\Resources\ProductResource;
-use App\Http\Resources\ProductTypeCollection;
-use App\Http\Resources\DepartmentCollection;
-use App\Http\Resources\BrandCollection;
-use App\Http\Resources\CollectionList;
-// use App\Http\Resources\CollectionResource;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\ProductColor;
@@ -21,22 +16,30 @@ use App\Models\Brand;
 use App\Models\Color;
 use App\Models\Department;
 use App\Models\Coupon;
-use App\Models\Collection;
 use Illuminate\Support\Carbon;
 use App\Models\ProductType;
 use Exception;
 
 class ProductController extends Controller
 {
-          
     public function index(Request $request){
-        
+        try{
+        $validator = Validator::make($request->all(), [
+            'column'      => 'in:price,name,productType',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
+        }
+        $column = $request->input('column') ?? 'products.created_at';
+        $orderBy = request()->input('order_by') ??  'asc'; 
+
         $query = Product::with(['brand', 'department', 'productType', 'webImage', 'specifications','quantities', 'colors.colorDetail', 'sizes.sizeDetail', 'webInfo'])
                     ->whereHas('webInfo', function ($q) {
-                        $q->where('is_splitted_with_colors', 1)
-                        ->where(function ($subQuery) {
-                            $subQuery->where('status', 1) 
-                                    ->orWhere('status', 2); 
+                        $q->where(function ($subQuery) {
+                            $subQuery->where('is_splitted_with_colors', 1)
+                            ->where('status', 1) 
+                            ->orWhere('status', 2); 
                         });
                     })
 
@@ -83,16 +86,69 @@ class ProductController extends Controller
                         'products.sale_start','products.sale_end', 'products.season', 'products.size_scale_id', 
                         'products.min_size_id', 'products.max_size_id', 'product_colors.color_id'
                     )
-                  
-                     ->orderBy('products.updated_at', 'desc')  
+                     ->orderBy($column, $orderBy)  
 
                     ->paginate($request->input('length', 10));
 
-        $products->load(['brand', 'department', 'productType', 'colors.colorDetail', 'sizes.sizeDetail', 'webInfo']);
-        return new ProductListCollection($products);
-    
 
+        $products->load(['brand', 'department', 'productType', 'colors.colorDetail', 'sizes.sizeDetail', 'webInfo']);
+
+        $filters = [];
+            foreach ($products as $product) {
+                foreach ($product->colors as $key => $color) {
+                        $filters['colors'][$key] = [
+                            'id' => $color->id,
+                            'color_id' => $color->color_id,
+                            'supplier_color_code' => $color->supplier_color_code,
+                            'supplier_color_name' => $color->supplier_color_name,
+                            'swatch_image_path' => $color->swatch_image_path,
+                            'detail' => [
+                                'id' => optional($color->colorDetail)->id,
+                                'name' => optional($color->colorDetail)->name,
+                                'slug' => optional($color->colorDetail)->slug,
+                                'code' => optional($color->colorDetail)->code,
+                                'ui_color_code' => optional($color->colorDetail)->ui_color_code,
+                        ]];
+                }
+                foreach ($product->sizes as $key => $size) {
+                        $filters['sizes'][$key] =[
+                                'id' => $size->id,
+                                'size_id' => $size->size_id,
+                                'detail' => [
+                                    'id' => optional($size->sizeDetail)->id,
+                                    'size' => optional($size->sizeDetail)->size,
+                                ]
+                    ] ;
+                }
+   
+                    $filters['brands'] = 
+                        [
+                            'id' => optional($product->brand)->id,
+                            'name' => optional($product->brand)->name,
+                            'slug' => optional($product->brand)->slug,
+                        ];
+
+            $filters['minPrice'] = Product::min('price');   
+            $filters['maxPrice'] = Product::max('price');       
+              
+            }
+          
+            return response()->json([
+                'success' => true,
+                'products' => new ProductListCollection($products),
+                'filters' => $filters
+            ]);
+        }catch(Exception $e){
+            return response()->json([
+                'success' => false,
+                'data' => $e->getMessage()
+            ]);
+        }
+       
+ 
     }
+
+
 
     public function showProduct(Request $request, $product){
         try{
@@ -115,90 +171,5 @@ class ProductController extends Controller
         }
          
     }
-
-    public function brands(Request $request){
-
-        $brands = Brand::where('status','Active')->paginate($request->input('length', 10));
-        
-        if($brands)
-        {
-            return new BrandCollection($brands); 
-        }
-    }
-
-
-    public function departments(Request $request)
-    {
-        $departments = Department::where('status','Active')->paginate($request->input('length', 10));
-        if($departments)
-        {
-            return new DepartmentCollection($departments); 
-        }
-    }
-
-    public function producTypes(Request $request){
-        
-        $productTypes = ProductType::where('status','Active')->paginate($request->input('length', 10));
-
-        if($productTypes)
-        {
-            return new ProductTypeCollection($productTypes);
-        }
-    }
-    
-      
-    public function applyCoupon(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'coupon' => 'required||exists:coupons,code',
-        ]);
-    
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
-        }
-
-        $currentDateTime = Carbon::now(); 
-
-        $coupon = Coupon::where('code', $request->coupon)
-                        ->where(function ($query) use ($currentDateTime) {
-                            $query->whereNotNull('start_date')
-                                  ->whereDate('start_date', '>=', $currentDateTime);
-                        })
-                        ->where(function ($query) use ($currentDateTime) {
-                            $query->whereNotNull('expire_date')
-                                  ->whereDate('expire_date', '>=', $currentDateTime);
-                        })
-                        ->where('status', 1) 
-                        ->first();
-        if (!$coupon) { 
-            return response()->json(['success' => false,  'message' => 'Coupon is expired' ], 400);
-        } 
-   
-        return response()->json(['success' => false,  'data' => $coupon ], 200);
-    }
-
-    public function collections(Request $request)
-    {
-        $collections = Collection::where('status', 1)->paginate($request->input('length', 10));
-   
-        return new CollectionList($collections);
-    }
-
  
-    public function showCollection(Request $request, $id){
-        $collection = Collection::find($id);
-
-        if(!$collection)
-        {
-            return response()->json([
-                'success' => false,
-                'data' => (object)[]
-            ]);     
-        }
-        return response()->json([
-            'success' => true,
-            'data' => $collection
-        ]);
-
-    }
 }
