@@ -290,27 +290,24 @@
             // });
 
             $(document).on('click', '.save-variant', function() {
-                console.log($('#variantModal'));
                 let productIndex = $('#selected_product_index').val();
                 let supplierColorCode = $('#supplier_color_code').val();
                 let supplierColorName = $('#supplier_color_name').val();
                 let color = $('#color-name').val();
                 let colorName = $('#color-name option:selected').data('name'); 
-                // Check if the required fields are filled
                 if (!supplierColorCode || !supplierColorName || !color) {
                     if (!supplierColorCode) {
-                        $('#supplier_color_code').after('<span class="form-error text-danger">Supplier Color Code is required.</span>');
+                        $('#supplier_color_code').after('<span class="invalid-feedback" style="display: block;">Supplier Color Code is required.</span>');
                     }
                     if (!supplierColorName) {
-                        $('#supplier_color_name').after('<span class="form-error text-danger">Supplier Color Name is required.</span>');
+                        $('#supplier_color_name').after('<span class="invalid-feedback" style="display: block;">Supplier Color Name is required.</span>');
                     }
                     if (!color) {
-                        $('#color-name').after('<span class="form-error text-danger">Color is required.</span>');
+                        $('#color-name').after('<span class="invalid-feedback" style="display: block;">Color is required.</span>');
                     }
                     return;
                 }
 
-                // Check if this variant already exists in the table
                 let isUnique = true;
                 $(`[data-product-index="${productIndex}"] .variants-container tbody tr`).each(function() {
                     let existingColorCode = $(this).find('.color-code').text();
