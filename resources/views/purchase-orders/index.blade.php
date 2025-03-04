@@ -20,16 +20,24 @@
                                     <tr>
                                         <th class="p-1">#</th>
                                         <th class="p-1">Order ID</th>
-                                        <th class="p-1">Supplier Order Number</th>
                                         <th class="p-1">Supplier Name</th>
                                         <th class="p-1">Order Date</th>
                                         <th class="p-1">Delivery Date</th>
-                                        @canany(['edit role', 'delete role'])
                                             <th class="p-1">Action</th>
-                                        @endcanany
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach($purchaseOrders as $key => $purchaseOrder)
+                                        <td>{{ $key+1 }}</td>
+                                        <td>{{ $purchaseOrder->order_no }}</td>
+                                        <td>{{ $purchaseOrder->supplier->supplier_name}}</td>
+                                        <td>{{ $purchaseOrder->supplier_order_date }}</td>
+                                        <td>{{ $purchaseOrder->delivery_date }}</td>
+                                        <td><a href="{{ route('colors.edit', $purchaseOrder->id) }}" class="btn btn-primary btn-sm edit py-0 px-1"><i class="fas fa-pencil-alt"></i></a>
+                                            <button data-source="Color" data-endpoint="{{ route('colors.destroy', $purchaseOrder->id) }}" class="delete-btn btn btn-danger btn-sm edit py-0 px-1"><i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
