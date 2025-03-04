@@ -15,7 +15,10 @@ class DepartmentController extends Controller
 {
     public function departments(Request $request)
     {
-        $departments = Department::where('status','Active')->paginate($request->input('length', 10));
+        $per_page = $request->per_page ?? 1; 
+        $page =  $request->page ?? 1;
+
+        $departments = Department::where('status','Active')->paginate($per_page,['*'],'page',$page); 
         if($departments)
         {
             return new DepartmentCollection($departments); 

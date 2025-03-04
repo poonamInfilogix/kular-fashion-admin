@@ -11,8 +11,10 @@ class DepartmentCollection extends BaseResource
 
     public function toArray(Request $request): array
     {
+      
         return [
             'success' => true,
+          
             'data' => $this->resource->map(function ($department) {
                 return [
                     "id"=>$department->id,
@@ -28,9 +30,8 @@ class DepartmentCollection extends BaseResource
                 'per_page' => $this->resource->perPage(),
                 'current_page' => $this->resource->currentPage(),
                 'last_page' => $this->resource->lastPage(),
-                'next_page_url' => $this->resource->nextPageUrl(),
-                'prev_page_url' => $this->resource->previousPageUrl(),
             ],
+         
         ];
     }
 }

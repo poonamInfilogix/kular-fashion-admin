@@ -17,7 +17,9 @@ class CollectionController extends Controller
 
     public function collections(Request $request)
     {
-        $collections = Collection::where('status', 1)->paginate($request->input('length', 10));
+        $per_page = $request->per_page ?? 10;
+        $page = $request->page ?? 1;
+        $collections = Collection::where('status', 1)->paginate($per_page, ['*'],'page', $page);
    
         return new CollectionList($collections);
     }

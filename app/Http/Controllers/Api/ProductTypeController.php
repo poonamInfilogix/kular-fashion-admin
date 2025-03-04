@@ -16,7 +16,10 @@ class ProductTypeController extends Controller
 
     public function producTypes(Request $request){
         
-        $productTypes = ProductType::where('status','Active')->paginate($request->input('length', 10));
+        $per_page = $request->per_page ?? 5;
+        $page = $request->page ?? 1;
+        
+        $productTypes = ProductType::where('status','Active')->paginate($per_page,['*'],'page',$page);
 
         if($productTypes)
         {

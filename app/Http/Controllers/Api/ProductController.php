@@ -6,18 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductListCollection;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Models\ProductColor;
 use Illuminate\Http\Request;
 use App\Models\Product;
-use App\Models\ProductSize;
-use App\Models\ProductQuantity;
-use App\Models\Brand;
-use App\Models\Color;
-use App\Models\Department;
-use App\Models\Coupon;
+use App\Models\User;
 use Illuminate\Support\Carbon;
-use App\Models\ProductType;
 use Exception;
 
 class ProductController extends Controller
@@ -31,6 +25,7 @@ class ProductController extends Controller
                 if ($validator->fails()) {
                     return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
                 }
+                //HIDE WHEN OUT OF STOCK IN NOT IN OPTION OF STATUS IN PRODUCTS TABLE STRUCTURE
                 $column = $request->input('column') ?? 'products.created_at';
                 $orderBy = request()->input('order_by') ??  'asc'; 
                 $per_page = $request->input('per_page', 10); // Default to 10 if not provided
@@ -39,20 +34,21 @@ class ProductController extends Controller
                             ->whereHas('webInfo', function ($q) {
                                 $q->where(function ($subQuery) {
                                     $subQuery->where('is_splitted_with_colors', 1)
-                                    ->where('status', 1) 
-                                    ->orWhere('status', 2); 
+                                    ->where('status', 2) 
+                                    ->orWhere('status', 1); 
                                 });
                             })
 
                             ->where(function ($query) {
                                 $query->whereHas('quantities', function ($q) {
-                                    $q->select(DB::raw('SUM(product_quantities.quantity) as total_quantity'))
-                                    ->havingRaw('SUM(quantity) > ?', [1]);
+                                    $q->select(DB::raw('SUM(product_quantities.total_quantity) as total_quantity'))
+                                    ->havingRaw('SUM(total_quantity) > ?', [1]);
                                 })
                                 ->orWhereHas('webInfo', function ($q) {
                                     $q->where('status', 1); 
                                 });
                             });
+                         
                         
                             
                     $filterable = [

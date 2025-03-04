@@ -14,8 +14,10 @@ use Exception;
 class BrandController extends Controller
 {
     public function brands(Request $request){
-
-        $brands = Brand::where('status','Active')->paginate($request->input('length', 10));
+        $per_page = $request->per_page ?? 2;
+        $page = $request->page ?? 1;
+        
+        $brands = Brand::where('status','Active')->paginate($per_page, ['*'],'page', $page);
         
         if($brands)
         {
