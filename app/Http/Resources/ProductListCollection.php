@@ -4,24 +4,48 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
+// use Illuminate\Pagination\LengthAwarePaginator;
 use App\Http\Resources\BaseResource;
 
-class ProductListCollection extends ResourceCollection
+class ProductListCollection extends JsonResource
 {
     /**
      * Transform the resource collection into an array.
      *
      * @return array<int|string, mixed>
      */
-        public function toArray(Request $request): array
+
+
+     private $pagination;
+
+        public function __construct($resource)
         {
 
+            
+            $this->pagination = [
+                'current_page' => $resource->currentPage(),
+                'from' => $resource->firstItem(),
+                'last_page' => $resource->lastPage(),
+                'per_page' => $resource->perPage(),
+                'to' => $resource->lastItem(),
+                'total' => $resource->total(),
+            ];
+    
+            
+            $resource = $resource->getCollection(); // Necessary to remove meta and links
+    
+            parent::__construct($resource);
+        }
+        public function toArray(Request $request): array
+        {
+            
             return [
                 'success' => true,
-                'draw' => $request->input('draw') ?? 0,
-                'recordsTotal' => $this->resource->total(),
-                'recordsFiltered' => $this->resource->total(),
-                'products' => $this->collection->map(function ($product) {
+
+              
+            
+                'products' => $this->resource->map(function ($product) {
                     return [
                         'id' => $product->id,
                         'slug' => $product->slug,
@@ -102,25 +126,11 @@ class ProductListCollection extends ResourceCollection
                                 ]
                             ];
                         }),
+                       
                     
                     ];
                 }),
-                
+                'pagination' => $this->pagination,
             ];
         }
-
-    public function paginationInformation($request, $paginated, $default)
-    {
-        $default['pagination']['current_page'] = $default['meta']['current_page'];
-        $default['pagination']['from'] = $default['meta']['from'];
-        $default['pagination']['last_page'] = $default['meta']['last_page'];
-        $default['pagination']['per_page'] = $default['meta']['per_page'];
-        $default['pagination']['to'] = $default['meta']['to'];
-        $default['pagination']['total'] = $default['meta']['total'];
-
-        unset($default['links']);
-        unset($default['meta']);
-
-        return $default;
-    }
 }
