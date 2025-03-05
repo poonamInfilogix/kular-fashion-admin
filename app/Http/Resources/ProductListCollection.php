@@ -15,14 +15,13 @@ class ProductListCollection extends JsonResource
      *
      * @return array<int|string, mixed>
      */
-
+    
 
      private $pagination;
-
-        public function __construct($resource)
+     private $filters;
+        public function __construct($resource, $filters)
         {
 
-            
             $this->pagination = [
                 'current_page' => $resource->currentPage(),
                 'from' => $resource->firstItem(),
@@ -31,20 +30,17 @@ class ProductListCollection extends JsonResource
                 'to' => $resource->lastItem(),
                 'total' => $resource->total(),
             ];
-    
-            
+ 
             $resource = $resource->getCollection(); // Necessary to remove meta and links
     
-            parent::__construct($resource);
+            parent::__construct($resource, $filters);
+            $this->filters = $filters;
+
         }
         public function toArray(Request $request): array
         {
-            
+         
             return [
-                'success' => true,
-
-              
-            
                 'products' => $this->resource->map(function ($product) {
                     return [
                         'id' => $product->id,
@@ -130,6 +126,11 @@ class ProductListCollection extends JsonResource
                     
                     ];
                 }),
+                'filters' => collect($this->filters)->map(function($filter) {
+                    return $filter;
+                    
+                }),
+                        
                 'pagination' => $this->pagination,
             ];
         }

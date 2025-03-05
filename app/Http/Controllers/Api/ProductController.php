@@ -127,12 +127,10 @@ class ProductController extends Controller
                     $filters['minPrice'] = Product::min('price');   
                     $filters['maxPrice'] = Product::max('price');           
                 }
-            
+             
                 return response()->json([
-                    'success' => true,
-                    // 'data' => $products,    
-                    'data' => new ProductListCollection($products),
-                    'filters' => $filters
+                    'success' => true, 
+                    'data' => new ProductListCollection($products, $filters),
                 ]);
         }catch(Exception $e){
             return response()->json([

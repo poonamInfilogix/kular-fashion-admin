@@ -93,8 +93,10 @@ class CartController extends Controller
                                                 ]);
                    
                 }
+                $cartItem = Cart::with('items')->where('carts.id', $cartItem->cart_id)->get();
 
-             return new CartItemResource($cartItem);
+                return response()->json(['data' => $cartItem]);
+            
         }catch(Exception $e){
             return response()->json(['message' => $e->getMessage(), 'cart' => (object)[]]);
         }
